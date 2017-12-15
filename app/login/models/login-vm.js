@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var LoginVM = /** @class */ (function () {
+var LoginVM = (function () {
     function LoginVM() {
     }
     Object.defineProperty(LoginVM.prototype, "value", {

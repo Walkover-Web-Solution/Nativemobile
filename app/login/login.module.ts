@@ -23,8 +23,9 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [NativeScriptRouterModule.forChild(routes)],
+  imports: [NativeScriptRouterModule, NativeScriptRouterModule.forChild(routes)],
   declarations: [...COMPONENTS],
+
   schemas: [NO_ERRORS_SCHEMA],
 })
 export class LoginModule { }

@@ -20,6 +20,6 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [NativeScriptRouterModule.forRoot(routes)]
+  imports: [NativeScriptRouterModule,NativeScriptRouterModule.forRoot(routes)]
 })
 export class AppRoutingModule { }

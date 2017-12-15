@@ -1,7 +1,4 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-
-// import { Item } from '../../models';
-import { LoginService } from '../../services/login.service';
 import { topmost, Frame } from 'ui/frame';
 import { Page, Color } from 'ui/page';
 import { isIOS } from 'platform';
@@ -15,7 +12,7 @@ import { RouterExtensions } from 'nativescript-angular/router';
   styleUrls: ['./login-with-otp.component.scss']
 })
 export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
-  constructor(private itemService: LoginService, private routerExtensions: RouterExtensions, private page: Page, private frame: Frame) { }
+  constructor(private routerExtensions: RouterExtensions, private page: Page, private frame: Frame) { }
 
   ngOnInit(): void {
     console.log('login-with-otp');

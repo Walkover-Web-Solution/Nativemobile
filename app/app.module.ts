@@ -4,6 +4,9 @@ import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptDevToolsMonitors } from "ngrx-devtools-nativescript";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
+import { NativeScriptHttpModule } from 'nativescript-angular/http';
+import { NSModuleFactoryLoader, NativeScriptRouterModule } from 'nativescript-angular/router';
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/switchMap';
@@ -13,7 +16,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/debounce';
 
-import { NgModule } from "@angular/core";
+import { NgModule, NgModuleFactoryLoader } from "@angular/core";
 import { StoreModule } from '@ngrx/store';
 
 import { AppComponent } from "./app.component";
@@ -23,12 +26,15 @@ import { Configuration } from "./app.constants";
 import { reducers } from "./store";
 import { ActionModule } from "./actions/actions.module";
 import { AppRoutingModule } from "./app.routing";
+import 'nativescript-ngx-fonticon';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    AppRoutingModule,
     NativeScriptModule,
+    NativeScriptHttpModule,
+    NativeScriptRouterModule,
+    AppRoutingModule,
     NativeScriptDevToolsMonitors,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument(),
@@ -36,6 +42,10 @@ import { AppRoutingModule } from "./app.routing";
     ActionModule.forRoot()
   ],
   providers: [
+    {
+      provide: NgModuleFactoryLoader,
+      useClass: NSModuleFactoryLoader
+    },
     {
       provide: ServiceConfig,
       useValue: { apiUrl: Configuration.ApiUrl, appUrl: Configuration.AppUrl }
