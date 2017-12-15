@@ -1,0 +1,13 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/**
+ * Model for company groups api response
+ * API:: (company-groups) /company/companyUniqueName/groups
+ */
+var GroupListItemResponse = (function () {
+    function GroupListItemResponse() {
+    }
+    return GroupListItemResponse;
+}());
+exports.GroupListItemResponse = GroupListItemResponse;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiR3JvdXBMaXN0SXRlbS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIkdyb3VwTGlzdEl0ZW0udHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFFQTs7O0dBR0c7QUFFSDtJQUFBO0lBTUEsQ0FBQztJQUFELDRCQUFDO0FBQUQsQ0FBQyxBQU5ELElBTUM7QUFOWSxzREFBcUIiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBJR3JvdXBMaXN0SXRlbSB9IGZyb20gJy4uL2ludGVyZmFjZXMvZ3JvdXBMaXN0SXRlbS5pbnRlcmZhY2UnO1xuXG4vKipcbiAqIE1vZGVsIGZvciBjb21wYW55IGdyb3VwcyBhcGkgcmVzcG9uc2VcbiAqIEFQSTo6IChjb21wYW55LWdyb3VwcykgL2NvbXBhbnkvY29tcGFueVVuaXF1ZU5hbWUvZ3JvdXBzXG4gKi9cblxuZXhwb3J0IGNsYXNzIEdyb3VwTGlzdEl0ZW1SZXNwb25zZSBpbXBsZW1lbnRzIElHcm91cExpc3RJdGVtIHtcbiAgcHVibGljIGNhdGVnb3J5OiBzdHJpbmc7XG4gIHB1YmxpYyBncm91cHM6IElHcm91cExpc3RJdGVtW107XG4gIHB1YmxpYyBuYW1lOiBzdHJpbmc7XG4gIHB1YmxpYyBzeW5vbnltcz86IHN0cmluZztcbiAgcHVibGljIHVuaXF1ZU5hbWU6IHN0cmluZztcbn1cbiJdfQ==

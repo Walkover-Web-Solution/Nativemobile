@@ -1,0 +1,6 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.APPLY_TAX_API = {
+    APPLY_TAX: 'company/:companyUniqueName/tax/assign',
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYXBwbHlUYXguYXBpLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiYXBwbHlUYXguYXBpLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQ2EsUUFBQSxhQUFhLEdBQUc7SUFDM0IsU0FBUyxFQUFFLHVDQUF1QztDQUNuRCxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiXG5leHBvcnQgY29uc3QgQVBQTFlfVEFYX0FQSSA9IHtcbiAgQVBQTFlfVEFYOiAnY29tcGFueS86Y29tcGFueVVuaXF1ZU5hbWUvdGF4L2Fzc2lnbicsXG59O1xuIl19

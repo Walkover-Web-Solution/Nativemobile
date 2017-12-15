@@ -1,0 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var login_service_1 = require("./login.service");
+exports.LOGIN_PROVIDERS = [login_service_1.LoginService];
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJpbmRleC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUFBLGlEQUErQztBQUVsQyxRQUFBLGVBQWUsR0FBRyxDQUFDLDRCQUFZLENBQUMsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IExvZ2luU2VydmljZSB9IGZyb20gJy4vbG9naW4uc2VydmljZSc7XG5cbmV4cG9ydCBjb25zdCBMT0dJTl9QUk9WSURFUlMgPSBbTG9naW5TZXJ2aWNlXTtcbiJdfQ==

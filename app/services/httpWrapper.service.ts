@@ -1,0 +1,69 @@
+import { Injectable } from '@angular/core';
+import { Headers, Http, RequestOptionsArgs, Response } from '@angular/http';
+import { Observable } from 'rxjs/Observable';
+import { GeneralService } from './general.service';
+
+@Injectable()
+export class HttpWrapperService {
+
+  constructor(private _http: Http, private _generalService: GeneralService) {
+  }
+
+  public get = (url: string, params?: any, options?: RequestOptionsArgs): Observable<Response> => {
+    options = this.prepareOptions(options);
+    options.params = params;
+    return this._http.get(url, options);
+  }
+
+  public post = (url: string, body: any, options?: RequestOptionsArgs): Observable<Response> => {
+    options = this.prepareOptions(options);
+    return this._http.post(url, body, options);
+  }
+
+  public put = (url: string, body: any, options?: RequestOptionsArgs): Observable<Response> => {
+    options = this.prepareOptions(options);
+    return this._http.put(url, body, options);
+  }
+
+  public delete = (url: string, params?: any, options?: RequestOptionsArgs): Observable<Response> => {
+    options = this.prepareOptions(options);
+    options.search = this.objectToParams(params);
+    return this._http.delete(url, options);
+  }
+
+  public patch = (url: string, body: any, options?: RequestOptionsArgs): Observable<Response> => {
+    options = this.prepareOptions(options);
+    return this._http.patch(url, body, options);
+  }
+
+  public prepareOptions(options: RequestOptionsArgs): RequestOptionsArgs {
+    let sessionId = this._generalService.sessionId;
+    options = options || {};
+
+    if (!options.headers) {
+      options.headers = new Headers();
+    }
+
+    if (sessionId) {
+      options.headers.append('Session-Id', sessionId);
+    }
+    // options.withCredentials = true;
+    options.headers.append('cache-control', 'no-cache');
+    options.headers.append('Content-Type', 'application/json');
+    options.headers.append('Accept', 'application/json');
+
+    return options;
+  }
+
+  public isPrimitive(value) {
+    return value == null || (typeof value !== 'function' && typeof value !== 'object');
+  }
+
+  public objectToParams(object = {}) {
+    return Object.keys(object).map((value) => {
+      let objectValue = this.isPrimitive(object[value]) ? object[value] : JSON.stringify(object[value]);
+      return `${value}=${objectValue}`;
+    }).join('&');
+  }
+
+}
