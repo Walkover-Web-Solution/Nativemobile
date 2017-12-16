@@ -8,7 +8,7 @@
 android {
   defaultConfig {
     generatedDensities = []
-    applicationId = "org.nativescript.mobile"
+    applicationId = "org.walkover.giddh"
   }
   aaptOptions {
     additionalParameters "--no-version-vectors"

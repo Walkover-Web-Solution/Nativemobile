@@ -9,7 +9,7 @@
         <Button text="Login Success" *ngIf="(loginProcess$ | async)" class="btn btn-primary"></Button>
         <StackLayout horizontalAlignment="center" orientation="horizontal">
           <Label text="Forgot Password?" [nsRouterLink]="['/login/forgot-password']" pageTransition="slideLeft" class="font"></Label>
-          <Label text="|"></Label>
+          <Label text=" |"></Label>
           <Label text="  Login wiht OTP" [nsRouterLink]="['/login/login-with-otp']" pageTransition="slideLeft" class="font"></Label>
         </StackLayout>
       </StackLayout>
