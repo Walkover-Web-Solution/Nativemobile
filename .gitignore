@@ -83,3 +83,6 @@ src/assets/.htaccess
 app/App_Resources/
 platforms/
 hooks/
+app/models/**/*.js
+app/services/**/*.js
+app/**/*.js

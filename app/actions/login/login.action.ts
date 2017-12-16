@@ -12,7 +12,7 @@ export class LoginActions {
   constructor(private action$: Actions) {
 
   }
-  public login(value: string): CustomActions {
+  public login(): CustomActions {
     return {
       type: LoginConstants.LOGIN_SUCCESS
     }

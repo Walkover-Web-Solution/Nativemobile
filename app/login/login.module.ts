@@ -6,6 +6,7 @@ import { NativeScriptRouterModule } from 'nativescript-angular/router';
 
 // app
 import { COMPONENTS, LoginComponent, LoginWithOtpComponent, ForgotComponent } from './components';
+import { CommonModule } from '@angular/common';
 
 export const routes: Routes = [
   {
@@ -23,7 +24,7 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [NativeScriptRouterModule, NativeScriptRouterModule.forChild(routes)],
+  imports: [CommonModule, NativeScriptRouterModule, NativeScriptRouterModule.forChild(routes)],
   declarations: [...COMPONENTS],
 
   schemas: [NO_ERRORS_SCHEMA],
