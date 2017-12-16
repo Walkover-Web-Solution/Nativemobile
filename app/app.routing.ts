@@ -16,6 +16,10 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: './login/login.module#LoginModule'
+  },
+  {
+    path: 'home',
+    loadChildren: './home/home.module#HomeModule'
   }
 ];
 

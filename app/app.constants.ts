@@ -2,7 +2,6 @@
 // tslint:disable-next-line:no-var-keyword
 // tslint:disable-next-line:no-var-requires
 var config = require('./config/config');
-
 export const Configuration = {
   AppUrl: config.AppUrl,
   ApiUrl: config.ApiUrl,

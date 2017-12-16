@@ -9,27 +9,25 @@ import { AuthKeyResponse, LinkedInRequestModel, SignupWithMobile, UserDetails, V
 import { ErrorHandler } from './catchManager/catchmanger';
 import { Headers, Http } from '@angular/http';
 import { GeneralService } from './general.service';
+import { SignUpWithPassword, LoginWithPassword } from '../models/api-models/Login';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
 
+let config = require('../config/config');
 @Injectable()
 export class AuthenticationService {
-
   constructor(private errorHandler: ErrorHandler,
     public _Http: Http,
     public _http: HttpWrapperService,
     public _router: Router,
     private _generalService: GeneralService,
     @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
-
   }
-
   public SignupWithEmail(email: string): Observable<BaseResponse<string, string>> {
     return this._http.post(this.config.apiUrl + LOGIN_API.SignupWithEmail, { email }).map((res) => {
       let data: BaseResponse<string, string> = res.json();
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, email));
   }
-
   public VerifyEmail(model: VerifyEmailModel): Observable<BaseResponse<VerifyEmailResponseModel, VerifyEmailModel>> {
     return this._http.post(this.config.apiUrl + LOGIN_API.VerifyEmail, model).map((res) => {
       let data: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = res.json();
@@ -38,7 +36,6 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, VerifyEmailModel>(e, model));
   }
-
   public SignupWithMobile(model: SignupWithMobile): Observable<BaseResponse<string, SignupWithMobile>> {
     return this._http.post(this.config.apiUrl + LOGIN_API.SignupWithMobile, model).map((res) => {
       let data: BaseResponse<string, SignupWithMobile> = res.json();
@@ -46,7 +43,6 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, SignupWithMobile>(e, model));
   }
-
   public VerifyOTP(modele: VerifyMobileModel): Observable<BaseResponse<VerifyMobileResponseModel, VerifyMobileModel>> {
     return this._http.post(this.config.apiUrl + LOGIN_API.VerifyOTP, modele).map((res) => {
       let data: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = res.json();
@@ -55,7 +51,22 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyMobileResponseModel, VerifyMobileModel>(e, modele));
   }
-
+  public SignupWithPassword(modele: SignUpWithPassword): Observable<BaseResponse<VerifyMobileResponseModel, SignUpWithPassword>> {
+    return this._http.post(config.config.ApiUrl + LOGIN_API.SignupWithPassword, modele).map((res) => {
+      let data: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = res.json();
+      data.request = modele;
+      // console.log(data);
+      return data;
+    }).catch((e) => this.errorHandler.HandleCatch<VerifyMobileResponseModel, SignUpWithPassword>(e, modele));
+  }
+  public LoginWithPassword(modele: LoginWithPassword): Observable<BaseResponse<VerifyMobileResponseModel, LoginWithPassword>> {
+    return this._http.post(config.config.ApiUrl + LOGIN_API.LoginWithPassword, modele).map((res) => {
+      let data: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = res.json();
+      data.request = modele;
+      // console.log(data);
+      return data;
+    }).catch((e) => this.errorHandler.HandleCatch<VerifyMobileResponseModel, LoginWithPassword>(e, modele));
+  }
   public VerifyNumber(modele: SignupWithMobile): Observable<BaseResponse<string, SignupWithMobile>> {
     return this._http.post(this.config.apiUrl + LOGIN_API.VerifyNumber, modele).map((res) => {
       let data: BaseResponse<string, SignupWithMobile> = res.json();
@@ -63,7 +74,6 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, SignupWithMobile>(e, modele));
   }
-
   public VerifyNumberOTP(modele: VerifyMobileModel): Observable<BaseResponse<string, VerifyMobileModel>> {
     return this._http.put(this.config.apiUrl + LOGIN_API.VerifyNumber, modele).map((res) => {
       let data: BaseResponse<string, VerifyMobileModel> = res.json();
@@ -71,7 +81,6 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, VerifyMobileModel>(e));
   }
-
   public ClearSession(): Observable<BaseResponse<string, string>> {
     let userName = this._generalService.user.uniqueName;
     return this._http.delete(this.config.apiUrl + LOGIN_API.CLEAR_SESSION.replace(':userUniqueName', encodeURIComponent(userName))).map((res) => {
@@ -79,7 +88,6 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, string>(e));
   }
-
   public LoginWithGoogle(token: string) {
     let args: any = {};
     args.headers = new Headers();
@@ -92,7 +100,6 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, string>(e, args));
   }
-
   public LoginWithLinkedin(model: LinkedInRequestModel) {
     let args: any = {};
     args.headers = new Headers();
@@ -107,10 +114,8 @@ export class AuthenticationService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, LinkedInRequestModel>(e, args));
   }
-
   public SetSettings(model): Observable<BaseResponse<string, string>> {
     let uniqueName = this._generalService.user.uniqueName;
-
     return this._http.put(this.config.apiUrl + LOGIN_API.SET_SETTINGS
       .replace(':userUniqueName', encodeURIComponent(uniqueName)), model).map((res) => {
         let data: BaseResponse<string, string> = res.json();
@@ -120,10 +125,8 @@ export class AuthenticationService {
         return data;
       }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, ''));
   }
-
   public FetchUserDetails(): Observable<BaseResponse<UserDetails, string>> {
     let sessionId = this._generalService.user.uniqueName;
-
     return this._http.get(this.config.apiUrl + LOGIN_API.FETCH_DETAILS
       .replace(':sessionId', sessionId)).map((res) => {
         let data: BaseResponse<UserDetails, string> = res.json();
@@ -133,10 +136,8 @@ export class AuthenticationService {
         return data;
       }).catch((e) => this.errorHandler.HandleCatch<UserDetails, string>(e, ''));
   }
-
   public GetSubScribedCompanies(): Observable<BaseResponse<string, string>> {
     let userUniqueName = this._generalService.user.uniqueName;
-
     return this._http.get(this.config.apiUrl + LOGIN_API.SUBSCRIBED_COMPANIES
       .replace(':userUniqueName', userUniqueName)).map((res) => {
         let data: BaseResponse<string, string> = res.json();
@@ -146,10 +147,8 @@ export class AuthenticationService {
         return data;
       }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, ''));
   }
-
   public AddBalance(model): Observable<BaseResponse<string, string>> {
     let uniqueName = this._generalService.user.uniqueName;
-
     return this._http.get(this.config.apiUrl + LOGIN_API.ADD_BALANCE
       .replace(':uniqueName', uniqueName)).map((res) => {
         let data: BaseResponse<string, string> = res.json();
@@ -159,10 +158,8 @@ export class AuthenticationService {
         return data;
       }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, ''));
   }
-
   public GetAuthKey(): Observable<BaseResponse<AuthKeyResponse, string>> {
     let uniqueName = this._generalService.user.uniqueName;
-
     return this._http.get(this.config.apiUrl + LOGIN_API.GET_AUTH_KEY
       .replace(':uniqueName', uniqueName)).map((res) => {
         let data: BaseResponse<AuthKeyResponse, string> = res.json();
@@ -172,10 +169,8 @@ export class AuthenticationService {
         return data;
       }).catch((e) => this.errorHandler.HandleCatch<AuthKeyResponse, string>(e, ''));
   }
-
   public RegenerateAuthKey(): Observable<BaseResponse<AuthKeyResponse, string>> {
     let userEmail = this._generalService.user.email;
-
     return this._http.put(this.config.apiUrl + LOGIN_API.REGENERATE_AUTH_KEY
       .replace(':userEmail', userEmail), {}).map((res) => {
         let data: BaseResponse<AuthKeyResponse, string> = res.json();

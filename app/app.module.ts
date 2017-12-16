@@ -27,7 +27,8 @@ import { reducers } from "./store";
 import { ActionModule } from "./actions/actions.module";
 import { AppRoutingModule } from "./app.routing";
 import 'nativescript-ngx-fonticon';
-
+var config = require('./config/config');
+// console.log('jkooiihuihuihui', JSON.stringify(config));
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -48,7 +49,7 @@ import 'nativescript-ngx-fonticon';
     },
     {
       provide: ServiceConfig,
-      useValue: { apiUrl: Configuration.ApiUrl, appUrl: Configuration.AppUrl }
+      useValue: { apiUrl: config.ApiUrl, appUrl: config.AppUrl }
     }
   ],
   bootstrap: [AppComponent]

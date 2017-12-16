@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
 import { Observable } from 'rxjs/Observable';
 import { LoginActions } from '../../../actions/login/login.action';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { RouterExtensions } from 'nativescript-angular/router';
 
 @Component({
   selector: 'ns-login',
@@ -14,18 +16,31 @@ import { LoginActions } from '../../../actions/login/login.action';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginProcess$: Observable<boolean>;
-  constructor(private store: Store<AppState>, private _loginActions: LoginActions) {
-    this.loginProcess$ = this.store.select(p => p.login.isLogeedInProcess);
-   }
+  public loginSuccess$: Observable<boolean>;
+  public loginWithPasswordForm: FormGroup;
+  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions,) {
+    this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
+    this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
+  }
 
   public ngOnInit(): void {
-    // this.items = this.itemService.getItems();
+
+    this.loginWithPasswordForm = this._fb.group({
+      uniqueKey: ['', [Validators.required]],
+      password: ['', [Validators.required]],
+    });
+
+    this.loginSuccess$.subscribe(s => {
+      if (s) {
+        this.routerExtensions.navigate(['/home']);
+      }
+    })
   }
   public ngOnDestroy(): void {
-    console.log('login destroyed');
+    // this.lo
   }
 
-  public onLogin() {
-    this.store.dispatch(this._loginActions.login());
+  public login() {
+    this.store.dispatch(this._loginActions.loginWithPassword(this.loginWithPasswordForm.value));
   }
 }

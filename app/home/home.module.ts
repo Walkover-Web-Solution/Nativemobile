@@ -7,27 +7,15 @@ import { NativeScriptRouterModule } from 'nativescript-angular/router';
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
 
 // app
-import { COMPONENTS, LoginComponent, LoginWithOtpComponent, ForgotComponent, SignUpComponent } from './components';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HomeComponent } from './home.component';
 
 export const routes: Routes = [
   {
     path: '',
-    component: LoginComponent
+    component: HomeComponent
   },
-  {
-    path: 'login-with-otp',
-    component: LoginWithOtpComponent
-  },
-  {
-    path: 'forgot-password',
-    component: ForgotComponent
-  },
-  {
-    path: 'signup',
-    component: SignUpComponent
-  }
 ];
 
 @NgModule({
@@ -40,8 +28,8 @@ export const routes: Routes = [
     FormsModule,
     ReactiveFormsModule
   ],
-  declarations: [...COMPONENTS],
+  declarations: [HomeComponent],
 
   schemas: [NO_ERRORS_SCHEMA],
 })
-export class LoginModule { }
+export class HomeModule { }
