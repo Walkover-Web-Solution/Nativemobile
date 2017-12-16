@@ -1,7 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var COMMON = 'company/:companyUniqueName';
-exports.SETTINGS_PROFILE_API = {
-    GET: COMMON,
-};
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2V0dGluZ3MucHJvZmlsZS5hcGkuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyJzZXR0aW5ncy5wcm9maWxlLmFwaS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOztBQUNBLElBQU0sTUFBTSxHQUFHLDRCQUE0QixDQUFDO0FBRS9CLFFBQUEsb0JBQW9CLEdBQUc7SUFDbEMsR0FBRyxFQUFFLE1BQU07Q0FDWixDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiXG5jb25zdCBDT01NT04gPSAnY29tcGFueS86Y29tcGFueVVuaXF1ZU5hbWUnO1xuXG5leHBvcnQgY29uc3QgU0VUVElOR1NfUFJPRklMRV9BUEkgPSB7XG4gIEdFVDogQ09NTU9OLFxufTtcbiJdfQ==

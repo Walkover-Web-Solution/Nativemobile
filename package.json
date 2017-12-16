@@ -47,9 +47,15 @@
     "nativescript-dev-sass": "^1.0.0-rc.2",
     "nativescript-dev-typescript": "^0.5.0",
     "tns-platform-declarations": "^3.2.0",
-    "typescript": "~2.3.1"
+    "typescript": "~2.3.1",
+    "rimraf": "2.6.2"
   },
   "scripts": {
-    "start": "cross-env BUILD_PROFILE=dev tns debug android --chrome"
+    "start": "cross-env BUILD_PROFILE=dev tns debug android --chrome",
+    "clean": "npm run js.clean && npm run css",
+    "css.clean": "find app -type f -iname '*.css' -and ! -iname 'font-awesome.min.css' -delete",
+    "css.generate": "node -e 'require(\"./node_modules/nativescript-dev-sass/lib/converter.js\").convert(console, \".\");'",
+    "css": "npm run css.clean && npm run css.generate",
+    "js.clean": "npx rimraf -- app/**/*.js"
   }
 }

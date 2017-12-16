@@ -1,6 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SEARCH_API = {
-    SEARCH: 'company/:companyUniqueName/groups/:groupName/closing-balance',
-};
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2VhcmNoLmFwaS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbInNlYXJjaC5hcGkudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFDYSxRQUFBLFVBQVUsR0FBRztJQUN4QixNQUFNLEVBQUUsOERBQThEO0NBQ3ZFLENBQUMiLCJzb3VyY2VzQ29udGVudCI6WyJcbmV4cG9ydCBjb25zdCBTRUFSQ0hfQVBJID0ge1xuICBTRUFSQ0g6ICdjb21wYW55Lzpjb21wYW55VW5pcXVlTmFtZS9ncm91cHMvOmdyb3VwTmFtZS9jbG9zaW5nLWJhbGFuY2UnLCAvLyBnZXQgY2FsbFxufTtcbiJdfQ==

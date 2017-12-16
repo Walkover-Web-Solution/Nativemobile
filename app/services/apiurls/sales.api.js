@@ -1,7 +1,0 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var URL = 'v2/company/:companyUniqueName/accounts/:accountUniqueName/';
-exports.SALES_API_V2 = {
-    GENERATE_SALES: URL + 'invoices/generate-sales',
-};
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2FsZXMuYXBpLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsic2FsZXMuYXBpLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBQ0EsSUFBSSxHQUFHLEdBQUcsNERBQTRELENBQUM7QUFFMUQsUUFBQSxZQUFZLEdBQUc7SUFDMUIsY0FBYyxFQUFFLEdBQUcsR0FBRyx5QkFBeUI7Q0FDaEQsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbIlxubGV0IFVSTCA9ICd2Mi9jb21wYW55Lzpjb21wYW55VW5pcXVlTmFtZS9hY2NvdW50cy86YWNjb3VudFVuaXF1ZU5hbWUvJztcblxuZXhwb3J0IGNvbnN0IFNBTEVTX0FQSV9WMiA9IHtcbiAgR0VORVJBVEVfU0FMRVM6IFVSTCArICdpbnZvaWNlcy9nZW5lcmF0ZS1zYWxlcycsXG59O1xuIl19

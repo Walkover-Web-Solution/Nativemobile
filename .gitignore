@@ -80,9 +80,10 @@ POSTMAN/
 yarn.lock
 tsconfig.main.temp.json
 src/assets/.htaccess
-app/App_Resources/
+
 platforms/
 hooks/
 app/models/**/*.js
 app/services/**/*.js
 app/**/*.js
+app.component.js
