@@ -17,7 +17,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/debounce';
 
 import { NgModule, NgModuleFactoryLoader } from "@angular/core";
-import { StoreModule } from '@ngrx/store';
+import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
 
 import { AppComponent } from "./app.component";
 import { ServiceModule } from "./services/service.module";
@@ -27,8 +27,9 @@ import { reducers } from "./store";
 import { ActionModule } from "./actions/actions.module";
 import { AppRoutingModule } from "./app.routing";
 import 'nativescript-ngx-fonticon';
+
+
 var config = require('./config/config');
-// console.log('jkooiihuihuihui', JSON.stringify(config));
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -37,7 +38,7 @@ var config = require('./config/config');
     NativeScriptRouterModule,
     AppRoutingModule,
     NativeScriptDevToolsMonitors,
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot(reducers, {  }),
     StoreDevtoolsModule.instrument(),
     ServiceModule.forRoot(),
     ActionModule.forRoot()

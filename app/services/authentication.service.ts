@@ -23,13 +23,13 @@ export class AuthenticationService {
     @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
   }
   public SignupWithEmail(email: string): Observable<BaseResponse<string, string>> {
-    return this._http.post(this.config.apiUrl + LOGIN_API.SignupWithEmail, { email }).map((res) => {
+    return this._http.post(config.config.ApiUrl + LOGIN_API.SignupWithEmail, { email }).map((res) => {
       let data: BaseResponse<string, string> = res.json();
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, email));
   }
   public VerifyEmail(model: VerifyEmailModel): Observable<BaseResponse<VerifyEmailResponseModel, VerifyEmailModel>> {
-    return this._http.post(this.config.apiUrl + LOGIN_API.VerifyEmail, model).map((res) => {
+    return this._http.post(config.config.ApiUrl + LOGIN_API.VerifyEmail, model).map((res) => {
       let data: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = res.json();
       data.request = model;
       // console.log(data);
@@ -37,14 +37,14 @@ export class AuthenticationService {
     }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, VerifyEmailModel>(e, model));
   }
   public SignupWithMobile(model: SignupWithMobile): Observable<BaseResponse<string, SignupWithMobile>> {
-    return this._http.post(this.config.apiUrl + LOGIN_API.SignupWithMobile, model).map((res) => {
+    return this._http.post(config.config.ApiUrl + LOGIN_API.SignupWithMobile, model).map((res) => {
       let data: BaseResponse<string, SignupWithMobile> = res.json();
       data.request = model;
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, SignupWithMobile>(e, model));
   }
   public VerifyOTP(modele: VerifyMobileModel): Observable<BaseResponse<VerifyMobileResponseModel, VerifyMobileModel>> {
-    return this._http.post(this.config.apiUrl + LOGIN_API.VerifyOTP, modele).map((res) => {
+    return this._http.post(config.config.ApiUrl + LOGIN_API.VerifyOTP, modele).map((res) => {
       let data: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = res.json();
       data.request = modele;
       // console.log(data);

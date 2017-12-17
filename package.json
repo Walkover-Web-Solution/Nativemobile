@@ -52,7 +52,7 @@
     "rimraf": "2.6.2"
   },
   "scripts": {
-    "start": "cross-env BUILD_PROFILE=dev tns debug android --chrome",
+    "start": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "clean": "npm run js.clean && npm run css",
     "css.clean": "find app -type f -iname '*.css' -and ! -iname 'font-awesome.min.css' -delete",
     "css.generate": "node -e 'require(\"./node_modules/nativescript-dev-sass/lib/converter.js\").convert(console, \".\");'",

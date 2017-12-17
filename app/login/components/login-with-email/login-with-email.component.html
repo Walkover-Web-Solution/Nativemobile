@@ -4,17 +4,17 @@
     <StackLayout row="0" col="0" class="page">
       <Image id='logo' src="~/assets/image/logo.png" stretch="none" horizontalAlignment="center"></Image>
 
-      <StackLayout class="form" [formGroup]="mobileVerifyForm">
+      <StackLayout class="form" [formGroup]="emailVerifyForm">
 
-        <StackLayout *ngIf="!(isLoginWithMobileSubmited$ | async)">
-          <TextField hint="Mobile No" class="input" formControlName="mobileNumber"></TextField>
-          <Button text="Get Verification Code" [disabled]="mobileVerifyForm.invalid" (tap)="getOtp()" class="btn btn-primary"></Button>
-          <!-- <Button text="Resend" [disabled]="mobileVerifyForm.invalid" (tap)="getOtp()" *ngIf="!(isLoginWithMobileSubmited$ | async)" class="btn btn-primary"></Button> -->
+        <StackLayout *ngIf="!(isLoginWithEmailSubmited$ | async)">
+          <TextField hint="Email Id" class="input" formControlName="email"></TextField>
+          <Button text="Submit" [disabled]="emailVerifyForm.invalid" (tap)="loginWithEmail()" class="btn btn-primary"></Button>
+          <!-- <Button text="Resend" [disabled]="emailVerifyForm.invalid" (tap)="getOtp()" *ngIf="!(isLoginWithEmailSubmited$ | async)" class="btn btn-primary"></Button> -->
         </StackLayout>
 
-        <StackLayout *ngIf="(isLoginWithMobileSubmited$ | async)">
-          <TextField hint="Otp" class="input" formControlName="otp"></TextField>
-          <Button text="Login" [disabled]="mobileVerifyForm.invalid" (tap)="verifyCode()" class="btn btn-primary"></Button>
+        <StackLayout *ngIf="(isLoginWithEmailSubmited$ | async)">
+          <TextField hint="Otp" class="input" formControlName="token"></TextField>
+          <Button text="Last step to go" [disabled]="emailVerifyForm.invalid" (tap)="verifyEmail()" class="btn btn-primary"></Button>
         </StackLayout>
 
         <StackLayout horizontalAlignment="center" orientation="horizontal">

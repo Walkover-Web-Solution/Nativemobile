@@ -1,6 +1,6 @@
 import { CustomActions } from '../customActions';
 import { LoginConstants } from '../../actions/login/login.const';
-import { VerifyEmailResponseModel, VerifyMobileResponseModel } from '../../models/api-models/loginModels';
+import { VerifyEmailResponseModel, VerifyMobileResponseModel, VerifyMobileModel } from '../../models/api-models/loginModels';
 import { LoginWithPassword, SignUpWithPassword } from '../../models/api-models/Login';
 import { BaseResponse } from '../../models/api-models/BaseResponse';
 
@@ -9,6 +9,14 @@ export interface LoginState {
   isSignUpSuccess: boolean;
   isLoginWithPasswordInProcess: boolean;
   isLoginWithPasswordSuccess: boolean;
+  isLoginWithMobileInProcess: boolean;
+  isLoginWithMobileSubmited: boolean;
+  isVerifyMobileInProcess: boolean;
+  isVerifyMobileSuccess: boolean;
+  isLoginWithEmailInProcess: boolean;
+  isLoginWithEmailSubmited: boolean;
+  isVerifyEmailInProcess: boolean;
+  isVerifyEmailSuccess: boolean;
   user: VerifyEmailResponseModel;
 }
 
@@ -17,7 +25,15 @@ const initialState: LoginState = {
   isSignUpSuccess: false,
   isLoginWithPasswordInProcess: false,
   isLoginWithPasswordSuccess: false,
-  user: null
+  user: null,
+  isLoginWithMobileInProcess: false,
+  isLoginWithMobileSubmited: false,
+  isVerifyMobileInProcess: false,
+  isVerifyMobileSuccess: false,
+  isLoginWithEmailInProcess: false,
+  isLoginWithEmailSubmited: false,
+  isVerifyEmailInProcess: false,
+  isVerifyEmailSuccess: false
 }
 
 export function LoginReducer(state: LoginState = initialState, action: CustomActions): LoginState {
@@ -64,6 +80,89 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
         isSignUpSuccess: false
       }
     }
+
+    case LoginConstants.SIGNUP_WITH_MOBILE_REQUEST:
+      return {
+        ...state,
+        isLoginWithMobileInProcess: true
+      };
+    case LoginConstants.SIGNUP_WITH_MOBILE_RESPONCE:
+      if (action.payload.status === 'success') {
+        return {
+          ...state,
+          isLoginWithMobileSubmited: true,
+          isLoginWithMobileInProcess: false
+        };
+      }
+      return {
+        ...state,
+        isLoginWithMobileSubmited: false,
+        isLoginWithMobileInProcess: false
+      };
+
+    case LoginConstants.VERIFY_MOBILE_REQUEST:
+      return {
+        ...state,
+        isVerifyMobileInProcess: true
+      };
+
+    case LoginConstants.VERIFY_MOBILE_RESPONCE: {
+      let data1: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
+      if (data1.status === 'success') {
+        return {
+          ...state,
+          isVerifyMobileInProcess: false,
+          isVerifyMobileSuccess: true,
+        };
+      } else {
+        return {
+          ...state,
+          isVerifyMobileInProcess: false,
+          isVerifyMobileSuccess: false
+        };
+      }
+    }
+
+    case LoginConstants.SIGNUP_WITH_EMAIL_REQUEST:
+      return {
+        ...state,
+        isLoginWithEmailInProcess: true
+      };
+    case LoginConstants.SIGNUP_WITH_EMAIL_RESPONCE:
+      if (action.payload.status === 'success') {
+        return {
+          ...state,
+          isLoginWithEmailSubmited: true,
+          isLoginWithEmailInProcess: false
+        };
+      }
+      return {
+        ...state,
+        isLoginWithEmailSubmited: false,
+        isLoginWithEmailInProcess: false
+      };
+
+    case LoginConstants.VERIFY_EMAIL_REQUEST:
+      return {
+        ...state,
+        isVerifyEmailInProcess: true
+      };
+
+    case LoginConstants.VERIFY_EMAIL_RESPONCE:
+      let data1: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
+      if (data1.status === 'success') {
+        return {
+          ...state,
+          isVerifyEmailInProcess: false,
+          isVerifyEmailSuccess: true,
+        };
+      } else {
+        return {
+          ...state,
+          isVerifyEmailInProcess: false,
+          isVerifyMobileSuccess: false
+        };
+      }
     case LoginConstants.RESET_LOGIN_STATE:
       return initialState;
 

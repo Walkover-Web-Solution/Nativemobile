@@ -3,6 +3,12 @@ import { topmost, Frame } from 'ui/frame';
 import { Page, Color } from 'ui/page';
 import { isIOS } from 'platform';
 import { RouterExtensions } from 'nativescript-angular/router';
+import { SignupWithMobile, VerifyMobileModel } from '../../../models/api-models/loginModels';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../store';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Observable } from 'rxjs/Observable';
+import { LoginActions } from '../../../actions/login/login.action';
 // import { Color } from 'tns-core-modules/ui/page/page';
 
 @Component({
@@ -12,37 +18,57 @@ import { RouterExtensions } from 'nativescript-angular/router';
   styleUrls: ['./login-with-otp.component.scss']
 })
 export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
-  constructor(private routerExtensions: RouterExtensions, private page: Page, private frame: Frame) { }
+  public mobileVerifyForm: FormGroup;
+  public isLoginWithMobileSubmited$: Observable<boolean>;
+  public isVerifyMobileSuccess$: Observable<boolean>;
+  public isLoginWithMobileInProcess$: Observable<boolean>;
+  constructor(private routerExtensions: RouterExtensions, private page: Page, private frame: Frame, private store: Store<AppState>,
+    private _fb: FormBuilder, private _loginActions: LoginActions) {
+    this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
+    this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
+    this.isLoginWithMobileInProcess$ = this.store.select(s => s.login.isLoginWithMobileInProcess);
+  }
 
   ngOnInit(): void {
-    console.log('login-with-otp');
-    // this.items = this.itemService.getItems();
-    // this.page.backgroundColor = new Color(1, 0, 169, 157);
-    // this.page.backgroundSpanUnderStatusBar = true;
-    // this.page.actionBarHidden = true;
+    this.mobileVerifyForm = this._fb.group({
+      country: ['91', [Validators.required]],
+      mobileNumber: ['', [Validators.required]],
+      otp: ['', [Validators.required]],
+    });
   }
   ngAfterViewInit() {
     // this.items = this.itemService.getItems();
     this.page.backgroundColor = new Color(1, 0, 169, 157);
     this.page.backgroundSpanUnderStatusBar = true;
     this.page.actionBarHidden = true;
-    // this.page.actionBar.backgroundColor = new Color('#00a99d');
-    // this.page.backgroundSpanUnderStatusBar = true;
-    // if (this.page.ios) {
-    //   const navigationBar = (this.page.ios.controller || this.page.ios.navigationController).navigationBar;
-    //   navigationBar.setBackgroundImageForBarMetrics(UIImage.new(), UIBarMetrics.Default);
-    //   navigationBar.shadowImage = UIImage.new();
-    //   navigationBar.translucent = false;
-    //   navigationBar.barTintColor = UIColor.blueColor;
-    //   navigationBar.tintColor = UIColor.redColor;
-    // }
-  }
-  loaded() {
+
+    this.isVerifyMobileSuccess$.subscribe(s => {
+      if (s) {
+        this.routerExtensions.navigate(['/home']);
+      }
+    })
   }
   ngOnDestroy(): void {
     console.log('login-with-otp destroyed');
   }
   backToLogin() {
     this.routerExtensions.backToPreviousPage();
+  }
+
+  public getOtp() {
+    let mobileVerifyForm = this.mobileVerifyForm.value;
+    let data: SignupWithMobile = new SignupWithMobile();
+    data.mobileNumber = mobileVerifyForm.mobileNumber;
+    data.countryCode = Number(mobileVerifyForm.country);
+    this.store.dispatch(this._loginActions.signupWithMobileRequest(data));
+  }
+
+  public verifyCode() {
+    let data = new VerifyMobileModel();
+    let mobileVerifyForm = this.mobileVerifyForm.value;
+    data.countryCode = Number(mobileVerifyForm.country);
+    data.mobileNumber = mobileVerifyForm.mobileNumber;;
+    data.oneTimePassword = mobileVerifyForm.otp;;
+    this.store.dispatch(this._loginActions.verifyMobileRequest(data));
   }
 }

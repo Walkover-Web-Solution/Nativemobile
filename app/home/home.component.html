@@ -1,3 +1,3 @@
 <DockLayout width="210" height="210" backgroundColor="lightgray" stretchLastChild="true">
-  <Label text="Welcome To Home"></Label>
+  <Label text="Welcome To Home {{ (userStream$ | async)?.user?.name }}"></Label>
 </DockLayout>
