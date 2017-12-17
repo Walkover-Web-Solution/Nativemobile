@@ -84,6 +84,7 @@ export class LoginActions {
     .ofType(LoginConstants.SIGNUP_WITH_EMAIL_REQUEST)
     .switchMap((action: CustomActions) => this._authService.SignupWithEmail(action.payload))
     .map(response => {
+      debugger;
       if (response.status === 'success') {
         return this.signupWithEmailResponce(response);
       } else {
@@ -103,6 +104,25 @@ export class LoginActions {
       if (res.status === 'success') {
         dialogs.alert('login success');
         return this.verifyEmailResponce(res);
+      } else {
+        dialogs.alert('login error');
+      }
+      return {
+        type: ''
+      }
+    });
+
+    @Effect()
+  public verifyTwoWayAuth$: Observable<CustomActions> = this.actions$
+    .ofType(LoginConstants.VERIFY_TWOWAYAUTH_REQUEST)
+    .switchMap((action: CustomActions) =>
+      this._authService.VerifyOTP(action.payload as VerifyMobileModel)
+    )
+    .map(response => {
+      let res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
+      if (res.status === 'success') {
+        dialogs.alert('login success');
+        return this.verifyTwoWayAuthResponse(res);
       } else {
         dialogs.alert('login error');
       }
@@ -195,6 +215,20 @@ export class LoginActions {
   public verifyEmailResponce(value: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel>): CustomActions {
     return {
       type: LoginConstants.VERIFY_EMAIL_RESPONCE,
+      payload: value
+    };
+  }
+
+  public verifyTwoWayAuthRequest(value: VerifyMobileModel): CustomActions {
+    return {
+      type: LoginConstants.VERIFY_TWOWAYAUTH_REQUEST,
+      payload: value
+    };
+  }
+
+  public verifyTwoWayAuthResponse(value: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel>): CustomActions {
+    return {
+      type: LoginConstants.VERIFY_TWOWAYAUTH_RESPONSE,
       payload: value
     };
   }

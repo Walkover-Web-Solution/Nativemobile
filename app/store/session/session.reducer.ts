@@ -50,6 +50,16 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
         });
       }
     }
+
+    case LoginConstants.VERIFY_TWOWAYAUTH_RESPONSE: {
+      let data1: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
+      if (data1.status === 'success') {
+        return Object.assign({}, state, {
+          user: data1.body
+        });
+      }
+      return state;
+    }
     default:
       return state;
   }

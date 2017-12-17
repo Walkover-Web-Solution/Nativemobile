@@ -17,6 +17,8 @@ export interface LoginState {
   isLoginWithEmailSubmited: boolean;
   isVerifyEmailInProcess: boolean;
   isVerifyEmailSuccess: boolean;
+  isTwoWayAuthInProcess: boolean;
+  isTwoWayAuthSuccess: boolean;
   user: VerifyEmailResponseModel;
 }
 
@@ -33,7 +35,9 @@ const initialState: LoginState = {
   isLoginWithEmailInProcess: false,
   isLoginWithEmailSubmited: false,
   isVerifyEmailInProcess: false,
-  isVerifyEmailSuccess: false
+  isVerifyEmailSuccess: false,
+  isTwoWayAuthInProcess: false,
+  isTwoWayAuthSuccess: false
 }
 
 export function LoginReducer(state: LoginState = initialState, action: CustomActions): LoginState {
@@ -121,6 +125,27 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
           isVerifyMobileSuccess: false
         };
       }
+    }
+
+    case LoginConstants.VERIFY_TWOWAYAUTH_REQUEST: {
+      return {
+        ...state,
+        isTwoWayAuthInProcess: true
+      };
+    }
+    case LoginConstants.VERIFY_TWOWAYAUTH_RESPONSE: {
+      if (action.payload.status === 'success') {
+        return {
+          ...state,
+          isTwoWayAuthInProcess: false,
+          isTwoWayAuthSuccess: true
+        };
+      }
+      return {
+        ...state,
+        isTwoWayAuthInProcess: false,
+        isTwoWayAuthSuccess: false
+      };
     }
 
     case LoginConstants.SIGNUP_WITH_EMAIL_REQUEST:

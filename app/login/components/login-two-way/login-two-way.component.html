@@ -1,0 +1,19 @@
+<GridLayout class="login" rows="*" columns="*">
+  <GridLayout rows="* ,auto" columns="*">
+
+    <StackLayout row="0" col="0" class="page">
+      <Image id='logo' src="~/assets/image/logo.png" stretch="none" horizontalAlignment="center"></Image>
+
+      <StackLayout class="form" [formGroup]="twoWayOthForm">
+
+        <StackLayout>
+          <TextField hint="Otp" class="input" formControlName="otp"></TextField>
+          <Label text=" We have sent an OTP to your registered mobile number. "></Label>
+          <Button text="Submit" [disabled]="twoWayOthForm.invalid" (tap)="verifyTwoWayCode()" class="btn btn-primary"></Button>
+        </StackLayout>
+
+      </StackLayout>
+    </StackLayout>
+
+  </GridLayout>
+</GridLayout>

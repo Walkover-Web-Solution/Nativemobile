@@ -7,7 +7,7 @@ import { NativeScriptRouterModule } from 'nativescript-angular/router';
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
 
 // app
-import { COMPONENTS, LoginComponent, LoginWithOtpComponent, LoginWithEmailComponent, ForgotComponent, SignUpComponent } from './components';
+import { COMPONENTS, LoginComponent, LoginWithOtpComponent, LoginWithEmailComponent, ForgotComponent, SignUpComponent, LoginTwoWayComponent } from './components';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
@@ -23,6 +23,10 @@ export const routes: Routes = [
   {
     path: 'login-with-email',
     component: LoginWithEmailComponent
+  },
+  {
+    path: 'login-two-way',
+    component: LoginTwoWayComponent
   },
   {
     path: 'forgot-password',
