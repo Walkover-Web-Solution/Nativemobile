@@ -84,7 +84,6 @@ export class LoginActions {
     .ofType(LoginConstants.SIGNUP_WITH_EMAIL_REQUEST)
     .switchMap((action: CustomActions) => this._authService.SignupWithEmail(action.payload))
     .map(response => {
-      debugger;
       if (response.status === 'success') {
         return this.signupWithEmailResponce(response);
       } else {

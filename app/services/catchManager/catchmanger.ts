@@ -30,6 +30,7 @@ export class ErrorHandler {
         data.code = 'Internal Error';
       } else {
         data = r.json();
+        console.log(JSON.stringify(r.json()));
         if (data.code === 'SESSION_EXPIRED_OR_INVALID') {
           // this.store.dispatch({type: 'LoginOut'});
         } else if (data.code === '') {
@@ -68,6 +69,7 @@ export function HandleCatch<TResponce, TRequest>(r: any, request?: any, queryStr
       data.code = 'Internal Error';
     } else {
       data = r.json();
+      console.log(JSON.stringify(r.json()));
       if (data.code === 'SESSION_EXPIRED_OR_INVALID') {
         // this.store.dispatch('LoginOut');
         // this.store.dispatch({type: 'LoginOut'});

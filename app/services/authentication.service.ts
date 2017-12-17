@@ -23,7 +23,9 @@ export class AuthenticationService {
     @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
   }
   public SignupWithEmail(email: string): Observable<BaseResponse<string, string>> {
+    console.log(email);
     return this._http.post(config.config.ApiUrl + LOGIN_API.SignupWithEmail, { email }).map((res) => {
+      console.log(JSON.stringify(res.json));
       let data: BaseResponse<string, string> = res.json();
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, email));
