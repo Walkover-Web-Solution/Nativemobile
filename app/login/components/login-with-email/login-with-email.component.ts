@@ -51,13 +51,13 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
   public loginWithEmail() {
     let emailForm = this.emailVerifyForm;
     console.log('email :' + emailForm.value.email)
-    this.store.dispatch(this._loginActions.signupWithEmailRequest(emailForm.value.email));
+    this.store.dispatch(this._loginActions.signupWithEmailRequest(emailForm.value.email.toLowerCase()));
   }
 
   public verifyEmail() {
     let emailForm = this.emailVerifyForm;
     let data = new VerifyEmailModel();
-    data.email = emailForm.value.email;
+    data.email = emailForm.value.email.toLowerCase();
     data.verificationCode = emailForm.value.token;
     this.store.dispatch(this._loginActions.verifyEmailRequest(data));
   }

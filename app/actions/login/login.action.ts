@@ -87,7 +87,7 @@ export class LoginActions {
       if (response.status === 'success') {
         return this.signupWithEmailResponce(response);
       } else {
-        dialogs.alert('something went wrong please try again');
+        dialogs.alert(response.message || 'something went wrong please try again');
         return { type: '' }
       }
     });
