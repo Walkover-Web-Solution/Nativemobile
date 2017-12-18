@@ -27,9 +27,15 @@ import { reducers } from "./store";
 import { ActionModule } from "./actions/actions.module";
 import { AppRoutingModule } from "./app.routing";
 import 'nativescript-ngx-fonticon';
+import { localStorageSync } from "./store/middleware/rehydrateAppState";
+import { NeedsAuthentication } from "./decorators/needsAuthentication";
 
+export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
+  return localStorageSync({ keys: ['session'], rehydrate: true })(reducer);
+}
 
-var config = require('./config/config');
+let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
+let config = require('./config/config');
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -38,12 +44,13 @@ var config = require('./config/config');
     NativeScriptRouterModule,
     AppRoutingModule,
     NativeScriptDevToolsMonitors,
-    StoreModule.forRoot(reducers, {  }),
+    StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument(),
     ServiceModule.forRoot(),
     ActionModule.forRoot()
   ],
   providers: [
+    NeedsAuthentication,
     {
       provide: NgModuleFactoryLoader,
       useClass: NSModuleFactoryLoader

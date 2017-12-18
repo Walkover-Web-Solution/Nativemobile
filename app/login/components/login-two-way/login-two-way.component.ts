@@ -19,7 +19,7 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
   public isTwoWayAuthSuccess$: Observable<boolean>;
   public userDetails$: Observable<VerifyEmailResponseModel>;
   public twoWayOthForm: FormGroup;
-  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions, ) {
+  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions) {
     this.isTwoWayAuthSuccess$ = this.store.select(s => s.login.isTwoWayAuthSuccess);
     this.userDetails$ = this.store.select(p => p.session.user);
   }

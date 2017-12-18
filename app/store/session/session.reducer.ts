@@ -13,6 +13,9 @@ const initialState: SessionState = {
 
 export function SessionReducer(state: SessionState = initialState, action: CustomActions): SessionState {
   switch (action.type) {
+
+    case LoginConstants.SET_INITIAL_SESSION_STATE:
+      return action.payload;
     case LoginConstants.LOGIN_WITH_PASSWORD_RESPONSE: {
       let resp: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = action.payload;
       if (resp.status === 'success') {
@@ -59,6 +62,13 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
         });
       }
       return state;
+    }
+
+    case LoginConstants.LOGOUT: {
+      return {
+        ...state,
+        user: null
+      }
     }
     default:
       return state;

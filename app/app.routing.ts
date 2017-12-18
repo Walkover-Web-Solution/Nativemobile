@@ -4,13 +4,14 @@ import { Routes } from '@angular/router';
 
 // nativescript
 import { NativeScriptRouterModule } from 'nativescript-angular/router';
+import { NeedsAuthentication } from './decorators/needsAuthentication';
 
 // app
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/login',
+    redirectTo: '/home',
     pathMatch: 'full'
   },
   {
@@ -19,11 +20,12 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: './home/home.module#HomeModule'
+    loadChildren: './home/home.module#HomeModule',
+    canActivate: [NeedsAuthentication]
   }
 ];
 
 @NgModule({
-  imports: [NativeScriptRouterModule,NativeScriptRouterModule.forRoot(routes)]
+  imports: [NativeScriptRouterModule, NativeScriptRouterModule.forRoot(routes)]
 })
 export class AppRoutingModule { }

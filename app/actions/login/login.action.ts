@@ -111,7 +111,7 @@ export class LoginActions {
       }
     });
 
-    @Effect()
+  @Effect()
   public verifyTwoWayAuth$: Observable<CustomActions> = this.actions$
     .ofType(LoginConstants.VERIFY_TWOWAYAUTH_REQUEST)
     .switchMap((action: CustomActions) =>
@@ -232,6 +232,18 @@ export class LoginActions {
     };
   }
 
+  public setInitialSessionState(value: any): CustomActions {
+    return {
+      type: LoginConstants.SET_INITIAL_SESSION_STATE,
+      payload: value
+    }
+  }
+
+  public logout(): CustomActions {
+    return {
+      type: LoginConstants.LOGOUT
+    }
+  }
   private validateResponse<TResponse, TRequest>(response: BaseResponse<TResponse, TRequest>, successAction: CustomActions, showToast: boolean = false, errorAction: CustomActions = { type: 'EmptyAction' }): CustomActions {
     if (response.status === 'error') {
       if (showToast) {
