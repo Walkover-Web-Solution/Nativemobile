@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { topmost } from 'ui/frame';
+import { Page, Color } from 'ui/page';
 import { isIOS } from 'platform';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
@@ -19,7 +20,7 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
   public isTwoWayAuthSuccess$: Observable<boolean>;
   public userDetails$: Observable<VerifyEmailResponseModel>;
   public twoWayOthForm: FormGroup;
-  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions) {
+  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions, private page: Page) {
     this.isTwoWayAuthSuccess$ = this.store.select(s => s.login.isTwoWayAuthSuccess);
     this.userDetails$ = this.store.select(p => p.session.user);
   }
@@ -29,6 +30,10 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
     this.twoWayOthForm = this._fb.group({
       otp: ['', Validators.required]
     });
+
+    this.page.backgroundColor = new Color(1, 0, 169, 157);
+    this.page.backgroundSpanUnderStatusBar = true;
+    this.page.actionBarHidden = true;
 
     this.isTwoWayAuthSuccess$.subscribe(s => {
       if (s) {

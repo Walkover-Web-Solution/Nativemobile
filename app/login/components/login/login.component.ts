@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { topmost } from 'ui/frame';
+import { Page, Color } from 'ui/page';
 import { isIOS } from 'platform';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
@@ -18,7 +19,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public loginProcess$: Observable<boolean>;
   public loginSuccess$: Observable<boolean>;
   public loginWithPasswordForm: FormGroup;
-  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions,) {
+  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions, private page: Page) {
     this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
     this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
   }
@@ -29,6 +30,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       uniqueKey: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
+
+    this.page.backgroundColor = new Color(1, 0, 169, 157);
+    this.page.backgroundSpanUnderStatusBar = true;
+    this.page.actionBarHidden = true;
 
     this.loginSuccess$.subscribe(s => {
       if (s) {
