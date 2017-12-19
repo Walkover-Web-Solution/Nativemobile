@@ -59,6 +59,7 @@
   },
   "scripts": {
     "start": "cross-env BUILD_PROFILE=dev tns run ios --chrome",
+    "start:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "debug": "cross-env BUILD_PROFILE=dev tns debug ios --chrome",
     "clean": "npm run js.clean && npm run css",
     "css.clean": "find app -type f -iname '*.css' -and ! -iname 'font-awesome.min.css' -delete",
