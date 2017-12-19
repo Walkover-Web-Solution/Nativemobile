@@ -16,26 +16,31 @@
         "type": "before-prepare",
         "script": "./customHooks/before-prepare/nativescript-environment.js"
       }
-    ]
+    ],
+    "tns-ios": {
+      "version": "3.3.0"
+    }
   },
   "dependencies": {
-    "@angular/common": "~4.2.6",
-    "@angular/compiler": "~4.2.6",
-    "@angular/core": "~4.2.6",
-    "@angular/forms": "~4.2.6",
-    "@angular/http": "~4.2.6",
-    "@angular/platform-browser": "~4.2.6",
-    "@angular/router": "~4.2.6",
+    "@angular/common": "~4.4.1",
+    "@angular/compiler": "~4.4.1",
+    "@angular/core": "~4.4.1",
+    "@angular/forms": "~4.4.1",
+    "@angular/http": "~4.4.1",
+    "@angular/platform-browser": "~4.4.1",
+    "@angular/router": "~4.4.1",
     "@ngrx/effects": "4.1.1",
     "@ngrx/router-store": "4.1.1",
     "@ngrx/store": "4.1.1",
     "@ngrx/store-devtools": "4.1.1",
     "lodash": "^4.17.4",
-    "nativescript-angular": "^4.2.0",
+    "nativescript-angular": "^4.4.1",
     "nativescript-ngx-fonticon": "^3.0.0",
     "nativescript-secure-storage": "^2.2.1",
     "nativescript-theme-core": "~1.0.2",
     "ngrx-devtools-nativescript": "~0.5.0",
+    "ngrx-store-logger": "^0.2.0",
+    "reselect": "^3.0.1",
     "rxjs": "~5.3.0",
     "tns-core-modules": "^3.0.0",
     "zone.js": "^0.8.4"
@@ -53,7 +58,8 @@
     "rimraf": "2.6.2"
   },
   "scripts": {
-    "start": "cross-env BUILD_PROFILE=dev tns debug android --chrome",
+    "start": "cross-env BUILD_PROFILE=dev tns run ios --chrome",
+    "debug": "cross-env BUILD_PROFILE=dev tns debug ios --chrome",
     "clean": "npm run js.clean && npm run css",
     "css.clean": "find app -type f -iname '*.css' -and ! -iname 'font-awesome.min.css' -delete",
     "css.generate": "node -e 'require(\"./node_modules/nativescript-dev-sass/lib/converter.js\").convert(console, \".\");'",

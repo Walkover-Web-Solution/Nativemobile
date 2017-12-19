@@ -3,10 +3,10 @@ import { platformNativeScriptDynamic } from "nativescript-angular/platform";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptDevToolsMonitors } from "ngrx-devtools-nativescript";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-
+import { storeLogger } from 'ngrx-store-logger';
 import { NativeScriptHttpModule } from 'nativescript-angular/http';
 import { NSModuleFactoryLoader, NativeScriptRouterModule } from 'nativescript-angular/router';
-
+import * as trace from "tns-core-modules/trace";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/switchMap';
@@ -15,6 +15,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/toPromise';
 
 import { NgModule, NgModuleFactoryLoader } from "@angular/core";
 import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
@@ -29,25 +30,42 @@ import { AppRoutingModule } from "./app.routing";
 import 'nativescript-ngx-fonticon';
 import { localStorageSync } from "./store/middleware/rehydrateAppState";
 import { NeedsAuthentication } from "./decorators/needsAuthentication";
+import { LoginModule } from './login/login.module';
+import { HomeModule } from './home/home.module';
+import { AppState } from './store/roots';
+import { LocationStrategy } from "@angular/common";
+
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({ keys: ['session'], rehydrate: true })(reducer);
 }
-
-let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
+export function logger(reducer: ActionReducer<AppState>): any {
+  // default, no options
+  return storeLogger()(reducer);
+}
+let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logger];
 let config = require('./config/config');
+trace.setCategories(trace.categories.concat(
+  trace.categories.Binding
+  , trace.categories.Debug
+  , trace.categories.Navigation
+));
+trace.enable();
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
     NativeScriptModule,
     NativeScriptHttpModule,
+    NativeScriptDevToolsMonitors,
     NativeScriptRouterModule,
     AppRoutingModule,
-    NativeScriptDevToolsMonitors,
     StoreModule.forRoot(reducers, { metaReducers }),
     StoreDevtoolsModule.instrument(),
     ServiceModule.forRoot(),
-    ActionModule.forRoot()
+    ActionModule.forRoot(),
+    LoginModule,
+    HomeModule
   ],
   providers: [
     NeedsAuthentication,
@@ -59,6 +77,7 @@ let config = require('./config/config');
       provide: ServiceConfig,
       useValue: { apiUrl: config.ApiUrl, appUrl: config.AppUrl }
     }
+    // { provide: LocationStrategy, useValue: HashLocationStrategy }
   ],
   bootstrap: [AppComponent]
 })

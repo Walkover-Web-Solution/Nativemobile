@@ -38,7 +38,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
 
     this.signupSuccess$.subscribe(s => {
       if (s) {
-        this.routerExtensions.navigate(['/home']);
+        this.routerExtensions.navigate(['/home'], { clearHistory: true });
       }
     })
   }
@@ -46,7 +46,8 @@ export class SignUpComponent implements OnInit, OnDestroy {
     // this.lo
   }
   public backToLogin() {
-    this.routerExtensions.backToPreviousPage();
+    this.routerExtensions.navigate(['/login'], { clearHistory: true });
+    // this.routerExtensions.backToPreviousPage();
   }
   public signUp() {
     this.store.dispatch(this._loginActions.signUp(this.signupWithPasswordForm.value));

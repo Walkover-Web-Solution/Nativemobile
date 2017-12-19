@@ -19,7 +19,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   public loginProcess$: Observable<boolean>;
   public loginSuccess$: Observable<boolean>;
   public loginWithPasswordForm: FormGroup;
-  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions, private page: Page) {
+  constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions,
+    private page: Page) {
     this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
     this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
   }
@@ -37,14 +38,17 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     this.loginSuccess$.subscribe(s => {
       if (s) {
-        this.routerExtensions.navigate(['/home']);
+        this.routerExtensions.navigate(['/home'], { clearHistory: true });
       }
     })
   }
   public ngOnDestroy(): void {
     // this.lo
   }
-
+  public gotoUrl(url: string[]) {
+    console.log(url.join('/'));
+    this.routerExtensions.navigateByUrl('/' + url.join('/'), { clearHistory: true });
+  }
   public login() {
     this.store.dispatch(this._loginActions.loginWithPassword(this.loginWithPasswordForm.value));
   }

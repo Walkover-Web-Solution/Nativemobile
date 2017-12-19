@@ -23,8 +23,8 @@ export class LoginActions {
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = response;
       if (res.status === 'error') {
-        dialogs.alert(res.message);
-        return { type: '' }
+        // dialogs.alert(res.message);
+        return { type: 'Error', payload: res }
       } else {
         return this.signUpResponse(res);
       }
@@ -38,11 +38,11 @@ export class LoginActions {
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = response;
       if (res.status === 'success') {
-        dialogs.alert('login success');
+        // dialogs.alert('login success');
         return this.loginWithPasswordResponse(res);
       } else {
-        dialogs.alert('login error');
-        return { type: '' }
+        // dialogs.alert('login error');
+        return { type: 'Error', payload: res }
       }
     });
 
@@ -54,8 +54,8 @@ export class LoginActions {
       if (response.status === 'success') {
         return this.signupWithMobileResponce(response);
       } else {
-        dialogs.alert('something went wrong please try again');
-        return { type: '' }
+        // dialogs.alert('something went wrong please try again');
+        return { type: 'Error', payload: response }
       }
     });
 
@@ -68,13 +68,11 @@ export class LoginActions {
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
       if (res.status === 'success') {
-        dialogs.alert('login success');
+        // dialogs.alert('login success');
         return this.verifyMobileResponce(res);
       } else {
-        dialogs.alert('login error');
-      }
-      return {
-        type: ''
+        // dialogs.alert('login error');
+        return { type: 'Error', payload: res };
       }
     });
 
@@ -87,8 +85,8 @@ export class LoginActions {
       if (response.status === 'success') {
         return this.signupWithEmailResponce(response);
       } else {
-        dialogs.alert(response.message || 'something went wrong please try again');
-        return { type: '' }
+        // dialogs.alert(response.message || 'something went wrong please try again');
+        return { type: 'Error', payload: response };
       }
     });
 
@@ -101,13 +99,11 @@ export class LoginActions {
     .map(response => {
       let res: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = response;
       if (res.status === 'success') {
-        dialogs.alert('login success');
+        // dialogs.alert('login success');
         return this.verifyEmailResponce(res);
       } else {
-        dialogs.alert('login error');
-      }
-      return {
-        type: ''
+        // dialogs.alert('login error');
+        return { type: 'Error', payload: res };
       }
     });
 
@@ -120,13 +116,11 @@ export class LoginActions {
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
       if (res.status === 'success') {
-        dialogs.alert('login success');
+        // dialogs.alert('login success');
         return this.verifyTwoWayAuthResponse(res);
       } else {
-        dialogs.alert('login error');
-      }
-      return {
-        type: ''
+        // dialogs.alert('login error');
+        return { type: 'Error', payload: res };
       }
     });
 

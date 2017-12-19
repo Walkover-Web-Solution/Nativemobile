@@ -13,7 +13,10 @@ const initialState: SessionState = {
 
 export function SessionReducer(state: SessionState = initialState, action: CustomActions): SessionState {
   switch (action.type) {
-
+    case 'Error': {
+      console.log(JSON.stringify(action.payload));
+      return state;
+    }
     case LoginConstants.SET_INITIAL_SESSION_STATE:
       return action.payload;
     case LoginConstants.LOGIN_WITH_PASSWORD_RESPONSE: {

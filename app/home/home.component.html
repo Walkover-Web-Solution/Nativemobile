@@ -1,7 +1,9 @@
-<DockLayout width="210" height="210" backgroundColor="lightgray" stretchLastChild="true">
-  <Label text="Welcome To Home {{ (userStream$ | async)?.user?.name }}"></Label>
+<GridLayout rows="*,*">
+  <DockLayout row="0" width="210" height="210" backgroundColor="lightgray" stretchLastChild="true">
+    <Label text="Welcome To Home {{ (userStream$ | async)?.user?.name }}"></Label>
 
-</DockLayout>
-<StackLayout horizontalAlignment="center">
-  <Button class="btn btn-primary" id="button" text="Logout" (tap)="logout()"></Button>
-</StackLayout>
+  </DockLayout>
+  <StackLayout row="1" horizontalAlignment="center">
+    <Button class="btn btn-primary" id="button" text="Logout" (tap)="logout()"></Button>
+  </StackLayout>
+</GridLayout>

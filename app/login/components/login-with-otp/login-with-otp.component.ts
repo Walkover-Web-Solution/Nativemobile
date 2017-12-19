@@ -22,7 +22,7 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   public isLoginWithMobileSubmited$: Observable<boolean>;
   public isVerifyMobileSuccess$: Observable<boolean>;
   public isLoginWithMobileInProcess$: Observable<boolean>;
-  constructor(private routerExtensions: RouterExtensions, private page: Page, private frame: Frame, private store: Store<AppState>,
+  constructor(private routerExtensions: RouterExtensions, private page: Page, private store: Store<AppState>,
     private _fb: FormBuilder, private _loginActions: LoginActions) {
     this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
     this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
@@ -44,15 +44,15 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.isVerifyMobileSuccess$.subscribe(s => {
       if (s) {
-        this.routerExtensions.navigate(['/home']);
+        this.routerExtensions.navigate(['/home'], { clearHistory: true });
       }
-    })
+    });
   }
   ngOnDestroy(): void {
     console.log('login-with-otp destroyed');
   }
   backToLogin() {
-    this.routerExtensions.backToPreviousPage();
+    this.routerExtensions.navigate(['/login'], { clearHistory: true });
   }
 
   public getOtp() {

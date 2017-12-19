@@ -1,5 +1,5 @@
 // angular
-import { NgModule } from '@angular/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 import { Routes } from '@angular/router';
 
 // nativescript
@@ -8,7 +8,7 @@ import { NeedsAuthentication } from './decorators/needsAuthentication';
 
 // app
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     redirectTo: '/home',
@@ -26,6 +26,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [NativeScriptRouterModule, NativeScriptRouterModule.forRoot(routes)]
+  imports: [NativeScriptRouterModule, NativeScriptRouterModule.forRoot(routes, { enableTracing: true })]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+  public static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: AppRoutingModule,
+      providers: []
+    };
+  }
+}

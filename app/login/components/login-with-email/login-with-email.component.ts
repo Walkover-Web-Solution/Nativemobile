@@ -7,8 +7,8 @@ import { AppState } from '../../../store';
 import { Observable } from 'rxjs/Observable';
 import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { RouterExtensions } from 'nativescript-angular/router';
 import { VerifyEmailModel } from '../../../models/api-models/loginModels';
+import { RouterExtensions } from 'nativescript-angular/router';
 
 @Component({
   selector: 'ns-login-with-email',
@@ -40,7 +40,7 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
 
     this.isVerifyEmailSuccess$.subscribe(s => {
       if (s) {
-        this.routerExtensions.navigate(['/home']);
+        this.routerExtensions.navigate(['/home'], { clearHistory: true });
       }
     })
   }
@@ -63,6 +63,6 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
   }
 
   public backToLogin() {
-    this.routerExtensions.backToPreviousPage();
+    this.routerExtensions.navigate(['/login'], { clearHistory: true });
   }
 }

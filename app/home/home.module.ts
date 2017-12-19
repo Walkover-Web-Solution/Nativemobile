@@ -1,35 +1,29 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { Routes } from '@angular/router';
-
+import { Routes, RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // nativescript
-import { NativeScriptModule } from 'nativescript-angular/nativescript.module';
-import { NativeScriptRouterModule } from 'nativescript-angular/router';
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
+import { NativeScriptCommonModule } from "nativescript-angular/common";
 
 // app
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './home.component';
+import { NeedsAuthentication } from '../decorators/needsAuthentication';
+import { HomeRoutingModule } from './home.routing.module';
+import { NativeScriptRouterModule } from 'nativescript-angular/router';
 
-export const routes: Routes = [
-  {
-    path: '',
-    component: HomeComponent
-  },
-];
 
 @NgModule({
   imports: [
-    NativeScriptModule,
-    CommonModule,
-    NativeScriptRouterModule,
-    NativeScriptRouterModule.forChild(routes),
+    NativeScriptCommonModule,
     NativeScriptFormsModule,
+    NativeScriptRouterModule,
+    HomeRoutingModule,
     FormsModule,
     ReactiveFormsModule
   ],
   declarations: [HomeComponent],
-
-  schemas: [NO_ERRORS_SCHEMA],
+  schemas: [
+    NO_ERRORS_SCHEMA
+  ]
 })
 export class HomeModule { }

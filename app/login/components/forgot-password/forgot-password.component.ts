@@ -24,6 +24,6 @@ export class ForgotComponent implements OnInit, OnDestroy {
     console.log('forgot-password destroyed');
   }
   backToLogin() {
-    this.routerExtensions.backToPreviousPage();
+    this.routerExtensions.navigate(['/login'], { clearHistory: true });
   }
 }

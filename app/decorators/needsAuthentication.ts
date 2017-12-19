@@ -1,24 +1,30 @@
 import { AppState } from '../store';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate } from '@angular/router';
+import { RouterExtensions } from 'nativescript-angular/router';
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-
-import { RouterExtensions } from 'nativescript-angular/router';
 import { LoginActions } from '../actions/login/login.action';
-
+import { createSelector } from 'reselect';
 
 @Injectable()
 export class NeedsAuthentication implements CanActivate {
-  constructor(private _router: Router, private store: Store<AppState>, private routerExtensions: RouterExtensions, private _loginActions: LoginActions) {
+  constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions, private _loginActions: LoginActions) {
   }
 
   public canActivate() {
-    return this.store.select(s => s.session).select(session => {
-      if (session && session.user) {
+    let data = false;
+    return this.store.select(createSelector([(p: AppState) => p.session], (s) => {
+      if (s && s.user) {
+        console.log('please allow me');
         return true;
       } else {
-        this._router.navigate(['/login']);
+        console.log('please login first');
+        this.routerExtensions.navigateByUrl('/login', { clearHistory: true });
+        // this.routerExtensions.navigate(['/login']);
+        return false;
       }
-    });
+
+    }));
+    // return data;
   }
 }

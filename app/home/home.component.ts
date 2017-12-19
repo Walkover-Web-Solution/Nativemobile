@@ -5,6 +5,7 @@ import { AppState } from '../store';
 import { Store } from '@ngrx/store';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { LoginActions } from '../actions/login/login.action';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ns-home',
@@ -25,7 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public logout() {
     this.store.dispatch(this._loginActions.logout());
-    this.routerExtensions.navigate(['/login']);
+    this.routerExtensions.navigateByUrl('/login', { clearHistory: true });
   }
   public ngOnDestroy(): void {
     // this.lo
