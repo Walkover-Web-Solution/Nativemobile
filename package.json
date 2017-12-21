@@ -39,6 +39,7 @@
     "nativescript-angular": "next",
     "nativescript-intl": "~3.0.0",
     "nativescript-ngx-fonticon": "^4.0.0",
+    "nativescript-pro-ui": "3.2.0",
     "nativescript-secure-storage": "^2.2.1",
     "nativescript-theme-core": "~1.0.4",
     "ngrx-devtools-nativescript": "~0.5.0",
