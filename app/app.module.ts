@@ -1,5 +1,4 @@
 // this import should be first in order to load some required settings (like globals and reflect-metadata)
-import { platformNativeScriptDynamic } from "nativescript-angular/platform";
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
 import { NativeScriptDevToolsMonitors } from "ngrx-devtools-nativescript";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
@@ -7,6 +6,9 @@ import { storeLogger } from 'ngrx-store-logger';
 import { NativeScriptHttpModule } from 'nativescript-angular/http';
 import { NSModuleFactoryLoader, NativeScriptRouterModule } from 'nativescript-angular/router';
 import * as trace from "tns-core-modules/trace";
+
+// import "nativescript-materialdropdownlist";
+
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/skip';
 import 'rxjs/add/operator/switchMap';
@@ -17,7 +19,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/debounce';
 import 'rxjs/add/operator/toPromise';
 
-import { NgModule, NgModuleFactoryLoader } from "@angular/core";
+import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
 
 import { AppComponent } from "./app.component";
@@ -45,15 +47,22 @@ export function logger(reducer: ActionReducer<AppState>): any {
 }
 let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logger];
 let config = require('./config/config');
-trace.setCategories(trace.categories.concat(
-  trace.categories.Binding
-  , trace.categories.Debug
-  , trace.categories.Navigation
-));
+// trace.setCategories(trace.categories.concat(
+//   trace.categories.Binding
+//   , trace.categories.Debug
+//   , trace.categories.Navigation
+//   , trace.categories.ViewHierarchy
+//   , trace.categories.Binding
+//   , trace.categories.Error
+//   , trace.categories.Layout
+// ));
+trace.setCategories(trace.categories.All);
 trace.enable();
 
+// import { registerElement } from "nativescript-angular/element-registry";
+// registerElement("MaterialDropdownList", () => require("nativescript-materialdropdownlist").MaterialDropdownList);
 @NgModule({
-  declarations: [AppComponent],
+  bootstrap: [AppComponent],
   imports: [
     NativeScriptModule,
     NativeScriptHttpModule,
@@ -67,20 +76,18 @@ trace.enable();
     LoginModule,
     HomeModule
   ],
+  declarations: [AppComponent],
   providers: [
     NeedsAuthentication,
-    {
-      provide: NgModuleFactoryLoader,
-      useClass: NSModuleFactoryLoader
-    },
     {
       provide: ServiceConfig,
       useValue: { apiUrl: config.ApiUrl, appUrl: config.AppUrl }
     }
     // { provide: LocationStrategy, useValue: HashLocationStrategy }
   ],
-  bootstrap: [AppComponent]
+  schemas: [
+    NO_ERRORS_SCHEMA
+]
 })
-class AppModule { };
+export class AppModule { };
 
-platformNativeScriptDynamic().bootstrapModule(AppModule);

@@ -8,63 +8,94 @@
   "nativescript": {
     "id": "org.walkover.giddh",
     "name": "giddh",
-    "tns-android": {
-      "version": "3.1.1"
-    },
     "hooks": [
       {
         "type": "before-prepare",
         "script": "./customHooks/before-prepare/nativescript-environment.js"
       }
     ],
+    "tns-android": {
+      "version": "3.3.1"
+    },
     "tns-ios": {
       "version": "3.3.0"
     }
   },
   "dependencies": {
-    "@angular/common": "~4.4.1",
-    "@angular/compiler": "~4.4.1",
-    "@angular/core": "~4.4.1",
-    "@angular/forms": "~4.4.1",
-    "@angular/http": "~4.4.1",
-    "@angular/platform-browser": "~4.4.1",
-    "@angular/router": "~4.4.1",
+    "@angular/animations": "~5.0.0",
+    "@angular/common": "~5.0.0",
+    "@angular/compiler": "~5.0.0",
+    "@angular/core": "~5.0.0",
+    "@angular/forms": "~5.0.0",
+    "@angular/http": "~5.0.0",
+    "@angular/platform-browser": "~5.0.0",
+    "@angular/platform-browser-dynamic": "~5.0.0",
+    "@angular/router": "~5.0.0",
     "@ngrx/effects": "4.1.1",
     "@ngrx/router-store": "4.1.1",
     "@ngrx/store": "4.1.1",
     "@ngrx/store-devtools": "4.1.1",
     "lodash": "^4.17.4",
-    "nativescript-angular": "^4.4.1",
-    "nativescript-ngx-fonticon": "^3.0.0",
+    "nativescript-angular": "next",
+    "nativescript-intl": "~3.0.0",
+    "nativescript-ngx-fonticon": "^4.0.0",
     "nativescript-secure-storage": "^2.2.1",
-    "nativescript-theme-core": "~1.0.2",
+    "nativescript-theme-core": "~1.0.4",
     "ngrx-devtools-nativescript": "~0.5.0",
     "ngrx-store-logger": "^0.2.0",
+    "reflect-metadata": "~0.1.8",
     "reselect": "^3.0.1",
-    "rxjs": "~5.3.0",
-    "tns-core-modules": "^3.0.0",
-    "zone.js": "^0.8.4"
+    "rxjs": "^5.5.0",
+    "tns-core-modules": "next",
+    "zone.js": "0.8.18"
   },
   "devDependencies": {
-    "babel-traverse": "6.15.0",
-    "babel-types": "6.15.0",
-    "babylon": "6.9.1",
+    "@angular/compiler-cli": "~5.0.0",
+    "@ngtools/webpack": "~1.8.2",
+    "babel-traverse": "6.25.0",
+    "babel-types": "6.25.0",
+    "babylon": "6.17.4",
+    "@types/node": "^7.0.5",
+    "copy-webpack-plugin": "~4.0.1",
+    "css-loader": "~0.28.7",
+    "extract-text-webpack-plugin": "3.0.0",
+    "raw-loader": "~0.5.1",
+    "resolve-url-loader": "~2.1.0",
+    "typescript": "~2.4.2",
+    "webpack": "~3.8.1",
+    "webpack-bundle-analyzer": "^2.8.2",
+    "webpack-sources": "~1.0.1",
     "cross-env": "^5.1.1",
     "lazy": "1.0.11",
+    "node-sass": "^4.7.1",
+    "nativescript-css-loader": "0.26.1",
+    "nativescript-dev-webpack": "0.9.0",
+    "nativescript-dev-appium": "next",
     "nativescript-dev-sass": "1.3.5",
     "nativescript-dev-typescript": "^0.5.0",
     "tns-platform-declarations": "^3.2.0",
-    "typescript": "~2.3.1",
-    "rimraf": "2.6.2"
+    "nativescript-worker-loader": "~0.8.1",
+    "rimraf": "2.6.2",
+    "sass-loader": "~6.0.6"
   },
   "scripts": {
+    "u": "update-ns-webpack",
     "start": "cross-env BUILD_PROFILE=dev tns run ios --chrome",
     "start:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
+    "debug:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "debug": "cross-env BUILD_PROFILE=dev tns debug ios --chrome",
     "clean": "npm run js.clean && npm run css",
     "css.clean": "find app -type f -iname '*.css' -and ! -iname 'font-awesome.min.css' -delete",
     "css.generate": "node -e 'require(\"./node_modules/nativescript-dev-sass/lib/converter.js\").convert(console, \".\");'",
     "css": "npm run css.clean && npm run css.generate",
-    "js.clean": "npx rimraf -- app/**/*.js"
+    "js.clean": "npx rimraf -- app/**/*.js",
+    "ns-bundle": "ns-bundle",
+    "start-android-bundle": "cross-env BUILD_PROFILE=dev tns build android --bundle",
+    "start-ios-bundle": "cross-env BUILD_PROFILE=dev tns build ios --run-app",
+    "build-android-bundle": "cross-env BUILD_PROFILE=dev tns build android --build-app",
+    "build-ios-bundle": "cross-env BUILD_PROFILE=dev tns build ios --build-app",
+    "publish-ios-bundle": "cross-env BUILD_PROFILE=dev tns build ios --publish-app",
+    "e2e": "tsc -p e2e && mocha --opts ./e2e/config/mocha.opts",
+    "compile-tests": "tsc -p e2e --watch"
   }
 }

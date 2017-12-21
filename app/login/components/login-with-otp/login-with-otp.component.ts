@@ -9,6 +9,9 @@ import { AppState } from '../../../store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { LoginActions } from '../../../actions/login/login.action';
+import * as application from "application";
+import * as utils from "utils/utils";
+import { AnimationCurve } from 'ui/enums';
 // import { Color } from 'tns-core-modules/ui/page/page';
 
 @Component({
@@ -27,17 +30,21 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
     this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
     this.isLoginWithMobileInProcess$ = this.store.select(s => s.login.isLoginWithMobileInProcess);
+    console.log('Login with OTP construtor');
   }
 
   ngOnInit(): void {
+    console.log('Login with OTP ngOnInit');
     this.mobileVerifyForm = this._fb.group({
       country: ['91', [Validators.required]],
       mobileNumber: ['', [Validators.required]],
       otp: ['', [Validators.required]],
     });
+    this.isLoginWithMobileSubmited$.subscribe()
   }
   ngAfterViewInit() {
     // this.items = this.itemService.getItems();
+    console.log('Login with OTP ngAfterViewInit');
     this.page.backgroundColor = new Color(1, 0, 169, 157);
     this.page.backgroundSpanUnderStatusBar = true;
     this.page.actionBarHidden = true;
@@ -52,7 +59,13 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     console.log('login-with-otp destroyed');
   }
   backToLogin() {
-    this.routerExtensions.navigate(['/login'], { clearHistory: true });
+    this.routerExtensions.navigate(['/login'], {
+      clearHistory: true, animated: true,
+      transition: {
+        name: 'slideRight',
+        curve: AnimationCurve.ease
+      }
+    });
   }
 
   public getOtp() {

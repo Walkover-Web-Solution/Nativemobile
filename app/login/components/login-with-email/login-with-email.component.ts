@@ -9,6 +9,7 @@ import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VerifyEmailModel } from '../../../models/api-models/loginModels';
 import { RouterExtensions } from 'nativescript-angular/router';
+import { AnimationCurve } from 'ui/enums';
 
 @Component({
   selector: 'ns-login-with-email',
@@ -63,6 +64,12 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
   }
 
   public backToLogin() {
-    this.routerExtensions.navigate(['/login'], { clearHistory: true });
+    this.routerExtensions.navigate(['/login'], {
+      clearHistory: true, animated: true,
+      transition: {
+        name: 'slideRight',
+        curve: AnimationCurve.ease
+      }
+    });
   }
 }

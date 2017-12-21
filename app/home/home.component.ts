@@ -16,6 +16,8 @@ import { Router } from '@angular/router';
 export class HomeComponent implements OnInit, OnDestroy {
 
   public userStream$: Observable<VerifyEmailResponseModel>;
+  public colors: ['red', 'blue', 'green', 'yellow', 'orange', 'brown', 'silver'];
+  public selectedColorIndex: 1;
   constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions, private _loginActions: LoginActions) {
     this.userStream$ = this.store.select(s => s.session.user);
   }

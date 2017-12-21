@@ -9,6 +9,7 @@ import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VerifyEmailModel, VerifyEmailResponseModel, VerifyMobileModel } from '../../../models/api-models/loginModels';
 import { RouterExtensions } from 'nativescript-angular/router';
+import { AnimationCurve } from 'ui/enums';
 
 @Component({
   selector: 'ns-login-two-way',
@@ -55,6 +56,12 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
     // this.store.dispatch(this._loginActions.VerifyTwoWayAuthRequest(data));
   }
   public backToLogin() {
-    this.routerExtensions.navigate(['/login'], { clearHistory: true });
+    this.routerExtensions.navigate(['/login'], {
+      clearHistory: true, animated: true,
+      transition: {
+        name: 'slideRight',
+        curve: AnimationCurve.ease
+      }
+    });
   }
 }

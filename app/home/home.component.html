@@ -1,4 +1,4 @@
-<GridLayout rows="*,*">
+<!-- <GridLayout rows="*,*">
   <DockLayout row="0" width="210" height="210" backgroundColor="lightgray" stretchLastChild="true">
     <Label text="Welcome To Home {{ (userStream$ | async)?.user?.name }}"></Label>
 
@@ -6,4 +6,56 @@
   <StackLayout row="1" horizontalAlignment="center">
     <Button class="btn btn-primary" id="button" text="Logout" (tap)="logout()"></Button>
   </StackLayout>
+</GridLayout> -->
+
+<ActionBar class="action-bar">
+  <GridLayout rows="*" columns="auto,*,auto" width="100%">
+    <!-- <Image col="0" src="https://d2odgkulk9w7if.cloudfront.net/images/default-source/logos/nativescript-logo.png?sfvrsn=2" class="action-image">
+    </Image> -->
+    <MaterialDropdownList col="0" id="ddlColors" itemsSeparatorColor="transparent" itemsRowHeight="30" [items]="colors" [selectedIndex]="selectedColorIndex">
+    </MaterialDropdownList>
+
+    <Button text="MB" width="50" class="button" col="2"></Button>
+  </GridLayout>
+
+</ActionBar>
+<GridLayout columns="*,*" rows="*,*,*">
+  <!-- <Border borderRadius="0" borderWidth="1" borderColor="#FF0000"> -->
+  <Button class="b-button" row="0" col="0" textWrap="true" textAlignment="center">
+    <FormattedString>
+      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+      <Span text="Dashboard" verticalAlignment="bottom" fontSize="20"></Span>
+    </FormattedString>
+  </Button>
+  <!-- </Border> -->
+  <Button class="b-button" row="0" col="1" textWrap="true" textAlignment="center">
+    <FormattedString>
+      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+      <Span text="trial balance" verticalAlignment="bottom" fontSize="20"></Span>
+    </FormattedString>
+  </Button>
+  <Button class="b-button" row="1" col="0" textWrap="true" textAlignment="center">
+    <FormattedString>
+      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+      <Span text="Sales invoice" verticalAlignment="bottom" fontSize="20"></Span>
+    </FormattedString>
+  </Button>
+  <Button class="b-button" row="1" col="1" textWrap="true" textAlignment="center">
+    <FormattedString>
+      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+      <Span text="Purchase invoice" verticalAlignment="bottom" fontSize="20"></Span>
+    </FormattedString>
+  </Button>
+  <Button class="b-button" row="2" col="0" textWrap="true" textAlignment="center">
+    <FormattedString>
+      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+      <Span text="Reports" verticalAlignment="bottom" fontSize="20"></Span>
+    </FormattedString>
+  </Button>
+  <Button class="b-button" row="2" col="1" textWrap="true" textAlignment="center">
+    <FormattedString>
+      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+      <Span text="Setting" verticalAlignment="bottom" fontSize="20"></Span>
+    </FormattedString>
+  </Button>
 </GridLayout>

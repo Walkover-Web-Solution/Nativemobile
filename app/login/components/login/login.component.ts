@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { topmost } from 'ui/frame';
 import { Page, Color } from 'ui/page';
+import { AnimationCurve } from 'ui/enums';
 import { isIOS } from 'platform';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
@@ -45,11 +46,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     // this.lo
   }
-  public gotoUrl(url: string[]) {
+  public gotoUrl(url: string[], transitionName: string) {
     console.log(url.join('/'));
-    this.routerExtensions.navigateByUrl('/' + url.join('/'), { clearHistory: true });
+    this.routerExtensions.navigateByUrl('/' + url.join('/'), {
+      animated: true,
+      transition: {
+        name: transitionName,
+        curve: AnimationCurve.ease
+      }
+    });
   }
   public login() {
+    // this.routerExtensions.navigate(['/home'], { clearHistory: true });
     this.store.dispatch(this._loginActions.loginWithPassword(this.loginWithPasswordForm.value));
   }
 }

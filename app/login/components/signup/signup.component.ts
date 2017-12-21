@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RouterExtensions } from 'nativescript-angular/router';
+import { AnimationCurve } from 'ui/enums';
 
 @Component({
   selector: 'ns-signup',
@@ -46,7 +47,13 @@ export class SignUpComponent implements OnInit, OnDestroy {
     // this.lo
   }
   public backToLogin() {
-    this.routerExtensions.navigate(['/login'], { clearHistory: true });
+    this.routerExtensions.navigate(['/login'], {
+      clearHistory: true, animated: true,
+      transition: {
+        name: 'slideBottom',
+        curve: AnimationCurve.ease
+      }
+    });
     // this.routerExtensions.backToPreviousPage();
   }
   public signUp() {

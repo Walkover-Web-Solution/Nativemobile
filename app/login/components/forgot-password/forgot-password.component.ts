@@ -3,6 +3,7 @@ import { Page, Color } from 'ui/page';
 import { topmost } from 'ui/frame';
 import { isIOS } from 'platform';
 import { RouterExtensions } from 'nativescript-angular/router';
+import { AnimationCurve } from 'ui/enums';
 
 @Component({
   selector: 'ns-forgot-password',
@@ -24,6 +25,12 @@ export class ForgotComponent implements OnInit, OnDestroy {
     console.log('forgot-password destroyed');
   }
   backToLogin() {
-    this.routerExtensions.navigate(['/login'], { clearHistory: true });
+    this.routerExtensions.navigate(['/login'], {
+      clearHistory: true, animated: true,
+      transition: {
+        name: 'slideRight',
+        curve: AnimationCurve.ease
+      }
+    });
   }
 }
