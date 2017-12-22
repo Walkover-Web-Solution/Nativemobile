@@ -63,7 +63,9 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
         isLoginWithPasswordSuccess: false
       }
     }
-
+    case LoginConstants.LOGOUT: {
+      return initialState;
+    }
     case LoginConstants.SIGNUP_REQUEST:
       return {
         ...state,

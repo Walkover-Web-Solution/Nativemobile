@@ -9,6 +9,7 @@ import { AppState } from '../../../store';
 import { LoginActions } from '../../../actions/login/login.action';
 import { ResetPasswordV2 } from '../../../models/api-models/Login';
 import { Observable } from 'rxjs';
+import { AnimationCurve } from 'ui/enums';
 
 @Component({
   selector: 'ns-forgot-password',
@@ -37,7 +38,13 @@ export class ForgotComponent implements OnInit, OnDestroy {
     console.log('forgot-password destroyed');
   }
   backToLogin() {
-    this.routerExtensions.backToPreviousPage();
+    this.routerExtensions.navigate(['/login'], {
+      clearHistory: true, animated: true,
+      transition: {
+        name: 'slideRight',
+        curve: AnimationCurve.ease
+      }
+    });
   }
 
   forgotPassword() {

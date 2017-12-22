@@ -1,7 +1,7 @@
 <GridLayout class="login" rows="*" columns="*">
   <GridLayout rows="* ,auto" columns="*">
     <StackLayout row="0" col="0" class="page">
-      <Image id='logo' src="~/assets/image/logo.png" stretch="none" horizontalAlignment="center"></Image>
+      <Image id='logo' src="~/assets/image/logo.png" height="12%" stretch="aspectFit" horizontalAlignment="center"></Image>
 
       <StackLayout class="form" [formGroup]="loginWithPasswordForm">
 
@@ -10,16 +10,16 @@
         <Button text="Login" [disabled]="loginWithPasswordForm.invalid" (tap)="login()" class="btn btn-primary"></Button>
 
         <StackLayout horizontalAlignment="center" orientation="horizontal">
-          <Label text="Forgot Password?" [nsRouterLink]="['/login/forgot-password']" pageTransition="slideLeft" class="font"></Label>
+          <Label text="Forgot Password?" (tap)="gotoUrl(['login', 'forgot-password'],'slide')" class="font"></Label>
           <Label text=" |"></Label>
-          <Label text="  Login with OTP" [nsRouterLink]="['/login/login-with-otp']" pageTransition="slideLeft" class="font"></Label>
+          <Label text="  Login with OTP" (tap)="gotoUrl(['login', 'login-with-otp'],'slide')" class="font"></Label>
         </StackLayout>
 
         <StackLayout horizontalAlignment="center">
-          <Label text="  Login with Email" [nsRouterLink]="['/login/login-with-email']" pageTransition="slideLeft" class="font"></Label>
+          <Label text="  Login with Email" (tap)="gotoUrl(['login', 'login-with-email'],'slide')" class="font"></Label>
         </StackLayout>
         <StackLayout horizontalAlignment="center">
-          <Label text="Sign Up" [nsRouterLink]="['/login/signup']" pageTransition="slideLeft" class="font"></Label>
+          <Label text="Sign Up" (tap)="gotoUrl(['login', 'signup'],'slideTop')" class="font"></Label>
         </StackLayout>
 
       </StackLayout>
