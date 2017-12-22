@@ -6,7 +6,7 @@ import { BaseResponse } from "../../models/api-models/BaseResponse";
 import { CustomActions } from "../../store/customActions";
 import { LoginConstants } from "./login.const";
 import { AuthenticationService } from "../../services/authentication.service";
-import { SignUpWithPassword, LoginWithPassword } from "../../models/api-models/Login";
+import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from "../../models/api-models/Login";
 import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel } from "../../models/api-models/loginModels";
 import * as dialogs from "ui/dialogs";
 import { action } from "ui/dialogs";
@@ -130,6 +130,35 @@ export class LoginActions {
       }
     });
 
+  @Effect()
+  public forgotPassword$: Observable<CustomActions> = this.actions$
+    .ofType(LoginConstants.FORGOT_PASSWORD_REQUEST)
+    .switchMap((action: CustomActions) =>
+      this._authService.ForgotPassword(action.payload))
+    .map(response => {
+      let res: BaseResponse<string, string> = response;
+      if (res.status === 'error') {
+        dialogs.alert(res.message);
+        return { type: '' }
+      } else {
+        return this.forgotPasswordResponse();
+      }
+    });
+
+  @Effect()
+  public resetPasswordV2$: Observable<CustomActions> = this.actions$
+    .ofType(LoginConstants.RESET_PASSWORD_V2_REQUEST)
+    .switchMap((action: CustomActions) =>
+      this._authService.ResetPasswordV2(action.payload))
+    .map(response => {
+      let res: BaseResponse<string, ResetPasswordV2> = response;
+      if (res.status === 'error') {
+        dialogs.alert(res.message);
+        return { type: '' }
+      } else {
+        return this.resetPasswordV2Response();
+      }
+    });
   constructor(private actions$: Actions, private _authService: AuthenticationService) {
 
   }
@@ -236,6 +265,32 @@ export class LoginActions {
     return {
       type: LoginConstants.SET_INITIAL_SESSION_STATE,
       payload: value
+    }
+  }
+
+  public forgotPasswordRequest(email: string): CustomActions {
+    return {
+      type: LoginConstants.FORGOT_PASSWORD_REQUEST,
+      payload: { email }
+    }
+  }
+
+  public forgotPasswordResponse(): CustomActions {
+    return {
+      type: LoginConstants.FORGOT_PASSWORD_RESPONSE
+    }
+  }
+
+  public restPasswordV2Request(requestModel: ResetPasswordV2): CustomActions {
+    return {
+      type: LoginConstants.RESET_PASSWORD_V2_REQUEST,
+      payload: requestModel
+    }
+  }
+
+  public resetPasswordV2Response(): CustomActions {
+    return {
+      type: LoginConstants.RESET_PASSWORD_V2_RESPONSE
     }
   }
 

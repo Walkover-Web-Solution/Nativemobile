@@ -7,6 +7,8 @@ export const LOGIN_API = {
   VerifyOTP: 'v2/verify-number',
   VerifyNumber: 'users/system_admin/verify-number',
   LoginWithNumber: 'login-with-number?countryCode=:countryCode&mobileNumber=:mobileNumber', // get call
+  ForgotPassword: 'users/:email/forgot-password',
+  ResetPasswordV2: 'reset-password',
   LOGIN_WITH_GOOGLE: 'v2/signup-with-google',
   LOGIN_WITH_LINKEDIN: 'v3/signup-with-linkedIn',
   CLEAR_SESSION: 'users/:userUniqueName/destroy-session',

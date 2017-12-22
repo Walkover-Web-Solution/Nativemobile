@@ -8,3 +8,9 @@ export interface LoginWithPassword {
   uniqueKey: string;
   password: string;
 }
+
+export class ResetPasswordV2 {
+  verificationCode: string;
+  uniqueKey: string;
+  newPassword: string;
+}
