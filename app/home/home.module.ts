@@ -10,6 +10,7 @@ import { HomeComponent } from './home.component';
 import { NeedsAuthentication } from '../decorators/needsAuthentication';
 import { HomeRoutingModule } from './home.routing.module';
 import { NativeScriptRouterModule } from 'nativescript-angular/router';
+import { SharedModule } from './../shared/shared.module';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { NativeScriptRouterModule } from 'nativescript-angular/router';
     NativeScriptRouterModule,
     HomeRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   declarations: [HomeComponent],
   schemas: [

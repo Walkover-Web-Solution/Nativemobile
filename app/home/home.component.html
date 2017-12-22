@@ -19,43 +19,68 @@
   </GridLayout>
 
 </ActionBar>
-<GridLayout columns="*,*" rows="*,*,*">
-  <!-- <Border borderRadius="0" borderWidth="1" borderColor="#FF0000"> -->
-  <Button class="b-button" row="0" col="0" textWrap="true" textAlignment="center">
-    <FormattedString>
-      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
-      <Span text="Dashboard" verticalAlignment="bottom" fontSize="20"></Span>
-    </FormattedString>
-  </Button>
-  <!-- </Border> -->
-  <Button class="b-button" row="0" col="1" textWrap="true" textAlignment="center">
-    <FormattedString>
-      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
-      <Span text="trial balance" verticalAlignment="bottom" fontSize="20"></Span>
-    </FormattedString>
-  </Button>
-  <Button class="b-button" row="1" col="0" textWrap="true" textAlignment="center">
-    <FormattedString>
-      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
-      <Span text="Sales invoice" verticalAlignment="bottom" fontSize="20"></Span>
-    </FormattedString>
-  </Button>
-  <Button class="b-button" row="1" col="1" textWrap="true" textAlignment="center">
-    <FormattedString>
-      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
-      <Span text="Purchase invoice" verticalAlignment="bottom" fontSize="20"></Span>
-    </FormattedString>
-  </Button>
-  <Button class="b-button" row="2" col="0" textWrap="true" textAlignment="center">
-    <FormattedString>
-      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
-      <Span text="Reports" verticalAlignment="bottom" fontSize="20"></Span>
-    </FormattedString>
-  </Button>
-  <Button class="b-button" row="2" col="1" textWrap="true" textAlignment="center">
-    <FormattedString>
-      <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
-      <Span text="Setting" verticalAlignment="bottom" fontSize="20"></Span>
-    </FormattedString>
-  </Button>
-</GridLayout>
+
+<ActionBar class="action-bar">
+  <!--
+  Use the NavigationButton as a side-drawer button in Android because ActionItems are shown on the right side of the ActionBar
+  -->
+  <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
+  <!--
+  Use the ActionItem for IOS with position set to left. Using the NavigationButton as a side-drawer button in iOS is not possible, because its function is to always navigate back in the application.
+  -->
+  <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
+  </ActionItem>
+  <Label class="action-bar-title" text="Home"></Label>
+</ActionBar>
+<RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
+  <!--
+  Use the tkDrawerContent directive to display the content of the app drawer on this page.
+  -->
+  <StackLayout tkDrawerContent>
+    <MyDrawer [selectedPage]="'Home'"></MyDrawer>
+  </StackLayout>
+
+  <!--
+  Use the tkMainContent directive to display the content of the page when you have an app drawer.
+  -->
+  <GridLayout columns="*,*" rows="*,*,*" class="page page-content" tkMainContent>
+    <!-- <Border borderRadius="0" borderWidth="1" borderColor="#FF0000"> -->
+    <Button class="b-button" row="0" col="0" textWrap="true" textAlignment="center">
+      <FormattedString>
+        <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+        <Span text="Dashboard" verticalAlignment="bottom" fontSize="20"></Span>
+      </FormattedString>
+    </Button>
+    <!-- </Border> -->
+    <Button class="b-button" row="0" col="1" textWrap="true" textAlignment="center">
+      <FormattedString>
+        <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+        <Span text="trial balance" verticalAlignment="bottom" fontSize="20"></Span>
+      </FormattedString>
+    </Button>
+    <Button class="b-button" row="1" col="0" textWrap="true" textAlignment="center">
+      <FormattedString>
+        <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+        <Span text="Sales invoice" verticalAlignment="bottom" fontSize="20"></Span>
+      </FormattedString>
+    </Button>
+    <Button class="b-button" row="1" col="1" textWrap="true" textAlignment="center">
+      <FormattedString>
+        <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+        <Span text="Purchase invoice" verticalAlignment="bottom" fontSize="20"></Span>
+      </FormattedString>
+    </Button>
+    <Button class="b-button" row="2" col="0" textWrap="true" textAlignment="center">
+      <FormattedString>
+        <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+        <Span text="Reports" verticalAlignment="bottom" fontSize="20"></Span>
+      </FormattedString>
+    </Button>
+    <Button class="b-button" row="2" col="1" textWrap="true" textAlignment="center">
+      <FormattedString>
+        <Span text="&#xf118;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" class="fa" fontSize="35"></Span>
+        <Span text="Setting" verticalAlignment="bottom" fontSize="20"></Span>
+      </FormattedString>
+    </Button>
+  </GridLayout>
+</RadSideDrawer>

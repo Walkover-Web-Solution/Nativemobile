@@ -1,5 +1,7 @@
+@import '../scss/variables';
 ActionBar {
-  background-color: #2b2766;
+  background-color: $ab-background;
+
 }
 
 .left {
@@ -13,20 +15,20 @@ ActionBar {
 }
 
 .action-label {
-  color: #3C5AFD;
+  color: black;
   font-size: 24;
   font-weight: bold;
   vertical-align: center;
 }
 
 .button {
-  background-color: #2b2766;
+  background-color: $ab-background;
   color: white;
   box-shadow: 0;
 }
 
 .b-button {
-  color: #2b2766;
+  color: $ab-background;
   border-color: rgb(250, 190, 190);
   border-style: solid;
   border-width: 2pt;
