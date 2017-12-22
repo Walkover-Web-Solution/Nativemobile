@@ -19,6 +19,10 @@ export interface LoginState {
   isVerifyEmailSuccess: boolean;
   isTwoWayAuthInProcess: boolean;
   isTwoWayAuthSuccess: boolean;
+  isForgotPasswordInProcess: boolean;
+  isForgotPasswordSuccess: boolean;
+  isResetPasswordInProcess: boolean;
+  isResetPasswordSuccess: boolean;
   user: VerifyEmailResponseModel;
 }
 
@@ -37,7 +41,11 @@ const initialState: LoginState = {
   isVerifyEmailInProcess: false,
   isVerifyEmailSuccess: false,
   isTwoWayAuthInProcess: false,
-  isTwoWayAuthSuccess: false
+  isTwoWayAuthSuccess: false,
+  isForgotPasswordInProcess: false,
+  isForgotPasswordSuccess: false,
+  isResetPasswordInProcess: false,
+  isResetPasswordSuccess: false
 }
 
 export function LoginReducer(state: LoginState = initialState, action: CustomActions): LoginState {
@@ -148,6 +156,38 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
         isTwoWayAuthInProcess: false,
         isTwoWayAuthSuccess: false
       };
+    }
+
+    case LoginConstants.FORGOT_PASSWORD_REQUEST: {
+      return {
+        ...state, isForgotPasswordInProcess: true
+      }
+    }
+    case LoginConstants.FORGOT_PASSWORD_RESPONSE: {
+      if (action.payload.status === 'success') {
+        return {
+          ...state, isForgotPasswordInProcess: false, isForgotPasswordSuccess: true
+        }
+      }
+      return {
+        ...state, isForgotPasswordInProcess: false, isForgotPasswordSuccess: false
+      }
+    }
+
+    case LoginConstants.RESET_PASSWORD_V2_REQUEST: {
+      return {
+        ...state, isResetPasswordInProcess: true
+      }
+    }
+    case LoginConstants.RESET_PASSWORD_V2_RESPONSE: {
+      if (action.payload.status === 'success') {
+        return {
+          ...state, isResetPasswordInProcess: false, isResetPasswordSuccess: true
+        }
+      }
+      return {
+        ...state, isResetPasswordInProcess: false, isResetPasswordSuccess: false
+      }
     }
 
     case LoginConstants.SIGNUP_WITH_EMAIL_REQUEST:

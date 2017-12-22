@@ -135,7 +135,7 @@ export class LoginActions {
         dialogs.alert(res.message);
         return { type: '' }
       } else {
-        return this.forgotPasswordResponse();
+        return this.forgotPasswordResponse(res);
       }
     });
 
@@ -146,6 +146,7 @@ export class LoginActions {
       this._authService.ResetPasswordV2(action.payload))
     .map(response => {
       let res: BaseResponse<string, ResetPasswordV2> = response;
+      console.log(res);
       if (res.status === 'error') {
         dialogs.alert(res.message);
         return { type: '' }
@@ -265,17 +266,19 @@ export class LoginActions {
   public forgotPasswordRequest(email: string): CustomActions {
     return {
       type: LoginConstants.FORGOT_PASSWORD_REQUEST,
-      payload: { email }
+      payload: email
     }
   }
 
-  public forgotPasswordResponse(): CustomActions {
+  public forgotPasswordResponse(res): CustomActions {
     return {
-      type: LoginConstants.FORGOT_PASSWORD_RESPONSE
+      type: LoginConstants.FORGOT_PASSWORD_RESPONSE,
+      payload: res
     }
   }
 
   public restPasswordV2Request(requestModel: ResetPasswordV2): CustomActions {
+    console.log(JSON.stringify(requestModel));
     return {
       type: LoginConstants.RESET_PASSWORD_V2_REQUEST,
       payload: requestModel

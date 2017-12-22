@@ -1,5 +1,5 @@
 exports.config = {
-  "AppUrl": "http://test:8081/",
-  "ApiUrl": "local",
+  "AppUrl": "http://apitest.giddh.com/",
+  "ApiUrl": "http://apitest.giddh.com/",
   "buildProfile": "test"
 };

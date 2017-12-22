@@ -8,8 +8,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
 import { LoginActions } from '../../../actions/login/login.action';
 import { ResetPasswordV2 } from '../../../models/api-models/Login';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AnimationCurve } from 'ui/enums';
+import * as dialogs from "ui/dialogs";
 
 @Component({
   selector: 'ns-forgot-password',
@@ -19,8 +21,15 @@ import { AnimationCurve } from 'ui/enums';
 })
 export class ForgotComponent implements OnInit, OnDestroy {
   public forgotPasswordForm: FormGroup;
+  public isForgotPasswordSuccess$: Observable<boolean>;
+  public isResetPasswordSuccess$: Observable<boolean>;
+
+  // private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private routerExtensions: RouterExtensions, private page: Page, private _fb: FormBuilder,
-    private store: Store<AppState>, private _loginActions: LoginActions) { }
+    private store: Store<AppState>, private _loginActions: LoginActions) {
+    this.isForgotPasswordSuccess$ = this.store.select(s => s.login.isForgotPasswordSuccess);
+    this.isResetPasswordSuccess$ = this.store.select(s => s.login.isResetPasswordSuccess);
+  }
 
   ngOnInit(): void {
     this.forgotPasswordForm = this._fb.group({
@@ -28,14 +37,21 @@ export class ForgotComponent implements OnInit, OnDestroy {
       verificationCode: ['', Validators.required],
       newPassword: ['', Validators.required],
       confirmPassword: ['', Validators.required]
-    }, { validator: this.confirmPasswordValidator });
+    }, { updateOn: 'submit' });
     // this.items = this.itemService.getItems();
     this.page.backgroundColor = new Color(1, 0, 169, 157);
     this.page.backgroundSpanUnderStatusBar = true;
     this.page.actionBarHidden = true;
+
+    this.isResetPasswordSuccess$.subscribe(s => {
+      if (s) {
+        this.routerExtensions.navigate(['/login']);
+      }
+    })
   }
   ngOnDestroy(): void {
-    console.log('forgot-password destroyed');
+    // this.destroyed$.next(true);
+    // this.destroyed$.complete();
   }
   backToLogin() {
     this.routerExtensions.navigate(['/login'], {
@@ -59,27 +75,13 @@ export class ForgotComponent implements OnInit, OnDestroy {
     resetPasswordRequest.verificationCode = resetPasswordFormValues.verificationCode;
     resetPasswordRequest.newPassword = resetPasswordFormValues.newPassword;
 
-    this.store.dispatch(this._loginActions.restPasswordV2Request(resetPasswordRequest));
-  }
-
-  confirmPasswordValidator(control: AbstractControl) {
-    const passwordControl = control.get('newPassword');
-    const confirmPasswordControl = control.get('confirmPassword');
-
-    if (passwordControl && confirmPasswordControl) {
-      if (passwordControl.value !== '' && confirmPasswordControl.value !== '') {
-        if (passwordControl.value !== confirmPasswordControl.value) {
-          return {
-            passwordNotMatched: true
-          }
-        } else {
-          return null;
-        }
-      } else {
-        return null;
-      }
+    if (resetPasswordFormValues.newPassword !== resetPasswordFormValues.confirmPassword) {
+      dialogs.alert('both password should match');
+      return;
     } else {
-      return null;
+      this.store.dispatch(this._loginActions.restPasswordV2Request(resetPasswordRequest));
     }
+
   }
+
 }
