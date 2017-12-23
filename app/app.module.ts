@@ -70,7 +70,9 @@ trace.enable();
     NativeScriptRouterModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, { metaReducers }),
-    StoreDevtoolsModule.instrument(),
+    StoreDevtoolsModule.instrument({
+      maxAge: 25
+    }),
     ServiceModule.forRoot(),
     ActionModule.forRoot(),
     LoginModule,

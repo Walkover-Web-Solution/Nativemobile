@@ -30,11 +30,9 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
     this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
     this.isLoginWithMobileInProcess$ = this.store.select(s => s.login.isLoginWithMobileInProcess);
-    console.log('Login with OTP construtor');
   }
 
   ngOnInit(): void {
-    console.log('Login with OTP ngOnInit');
     this.mobileVerifyForm = this._fb.group({
       country: ['91', [Validators.required]],
       mobileNumber: ['', [Validators.required]],
@@ -44,7 +42,6 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   ngAfterViewInit() {
     // this.items = this.itemService.getItems();
-    console.log('Login with OTP ngAfterViewInit');
     this.page.backgroundColor = new Color(1, 0, 169, 157);
     this.page.backgroundSpanUnderStatusBar = true;
     this.page.actionBarHidden = true;
@@ -56,7 +53,6 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   ngOnDestroy(): void {
-    console.log('login-with-otp destroyed');
   }
   backToLogin() {
     this.routerExtensions.navigate(['/login'], {

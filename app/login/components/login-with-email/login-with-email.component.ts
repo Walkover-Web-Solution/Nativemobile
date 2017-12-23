@@ -51,7 +51,6 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
 
   public loginWithEmail() {
     let emailForm = this.emailVerifyForm;
-    console.log('email :' + emailForm.value.email)
     this.store.dispatch(this._loginActions.signupWithEmailRequest(emailForm.value.email.toLowerCase()));
   }
 

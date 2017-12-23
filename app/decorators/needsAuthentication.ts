@@ -15,10 +15,8 @@ export class NeedsAuthentication implements CanActivate {
     let data = false;
     return this.store.select(createSelector([(p: AppState) => p.session], (s) => {
       if (s && s.user) {
-        console.log('please allow me');
         return true;
       } else {
-        console.log('please login first');
         this.routerExtensions.navigateByUrl('/login', { clearHistory: true });
         // this.routerExtensions.navigate(['/login']);
         return false;

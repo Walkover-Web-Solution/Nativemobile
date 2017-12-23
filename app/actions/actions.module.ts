@@ -2,11 +2,13 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 
 import { LoginActions } from './login/login.action';
+import { CompanyActions } from './company/company.action';
 
 @NgModule({
   imports: [
     EffectsModule.forRoot([
-      LoginActions
+      LoginActions,
+      CompanyActions
     ])
   ],
   exports: [EffectsModule]

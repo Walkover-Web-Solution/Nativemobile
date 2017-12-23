@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     // this.lo
   }
   public gotoUrl(url: string[], transitionName: string) {
-    console.log(url.join('/'));
     this.routerExtensions.navigateByUrl('/' + url.join('/'), {
       animated: true,
       transition: {

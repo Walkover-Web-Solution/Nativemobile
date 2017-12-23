@@ -146,7 +146,6 @@ export class LoginActions {
       this._authService.ResetPasswordV2(action.payload))
     .map(response => {
       let res: BaseResponse<string, ResetPasswordV2> = response;
-      console.log(res);
       if (res.status === 'error') {
         dialogs.alert(res.message);
         return { type: '' }
@@ -278,7 +277,6 @@ export class LoginActions {
   }
 
   public restPasswordV2Request(requestModel: ResetPasswordV2): CustomActions {
-    console.log(JSON.stringify(requestModel));
     return {
       type: LoginConstants.RESET_PASSWORD_V2_REQUEST,
       payload: requestModel
