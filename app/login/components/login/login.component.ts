@@ -57,7 +57,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
   }
   public login() {
-    // this.routerExtensions.navigate(['/home'], { clearHistory: true });
+    let formValues = this.loginWithPasswordForm.value;
+    formValues.uniqueKey = formValues.uniqueKey.toLowerCase();
     this.store.dispatch(this._loginActions.loginWithPassword(this.loginWithPasswordForm.value));
   }
 }

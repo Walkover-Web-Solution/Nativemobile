@@ -64,17 +64,18 @@ export class ForgotComponent implements OnInit, OnDestroy {
   }
 
   forgotPassword() {
-    this.store.dispatch(this._loginActions.forgotPasswordRequest(this.forgotPasswordForm.value.uniqueKey));
+    this.store.dispatch(this._loginActions.forgotPasswordRequest(this.forgotPasswordForm.value.uniqueKey.toLowerCase()));
   }
 
   resetPassword() {
     let resetPasswordRequest = new ResetPasswordV2();
     let resetPasswordFormValues = this.forgotPasswordForm.value;
 
-    resetPasswordRequest.uniqueKey = resetPasswordFormValues.uniqueKey;
+    resetPasswordRequest.uniqueKey = resetPasswordFormValues.uniqueKey.toLowerCase();
     resetPasswordRequest.verificationCode = resetPasswordFormValues.verificationCode;
     resetPasswordRequest.newPassword = resetPasswordFormValues.newPassword;
 
+    // if (resetPasswordFormValues.newPassword)
     if (resetPasswordFormValues.newPassword !== resetPasswordFormValues.confirmPassword) {
       dialogs.alert('both password should match');
       return;

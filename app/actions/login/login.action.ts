@@ -41,7 +41,7 @@ export class LoginActions {
         // dialogs.alert('login success');
         return this.loginWithPasswordResponse(res);
       } else {
-        // dialogs.alert('login error');
+        dialogs.alert(res.message);
         return { type: 'Error', payload: res }
       }
     });
@@ -151,7 +151,7 @@ export class LoginActions {
         dialogs.alert(res.message);
         return { type: '' }
       } else {
-        return this.resetPasswordV2Response();
+        return this.resetPasswordV2Response(res);
       }
     });
   constructor(private actions$: Actions, private _authService: AuthenticationService) {
@@ -285,9 +285,10 @@ export class LoginActions {
     }
   }
 
-  public resetPasswordV2Response(): CustomActions {
+  public resetPasswordV2Response(res: BaseResponse<string, ResetPasswordV2>): CustomActions {
     return {
-      type: LoginConstants.RESET_PASSWORD_V2_RESPONSE
+      type: LoginConstants.RESET_PASSWORD_V2_RESPONSE,
+      payload: res
     }
   }
 
