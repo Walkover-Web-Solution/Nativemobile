@@ -39,16 +39,14 @@ export class CompanyActions {
             let companyIndex = response.body.findIndex(cmp => cmp.uniqueName === activeCompanyName);
             if (companyIndex > -1) {
               // if active company find no action needed
-              return this.changeCompany(activeCompanyName);
-              // return { type: 'EmptyAction' };
             } else {
               // if no active company active next company from companies list
-              return this.changeCompany(response.body[0].uniqueName);
+              this.store.dispatch(this.changeCompany(response.body[0].uniqueName));
             }
           } else {
             // if no active company active next company from companies list
             console.log('sssass', response.body[0].uniqueName);
-            return this.changeCompany(response.body[0].uniqueName);
+            this.store.dispatch(this.changeCompany(response.body[0].uniqueName));
           }
         } else {
           //  if no companies available open create new company popup
@@ -57,6 +55,7 @@ export class CompanyActions {
           //   payload: 2
           // } as CustomActions;
         }
+        return this.refreshCompaniesResponse(response);
       }
     });
 
