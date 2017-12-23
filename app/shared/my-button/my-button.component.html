@@ -1,0 +1,18 @@
+<!--
+The MyDrawer custom component view is where you define what will be displayed in the app drawer.
+Feel free to customize layouts and components to change how your app drawer looks.
+-->
+<!-- <Button class="view" textWrap="true" row="0" col="0" [disabled]="disabled" (tap)="taped()">
+  <FormattedString>
+    <Span [text]="'&#xf110;'" fontFamily="FontAwesome" dock="left" *ngIf='lodder' class="fa  fa-spin"></Span>
+    <Span [text]="text" dock="right" *ngIf='true'></Span>
+  </FormattedString>
+</Button> -->
+
+<GridLayout columns="*" horizontalAlignment="center" class="sidedrawer-list-item" [ngClass]="class" [disabled]="disabled"
+  (tap)="taped()">
+  <StackLayout horizontalAlignment="center" orientation="horizontal">
+    <Label [text]="'&#xf110;'" *ngIf="lodder" fontFamily="FontAwesome" class="fa fa-spin"></Label>
+    <Label [text]="text" class="p-r-10"></Label>
+  </StackLayout>
+</GridLayout>

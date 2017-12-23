@@ -37,13 +37,10 @@ export class LoginActions {
       this._authService.LoginWithPassword(action.payload))
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = response;
-      if (res.status === 'success') {
-        // dialogs.alert('login success');
-        return this.loginWithPasswordResponse(res);
-      } else {
+      if (res.status !== 'success') {
         dialogs.alert(res.message);
-        return { type: 'Error', payload: res }
       }
+      return this.loginWithPasswordResponse(res);
     });
 
   @Effect()
@@ -51,12 +48,10 @@ export class LoginActions {
     .ofType(LoginConstants.SIGNUP_WITH_MOBILE_REQUEST)
     .switchMap((action: CustomActions) => this._authService.SignupWithMobile(action.payload))
     .map(response => {
-      if (response.status === 'success') {
-        return this.signupWithMobileResponce(response);
-      } else {
-        // dialogs.alert('something went wrong please try again');
-        return { type: 'Error', payload: response }
+      if (response.status !== 'success') {
+        dialogs.alert(response.message);
       }
+      return this.signupWithMobileResponce(response);
     });
 
   @Effect()
@@ -67,13 +62,10 @@ export class LoginActions {
     )
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
-      if (res.status === 'success') {
-        // dialogs.alert('login success');
-        return this.verifyMobileResponce(res);
-      } else {
-        // dialogs.alert('login error');
-        return { type: 'Error', payload: res };
+      if (res.status !== 'success') {
+        dialogs.alert(res.message);
       }
+      return this.verifyMobileResponce(res);
     });
 
 
@@ -82,12 +74,12 @@ export class LoginActions {
     .ofType(LoginConstants.SIGNUP_WITH_EMAIL_REQUEST)
     .switchMap((action: CustomActions) => this._authService.SignupWithEmail(action.payload))
     .map(response => {
-      if (response.status === 'success') {
-        return this.signupWithEmailResponce(response);
-      } else {
-        // dialogs.alert(response.message || 'something went wrong please try again');
-        return { type: 'Error', payload: response };
+      if (response.status !== 'success') {
+        dialogs.alert(response.message);
       }
+
+      return this.signupWithEmailResponce(response);
+
     });
 
   @Effect()
@@ -98,13 +90,10 @@ export class LoginActions {
     )
     .map(response => {
       let res: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = response;
-      if (res.status === 'success') {
-        // dialogs.alert('login success');
-        return this.verifyEmailResponce(res);
-      } else {
-        // dialogs.alert('login error');
-        return { type: 'Error', payload: res };
+      if (response.status !== 'success') {
+        dialogs.alert(response.message);
       }
+      return this.verifyEmailResponce(res);
     });
 
   @Effect()
@@ -115,13 +104,10 @@ export class LoginActions {
     )
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
-      if (res.status === 'success') {
-        // dialogs.alert('login success');
-        return this.verifyTwoWayAuthResponse(res);
-      } else {
-        // dialogs.alert('login error');
-        return { type: 'Error', payload: res };
+      if (response.status !== 'success') {
+        dialogs.alert(response.message);
       }
+      return this.verifyTwoWayAuthResponse(res);
     });
 
   @Effect()
