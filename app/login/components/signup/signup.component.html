@@ -6,7 +6,7 @@
         <TextField hint="Email Id" formControlName="email" class="input"></TextField>
         <TextField hint="Password" secure="true" formControlName="password" class="input"></TextField>
         <TextField hint="Mobile No" formControlName="mobileNo" class="input"></TextField>
-        <Button text="Sign Up" [disabled]="signupWithPasswordForm.invalid" (tap)="signUp()" class="btn btn-primary"></Button>
+        <!-- <Button text="Sign Up" [disabled]="signupWithPasswordForm.invalid" (tap)="signUp()" class="btn btn-primary"></Button> -->
         <MyButton [text]="'Sign Up'" [isEnabled]="signupWithPasswordForm.valid" [lodder]='signUpProcess$ | async' (tap)="signUp()"
           [class]="'btn btn-primary'">
         </MyButton>
