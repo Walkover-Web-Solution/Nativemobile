@@ -1,5 +1,9 @@
 import { Component, Input, OnInit, EventEmitter, Output } from "@angular/core";
 import { MyDrawerItem } from "../my-drawer-item/my-drawer-item";
+import { Store } from "@ngrx/store";
+import { AppState } from "~/store";
+import { UserDetails } from "~/models/api-models/loginModels";
+import { Observable } from "rxjs/Observable";
 
 /* ***********************************************************
 * Keep data that is displayed in your app drawer in the MyDrawer component class.
@@ -12,41 +16,14 @@ import { MyDrawerItem } from "../my-drawer-item/my-drawer-item";
   styleUrls: ["./my-drawer.component.css"]
 })
 export class MyDrawerComponent implements OnInit {
-
+  public user$: Observable<UserDetails>;
   @Input() selectedPage: string;
   @Output() public itemSelected: EventEmitter<MyDrawerItem> = new EventEmitter();
-  @Input() pages: MyDrawerItem[] = [{
-    title: "test1",
-    disabled: false,
-    icon: '',
-    isSelected: true,
-    needTopHr: false,
-    router: ''
-  },
-  {
-    title: "test2",
-    disabled: true,
-    icon: String.fromCharCode(0xf073),
-    isSelected: false,
-    needTopHr: false,
-    router: 'home'
-  },
-  {
-    title: "test1",
-    disabled: false,
-    icon: '',
-    isSelected: false,
-    needTopHr: false,
-    router: ''
-  },
-  {
-    title: "test1",
-    disabled: false,
-    icon: '',
-    isSelected: false,
-    needTopHr: true,
-    router: ''
-  }];
+  @Input() pages: MyDrawerItem[];
+
+  constructor(private store: Store<AppState>) {
+    this.user$ = this.store.select(p => p.session.user.user);
+  }
 
   ngOnInit(): void {
   }

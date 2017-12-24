@@ -34,7 +34,6 @@ export class CompanyActions {
         if (response.body.length) {
           let activeCompanyName = null;
           this.store.select(s => s.session.companyUniqueName).take(1).subscribe(a => activeCompanyName = a);
-
           if (activeCompanyName) {
             let companyIndex = response.body.findIndex(cmp => cmp.uniqueName === activeCompanyName);
             if (companyIndex > -1) {
@@ -45,7 +44,6 @@ export class CompanyActions {
             }
           } else {
             // if no active company active next company from companies list
-            console.log('sssass', response.body[0].uniqueName);
             this.store.dispatch(this.changeCompany(response.body[0].uniqueName));
           }
         } else {

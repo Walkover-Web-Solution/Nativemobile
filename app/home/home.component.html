@@ -30,15 +30,15 @@
   -->
   <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
   </ActionItem>
-  <Label class="action-bar-title" text="Home"></Label>
-  <ActionItem (tap)="logout()" ios.systemIcon="9" ios.position="left" android.systemIcon="ic_menu_share" android.position="actionBar"></ActionItem>
+  <Label class="action-bar-title" [text]="activeCompany?.name"></Label>
+  <ActionItem (tap)="logout()" ios.position="left" android.position="actionBar" class="fa" fontColor="white" text="&#xf118;" ></ActionItem>
 </ActionBar>
 <RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
   <!--
   Use the tkDrawerContent directive to display the content of the app drawer on this page.
   -->
   <StackLayout tkDrawerContent>
-    <MyDrawer [pages]="companies" (itemSelected)="changeCompany($event)" [selectedPage]="activeCompany?.name"></MyDrawer>
+    <MyDrawer [pages]="companies" (itemSelected)="changeCompany($event)" [selectedPage]="'home'"></MyDrawer>
   </StackLayout>
 
   <!--
