@@ -12,7 +12,7 @@ Feel free to customize layouts and components to change how your app drawer look
   <ScrollView row="1">
     <StackLayout class="sidedrawer-content">
 
-      <MyDrawerItem *ngFor="let item of pages" [mydraweritem]="item" icon="{{item.icon}}">
+      <MyDrawerItem (itemSelected)="onNavItemTap($event)" *ngFor="let item of pages" [mydraweritem]="item" icon="{{item.icon}}">
       </MyDrawerItem>
     </StackLayout>
   </ScrollView>

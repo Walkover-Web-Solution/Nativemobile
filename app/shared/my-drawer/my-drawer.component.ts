@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, EventEmitter, Output } from "@angular/core";
 import { MyDrawerItem } from "../my-drawer-item/my-drawer-item";
 
 /* ***********************************************************
@@ -14,6 +14,7 @@ import { MyDrawerItem } from "../my-drawer-item/my-drawer-item";
 export class MyDrawerComponent implements OnInit {
 
   @Input() selectedPage: string;
+  @Output() public itemSelected: EventEmitter<MyDrawerItem> = new EventEmitter();
   @Input() pages: MyDrawerItem[] = [{
     title: "test1",
     disabled: false,
@@ -51,5 +52,9 @@ export class MyDrawerComponent implements OnInit {
   }
   isPageSelected(pageTitle: string): boolean {
     return pageTitle === this.selectedPage;
+  }
+
+  onNavItemTap(item: MyDrawerItem): void {
+    this.itemSelected.emit(item);
   }
 }

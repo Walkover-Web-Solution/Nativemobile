@@ -23,9 +23,7 @@ export class AuthenticationService {
     @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
   }
   public SignupWithEmail(email: string): Observable<BaseResponse<string, string>> {
-    console.log(email);
     return this._http.post(config.config.ApiUrl + LOGIN_API.SignupWithEmail, { email }).map((res) => {
-      console.log(JSON.stringify(res.json));
       let data: BaseResponse<string, string> = res.json();
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, email));
@@ -34,7 +32,6 @@ export class AuthenticationService {
     return this._http.post(config.config.ApiUrl + LOGIN_API.VerifyEmail, model).map((res) => {
       let data: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = res.json();
       data.request = model;
-      // console.log(data);
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, VerifyEmailModel>(e, model));
   }
@@ -49,7 +46,6 @@ export class AuthenticationService {
   }
 
   public ResetPasswordV2(request: ResetPasswordV2): Observable<BaseResponse<string, ResetPasswordV2>> {
-    console.log(config.config.ApiUrl + LOGIN_API.ResetPasswordV2, request);
     return this._http.put(config.config.ApiUrl +
       LOGIN_API.ResetPasswordV2, request).map((res) => {
         let data: BaseResponse<string, ResetPasswordV2> = res.json();
@@ -69,7 +65,6 @@ export class AuthenticationService {
     return this._http.post(config.config.ApiUrl + LOGIN_API.VerifyOTP, modele).map((res) => {
       let data: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = res.json();
       data.request = modele;
-      // console.log(data);
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyMobileResponseModel, VerifyMobileModel>(e, modele));
   }
@@ -77,7 +72,6 @@ export class AuthenticationService {
     return this._http.post(config.config.ApiUrl + LOGIN_API.SignupWithPassword, modele).map((res) => {
       let data: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = res.json();
       data.request = modele;
-      // console.log(data);
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyMobileResponseModel, SignUpWithPassword>(e, modele));
   }
@@ -85,7 +79,6 @@ export class AuthenticationService {
     return this._http.post(config.config.ApiUrl + LOGIN_API.LoginWithPassword, modele).map((res) => {
       let data: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = res.json();
       data.request = modele;
-      // console.log(data);
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyMobileResponseModel, LoginWithPassword>(e, modele));
   }

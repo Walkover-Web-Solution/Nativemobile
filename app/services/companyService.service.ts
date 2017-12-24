@@ -11,6 +11,7 @@ import { BulkEmailRequest } from '../models/api-models/Search';
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
 
+let config = require('../config/config');
 @Injectable()
 export class CompanyService {
 
@@ -41,7 +42,7 @@ export class CompanyService {
    */
   public CompanyList(): Observable<BaseResponse<CompanyResponse[], string>> {
     this.user = this._generalService.user;
-    return this._http.get(this.config.apiUrl + COMPANY_API.COMPANY_LIST.replace(':uniqueName', this.user.uniqueName))
+    return this._http.get(config.config.ApiUrl + COMPANY_API.COMPANY_LIST.replace(':uniqueName', this.user.uniqueName))
       .map((res) => {
         let data: BaseResponse<CompanyResponse[], string> = res.json();
         return data;
@@ -67,9 +68,9 @@ export class CompanyService {
   public getStateDetails(cmpUniqueName?: string): Observable<BaseResponse<StateDetailsResponse, string>> {
     let url = '';
     if (cmpUniqueName) {
-      url = this.config.apiUrl + COMPANY_API.GET_STATE_DETAILS.replace(':companyUniqueName', encodeURIComponent(cmpUniqueName ? cmpUniqueName : ''));
+      url = config.config.ApiUrl + COMPANY_API.GET_STATE_DETAILS.replace(':companyUniqueName', encodeURIComponent(cmpUniqueName ? cmpUniqueName : ''));
     } else {
-      url = this.config.apiUrl + COMPANY_API.GET_STATE_DETAILS.replace('?companyUniqueName=:companyUniqueName', '');
+      url = config.config.ApiUrl + COMPANY_API.GET_STATE_DETAILS.replace('?companyUniqueName=:companyUniqueName', '');
     }
     return this._http.get(url).map((res) => {
       let data: BaseResponse<StateDetailsResponse, string> = res.json();
