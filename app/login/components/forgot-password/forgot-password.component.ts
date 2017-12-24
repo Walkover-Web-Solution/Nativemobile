@@ -23,12 +23,16 @@ export class ForgotComponent implements OnInit, OnDestroy {
   public forgotPasswordForm: FormGroup;
   public isForgotPasswordSuccess$: Observable<boolean>;
   public isResetPasswordSuccess$: Observable<boolean>;
+  public isForgotPasswordInProcess$: Observable<boolean>;
+  public isResetPasswordInProcess$: Observable<boolean>;
 
   // private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private routerExtensions: RouterExtensions, private page: Page, private _fb: FormBuilder,
     private store: Store<AppState>, private _loginActions: LoginActions) {
     this.isForgotPasswordSuccess$ = this.store.select(s => s.login.isForgotPasswordSuccess);
     this.isResetPasswordSuccess$ = this.store.select(s => s.login.isResetPasswordSuccess);
+    this.isForgotPasswordInProcess$ = this.store.select(s => s.login.isForgotPasswordInProcess);
+    this.isResetPasswordInProcess$ = this.store.select(s => s.login.isResetPasswordInProcess);
   }
 
   ngOnInit(): void {

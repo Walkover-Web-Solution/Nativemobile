@@ -8,13 +8,19 @@
 
         <StackLayout *ngIf="!(isLoginWithEmailSubmited$ | async)">
           <TextField hint="Email Id" class="input" formControlName="email"></TextField>
-          <Button text="Submit" [disabled]="emailVerifyForm.invalid" (tap)="loginWithEmail()" class="btn btn-primary"></Button>
+          <!-- <Button text="Submit" [disabled]="emailVerifyForm.invalid" (tap)="loginWithEmail()" class="btn btn-primary"></Button> -->
+          <MyButton [text]="'Submit'" [isEnabled]="emailVerifyForm.get('email').valid" [lodder]='isLoginWithEmailInProcess$ | async'
+            (tap)="loginWithEmail()" [class]="'btn btn-primary'">
+          </MyButton>
           <!-- <Button text="Resend" [disabled]="emailVerifyForm.invalid" (tap)="getOtp()" *ngIf="!(isLoginWithEmailSubmited$ | async)" class="btn btn-primary"></Button> -->
         </StackLayout>
 
         <StackLayout *ngIf="(isLoginWithEmailSubmited$ | async)">
           <TextField hint="Otp" class="input" formControlName="token"></TextField>
-          <Button text="Last step to go" [disabled]="emailVerifyForm.invalid" (tap)="verifyEmail()" class="btn btn-primary"></Button>
+          <!-- <Button text="Last step to go" [disabled]="emailVerifyForm.invalid" (tap)="verifyEmail()" class="btn btn-primary"></Button> -->
+          <MyButton [text]="'Last step to go'" [isEnabled]="emailVerifyForm.valid" [lodder]='isVerifyEmailInProcess$ | async' (tap)="verifyEmail()"
+            [class]="'btn btn-primary'">
+          </MyButton>
         </StackLayout>
 
         <StackLayout horizontalAlignment="center" orientation="horizontal">

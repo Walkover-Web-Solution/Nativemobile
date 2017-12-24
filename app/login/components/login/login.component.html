@@ -7,7 +7,7 @@
 
         <TextField hint="Username/Mobile No/Email Id" formControlName="uniqueKey" class="input"></TextField>
         <TextField hint="Password" formControlName="password" secure="true" class="input"></TextField>
-        <MyButton [text]="'Login'" [disabled]="loginWithPasswordForm.invalid" [lodder]='loginProcess$ | async' (tap)="login()" [class]="'btn btn-primary'">
+        <MyButton [text]="'Login'" [isEnabled]="loginWithPasswordForm.valid" [lodder]='loginProcess$ | async' (tap)="login()" [class]="'btn btn-primary'">
         </MyButton>
 
         <StackLayout horizontalAlignment="center" orientation="horizontal">

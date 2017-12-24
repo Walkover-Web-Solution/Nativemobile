@@ -15,7 +15,7 @@ export class MyButonComponent implements OnInit, OnChanges {
 
   @Input() lodder: boolean;
   @Input() text: boolean;
-  @Input() disabled: boolean;
+  @Input() isEnabled: boolean;
   @Input() class: string;
 
   @Output() public tap: EventEmitter<boolean> = new EventEmitter(true);

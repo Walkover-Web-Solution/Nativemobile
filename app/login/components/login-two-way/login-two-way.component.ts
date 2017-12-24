@@ -19,11 +19,13 @@ import { AnimationCurve } from 'ui/enums';
 })
 export class LoginTwoWayComponent implements OnInit, OnDestroy {
   public isTwoWayAuthSuccess$: Observable<boolean>;
+  public isTwoWayAuthInProcess$: Observable<boolean>;
   public userDetails$: Observable<VerifyEmailResponseModel>;
   public twoWayOthForm: FormGroup;
   constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions, private page: Page) {
     this.isTwoWayAuthSuccess$ = this.store.select(s => s.login.isTwoWayAuthSuccess);
     this.userDetails$ = this.store.select(p => p.session.user);
+    this.isTwoWayAuthInProcess$ = this.store.select(p => p.login.isTwoWayAuthInProcess);
   }
 
   public ngOnInit(): void {

@@ -25,11 +25,13 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   public isLoginWithMobileSubmited$: Observable<boolean>;
   public isVerifyMobileSuccess$: Observable<boolean>;
   public isLoginWithMobileInProcess$: Observable<boolean>;
+  public isVerifyMobileInProcess$: Observable<boolean>;
   constructor(private routerExtensions: RouterExtensions, private page: Page, private store: Store<AppState>,
     private _fb: FormBuilder, private _loginActions: LoginActions) {
     this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
     this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
     this.isLoginWithMobileInProcess$ = this.store.select(s => s.login.isLoginWithMobileInProcess);
+    this.isVerifyMobileInProcess$ = this.store.select(s => s.login.isVerifyMobileInProcess);
   }
 
   ngOnInit(): void {

@@ -24,9 +24,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     private page: Page) {
     this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
     this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
-    this.loginProcess$.subscribe(p => {
-      console.log('loader : ' + p);
-    });
   }
 
   public ngOnInit(): void {

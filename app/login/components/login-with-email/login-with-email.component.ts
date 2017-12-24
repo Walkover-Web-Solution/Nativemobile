@@ -19,11 +19,13 @@ import { AnimationCurve } from 'ui/enums';
 })
 export class LoginWithEmailComponent implements OnInit, OnDestroy {
   public isLoginWithEmailInProcess$: Observable<boolean>;
+  public isVerifyEmailInProcess$: Observable<boolean>;
   public isVerifyEmailSuccess$: Observable<boolean>;
   public isLoginWithEmailSubmited$: Observable<boolean>;
   public emailVerifyForm: FormGroup;
   constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions, private page: Page) {
     this.isLoginWithEmailInProcess$ = this.store.select(s => s.login.isLoginWithEmailInProcess);
+    this.isVerifyEmailInProcess$ = this.store.select(s => s.login.isVerifyEmailInProcess);
     this.isVerifyEmailSuccess$ = this.store.select(s => s.login.isVerifyEmailSuccess);
     this.isLoginWithEmailSubmited$ = this.store.select(s => s.login.isLoginWithEmailSubmited);
   }

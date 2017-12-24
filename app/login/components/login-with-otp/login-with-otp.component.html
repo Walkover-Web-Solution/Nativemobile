@@ -9,12 +9,18 @@
         <StackLayout *ngIf="!(isLoginWithMobileSubmited$ | async)">
           <TextField hint="Mobile No" class="input" formControlName="mobileNumber"></TextField>
           <Button text="Get Verification Code" [disabled]="mobileVerifyForm.invalid" (tap)="getOtp()" class="btn btn-primary"></Button>
+          <MyButton [text]="'Get Verification Code'" [isEnabled]="mobileVerifyForm.get('mobileNumber').valid" [lodder]='isLoginWithMobileInProcess$ | async'
+            (tap)="getOtp()" [class]="'btn btn-primary'">
+          </MyButton>
           <!-- <Button text="Resend" [disabled]="mobileVerifyForm.invalid" (tap)="getOtp()" *ngIf="!(isLoginWithMobileSubmited$ | async)" class="btn btn-primary"></Button> -->
         </StackLayout>
 
         <StackLayout *ngIf="(isLoginWithMobileSubmited$ | async)">
           <TextField hint="Otp" class="input" formControlName="otp"></TextField>
           <Button text="Login" [disabled]="mobileVerifyForm.invalid" (tap)="verifyCode()" class="btn btn-primary"></Button>
+          <MyButton [text]="'Get Verification Code'" [isEnabled]="mobileVerifyForm.valid" [lodder]='isVerifyMobileInProcess$ | async'
+            (tap)="verifyCode()" [class]="'btn btn-primary'">
+          </MyButton>
         </StackLayout>
 
         <StackLayout horizontalAlignment="center" orientation="horizontal">

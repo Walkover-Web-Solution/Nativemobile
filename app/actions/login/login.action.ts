@@ -22,12 +22,10 @@ export class LoginActions {
       this._authService.SignupWithPassword(action.payload))
     .map(response => {
       let res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = response;
-      if (res.status === 'error') {
-        // dialogs.alert(res.message);
-        return { type: 'Error', payload: res }
-      } else {
-        return this.signUpResponse(res);
+      if (res.status !== 'success') {
+        dialogs.alert(res.message);
       }
+      return this.signUpResponse(res);
     });
 
   @Effect()
@@ -117,12 +115,12 @@ export class LoginActions {
       this._authService.ForgotPassword(action.payload))
     .map(response => {
       let res: BaseResponse<string, string> = response;
-      if (res.status === 'error') {
+      if (res.status !== 'success') {
         dialogs.alert(res.message);
-        return { type: '' }
-      } else {
-        return this.forgotPasswordResponse(res);
+        // return { type: '' }
       }
+      return this.forgotPasswordResponse(res);
+
     });
 
   @Effect()
@@ -132,12 +130,12 @@ export class LoginActions {
       this._authService.ResetPasswordV2(action.payload))
     .map(response => {
       let res: BaseResponse<string, ResetPasswordV2> = response;
-      if (res.status === 'error') {
+      if (res.status !== 'success') {
         dialogs.alert(res.message);
-        return { type: '' }
-      } else {
-        return this.resetPasswordV2Response(res);
+        // return { type: '' }
       }
+      return this.resetPasswordV2Response(res);
+
     });
   constructor(private actions$: Actions, private _authService: AuthenticationService) {
 
