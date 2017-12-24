@@ -12,7 +12,7 @@ import { CompanyActions } from '~/actions/company/company.action';
 import { CompanyResponse } from '~/models/api-models/Company';
 import { MyDrawerItem } from '~/shared/my-drawer-item/my-drawer-item';
 import { createSelector } from 'reselect';
-
+import { TNSFontIconService } from 'nativescript-ngx-fonticon';
 
 
 @Component({
@@ -25,32 +25,33 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild("drawer") drawerComponent: RadSideDrawerComponent;
   private _sideDrawerTransition: DrawerTransitionBase;
   public userStream$: Observable<VerifyEmailResponseModel>;
-  public colors: ['red', 'blue', 'green', 'yellow', 'orange', 'brown', 'silver'];
-  public selectedColorIndex: 1;
   public activeCompany: CompanyResponse;
+  public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public companies: MyDrawerItem[] = [];
   constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions, private _loginActions: LoginActions,
     private _companyActions: CompanyActions) {
     this.userStream$ = this.store.select(s => s.session.user);
+    this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+      return { companies, uniqueName };
+    }));
   }
 
   public ngOnInit(): void {
     this.store.dispatch(this._companyActions.refreshCompanies());
 
-    this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-      console.log('companies ', JSON.stringify(companies));
-      if (!companies) {
+    this.companyData$.subscribe(res => {
+      if (!res.companies) {
         return;
       }
 
       let allCmps: MyDrawerItem[] = [];
-      companies.forEach(cmp => {
+      res.companies.forEach(cmp => {
         let item = new MyDrawerItem();
         item.title = cmp.name;
         item.needTopHr = true;
         item.customData = cmp;
 
-        if (cmp.uniqueName === uniqueName) {
+        if (cmp.uniqueName === res.uniqueName) {
           item.icon = String.fromCharCode(0xf00c);
           item.isSelected = true;
         }
@@ -59,10 +60,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
       this.companies = allCmps;
 
-      this.activeCompany = companies.find(cmp => {
-        return cmp.uniqueName === uniqueName;
+      this.activeCompany = res.companies.find(cmp => {
+        return cmp.uniqueName === res.uniqueName;
       });
-    }));
+
+    });
   }
   public get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;

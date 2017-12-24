@@ -1,6 +1,5 @@
 // this import should be first in order to load some required settings (like globals and reflect-metadata)
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
-import { NativeScriptDevToolsMonitors } from "ngrx-devtools-nativescript";
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { storeLogger } from 'ngrx-store-logger';
 import { NativeScriptHttpModule } from 'nativescript-angular/http';
@@ -66,7 +65,6 @@ trace.enable();
   imports: [
     NativeScriptModule,
     NativeScriptHttpModule,
-    NativeScriptDevToolsMonitors,
     NativeScriptRouterModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, { metaReducers }),

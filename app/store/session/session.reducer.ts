@@ -76,7 +76,6 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
 
     case CompanyConstants.REFRESH_COMPANIES_RESPONSE: {
       let companies: BaseResponse<CompanyResponse[], string> = action.payload;
-      console.log('rer', companies.body);
       if (companies.status === 'success') {
         return {
           ...state,

@@ -5,14 +5,14 @@ Feel free to customize layouts and components to change how your app drawer look
 <GridLayout rows="auto, *" class="sidedrawer sidedrawer-left">
   <StackLayout row="0" class="sidedrawer-header">
     <Label class="sidedrawer-header-image fa" text="&#xf2bd;"></Label>
-    <Label class="sidedrawer-header-brand" text="User Name"></Label>
-    <Label class="footnote" text="username@mail.com"></Label>
+    <Label class="sidedrawer-header-brand" [text]="(user$ | async)?.name"></Label>
+    <Label class="footnote" [text]="(user$ | async)?.email"></Label>
   </StackLayout>
 
   <ScrollView row="1">
     <StackLayout class="sidedrawer-content">
-
-      <MyDrawerItem (itemSelected)="onNavItemTap($event)" *ngFor="let item of pages" [mydraweritem]="item" icon="{{item.icon}}">
+      {{ pages | json }}
+      <MyDrawerItem (itemSelected)="onNavItemTap(item)" *ngFor="let item of pages" [mydraweritem]="item" icon="{{item.icon}}">
       </MyDrawerItem>
     </StackLayout>
   </ScrollView>

@@ -11,7 +11,7 @@ import { MyDrawerItem } from "./my-drawer-item";
 export class MyDrawerItemComponent implements OnInit {
   @Input() mydraweritem: MyDrawerItem;
   @Input() icon: string;
-  @Output() public itemSelected: EventEmitter<MyDrawerItem> = new EventEmitter();
+  @Output() public itemSelected: EventEmitter<any> = new EventEmitter();
 
   constructor(private routerExtensions: RouterExtensions) {
 
@@ -19,7 +19,7 @@ export class MyDrawerItemComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  onNavItemTap(item: MyDrawerItem): void {
-    this.itemSelected.emit(item);
+  onNavItemTap(): void {
+    this.itemSelected.emit();
   }
 }
