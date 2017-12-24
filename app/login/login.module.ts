@@ -9,6 +9,7 @@ import { NativeScriptRouterModule } from 'nativescript-angular/router';
 // app
 import { COMPONENTS, LoginComponent, LoginWithOtpComponent, LoginWithEmailComponent, ForgotComponent, SignUpComponent, LoginTwoWayComponent } from './components';
 import { LoginRoutingModule } from './login.routing.module';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { LoginRoutingModule } from './login.routing.module';
     NativeScriptRouterModule,
     LoginRoutingModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   exports: [NativeScriptRouterModule],
   declarations: [...COMPONENTS],

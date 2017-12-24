@@ -56,7 +56,7 @@ let config = require('./config/config');
 //   , trace.categories.Layout
 // ));
 trace.setCategories(trace.categories.All);
-trace.enable();
+// trace.enable();
 
 // import { registerElement } from "nativescript-angular/element-registry";
 // registerElement("MaterialDropdownList", () => require("nativescript-materialdropdownlist").MaterialDropdownList);
@@ -87,7 +87,7 @@ trace.enable();
   ],
   schemas: [
     NO_ERRORS_SCHEMA
-]
+  ]
 })
 export class AppModule { };
 
