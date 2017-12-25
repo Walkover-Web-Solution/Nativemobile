@@ -1,5 +1,6 @@
-<FlexboxLayout flexDirection="column" height="200" margin="10">
-  <FlexboxLayout>
-    <Label text="Revenue" textWrap="true"></Label>
-  </FlexboxLayout>
-</FlexboxLayout>
+<RadCartesianChart tkExampleTitle tkToggleNavButton>
+    <CategoricalAxis tkCartesianHorizontalAxis></CategoricalAxis>
+    <LinearAxis tkCartesianVerticalAxis></LinearAxis>
+
+    <BarSeries tkCartesianSeries [items]="categoricalSource" categoryProperty="Country" valueProperty="Amount"></BarSeries>
+</RadCartesianChart>

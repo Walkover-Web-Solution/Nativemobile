@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // nativescript
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
 import { NativeScriptCommonModule } from "nativescript-angular/common";
+import { NativeScriptUIChartModule } from "nativescript-pro-ui/chart/angular";
 
 // app
 import { NeedsAuthentication } from '../decorators/needsAuthentication';
@@ -23,7 +24,8 @@ import { ExpensesChartComponent } from '~/dashboard/components/expenses/expenses
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    DashboardRoutingModule
+    DashboardRoutingModule,
+    NativeScriptUIChartModule
   ],
   declarations: [DashboardComponent, RevenueChartComponent, ExpensesChartComponent],
   schemas: [
