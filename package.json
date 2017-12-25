@@ -75,6 +75,7 @@
     "sass-loader": "~6.0.6",
     "tns-platform-declarations": "3.4.0",
     "typescript": "~2.4.2",
+    "uglifyjs-webpack-plugin": "^1.1.4",
     "webpack": "~3.8.1",
     "webpack-bundle-analyzer": "^2.8.2",
     "webpack-sources": "~1.0.1"
@@ -91,7 +92,7 @@
     "css": "npm run css.clean && npm run css.generate",
     "js.clean": "npx rimraf -- app/**/*.js",
     "ns-bundle": "ns-bundle",
-    "start-android-bundle": "cross-env BUILD_PROFILE=dev tns build android --bundle",
+    "start-android-bundle": "cross-env BUILD_PROFILE=dev tns build android --bundle --env.aot --env.uglify",
     "start-ios-bundle": "cross-env BUILD_PROFILE=dev tns build ios --bundle",
     "build-android-bundle": "cross-env BUILD_PROFILE=dev tns build android",
     "build-ios-bundle": "cross-env BUILD_PROFILE=dev tns build ios --bundle",

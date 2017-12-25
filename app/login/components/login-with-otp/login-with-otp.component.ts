@@ -13,7 +13,6 @@ import * as application from "application";
 import * as utils from "utils/utils";
 import { AnimationCurve } from 'ui/enums';
 // import { Color } from 'tns-core-modules/ui/page/page';
-
 @Component({
   selector: 'ns-login-with-otp',
   moduleId: module.id,
