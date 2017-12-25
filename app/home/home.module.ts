@@ -9,7 +9,6 @@ import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { HomeComponent } from './home.component';
 import { NeedsAuthentication } from '../decorators/needsAuthentication';
 import { HomeRoutingModule } from './home.routing.module';
-import { NativeScriptRouterModule } from 'nativescript-angular/router';
 import { SharedModule } from './../shared/shared.module';
 
 
@@ -17,7 +16,6 @@ import { SharedModule } from './../shared/shared.module';
   imports: [
     NativeScriptCommonModule,
     NativeScriptFormsModule,
-    NativeScriptRouterModule,
     HomeRoutingModule,
     FormsModule,
     ReactiveFormsModule,

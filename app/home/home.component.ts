@@ -22,6 +22,7 @@ import { TNSFontIconService } from 'nativescript-ngx-fonticon';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  public logoutIcon: string = String.fromCharCode(0xf073);
   @ViewChild("drawer") drawerComponent: RadSideDrawerComponent;
   private _sideDrawerTransition: DrawerTransitionBase;
   public userStream$: Observable<VerifyEmailResponseModel>;
@@ -69,10 +70,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;
   }
-  public logout() {
-    this.store.dispatch(this._loginActions.logout());
-    this.routerExtensions.navigateByUrl('/login', { clearHistory: true });
-  }
+
   public ngOnDestroy(): void {
     // this.lo
   }

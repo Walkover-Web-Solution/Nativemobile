@@ -1,7 +1,5 @@
 // this import should be first in order to load some required settings (like globals and reflect-metadata)
 import { NativeScriptModule } from "nativescript-angular/nativescript.module";
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { storeLogger } from 'ngrx-store-logger';
 import { NativeScriptHttpModule } from 'nativescript-angular/http';
 import { NSModuleFactoryLoader, NativeScriptRouterModule } from 'nativescript-angular/router';
 import * as trace from "tns-core-modules/trace";
@@ -40,26 +38,10 @@ import { LocationStrategy } from "@angular/common";
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({ keys: ['session'], rehydrate: true })(reducer);
 }
-export function logger(reducer: ActionReducer<AppState>): any {
-  // default, no options
-  return storeLogger()(reducer);
-}
-let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logger];
-let config = require('./config/config');
-// trace.setCategories(trace.categories.concat(
-//   trace.categories.Binding
-//   , trace.categories.Debug
-//   , trace.categories.Navigation
-//   , trace.categories.ViewHierarchy
-//   , trace.categories.Binding
-//   , trace.categories.Error
-//   , trace.categories.Layout
-// ));
-trace.setCategories(trace.categories.All);
-// trace.enable();
 
-// import { registerElement } from "nativescript-angular/element-registry";
-// registerElement("MaterialDropdownList", () => require("nativescript-materialdropdownlist").MaterialDropdownList);
+let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
+let config = require('./config/config')
+
 @NgModule({
   bootstrap: [AppComponent],
   imports: [
@@ -68,9 +50,6 @@ trace.setCategories(trace.categories.All);
     NativeScriptRouterModule,
     AppRoutingModule,
     StoreModule.forRoot(reducers, { metaReducers }),
-    StoreDevtoolsModule.instrument({
-      maxAge: 25
-    }),
     ServiceModule.forRoot(),
     ActionModule.forRoot(),
     LoginModule,
@@ -83,7 +62,6 @@ trace.setCategories(trace.categories.All);
       provide: ServiceConfig,
       useValue: { apiUrl: config.ApiUrl, appUrl: config.AppUrl }
     }
-    // { provide: LocationStrategy, useValue: HashLocationStrategy }
   ],
   schemas: [
     NO_ERRORS_SCHEMA

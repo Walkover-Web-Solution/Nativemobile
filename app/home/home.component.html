@@ -1,37 +1,12 @@
-<!-- <GridLayout rows="*,*">
-  <DockLayout row="0" width="210" height="210" backgroundColor="lightgray" stretchLastChild="true">
-    <Label text="Welcome To Home {{ (userStream$ | async)?.user?.name }}"></Label>
+<ActionBar class="action-bar" width="100%">
+  <GridLayout columns="auto,*,auto" rows="*" width="100%">
+    <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf0c9;" fontFamily="FontAwesome"
+      (tap)="onDrawerButtonTap()">
+    </Button>
+    <Label row="0" col="1" class="action-bar-title" [text]="activeCompany?.name" horizontalAlignment="center"></Label>
 
-  </DockLayout>
-  <StackLayout row="1" horizontalAlignment="center">
-    <Button class="btn btn-primary" id="button" text="Logout" (tap)="logout()"></Button>
-  </StackLayout>
-</GridLayout> -->
-
-<ActionBar class="action-bar">
-  <GridLayout rows="*" columns="auto,*,auto" width="100%">
-    <!-- <Image col="0" src="https://d2odgkulk9w7if.cloudfront.net/images/default-source/logos/nativescript-logo.png?sfvrsn=2" class="action-image">
-    </Image> -->
-    <MaterialDropdownList col="0" id="ddlColors" itemsSeparatorColor="transparent" itemsRowHeight="30" [items]="colors" [selectedIndex]="selectedColorIndex">
-    </MaterialDropdownList>
-
-    <Button text="MB" width="50" class="button" col="2"></Button>
+    <LogoutButton row="0" col="2"></LogoutButton>
   </GridLayout>
-
-</ActionBar>
-
-<ActionBar class="action-bar">
-  <!--
-  Use the NavigationButton as a side-drawer button in Android because ActionItems are shown on the right side of the ActionBar
-  -->
-  <NavigationButton ios:visibility="collapsed" icon="res://menu" (tap)="onDrawerButtonTap()"></NavigationButton>
-  <!--
-  Use the ActionItem for IOS with position set to left. Using the NavigationButton as a side-drawer button in iOS is not possible, because its function is to always navigate back in the application.
-  -->
-  <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
-  </ActionItem>
-  <Label class="action-bar-title" [text]="activeCompany?.name"></Label>
-  <ActionItem (tap)="logout()" ios.position="left" android.position="actionBar" class="fa" fontColor="white" text="&#xf118;" ></ActionItem>
 </ActionBar>
 <RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
   <!--
@@ -46,9 +21,9 @@
   -->
   <GridLayout columns="*,*" rows="*,*,*" class="page page-content" tkMainContent>
     <!-- <Border borderRadius="0" borderWidth="1" borderColor="#FF0000"> -->
-    <Button class="b-button" row="0" col="0" textWrap="true" textAlignment="center" >
+    <Button class="b-button" row="0" col="0" textWrap="true" textAlignment="center">
       <FormattedString>
-        <Span text="&#xf110;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" *ngIf='false'  fontSize="35"></Span>
+        <Span text="&#xf110;&#x000a;" fontFamily="FontAwesome" verticalAlignment="top" *ngIf='false' fontSize="35"></Span>
         <Span text="Dashboard" verticalAlignment="bottom" fontSize="20"></Span>
       </FormattedString>
     </Button>

@@ -98,10 +98,7 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
     }
 
     case LoginConstants.LOGOUT: {
-      return {
-        ...state,
-        user: null
-      }
+      return initialState;
     }
     default:
       return state;

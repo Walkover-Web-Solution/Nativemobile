@@ -15,13 +15,11 @@ import { SharedModule } from '../shared/shared.module';
   imports: [
     NativeScriptCommonModule,
     NativeScriptFormsModule,
-    NativeScriptRouterModule,
     LoginRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule
   ],
-  exports: [NativeScriptRouterModule],
   declarations: [...COMPONENTS],
   schemas: [
     NO_ERRORS_SCHEMA

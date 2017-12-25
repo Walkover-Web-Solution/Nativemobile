@@ -5,6 +5,7 @@ import { NativeScriptUISideDrawerModule } from "nativescript-pro-ui/sidedrawer/a
 import { MyDrawerItemComponent } from "./my-drawer-item/my-drawer-item.component";
 import { MyDrawerComponent } from "./my-drawer/my-drawer.component";
 import { MyButonComponent } from "./my-button/my-botton.component";
+import { MyLogoutComponent } from "./logout-button/logout-botton.component";
 
 @NgModule({
   imports: [
@@ -14,11 +15,13 @@ import { MyButonComponent } from "./my-button/my-botton.component";
   declarations: [
     MyDrawerComponent,
     MyDrawerItemComponent,
-    MyButonComponent
+    MyButonComponent,
+    MyLogoutComponent
   ],
   exports: [
     MyDrawerComponent,
     MyButonComponent,
+    MyLogoutComponent,
     NativeScriptUISideDrawerModule
   ],
   schemas: [

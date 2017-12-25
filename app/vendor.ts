@@ -14,6 +14,9 @@ require("@angular/common");
 require("@angular/forms");
 require("@angular/http");
 require("@angular/router");
+require("@ngrx/store");
+require("@ngrx/router-store");
+require("@ngrx/effects")
 
 require("nativescript-angular/platform-static");
 require("nativescript-angular/forms");

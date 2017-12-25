@@ -1,6 +1,7 @@
 @import '../scss/variables';
 ActionBar {
   background-color: $ab-background;
+  padding: 0;
 }
 
 .left {
@@ -24,6 +25,7 @@ ActionBar {
   background-color: $ab-background;
   color: white;
   box-shadow: 0;
+  margin: 0;
 }
 
 .b-button {
@@ -48,28 +50,3 @@ ActionBar {
     transform: rotate(359deg);
   }
 }
-
-// .fa-spin {
-//   -webkit-animation: fa-spin 2s infinite linear;
-//   animation: fa-spin 2s infinite linear;
-// }
-// @-webkit-keyframes fa-spin {
-//   0% {
-//     -webkit-transform: rotate(0deg);
-//     transform: rotate(0deg);
-//   }
-//   100% {
-//     -webkit-transform: rotate(359deg);
-//     transform: rotate(359deg);
-//   }
-// }
-// @keyframes fa-spin {
-//   0% {
-//     -webkit-transform: rotate(0deg);
-//     transform: rotate(0deg);
-//   }
-//   100% {
-//     -webkit-transform: rotate(359deg);
-//     transform: rotate(359deg);
-//   }
-// }

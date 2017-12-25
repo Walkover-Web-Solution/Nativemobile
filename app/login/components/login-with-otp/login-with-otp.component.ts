@@ -55,6 +55,11 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   ngOnDestroy(): void {
+    this.mobileVerifyForm = this._fb.group({
+      country: ['91', [Validators.required]],
+      mobileNumber: ['', [Validators.required]],
+      otp: ['', [Validators.required]],
+    });
   }
   backToLogin() {
     this.routerExtensions.navigate(['/login'], {
