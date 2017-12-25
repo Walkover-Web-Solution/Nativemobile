@@ -24,7 +24,10 @@
   <!--
   Use the tkMainContent directive to display the content of the page when you have an app drawer.
   -->
-  <GridLayout columns="*" rows="*" class="page page-content" tkMainContent>
-
-  </GridLayout>
+  <FlexboxLayout flexDirection="column" tkMainContent>
+    <!-- <ScrollView> -->
+      <ns-revenue-chart row="0" col="0"></ns-revenue-chart>
+      <ns-expenses-chart row="1"></ns-expenses-chart>
+    <!-- </ScrollView> -->
+  </FlexboxLayout>
 </RadSideDrawer>

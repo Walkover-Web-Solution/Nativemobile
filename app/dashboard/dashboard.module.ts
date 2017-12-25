@@ -11,6 +11,8 @@ import { NativeScriptRouterModule } from 'nativescript-angular/router';
 import { SharedModule } from './../shared/shared.module';
 import { DashboardRoutingModule } from '~/dashboard/dashboard.routing.module';
 import { DashboardComponent } from '~/dashboard/dashboard.component';
+import { RevenueChartComponent } from '~/dashboard/components/revenue/revenue.component';
+import { ExpensesChartComponent } from '~/dashboard/components/expenses/expenses.component';
 
 
 @NgModule({
@@ -23,7 +25,7 @@ import { DashboardComponent } from '~/dashboard/dashboard.component';
     SharedModule,
     DashboardRoutingModule
   ],
-  declarations: [DashboardComponent],
+  declarations: [DashboardComponent, RevenueChartComponent, ExpensesChartComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]
