@@ -22,6 +22,11 @@ export const routes: Routes = [
     path: 'home',
     loadChildren: './home/home.module#HomeModule',
     canActivate: [NeedsAuthentication]
+  },
+  {
+    path: 'dashboard',
+    loadChildren: './dashboard/dashboard.module#DashboardModule',
+    canActivate: [NeedsAuthentication]
   }
 ];
 

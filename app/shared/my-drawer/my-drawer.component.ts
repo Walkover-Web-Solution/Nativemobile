@@ -4,6 +4,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "~/store";
 import { UserDetails } from "~/models/api-models/loginModels";
 import { Observable } from "rxjs/Observable";
+import { RouterExtensions } from "nativescript-angular/router";
 
 /* ***********************************************************
 * Keep data that is displayed in your app drawer in the MyDrawer component class.
@@ -21,7 +22,7 @@ export class MyDrawerComponent implements OnInit {
   @Output() public itemSelected: EventEmitter<MyDrawerItem> = new EventEmitter();
   @Input() pages: MyDrawerItem[];
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions) {
     this.user$ = this.store.select(p => p.session.user.user);
   }
 
@@ -32,6 +33,10 @@ export class MyDrawerComponent implements OnInit {
   }
 
   onNavItemTap(item: MyDrawerItem): void {
-    this.itemSelected.emit(item);
+    if (item.router && item.router !== '') {
+      this.routerExtensions.navigate([item.router]);
+    } else {
+      this.itemSelected.emit(item);
+    }
   }
 }
