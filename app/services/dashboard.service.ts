@@ -11,13 +11,15 @@ import { BankAccountsResponse, ClosingBalanceResponse, DashboardResponse, GroupH
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
 
+let config = require('../config/config');
+
 @Injectable()
 export class DashboardService {
   private companyUniqueName: string;
   private user: UserDetails;
 
   constructor(private errorHandler: ErrorHandler, public _http: HttpWrapperService, public _router: Router,
-              private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
+    private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
   }
 
   public Dashboard(fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false): Observable<BaseResponse<DashboardResponse, string>> {
@@ -25,10 +27,10 @@ export class DashboardService {
     this.companyUniqueName = this._generalService.companyUniqueName;
     return this._http.get(this.config.apiUrl + DASHBOARD_API.DASHBOARD.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString())).map((res) => {
       let data: BaseResponse<DashboardResponse, string> = res.json();
-      data.queryString = {fromDate, toDate, interval, refresh};
+      data.queryString = { fromDate, toDate, interval, refresh };
       data.request = '';
       return data;
-    }).catch((e) => this.errorHandler.HandleCatch<DashboardResponse, string>(e, '', {fromDate, toDate, interval, refresh}));
+    }).catch((e) => this.errorHandler.HandleCatch<DashboardResponse, string>(e, '', { fromDate, toDate, interval, refresh }));
   }
 
   public GetGroupHistory(model: GroupHistoryRequest, fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false): Observable<BaseResponse<GroupHistoryResponse, GroupHistoryRequest>> {
@@ -37,7 +39,7 @@ export class DashboardService {
     return this._http.post(this.config.apiUrl + DASHBOARD_API.GROUP_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString()), model).map((res) => {
       let data: BaseResponse<GroupHistoryResponse, GroupHistoryRequest> = res.json();
       data.request = model;
-      data.queryString = {fromDate, toDate, interval, refresh};
+      data.queryString = { fromDate, toDate, interval, refresh };
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<GroupHistoryResponse, GroupHistoryRequest>(e, model, {
       fromDate,
@@ -50,12 +52,12 @@ export class DashboardService {
   public GetClosingBalance(groupUniqueName: string = '', fromDate: string = '', toDate: string = '', refresh: boolean = false): Observable<BaseResponse<ClosingBalanceResponse, string>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.get(this.config.apiUrl + DASHBOARD_API.CLOSING_BALANCE.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':fromDate', fromDate).replace(':toDate', toDate).replace(':groupUniqueName', encodeURIComponent(groupUniqueName)).replace(':refresh', refresh.toString())).map((res) => {
+    return this._http.get(config.config.ApiUrl + DASHBOARD_API.CLOSING_BALANCE.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':fromDate', fromDate).replace(':toDate', toDate).replace(':groupUniqueName', encodeURIComponent(groupUniqueName)).replace(':refresh', refresh.toString())).map((res) => {
       let data: BaseResponse<ClosingBalanceResponse, string> = res.json();
-      data.queryString = {fromDate, toDate, groupUniqueName, refresh};
+      data.queryString = { fromDate, toDate, groupUniqueName, refresh };
       data.request = '';
       return data;
-    }).catch((e) => this.errorHandler.HandleCatch<ClosingBalanceResponse, string>(e, '', {fromDate, toDate, groupUniqueName, refresh}));
+    }).catch((e) => this.errorHandler.HandleCatch<ClosingBalanceResponse, string>(e, '', { fromDate, toDate, groupUniqueName, refresh }));
   }
 
   public GetBankAccounts(): Observable<BaseResponse<BankAccountsResponse[], string>> {

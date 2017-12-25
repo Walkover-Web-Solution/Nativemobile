@@ -1,6 +1,13 @@
+<RadPieChart height="500" allowAnimation="true">
+  <PieSeries tkPieSeries selectionMode="DataPoint" expandRadius="0.4" outerRadiusFactor="0.7" [items]="activeYearAccountsRanks" valueProperty="amount"
+      legendLabel="Accounts"></PieSeries>
+
+  <RadLegendView tkPieLegend position="Right" title="Accounts" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView>
+</RadPieChart>
+
 <RadCartesianChart tkExampleTitle tkToggleNavButton>
     <CategoricalAxis tkCartesianHorizontalAxis></CategoricalAxis>
     <LinearAxis tkCartesianVerticalAxis></LinearAxis>
 
-    <BarSeries tkCartesianSeries [items]="categoricalSource" categoryProperty="Country" valueProperty="Amount"></BarSeries>
+    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" categoryProperty="name" valueProperty="amount"></BarSeries>
 </RadCartesianChart>
