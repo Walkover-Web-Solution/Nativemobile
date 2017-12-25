@@ -1,23 +1,23 @@
 // Snapshot the ~/app.css and the theme
 const application = require("application");
-require("ui/styling/style-scope");
+import "ui/styling/style-scope";
 const appCssContext = require.context("~/", false, /^\.\/app\.(css|scss|less|sass)$/);
 global.registerWebpackModules(appCssContext);
 application.loadAppCss();
 
-require("./vendor-platform");
+import "./vendor-platform";
+import 'rxjs'
+import "reflect-metadata";
+import "@angular/platform-browser";
+import "@angular/core";
+import "@angular/common";
+import "@angular/forms";
+import "@angular/http";
+import "@angular/router";
+import "@ngrx/store";
+import "@ngrx/router-store";
+import "@ngrx/effects";
 
-require("reflect-metadata");
-require("@angular/platform-browser");
-require("@angular/core");
-require("@angular/common");
-require("@angular/forms");
-require("@angular/http");
-require("@angular/router");
-require("@ngrx/store");
-require("@ngrx/router-store");
-require("@ngrx/effects")
-
-require("nativescript-angular/platform-static");
-require("nativescript-angular/forms");
-require("nativescript-angular/router");
+import "nativescript-angular/platform-static";
+import "nativescript-angular/forms";
+import "nativescript-angular/router";

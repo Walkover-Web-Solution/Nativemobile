@@ -8,6 +8,8 @@ const nsWebpack = require("nativescript-dev-webpack");
 const nativescriptTarget = require("nativescript-dev-webpack/nativescript-target");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+
 const {
   BundleAnalyzerPlugin
 } = require("webpack-bundle-analyzer");
@@ -188,11 +190,19 @@ module.exports = env => {
 
     // Work around an Android issue by setting compress = false
     const compress = platform !== "android";
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      mangle: {
-        except: nsWebpack.uglifyMangleExcludes
-      },
-      compress,
+    config.plugins.push(new UglifyJsPlugin({
+      uglifyOptions: {
+        mangle: {
+          eval: true,
+          reserved: [nsWebpack.uglifyMangleExcludes, ''],
+          keep_fnames: true,
+        },
+        compress: compress,
+        output: {
+          comments: false,
+          beautify: false,
+        }
+      }
     }));
   }
   return config;
