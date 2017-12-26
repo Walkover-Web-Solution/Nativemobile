@@ -21,13 +21,31 @@
     <MyDrawer [pages]="navItemObj$ | async"></MyDrawer>
   </StackLayout>
 
-  <!--
-  Use the tkMainContent directive to display the content of the page when you have an app drawer.
-  -->
-  <FlexboxLayout flexDirection="column" tkMainContent>
-    <!-- <ScrollView orientation="horizontal"> -->
-      <ns-revenue-chart></ns-revenue-chart>
-      <ns-expenses-chart></ns-expenses-chart>
-    <!-- </ScrollView> -->
-  </FlexboxLayout>
+  <ScrollView tkMainContent>
+    <StackLayout>
+      
+      <CardView margin="10" elevation="40" radius="1">
+        <StackLayout rows="10,*" columns="*">
+          <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
+            <Label text="Revenue (Last Month)"></Label>
+            <Label text="&#xf1de;" fontFamily="FontAwesome"></Label>
+          </FlexboxLayout>
+          <StackLayout class="hr-light"></StackLayout>
+          <ns-revenue-chart row="1" col="0"></ns-revenue-chart>
+        </StackLayout>
+      </CardView>
+
+      <CardView margin="10" elevation="40" radius="1">
+          <StackLayout rows="10,*" columns="*">
+            <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
+              <Label text="Expenses (Last Financial Year)"></Label>
+              <Label text="&#xf1de;" fontFamily="FontAwesome"></Label>
+            </FlexboxLayout>
+            <StackLayout class="hr-light"></StackLayout>
+            <ns-expenses-chart row="1" col="0"></ns-expenses-chart>
+          </StackLayout>
+        </CardView>
+
+    </StackLayout>
+  </ScrollView>
 </RadSideDrawer>

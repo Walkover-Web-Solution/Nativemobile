@@ -15,7 +15,6 @@ import { DashboardComponent } from '~/dashboard/dashboard.component';
 import { RevenueChartComponent } from '~/dashboard/components/revenue/revenue.component';
 import { ExpensesChartComponent } from '~/dashboard/components/expenses/expenses.component';
 
-
 @NgModule({
   imports: [
     NativeScriptCommonModule,
