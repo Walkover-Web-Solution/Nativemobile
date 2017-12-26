@@ -1,28 +1,34 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { NativeScriptUISideDrawerModule } from "nativescript-pro-ui/sidedrawer/angular";
+import { NativeScriptUIGaugesModule } from "nativescript-pro-ui/gauges/angular";
 
 import { MyDrawerItemComponent } from "./my-drawer-item/my-drawer-item.component";
 import { MyDrawerComponent } from "./my-drawer/my-drawer.component";
 import { MyButonComponent } from "./my-button/my-botton.component";
 import { MyLogoutComponent } from "./logout-button/logout-botton.component";
+import { PieChartComponent } from "~/shared/pie-chart/pie-chart.component";
 
 @NgModule({
   imports: [
     NativeScriptCommonModule,
-    NativeScriptUISideDrawerModule
+    NativeScriptUISideDrawerModule,
+    NativeScriptUIGaugesModule
   ],
   declarations: [
     MyDrawerComponent,
     MyDrawerItemComponent,
     MyButonComponent,
-    MyLogoutComponent
+    MyLogoutComponent,
+    PieChartComponent
   ],
   exports: [
     MyDrawerComponent,
     MyButonComponent,
     MyLogoutComponent,
-    NativeScriptUISideDrawerModule
+    PieChartComponent,
+    NativeScriptUISideDrawerModule,
+    NativeScriptUIGaugesModule
   ],
   schemas: [
     NO_ERRORS_SCHEMA

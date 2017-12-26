@@ -20,10 +20,9 @@
   <StackLayout tkDrawerContent>
     <MyDrawer [pages]="navItemObj$ | async"></MyDrawer>
   </StackLayout>
-
   <ScrollView tkMainContent>
     <StackLayout>
-      
+
       <CardView margin="10" elevation="40" radius="1">
         <StackLayout rows="10,*" columns="*">
           <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
@@ -36,15 +35,15 @@
       </CardView>
 
       <CardView margin="10" elevation="40" radius="1">
-          <StackLayout rows="10,*" columns="*">
-            <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
-              <Label text="Expenses (Last Financial Year)"></Label>
-              <Label text="&#xf1de;" fontFamily="FontAwesome"></Label>
-            </FlexboxLayout>
-            <StackLayout class="hr-light"></StackLayout>
-            <ns-expenses-chart row="1" col="0"></ns-expenses-chart>
-          </StackLayout>
-        </CardView>
+        <StackLayout rows="10,*" columns="*">
+          <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
+            <Label text="Expenses (Last Financial Year)"></Label>
+            <Label text="&#xf1de;" fontFamily="FontAwesome"></Label>
+          </FlexboxLayout>
+          <StackLayout class="hr-light"></StackLayout>
+          <ns-expenses-chart row="1" col="0"></ns-expenses-chart>
+        </StackLayout>
+      </CardView>
 
     </StackLayout>
   </ScrollView>

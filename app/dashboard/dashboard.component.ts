@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
 import { Store } from '@ngrx/store';
 import { AppState } from '~/store';
@@ -22,6 +22,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit() {
+
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {

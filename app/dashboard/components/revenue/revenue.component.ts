@@ -11,7 +11,7 @@ import { IRevenueChartClosingBalanceResponse, IChildGroups } from '~/models/inte
 import { AccountChartDataLastCurrentYear } from '~/models/view-models/AccountChartDataLastCurrentYear';
 import { INameUniqueName } from '~/models/interfaces/nameUniqueName.interface';
 import { DashboardActions } from '~/actions/dashboard/dashboard.action';
-
+import * as dialogs from "ui/dialogs";
 @Component({
   selector: 'ns-revenue-chart',
   moduleId: module.id,
@@ -24,6 +24,7 @@ export class RevenueChartComponent implements OnInit {
   public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
   public activeYearAccountsRanks: ObservableArray<any>;
+  public pieChartAmount: number = 0;
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
     this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart);
     this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
@@ -96,6 +97,7 @@ export class RevenueChartComponent implements OnInit {
     });
 
     this.activeYearAccountsRanks = new ObservableArray(accounts);
+    this.pieChartAmount = 100;
   }
 
   public generateActiveYearString(): INameUniqueName[] {
@@ -111,4 +113,7 @@ export class RevenueChartComponent implements OnInit {
       this.activeFinancialYear.financialYearEnds, false));
   }
 
+  public d(t) {
+    dialogs.alert(JSON.stringify(t));
+  }
 }
