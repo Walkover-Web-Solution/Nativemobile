@@ -1,13 +1,15 @@
-<RadPieChart height="500" allowAnimation="true">
-  <PieSeries tkPieSeries selectionMode="DataPoint" expandRadius="0.4" outerRadiusFactor="0.7" [items]="activeYearAccountsRanks" valueProperty="amount"
-      legendLabel="Accounts"></PieSeries>
+<StackLayout>
 
-  <RadLegendView tkPieLegend position="Right" title="Accounts" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView>
-</RadPieChart>
+  <ns-pie-chart [maxPoint]="pieChartAmount" height="200"></ns-pie-chart>
+  <!-- <RadPieChart height="100" allowAnimation="true">
+    <PieSeries tkPieSeries selectionMode="DataPoint" expandRadius="0.4" outerRadiusFactor="0.7" [items]="activeYearAccountsRanks"
+      valueProperty="amount" legendLabel="Accounts"></PieSeries> -->
+  <!-- <RadLegendView tkPieLegend position="Right" title="Accounts" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView> -->
+  <!-- </RadPieChart> -->
 
-<RadCartesianChart tkExampleTitle tkToggleNavButton>
+  <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="d($event)">
     <CategoricalAxis tkCartesianHorizontalAxis></CategoricalAxis>
     <LinearAxis tkCartesianVerticalAxis></LinearAxis>
-
-    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" categoryProperty="name" valueProperty="amount"></BarSeries>
-</RadCartesianChart>
+    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name" valueProperty="amount"></BarSeries>
+  </RadCartesianChart>
+</StackLayout>

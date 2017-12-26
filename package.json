@@ -38,6 +38,7 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "nativescript-angular": "next",
+    "nativescript-cardview": "^2.0.4",
     "nativescript-intl": "3.0.0",
     "nativescript-ngx-fonticon": "^4.0.0",
     "nativescript-pro-ui": "3.2.0",
@@ -83,7 +84,7 @@
   },
   "scripts": {
     "u": "update-ns-webpack",
-    "start": "cross-env BUILD_PROFILE=test tns run android",
+    "start": "cross-env BUILD_PROFILE=test tns debug android",
     "start:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "debug:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "debug": "cross-env BUILD_PROFILE=dev tns debug ios --chrome",

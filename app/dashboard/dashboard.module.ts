@@ -14,7 +14,7 @@ import { DashboardRoutingModule } from '~/dashboard/dashboard.routing.module';
 import { DashboardComponent } from '~/dashboard/dashboard.component';
 import { RevenueChartComponent } from '~/dashboard/components/revenue/revenue.component';
 import { ExpensesChartComponent } from '~/dashboard/components/expenses/expenses.component';
-
+import { DashboardFilterComponent } from '~/dashboard/components/filter/dashboard-filter.component';
 
 @NgModule({
   imports: [
@@ -25,7 +25,7 @@ import { ExpensesChartComponent } from '~/dashboard/components/expenses/expenses
     ReactiveFormsModule,
     SharedModule,
     DashboardRoutingModule,
-    NativeScriptUIChartModule
+    NativeScriptUIChartModule,
   ],
   declarations: [DashboardComponent, RevenueChartComponent, ExpensesChartComponent],
   schemas: [

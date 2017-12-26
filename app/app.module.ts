@@ -32,6 +32,7 @@ import { HomeModule } from './home/home.module';
 import { AppState } from './store/roots';
 import { LocationStrategy } from "@angular/common";
 import { SalesInvoiceModule } from "~/salesInvoice/salesInvoice.module";
+import * as elementRegistryModule from 'nativescript-angular/element-registry';
 
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
@@ -41,6 +42,7 @@ export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionRedu
 let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 let config = require('./config/config')
 
+elementRegistryModule.registerElement("CardView", () => require("nativescript-cardview").CardView);
 @NgModule({
   bootstrap: [AppComponent],
   imports: [
