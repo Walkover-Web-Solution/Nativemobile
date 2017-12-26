@@ -31,6 +31,7 @@ import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { AppState } from './store/roots';
 import { LocationStrategy } from "@angular/common";
+import { SalesInvoiceModule } from "~/salesInvoice/salesInvoice.module";
 
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
@@ -51,7 +52,8 @@ let config = require('./config/config')
     ServiceModule.forRoot(),
     ActionModule.forRoot(),
     LoginModule,
-    HomeModule
+    HomeModule,
+    SalesInvoiceModule
   ],
   declarations: [AppComponent],
   providers: [

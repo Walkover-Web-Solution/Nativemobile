@@ -24,13 +24,13 @@ const initialNavObj: MyDrawerItem[] = [
     title: 'Trail Balance',
     icon: String.fromCharCode(0xf060),
     needTopHr: true,
-    router: '/dashboard'
+    router: '/tb'
   } as MyDrawerItem,
   {
     title: 'Sales Invoice',
     icon: String.fromCharCode(0xf060),
     needTopHr: true,
-    router: '/dashboard'
+    router: '/sale'
   } as MyDrawerItem,
   {
     title: 'Purchase Invoice',
