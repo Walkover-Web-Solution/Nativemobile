@@ -24,6 +24,8 @@ export class ExpensesChartComponent implements OnInit {
   public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
   public activeYearAccountsRanks: ObservableArray<any>;
+  public activeYearGrandAmount: number = 0;
+  public pieChartAmount: number = 0;
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
     this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart);
     this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
@@ -96,6 +98,7 @@ export class ExpensesChartComponent implements OnInit {
     });
 
     this.activeYearAccountsRanks = new ObservableArray(accounts);
+    this.activeYearGrandAmount = _.sumBy(accounts, 'amount');
   }
 
   public generateActiveYearString(): INameUniqueName[] {
@@ -107,5 +110,10 @@ export class ExpensesChartComponent implements OnInit {
   }
   public fetchChartData() {
     this.store.dispatch(this._dashboardActions.getExpensesChartData(this.activeFinancialYear.financialYearStarts, this.activeFinancialYear.financialYearEnds, false));
+  }
+
+  public d(t) {
+    let indexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount;
+    this.pieChartAmount = Math.round((indexTotal * 100) / this.activeYearGrandAmount);
   }
 }
