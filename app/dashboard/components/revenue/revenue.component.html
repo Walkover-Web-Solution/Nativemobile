@@ -7,10 +7,12 @@
   <!-- <RadLegendView tkPieLegend position="Right" title="Accounts" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView> -->
   <!-- </RadPieChart> -->
 
-  <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
+  <RadCartesianChart height="200" *ngIf="activeYearAccounts.length > 0" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
     <CategoricalAxis tkCartesianHorizontalAxis labelFitMode="Rotate"></CategoricalAxis>
     <LinearAxis tkCartesianVerticalAxis lineHidden="true" labelFormat="%.0f"></LinearAxis>
     <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint"
     categoryProperty="name" valueProperty="amount" showLabels="true"></BarSeries>
   </RadCartesianChart>
+
+  <Label *ngIf="activeYearAccounts.length === 0" text="No Data"></Label>
 </StackLayout>

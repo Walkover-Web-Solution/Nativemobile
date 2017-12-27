@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
 import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { NativeScriptUIChartModule } from "nativescript-pro-ui/chart/angular";
+import { TNSCheckBoxModule } from 'nativescript-checkbox/angular';
 
 // app
 import { NeedsAuthentication } from '../decorators/needsAuthentication';
@@ -15,6 +16,7 @@ import { DashboardComponent } from '~/dashboard/dashboard.component';
 import { RevenueChartComponent } from '~/dashboard/components/revenue/revenue.component';
 import { ExpensesChartComponent } from '~/dashboard/components/expenses/expenses.component';
 import { DashboardFilterComponent } from '~/dashboard/components/filter/dashboard-filter.component';
+import { DashboardChartComponent } from '~/dashboard/components/chart/dashboard-chart.component';
 
 @NgModule({
   imports: [
@@ -26,8 +28,9 @@ import { DashboardFilterComponent } from '~/dashboard/components/filter/dashboar
     SharedModule,
     DashboardRoutingModule,
     NativeScriptUIChartModule,
+    TNSCheckBoxModule
   ],
-  declarations: [DashboardComponent, RevenueChartComponent, ExpensesChartComponent],
+  declarations: [DashboardComponent, RevenueChartComponent, ExpensesChartComponent, DashboardFilterComponent, DashboardChartComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]
