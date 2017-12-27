@@ -26,11 +26,13 @@ export class RevenueChartComponent implements OnInit {
   public activeYearAccountsRanks: ObservableArray<any>;
   public activeYearGrandAmount: number = 0;
   public pieChartAmount: number = 0;
+  public chartFilterType$: Observable<string>;
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
     this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart);
     this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
       return { companies, uniqueName };
     }));
+    this.chartFilterType$ = this.store.select(p => p.dashboard.revenueChartFilter);
   }
 
   ngOnInit() {
@@ -70,9 +72,22 @@ export class RevenueChartComponent implements OnInit {
           let otherincomeAccounts = [].concat.apply([], rvn.otherincomeData.childGroups);
           let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
           this.activeYearAccounts = groups;
+          this.generateCharts();
+        } else {
+          this.resetChartData();
         }
+      } else {
+        this.resetChartData();
       }
-      this.generateCharts();
+    });
+
+    this.chartFilterType$.subscribe(p => {
+      // let begin = moment().format("YYYY-MM-01");
+      // let end = moment().format("YYYY-MM-") + moment().date();
+      if (p) {
+        this.store.dispatch(this._dashboardActions.getRevenueChartData('1-1-2016',
+          '31-12-2016', true));
+      }
     });
   }
 
@@ -96,7 +111,6 @@ export class RevenueChartComponent implements OnInit {
     this.accountStrings.forEach(p => {
       accounts.push({ name: p.name, amount: p.activeYear });
     });
-
     this.activeYearAccountsRanks = new ObservableArray(accounts);
     this.activeYearGrandAmount = _.sumBy(accounts, 'amount');
     this.pieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
@@ -118,5 +132,13 @@ export class RevenueChartComponent implements OnInit {
   public calculatePieChartPer(t) {
     let indexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount;
     this.pieChartAmount = Math.round((indexTotal * 100) / this.activeYearGrandAmount);
+  }
+
+  public resetChartData() {
+    console.log('reset called');
+    this.activeYearAccounts = [];
+    this.activeYearAccountsRanks = new ObservableArray([]);
+    this.activeYearGrandAmount = 0;
+    this.pieChartAmount = 0;
   }
 }

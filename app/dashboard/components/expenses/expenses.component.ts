@@ -26,11 +26,14 @@ export class ExpensesChartComponent implements OnInit {
   public activeYearAccountsRanks: ObservableArray<any>;
   public activeYearGrandAmount: number = 0;
   public pieChartAmount: number = 0;
+  public chartFilterType$: Observable<string>;
+
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
     this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart);
     this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
       return { companies, uniqueName };
     }));
+    this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter);
   }
 
   ngOnInit() {
@@ -74,6 +77,8 @@ export class ExpensesChartComponent implements OnInit {
       }
       this.generateCharts();
     });
+
+    this.chartFilterType$.subscribe(p => console.log('exp', p));
   }
 
   public generateCharts() {

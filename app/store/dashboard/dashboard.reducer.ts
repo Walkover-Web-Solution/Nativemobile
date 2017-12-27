@@ -7,13 +7,18 @@ export interface DashboardState {
   revenueChart: IRevenueChartClosingBalanceResponse;
   expensesChartError: string;
   revenueChartError: string;
+
+  revenueChartFilter: string;
+  expensesChartFilter: string;
 }
 
 const initialState: DashboardState = {
   expensesChart: null,
   revenueChart: null,
   expensesChartError: '',
-  revenueChartError: ''
+  revenueChartError: '',
+  revenueChartFilter: '',
+  expensesChartFilter: ''
 }
 
 export function DashboardReducer(state: DashboardState = initialState, action: CustomActions): DashboardState {
@@ -29,20 +34,12 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         }
       });
     }
-    // case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE: {
-    //   let data = action.payload;
-    //   if (data.revenuefromoperationsActiveyear.status !== 'success') {
-    //     return Object.assign({}, state, {
-    //       revenueChartError: data.revenuefromoperationsActiveyear.message
-    //     });
-    //   }
-    //   if (data.otherincomeActiveyear.status !== 'success') {
-    //     return Object.assign({}, state, {
-    //       revenueChartError: data.otherincomeActiveyear.message
-    //     });
-    //   }
-    //   return state;
-    // }
+    case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE: {
+      return {
+        ...state,
+        revenueChart: null
+      }
+    }
 
     // revenue chart
 
@@ -56,6 +53,25 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
           indirectexpensesData: data.indirectexpensesData
         }
       });
+    }
+
+    case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ERROR_RESPONSE: {
+      return {
+        ...state,
+        expensesChart: null
+      }
+    }
+
+    case DashboardConst.SET_CHART_FILTER_TYPE: {
+      if (action.payload.chartType === 'revenue') {
+        return {
+          ...state, revenueChartFilter: action.payload.filterType
+        };
+      }
+
+      return {
+        ...state, expensesChartFilter: action.payload.filterType
+      }
     }
 
     default:

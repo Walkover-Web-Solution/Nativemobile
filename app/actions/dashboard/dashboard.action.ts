@@ -29,8 +29,7 @@ export class DashboardActions {
         };
       }
       return {
-        type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ERROR_RESPONSE,
-        payload: { operatingcostData: res[0], indirectexpensesData: res[1] }
+        type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ERROR_RESPONSE
       };
     });
   @Effect()
@@ -42,6 +41,7 @@ export class DashboardActions {
         this._dashboardService.GetClosingBalance('otherincome', action.payload.fromDate, action.payload.toDate, action.payload.refresh)
       );
     }).map((res) => {
+      console.log('dada', JSON.stringify(res[0].message));
       if (res[0].status === 'success' && res[1].status === 'success') {
         let obj: IRevenueChartClosingBalanceResponse = {
           revenuefromoperationsData: res[0].body[0],
@@ -53,8 +53,7 @@ export class DashboardActions {
         };
       }
       return {
-        type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE,
-        payload: { revenuefromoperationsActiveyear: res[0], otherincomeActiveyear: res[1] }
+        type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE
       };
     });
 
@@ -70,9 +69,17 @@ export class DashboardActions {
   }
 
   public getRevenueChartData(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
+    console.log('dada', fromDate);
     return {
       type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA,
       payload: { fromDate, toDate, refresh }
+    };
+  }
+
+  public setChartFilter(chartType: string, filterType: string) {
+    return {
+      type: DashboardConst.SET_CHART_FILTER_TYPE,
+      payload: { chartType, filterType }
     };
   }
 }
