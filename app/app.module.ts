@@ -31,6 +31,7 @@ import { LoginModule } from './login/login.module';
 import { HomeModule } from './home/home.module';
 import { AppState } from './store/roots';
 import { LocationStrategy } from "@angular/common";
+import { SalesInvoiceModule } from "~/salesInvoice/salesInvoice.module";
 import * as elementRegistryModule from 'nativescript-angular/element-registry';
 
 
@@ -53,7 +54,8 @@ elementRegistryModule.registerElement("CardView", () => require("nativescript-ca
     ServiceModule.forRoot(),
     ActionModule.forRoot(),
     LoginModule,
-    HomeModule
+    HomeModule,
+    SalesInvoiceModule
   ],
   declarations: [AppComponent],
   providers: [

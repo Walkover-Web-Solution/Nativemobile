@@ -1,0 +1,20 @@
+<ActionBar class="action-bar" width="100%">
+  <GridLayout columns="auto,*,auto" rows="*" width="100%">
+    <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf0c9;" fontFamily="FontAwesome"
+      (tap)="onDrawerButtonTap()">
+    </Button>
+    <Label row="0" col="1" class="action-bar-title" [text]="'Sales'" horizontalAlignment="center"></Label>
+
+    <LogoutButton row="0" col="2"></LogoutButton>
+  </GridLayout>
+</ActionBar>
+
+
+<RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
+  <StackLayout tkDrawerContent>
+    <MyDrawer [pages]="navItemObj$ | async" [selectedPage]="'sale'"></MyDrawer>
+  </StackLayout>
+  <FlexboxLayout flexDirection="column" tkMainContent>
+
+  </FlexboxLayout>
+</RadSideDrawer>

@@ -51,7 +51,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         item.title = cmp.name;
         item.needTopHr = true;
         item.customData = cmp;
-
         if (cmp.uniqueName === res.uniqueName) {
           item.icon = String.fromCharCode(0xf00c);
           item.isSelected = true;
