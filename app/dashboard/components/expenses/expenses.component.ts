@@ -96,9 +96,9 @@ export class ExpensesChartComponent implements OnInit {
     this.accountStrings.forEach(p => {
       accounts.push({ name: p.name, amount: p.activeYear });
     });
-
     this.activeYearAccountsRanks = new ObservableArray(accounts);
     this.activeYearGrandAmount = _.sumBy(accounts, 'amount');
+    this.pieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
   }
 
   public generateActiveYearString(): INameUniqueName[] {
@@ -112,7 +112,7 @@ export class ExpensesChartComponent implements OnInit {
     this.store.dispatch(this._dashboardActions.getExpensesChartData(this.activeFinancialYear.financialYearStarts, this.activeFinancialYear.financialYearEnds, false));
   }
 
-  public d(t) {
+  public calculatePieChartPer(t) {
     let indexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount;
     this.pieChartAmount = Math.round((indexTotal * 100) / this.activeYearGrandAmount);
   }

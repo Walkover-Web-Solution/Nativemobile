@@ -99,6 +99,7 @@ export class RevenueChartComponent implements OnInit {
 
     this.activeYearAccountsRanks = new ObservableArray(accounts);
     this.activeYearGrandAmount = _.sumBy(accounts, 'amount');
+    this.pieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
   }
 
   public generateActiveYearString(): INameUniqueName[] {
@@ -114,7 +115,7 @@ export class RevenueChartComponent implements OnInit {
       this.activeFinancialYear.financialYearEnds, false));
   }
 
-  public d(t) {
+  public calculatePieChartPer(t) {
     let indexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount;
     this.pieChartAmount = Math.round((indexTotal * 100) / this.activeYearGrandAmount);
   }
