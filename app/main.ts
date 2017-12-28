@@ -3,6 +3,13 @@ import { platformNativeScriptDynamic } from "nativescript-angular/platform";
 import { enableProdMode } from '@angular/core';
 
 
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/skip';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/debounce';
+import 'rxjs/add/operator/toPromise';
 import { AppModule } from "./app.module";
 
 // A traditional NativeScript application starts by initializing global objects, setting up global CSS rules, creating, and navigating to the main page.

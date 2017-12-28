@@ -4,6 +4,5 @@
     "v8Flags": "--expose_gc"
   },
   "main": "main.js",
-  "version": "0.0.1",
-  "profiling": "timeline"
+  "version": "0.0.1"
 }

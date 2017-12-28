@@ -1,11 +1,16 @@
 {
     "compilerOptions": {
+        "target": "es2015",
         "module": "commonjs",
-        "target": "es5",
-        "experimentalDecorators": true,
+        "moduleResolution": "node",
         "emitDecoratorMetadata": true,
-        "noEmitHelpers": false,
+        "experimentalDecorators": true,
+        "noEmitHelpers": true,
+        "noImplicitUseStrict": true,
+        "declaration": false,
+        "removeComments": false,
         "noEmitOnError": true,
+        "skipLibCheck": true,
         "lib": [
             "es6",
             "dom",

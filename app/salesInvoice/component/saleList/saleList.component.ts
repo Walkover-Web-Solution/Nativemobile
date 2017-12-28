@@ -39,4 +39,10 @@ export class SaleListComponent implements OnInit {
   ngOnInit() {
     //
   }
+  public get sideDrawerTransition(): DrawerTransitionBase {
+    return this._sideDrawerTransition;
+  }
+  public onDrawerButtonTap(): void {
+    this.drawerComponent.sideDrawer.showDrawer();
+  }
 }
