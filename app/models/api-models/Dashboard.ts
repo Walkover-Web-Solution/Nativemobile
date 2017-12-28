@@ -75,10 +75,10 @@ export class ChartFilterConfigs {
   public activeYear: {
     startDate: string,
     endDate: string
-  };
+  } = { startDate: '', endDate: '' };
 
   public lastYear: {
     startDate: string,
     endDate: string
-  }
+  } = { startDate: '', endDate: '' };
 }

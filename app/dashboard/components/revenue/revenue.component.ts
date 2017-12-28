@@ -186,80 +186,80 @@ export class RevenueChartComponent implements OnInit {
     let config = new ChartFilterConfigs();
     switch (filterType) {
       case '1': // This Month to DateS
-        config.activeYear.startDate = moment().startOf('month').format('YYYY-MM-DD');
-        config.activeYear.endDate = moment().format("YYYY-MM-") + moment().date();
+        config.activeYear.startDate = moment().startOf('month').format('DD-MM-YYYY');
+        config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
-        config.lastYear.startDate = moment(config.activeYear.startDate).subtract(1, 'month').format('YYYY-MM-DD');
-        config.lastYear.endDate = moment(config.activeYear.endDate).endOf('month').subtract(1, 'month').format('YYYY-MM-DD');
+        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('DD-MM-YYYY');
+        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         return config;
       case '2': // This Quarter to Date
-        config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').format('YYYY-MM-DD');
-        config.activeYear.endDate = moment().format("YYYY-MM-") + moment().date();
+        config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').format('DD-MM-YYYY');
+        config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
-        config.lastYear.startDate = moment(config.activeYear.startDate).quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('YYYY-MM-DD');
-        config.lastYear.endDate = moment(config.activeYear.startDate).quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('YYYY-MM-DD');
+        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
+        config.lastYear.endDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         return config;
       case '3': // This Financial Year to Date
         if (this.activeFinancialYear) {
-          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts).startOf('day').format('YYYY-MM-DD');
-          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearEnds).endOf('day').format('YYYY-MM-DD');
+          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('DD-MM-YYYY');
+          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
         } else {
           config.activeYear.startDate = '00-00-0000';
           config.activeYear.endDate = '00-00-0000';
         }
 
         if (this.lastFinancialYear) {
-          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts).subtract(1, 'year').startOf('day').format('YYYY-MM-DD');
-          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearEnds).endOf('day').subtract(1, 'year').format('YYYY-MM-DD');
+          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').subtract(1, 'year').startOf('day').format('DD-MM-YYYY');
+          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
         } else {
           config.lastYear.startDate = '00-00-0000';
           config.lastYear.endDate = '00-00-0000';
         }
         return config;
       case '4': // This Year to Date
-        config.activeYear.startDate = moment().startOf('year').format('YYYY-MM-DD');
-        config.activeYear.endDate = moment().format("YYYY-MM-") + moment().date();
+        config.activeYear.startDate = moment().startOf('year').format('DD-MM-YYYY');
+        config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
-        config.lastYear.startDate = moment(config.activeYear.startDate).subtract(1, 'year').format('YYYY-MM-DD');
-        config.lastYear.endDate = moment(config.activeYear.endDate).endOf('year').subtract(1, 'year').format('YYYY-MM-DD');
+        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'year').format('DD-MM-YYYY');
+        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         return config;
       case '5': // Last Month
-        config.activeYear.startDate = moment().startOf('month').subtract(1, 'month').format('YYYY-MM-DD');
-        config.activeYear.endDate = moment().endOf('month').subtract(1, 'month').format('YYYY-MM-DD');
+        config.activeYear.startDate = moment().startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
+        config.activeYear.endDate = moment().endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
 
-        config.lastYear.startDate = moment(config.activeYear.startDate).startOf('month').subtract(1, 'month').format('YYYY-MM-DD');
-        config.lastYear.endDate = moment(config.activeYear.endDate).endOf('month').startOf('month').subtract(1, 'month').format('YYYY-MM-DD');
+        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
+        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         return config;
       case '6': // Last Quater
-        config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('YYYY-MM-DD');
-        config.activeYear.endDate = moment().quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('YYYY-MM-DD');
+        config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
+        config.activeYear.endDate = moment().quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
 
-        config.lastYear.startDate = moment().quarter(moment(config.activeYear.startDate).quarter()).startOf('quarter').subtract(1, 'quarter').format('YYYY-MM-DD');
-        config.lastYear.endDate = moment().quarter(moment(config.activeYear.startDate).quarter()).endOf('quarter').subtract(1, 'quarter').format('YYYY-MM-DD');
+        config.lastYear.startDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
+        config.lastYear.endDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         return config;
       case '7': // Last Fiancial Year
         if (this.activeFinancialYear) {
-          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts).startOf('day').subtract(1, 'year').format('YYYY-MM-DD');
-          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearStarts).endOf('day').subtract(1, 'year').format('YYYY-MM-DD');
+          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
         } else {
           config.activeYear.startDate = '00-00-0000';
           config.activeYear.endDate = '00-00-0000';
         }
 
         if (this.lastFinancialYear) {
-          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts).startOf('day').subtract(1, 'year').format('YYYY-MM-DD');
-          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearStarts).endOf('day').subtract(1, 'year').format('YYYY-MM-DD');
+          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
         } else {
           config.lastYear.startDate = '00-00-0000';
           config.lastYear.endDate = '00-00-0000';
         }
         return config;
       case '8': // Last Year
-        config.activeYear.startDate = moment().startOf('year').subtract(1, 'year').format('YYYY-MM-DD');
-        config.activeYear.endDate = moment().endOf('year').subtract(1, 'year').format('YYYY-MM-DD');
+        config.activeYear.startDate = moment().startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
+        config.activeYear.endDate = moment().endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
 
-        config.lastYear.startDate = moment(config.activeYear.startDate).startOf('year').subtract(1, 'year').format('YYYY-MM-DD');
-        config.lastYear.endDate = moment(config.activeYear.endDate).endOf('year').subtract(1, 'year').format('YYYY-MM-DD');
+        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
+        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         return config;
       case '9':
         return config;
