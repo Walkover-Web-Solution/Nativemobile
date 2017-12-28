@@ -48,7 +48,7 @@ export class DashboardActions {
           indirectexpensesLastyear: res[1].body[0]
         };
         return {
-          type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
+          type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE,
           payload: obj
         };
       }
@@ -98,7 +98,7 @@ export class DashboardActions {
           otherincomeLastyear: res[1].body[0]
         };
         return {
-          type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE,
+          type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE,
           payload: obj
         };
       }

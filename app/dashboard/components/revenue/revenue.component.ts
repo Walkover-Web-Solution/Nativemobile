@@ -49,6 +49,7 @@ export class RevenueChartComponent implements OnInit {
       let financialYears = [];
       let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
       if (activeCmp) {
+        console.log('acc');
         this.activeFinancialYear = activeCmp.activeFinancialYear;
 
         if (activeCmp.financialYears.length > 1) {
@@ -198,7 +199,6 @@ export class RevenueChartComponent implements OnInit {
   public fetchChartData() {
     this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(this.activeFinancialYear.financialYearStarts,
       this.activeFinancialYear.financialYearEnds, false));
-
     if (this.lastFinancialYear) {
       this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(this.lastFinancialYear.financialYearStarts, this.lastFinancialYear.financialYearEnds, false));
     }

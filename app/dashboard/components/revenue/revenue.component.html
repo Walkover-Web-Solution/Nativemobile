@@ -1,8 +1,8 @@
 <StackLayout>
 
   <FlexboxLayout justifyContent="space-between" margin="10">
-    <ns-pie-chart [maxPoint]="activePieChartAmount" [chartColor]="'#4e9895'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
-    <ns-pie-chart [maxPoint]="lastPieChartAmount" [chartColor]="'#4e9895'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
+    <ns-pie-chart [maxPoint]="activePieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
+    <ns-pie-chart [maxPoint]="lastPieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
   </FlexboxLayout>
 
   <RadCartesianChart height="200" *ngIf="activeYearAccounts.length > 0" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
