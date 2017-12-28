@@ -1,17 +1,18 @@
 <StackLayout>
 
-  <ns-pie-chart [maxPoint]="pieChartAmount" [chartColor]="'#4e9895'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
-  <!-- <RadPieChart height="100" allowAnimation="true">
-    <PieSeries tkPieSeries selectionMode="DataPoint" expandRadius="0.4" outerRadiusFactor="0.7" [items]="activeYearAccountsRanks"
-      valueProperty="amount" legendLabel="Accounts"></PieSeries> -->
-  <!-- <RadLegendView tkPieLegend position="Right" title="Accounts" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView> -->
-  <!-- </RadPieChart> -->
+  <FlexboxLayout justifyContent="space-between" margin="10">
+    <ns-pie-chart [maxPoint]="activePieChartAmount" [chartColor]="'#4e9895'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
+    <ns-pie-chart [maxPoint]="lastPieChartAmount" [chartColor]="'#4e9895'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
+  </FlexboxLayout>
 
   <RadCartesianChart height="200" *ngIf="activeYearAccounts.length > 0" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
     <CategoricalAxis tkCartesianHorizontalAxis labelFitMode="Rotate"></CategoricalAxis>
     <LinearAxis tkCartesianVerticalAxis lineHidden="true" labelFormat="%.0f"></LinearAxis>
-    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint"
-    categoryProperty="name" valueProperty="amount" showLabels="true"></BarSeries>
+
+    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name" valueProperty="amount"
+      showLabels="true"></BarSeries>
+    <BarSeries tkCartesianSeries [items]="lastYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name" valueProperty="amount"
+      showLabels="true"></BarSeries>
   </RadCartesianChart>
 
   <Label *ngIf="activeYearAccounts.length === 0" text="No Data"></Label>

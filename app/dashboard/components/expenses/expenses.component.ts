@@ -19,13 +19,18 @@ import { createSelector } from 'reselect';
 })
 export class ExpensesChartComponent implements OnInit {
   public activeFinancialYear: ActiveFinancialYear;
+  public lastFinancialYear: ActiveFinancialYear;
   public activeYearAccounts: IChildGroups[] = [];
+  public lastYearAccounts: IChildGroups[] = [];
   public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
   public activeYearAccountsRanks: ObservableArray<any>;
+  public lastYearAccountsRanks: ObservableArray<any>;
   public activeYearGrandAmount: number = 0;
-  public pieChartAmount: number = 0;
+  public lastYearGrandAmount: number = 0;
+  public activePieChartAmount: number = 0;
+  public lastPieChartAmount: number = 0;
   public chartFilterType$: Observable<string>;
 
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
@@ -37,7 +42,7 @@ export class ExpensesChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    // get activeCompany and set activeFinacial Year
+    // get activeCompany and set activeFinacial Year and LastFinacial Year
     this.companyData$.subscribe(res => {
       if (!res.companies) {
         return;
@@ -60,6 +65,7 @@ export class ExpensesChartComponent implements OnInit {
             let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
             return b.diff(a, 'days');
           }, 'desc');
+          this.lastFinancialYear = financialYears[0];
         }
 
         this.fetchChartData();
@@ -68,11 +74,18 @@ export class ExpensesChartComponent implements OnInit {
 
     this.expensesChartData$.subscribe(exp => {
       if (exp) {
-        if (exp.operatingcostData && exp.indirectexpensesData) {
-          let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesData.childGroups);
-          let operatingcostGroups = [].concat.apply([], exp.operatingcostData.childGroups);
+        if (exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
+          let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
+          let operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
           let accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
           this.activeYearAccounts = accounts;
+        }
+
+        if (exp.operatingcostLastyear && exp.indirectexpensesLastyear) {
+          let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
+          let operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
+          let lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+          this.lastYearAccounts = lastAccounts;
         }
       }
       this.generateCharts();
@@ -82,7 +95,7 @@ export class ExpensesChartComponent implements OnInit {
   }
 
   public generateCharts() {
-    this.accountStrings = _.uniqBy(this.generateActiveYearString(), 'uniqueName');
+    this.accountStrings = _.uniqBy(this.generateActiveYearString().concat(this.generateLastYearString()), 'uniqueName');
     this.accountStrings.forEach((ac) => {
       ac.activeYear = 0;
       ac.lastYear = 0;
@@ -91,19 +104,35 @@ export class ExpensesChartComponent implements OnInit {
       if (index !== -1) {
         ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
       }
+      index = -1;
+      index = _.findIndex(this.lastYearAccounts, (p) => p.uniqueName === ac.uniqueName);
+      if (index !== -1) {
+        ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
+      }
     });
 
     this.accountStrings = _.filter(this.accountStrings, (a) => {
-      return !(a.activeYear === 0);
+      return !(a.activeYear === 0 && a.lastYear === 0);
     });
 
-    let accounts = [];
+    let activeAccounts = [];
+    let lastAccounts = [];
+
     this.accountStrings.forEach(p => {
-      accounts.push({ name: p.name, amount: p.activeYear });
+      activeAccounts.push({ name: p.name, amount: p.activeYear });
     });
-    this.activeYearAccountsRanks = new ObservableArray(accounts);
-    this.activeYearGrandAmount = _.sumBy(accounts, 'amount');
-    this.pieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
+
+    this.accountStrings.forEach(p => {
+      lastAccounts.push({ name: p.name, amount: p.lastYear });
+    });
+
+    this.activeYearAccountsRanks = new ObservableArray(activeAccounts);
+    this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
+    this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
+
+    this.lastYearAccountsRanks = new ObservableArray(lastAccounts);
+    this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
+    this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
   }
 
   public generateActiveYearString(): INameUniqueName[] {
@@ -113,12 +142,37 @@ export class ExpensesChartComponent implements OnInit {
     });
     return activeStrings;
   }
+
+  public generateLastYearString(): INameUniqueName[] {
+    let lastStrings: INameUniqueName[] = [];
+    this.lastYearAccounts.map(acc => {
+      lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+    });
+    return lastStrings;
+  }
+
+
   public fetchChartData() {
-    this.store.dispatch(this._dashboardActions.getExpensesChartData(this.activeFinancialYear.financialYearStarts, this.activeFinancialYear.financialYearEnds, false));
+    this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(this.activeFinancialYear.financialYearStarts, this.activeFinancialYear.financialYearEnds, false));
+
+    if (this.lastFinancialYear) {
+      this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(this.lastFinancialYear.financialYearStarts, this.lastFinancialYear.financialYearEnds, false));
+    }
   }
 
   public calculatePieChartPer(t) {
-    let indexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount;
-    this.pieChartAmount = Math.round((indexTotal * 100) / this.activeYearGrandAmount);
+    let activeYearIndexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount || 0;
+    let lastYearIndexTotal = this.lastYearAccountsRanks.getItem(t.pointIndex).amount || 0;
+
+    this.activePieChartAmount = Math.round((activeYearIndexTotal * 100) / this.activeYearGrandAmount) || 0;
+    this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;
+  }
+
+  public resetChartData() {
+    console.log('reset called');
+    this.activeYearAccounts = [];
+    this.activeYearAccountsRanks = new ObservableArray([]);
+    this.activeYearGrandAmount = 0;
+    // this.pieChartAmount = 0;
   }
 }

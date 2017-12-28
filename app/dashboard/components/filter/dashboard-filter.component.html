@@ -1,15 +1,15 @@
-<ActionBar class="action-bar">
-  <!--
-  Use the NavigationButton as a side-drawer button in Android because ActionItems are shown on the right side of the ActionBar
-  -->
-  <NavigationButton ios:visibility="collapsed" android.systemIcon="ic_menu_back" (tap)="onNavBtnTap()"></NavigationButton>
-  <!--
-  Use the ActionItem for IOS with position set to left. Using the NavigationButton as a side-drawer button in iOS is not possible, because its function is to always navigate back in the application.
-  -->
-  <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
-  </ActionItem>
-  <Label class="action-bar-title" [text]="'Select Time'"></Label>
-  <ActionItem ios.position="left" android.position="actionBar" (tap)="saveAndClose()" class="fa" fontColor="white" text="Save"></ActionItem>
+<ActionBar class="action-bar" width="100%">
+  <GridLayout columns="40,*,auto" rows="*" width="100%">
+    <Button row="0" col="0" class="button" height="50" textAlignment="center" text="&#xf060;" fontFamily="FontAwesome"
+      (tap)="onNavBtnTap()">
+    </Button>
+    <Label row="0" col="1" class="action-bar-title" [text]="'Select Time'" horizontalAlignment="center"></Label>
+
+    <Button row="0" col="2" class="button" height="50" textAlignment="center" text="SAVE" fontFamily="FontAwesome"
+      (tap)="saveAndClose()">
+    </Button>
+
+  </GridLayout>
 </ActionBar>
 
 <GridLayout>

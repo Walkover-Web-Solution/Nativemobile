@@ -19,13 +19,18 @@ import * as dialogs from "ui/dialogs";
 })
 export class RevenueChartComponent implements OnInit {
   public activeFinancialYear: ActiveFinancialYear;
+  public lastFinancialYear: ActiveFinancialYear;
   public activeYearAccounts: IChildGroups[] = [];
+  public lastYearAccounts: IChildGroups[] = [];
   public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
   public activeYearAccountsRanks: ObservableArray<any>;
+  public lastYearAccountsRanks: ObservableArray<any>;
   public activeYearGrandAmount: number = 0;
-  public pieChartAmount: number = 0;
+  public lastYearGrandAmount: number = 0;
+  public activePieChartAmount: number = 0;
+  public lastPieChartAmount: number = 0;
   public chartFilterType$: Observable<string>;
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
     this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart);
@@ -36,7 +41,7 @@ export class RevenueChartComponent implements OnInit {
   }
 
   ngOnInit() {
-    // get activeCompany and set activeFinacial Year
+    // get activeCompany and set activeFinacial Year and LastFinacial Year
     this.companyData$.subscribe(res => {
       if (!res.companies) {
         return;
@@ -59,6 +64,7 @@ export class RevenueChartComponent implements OnInit {
             let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
             return b.diff(a, 'days');
           }, 'desc');
+          this.lastFinancialYear = financialYears[0];
         }
 
         this.fetchChartData();
@@ -67,32 +73,73 @@ export class RevenueChartComponent implements OnInit {
 
     this.revenueChartData$.subscribe(rvn => {
       if (rvn) {
-        if (rvn.revenuefromoperationsData && rvn.otherincomeData) {
-          let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsData.childGroups);
-          let otherincomeAccounts = [].concat.apply([], rvn.otherincomeData.childGroups);
+        if (rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
+          let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
+          let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
           let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
           this.activeYearAccounts = groups;
-          this.generateCharts();
-        } else {
-          this.resetChartData();
         }
-      } else {
-        this.resetChartData();
+
+        if (rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
+          let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
+          let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
+          let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
+          this.lastYearAccounts = lastAccounts;
+        }
       }
+      this.generateCharts();
     });
 
     this.chartFilterType$.subscribe(p => {
-      // let begin = moment().format("YYYY-MM-01");
-      // let end = moment().format("YYYY-MM-") + moment().date();
       if (p) {
-        this.store.dispatch(this._dashboardActions.getRevenueChartData('1-1-2016',
-          '31-12-2016', true));
+        let beginDate: string;
+        let endDate: string;
+        switch (p) {
+          case '1':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '2':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '3':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '4':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '5':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '6':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '7':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '8':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+          case '9':
+            beginDate = moment().format("YYYY-MM-01");
+            endDate = moment().format("YYYY-MM-") + moment().date();
+            break;
+        }
+        // this.store.dispatch(this._dashboardActions.getRevenueChartData('1-1-2016',
+        //   '31-12-2016', false));
       }
     });
   }
 
   public generateCharts() {
-    this.accountStrings = _.uniqBy(this.generateActiveYearString(), 'uniqueName');
+    this.accountStrings = _.uniqBy(this.generateActiveYearString().concat(this.generateLastYearString()), 'uniqueName');
     this.accountStrings.forEach((ac) => {
       ac.activeYear = 0;
       ac.lastYear = 0;
@@ -101,19 +148,35 @@ export class RevenueChartComponent implements OnInit {
       if (index !== -1) {
         ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
       }
+      index = -1;
+      index = _.findIndex(this.lastYearAccounts, (p) => p.uniqueName === ac.uniqueName);
+      if (index !== -1) {
+        ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
+      }
     });
 
     this.accountStrings = _.filter(this.accountStrings, (a) => {
-      return !(a.activeYear === 0);
+      return !(a.activeYear === 0 && a.lastYear === 0);
     });
 
-    let accounts = [];
+    let activeAccounts = [];
+    let lastAccounts = [];
+
     this.accountStrings.forEach(p => {
-      accounts.push({ name: p.name, amount: p.activeYear });
+      activeAccounts.push({ name: p.name, amount: p.activeYear });
     });
-    this.activeYearAccountsRanks = new ObservableArray(accounts);
-    this.activeYearGrandAmount = _.sumBy(accounts, 'amount');
-    this.pieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
+
+    this.accountStrings.forEach(p => {
+      lastAccounts.push({ name: p.name, amount: p.lastYear });
+    });
+
+    this.activeYearAccountsRanks = new ObservableArray(activeAccounts);
+    this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
+    this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
+
+    this.lastYearAccountsRanks = new ObservableArray(lastAccounts);
+    this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
+    this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
   }
 
   public generateActiveYearString(): INameUniqueName[] {
@@ -124,14 +187,29 @@ export class RevenueChartComponent implements OnInit {
     return activeStrings;
   }
 
+  public generateLastYearString(): INameUniqueName[] {
+    let lastStrings: INameUniqueName[] = [];
+    this.lastYearAccounts.map(acc => {
+      lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+    });
+    return lastStrings;
+  }
+
   public fetchChartData() {
-    this.store.dispatch(this._dashboardActions.getRevenueChartData(this.activeFinancialYear.financialYearStarts,
+    this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(this.activeFinancialYear.financialYearStarts,
       this.activeFinancialYear.financialYearEnds, false));
+
+    if (this.lastFinancialYear) {
+      this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(this.lastFinancialYear.financialYearStarts, this.lastFinancialYear.financialYearEnds, false));
+    }
   }
 
   public calculatePieChartPer(t) {
-    let indexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount;
-    this.pieChartAmount = Math.round((indexTotal * 100) / this.activeYearGrandAmount);
+    let activeYearIndexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount || 0;
+    let lastYearIndexTotal = this.lastYearAccountsRanks.getItem(t.pointIndex).amount || 0;
+
+    this.activePieChartAmount = Math.round((activeYearIndexTotal * 100) / this.activeYearGrandAmount) || 0;
+    this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;
   }
 
   public resetChartData() {
@@ -139,6 +217,6 @@ export class RevenueChartComponent implements OnInit {
     this.activeYearAccounts = [];
     this.activeYearAccountsRanks = new ObservableArray([]);
     this.activeYearGrandAmount = 0;
-    this.pieChartAmount = 0;
+    // this.pieChartAmount = 0;
   }
 }
