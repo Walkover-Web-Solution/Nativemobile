@@ -6,6 +6,7 @@ import { Observable } from "rxjs/Observable";
 import { IRevenueChartClosingBalanceResponse, IExpensesChartClosingBalanceResponse } from "~/models/interfaces/dashboard.interface";
 import { Injectable } from "@angular/core";
 import { zip } from "rxjs/observable/zip";
+import * as dialogs from "ui/dialogs";
 
 @Injectable()
 export class DashboardActions {
@@ -28,6 +29,8 @@ export class DashboardActions {
           payload: obj
         };
       }
+      dialogs.alert(res[0].message);
+      dialogs.alert(res[1].message);
       return {
         type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE
       };
@@ -52,6 +55,8 @@ export class DashboardActions {
           payload: obj
         };
       }
+      dialogs.alert(res[0].message);
+      dialogs.alert(res[1].message);
       return {
         type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE
       };
@@ -77,6 +82,8 @@ export class DashboardActions {
           payload: obj
         };
       }
+      dialogs.alert(res[0].message);
+      dialogs.alert(res[1].message);
       return {
         type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE
       };
@@ -102,6 +109,8 @@ export class DashboardActions {
           payload: obj
         };
       }
+      dialogs.alert(res[0].message);
+      dialogs.alert(res[1].message);
       return {
         type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE
       };
