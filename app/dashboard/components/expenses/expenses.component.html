@@ -1,18 +1,21 @@
 <StackLayout>
-  <ns-pie-chart [maxPoint]="pieChartAmount" [chartColor]="'#f39660'" [indicatorColor]="'#e56830'"></ns-pie-chart>
-  <!-- <RadPieChart height="100" allowAnimation="true">
-      <PieSeries tkPieSeries selectionMode="DataPoint" expandRadius="0.4" outerRadiusFactor="0.7" [items]="activeYearAccountsRanks"
-        valueProperty="amount" legendLabel="Accounts"></PieSeries> -->
-  <!-- <RadLegendView tkPieLegend position="Right" title="Accounts" offsetOrigin="TopRight" width="110" enableSelection="true"></RadLegendView> -->
-  <!-- </RadPieChart> -->
+
+  <FlexboxLayout justifyContent="space-between" margin="10">
+    <ns-pie-chart [maxPoint]="activePieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#e56830'"></ns-pie-chart>
+    <ns-pie-chart [maxPoint]="lastPieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#e56830'"></ns-pie-chart>
+  </FlexboxLayout>
 
   <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
-    <RadCartesianChartGrid tkCartesianGrid horizontalLinesVisible="true" horizontalStripLinesVisible="true"
-     horizontalStrokeWidth="0.5" horizontalStripLineColor="#fafafa, #fff"></RadCartesianChartGrid>
+    <RadCartesianChartGrid tkCartesianGrid horizontalLinesVisible="true" horizontalStripLinesVisible="true" horizontalStrokeWidth="0.5"
+      horizontalStripLineColor="#fafafa, #fff"></RadCartesianChartGrid>
     <CategoricalAxis tkCartesianHorizontalAxis labelFitMode="Rotate"></CategoricalAxis>
     <LinearAxis tkCartesianVerticalAxis labelFormat="%.0f" lineHidden="true"></LinearAxis>
 
-    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint"
-    categoryProperty="name" valueProperty="amount" showLabels="true"></BarSeries>
+
+    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name" valueProperty="amount"
+      showLabels="true"></BarSeries>
+
+    <BarSeries tkCartesianSeries [items]="lastYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name" valueProperty="amount"
+      showLabels="true"></BarSeries>
   </RadCartesianChart>
 </StackLayout>

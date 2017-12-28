@@ -10,8 +10,8 @@ import { zip } from "rxjs/observable/zip";
 @Injectable()
 export class DashboardActions {
   @Effect()
-  public GetExpensesChart$: Observable<CustomActions> = this.actions$
-    .ofType(DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA)
+  public GetExpensesChartActiveYear$: Observable<CustomActions> = this.actions$
+    .ofType(DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR)
     .switchMap((action: CustomActions) => {
       return zip(
         this._dashboardService.GetClosingBalance('operatingcost', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
@@ -20,21 +20,46 @@ export class DashboardActions {
     }).map((res) => {
       if (res[0].status === 'success' && res[1].status === 'success') {
         let obj: IExpensesChartClosingBalanceResponse = {
-          operatingcostData: res[0].body[0],
-          indirectexpensesData: res[1].body[0]
+          operatingcostActiveyear: res[0].body[0],
+          indirectexpensesActiveyear: res[1].body[0]
         };
         return {
-          type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_RESPONSE,
+          type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
           payload: obj
         };
       }
       return {
-        type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ERROR_RESPONSE
+        type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE
       };
     });
+
+    @Effect()
+  public GetExpensesChartLastYear$: Observable<CustomActions> = this.actions$
+    .ofType(DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR)
+    .switchMap((action: CustomActions) => {
+      return zip(
+        this._dashboardService.GetClosingBalance('operatingcost', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
+        this._dashboardService.GetClosingBalance('indirectexpenses', action.payload.fromDate, action.payload.toDate, action.payload.refresh)
+      );
+    }).map((res) => {
+      if (res[0].status === 'success' && res[1].status === 'success') {
+        let obj: IExpensesChartClosingBalanceResponse = {
+          operatingcostLastyear: res[0].body[0],
+          indirectexpensesLastyear: res[1].body[0]
+        };
+        return {
+          type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE,
+          payload: obj
+        };
+      }
+      return {
+        type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE
+      };
+    });
+
   @Effect()
-  public GetRevenueChartData$: Observable<CustomActions> = this.actions$
-    .ofType(DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA)
+  public GetRevenueChartDataActiveYear$: Observable<CustomActions> = this.actions$
+    .ofType(DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR)
     .switchMap((action: CustomActions) => {
       return zip(
         this._dashboardService.GetClosingBalance('revenuefromoperations', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
@@ -44,11 +69,36 @@ export class DashboardActions {
       console.log('dada', JSON.stringify(res[0].message));
       if (res[0].status === 'success' && res[1].status === 'success') {
         let obj: IRevenueChartClosingBalanceResponse = {
-          revenuefromoperationsData: res[0].body[0],
-          otherincomeData: res[1].body[0]
+          revenuefromoperationsActiveyear: res[0].body[0],
+          otherincomeActiveyear: res[1].body[0]
         };
         return {
-          type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_RESPONSE,
+          type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE,
+          payload: obj
+        };
+      }
+      return {
+        type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE
+      };
+    });
+
+    @Effect()
+  public GetRevenueChartDataLastYear$: Observable<CustomActions> = this.actions$
+    .ofType(DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR)
+    .switchMap((action: CustomActions) => {
+      return zip(
+        this._dashboardService.GetClosingBalance('revenuefromoperations', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
+        this._dashboardService.GetClosingBalance('otherincome', action.payload.fromDate, action.payload.toDate, action.payload.refresh)
+      );
+    }).map((res) => {
+      console.log('dada', JSON.stringify(res[0].message));
+      if (res[0].status === 'success' && res[1].status === 'success') {
+        let obj: IRevenueChartClosingBalanceResponse = {
+          revenuefromoperationsLastyear: res[0].body[0],
+          otherincomeLastyear: res[1].body[0]
+        };
+        return {
+          type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE,
           payload: obj
         };
       }
@@ -61,17 +111,32 @@ export class DashboardActions {
 
   }
 
-  public getExpensesChartData(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
+  public getExpensesChartDataActiveYear(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
     return {
-      type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA,
+      type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR,
       payload: { fromDate, toDate, refresh }
     };
   }
 
-  public getRevenueChartData(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
+  public getExpensesChartDataLastYear(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
+    return {
+      type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR,
+      payload: { fromDate, toDate, refresh }
+    };
+  }
+
+  public getRevenueChartDataActiveYear(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
     console.log('dada', fromDate);
     return {
-      type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA,
+      type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR,
+      payload: { fromDate, toDate, refresh }
+    };
+  }
+
+  public getRevenueChartDataLastYear(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
+    console.log('dada', fromDate);
+    return {
+      type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR,
       payload: { fromDate, toDate, refresh }
     };
   }

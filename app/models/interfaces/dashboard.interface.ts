@@ -61,13 +61,17 @@ export interface ICbAccount {
 }
 
 export interface IExpensesChartClosingBalanceResponse {
-  operatingcostData?: ClosingBalanceResponse;
-  indirectexpensesData?: ClosingBalanceResponse;
+  operatingcostActiveyear?: ClosingBalanceResponse;
+  operatingcostLastyear?: ClosingBalanceResponse;
+  indirectexpensesActiveyear?: ClosingBalanceResponse;
+  indirectexpensesLastyear?: ClosingBalanceResponse;
 }
 
 export interface IRevenueChartClosingBalanceResponse {
-  revenuefromoperationsData?: ClosingBalanceResponse;
-  otherincomeData?: ClosingBalanceResponse;
+  revenuefromoperationsActiveyear?: ClosingBalanceResponse;
+  revenuefromoperationsLastyear?: ClosingBalanceResponse;
+  otherincomeActiveyear?: ClosingBalanceResponse;
+  otherincomeLastyear?: ClosingBalanceResponse;
 }
 
 export class IComparisionChartResponse {
