@@ -176,7 +176,6 @@ export class ExpensesChartComponent implements OnInit {
   }
 
   public resetChartData() {
-    console.log('reset called');
     this.activeYearAccounts = [];
     this.activeYearAccountsRanks = new ObservableArray([]);
     this.activeYearGrandAmount = 0;

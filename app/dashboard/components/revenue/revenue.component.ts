@@ -19,6 +19,7 @@ import { ChartFilterConfigs } from '~/models/api-models/Dashboard';
   templateUrl: `./revenue.component.html`
 })
 export class RevenueChartComponent implements OnInit {
+  public requestInFlight: boolean;
   public activeFinancialYear: ActiveFinancialYear;
   public lastFinancialYear: ActiveFinancialYear;
   public activeYearAccounts: IChildGroups[] = [];
@@ -50,7 +51,6 @@ export class RevenueChartComponent implements OnInit {
       let financialYears = [];
       let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
       if (activeCmp) {
-        console.log('acc');
         this.activeFinancialYear = activeCmp.activeFinancialYear;
 
         if (activeCmp.financialYears.length > 1) {
@@ -80,6 +80,8 @@ export class RevenueChartComponent implements OnInit {
           let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
           let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
           this.activeYearAccounts = groups;
+        } else {
+          this.resetActiveYearChartData();
         }
 
         if (rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
@@ -87,16 +89,23 @@ export class RevenueChartComponent implements OnInit {
           let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
           let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
           this.lastYearAccounts = lastAccounts;
+        } else {
+          this.resetLastYearChartData();
         }
+        this.generateCharts();
+      } else {
+        this.resetActiveYearChartData();
+        this.resetLastYearChartData();
       }
-      this.generateCharts();
+      this.requestInFlight = false;
     });
 
     this.chartFilterType$.subscribe(p => {
       if (p) {
         let dates = this.parseDates(p);
-        this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(dates.activeYear.startDate, dates.activeYear.endDate));
-        this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(dates.lastYear.startDate, dates.lastYear.endDate));
+        this.requestInFlight = true;
+        this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(dates.activeYear.startDate, dates.activeYear.endDate));
+        this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(dates.lastYear.startDate, dates.lastYear.endDate));
       }
     });
   }
@@ -159,6 +168,7 @@ export class RevenueChartComponent implements OnInit {
   }
 
   public fetchChartData() {
+    this.requestInFlight = true;
     this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(this.activeFinancialYear.financialYearStarts,
       this.activeFinancialYear.financialYearEnds, false));
     if (this.lastFinancialYear) {
@@ -174,12 +184,18 @@ export class RevenueChartComponent implements OnInit {
     this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;
   }
 
-  public resetChartData() {
-    console.log('reset called');
+  public resetActiveYearChartData() {
     this.activeYearAccounts = [];
-    this.activeYearAccountsRanks = new ObservableArray([]);
+    // this.activeYearAccountsRanks = new ObservableArray([]);
     this.activeYearGrandAmount = 0;
-    // this.pieChartAmount = 0;
+    this.activePieChartAmount = 0;
+  }
+
+  public resetLastYearChartData() {
+    this.lastYearAccounts = [];
+    // this.lastYearAccountsRanks = new ObservableArray([]);
+    this.lastYearGrandAmount = 0;
+    this.lastPieChartAmount = 0;
   }
 
   public parseDates(filterType: string): ChartFilterConfigs {
