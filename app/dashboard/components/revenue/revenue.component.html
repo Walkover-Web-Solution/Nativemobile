@@ -5,7 +5,7 @@
     <ns-pie-chart [maxPoint]="lastPieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#3b8d8a'" height="200"></ns-pie-chart>
   </FlexboxLayout>
 
-  <StackLayout>
+  <StackLayout *ngIf="activeYearAccounts.length > 0 || lastYearAccounts.length > 0">
 
     <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton
       (pointSelected)="calculatePieChartPer($event)">
@@ -21,5 +21,5 @@
   </StackLayout>
 
   <ActivityIndicator *ngIf="requestInFlight" #activityIndicator [busy]="requestInFlight" width="100" height="100" class="activity-indicator"></ActivityIndicator>
-  <!-- <Label *ngIf="activeYearAccounts.length === 0" text="No Data"></Label> -->
+  <Label *ngIf="activeYearAccounts.length === 0 && lastYearAccounts.length === 0" text="No Data"></Label>
 </StackLayout>

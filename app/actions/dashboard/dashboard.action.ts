@@ -92,7 +92,7 @@ export class DashboardActions {
         this._dashboardService.GetClosingBalance('otherincome', action.payload.fromDate, action.payload.toDate, action.payload.refresh)
       );
     }).map((res) => {
-      console.log('dada', JSON.stringify(res[0].message));
+      console.log('lada', JSON.stringify(res[0].message));
       if (res[0].status === 'success' && res[1].status === 'success') {
         let obj: IRevenueChartClosingBalanceResponse = {
           revenuefromoperationsLastyear: res[0].body[0],
@@ -127,7 +127,6 @@ export class DashboardActions {
   }
 
   public getRevenueChartDataActiveYear(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
-    console.log('dada', fromDate);
     return {
       type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR,
       payload: { fromDate, toDate, refresh }
@@ -135,7 +134,6 @@ export class DashboardActions {
   }
 
   public getRevenueChartDataLastYear(fromDate: string = '', toDate: string = '', refresh: boolean = false): CustomActions {
-    console.log('dada', fromDate);
     return {
       type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR,
       payload: { fromDate, toDate, refresh }

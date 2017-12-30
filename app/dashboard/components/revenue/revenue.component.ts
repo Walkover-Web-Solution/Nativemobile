@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 import { AppState } from '~/store';
 import { Store } from '@ngrx/store';
@@ -7,18 +7,21 @@ import { CompanyResponse, ActiveFinancialYear } from '~/models/api-models/Compan
 import { createSelector } from 'reselect';
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
+import * as CircularJSON from 'circular-json';
 import { IRevenueChartClosingBalanceResponse, IChildGroups } from '~/models/interfaces/dashboard.interface';
 import { AccountChartDataLastCurrentYear } from '~/models/view-models/AccountChartDataLastCurrentYear';
 import { INameUniqueName } from '~/models/interfaces/nameUniqueName.interface';
 import { DashboardActions } from '~/actions/dashboard/dashboard.action';
 import * as dialogs from "ui/dialogs";
 import { ChartFilterConfigs } from '~/models/api-models/Dashboard';
+import { Page } from 'tns-core-modules/ui/page/page';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 @Component({
   selector: 'ns-revenue-chart',
   moduleId: module.id,
   templateUrl: `./revenue.component.html`
 })
-export class RevenueChartComponent implements OnInit {
+export class RevenueChartComponent implements OnInit, OnDestroy {
   public requestInFlight: boolean;
   public activeFinancialYear: ActiveFinancialYear;
   public lastFinancialYear: ActiveFinancialYear;
@@ -27,22 +30,25 @@ export class RevenueChartComponent implements OnInit {
   public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
-  public activeYearAccountsRanks: ObservableArray<any>;
-  public lastYearAccountsRanks: ObservableArray<any>;
+  public activeYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
+  public lastYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
   public activeYearGrandAmount: number = 0;
   public lastYearGrandAmount: number = 0;
   public activePieChartAmount: number = 0;
   public lastPieChartAmount: number = 0;
   public chartFilterType$: Observable<string>;
-  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
-    this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart);
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
+    this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
     this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
       return { companies, uniqueName };
-    }));
-    this.chartFilterType$ = this.store.select(p => p.dashboard.revenueChartFilter);
+    })).takeUntil(this.destroyed$);
+    this.chartFilterType$ = this.store.select(p => p.dashboard.revenueChartFilter).takeUntil(this.destroyed$);
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   ngOnInit() {
+    // console.log('inited ');
     // get activeCompany and set activeFinacial Year and LastFinacial Year
     this.companyData$.subscribe(res => {
       if (!res.companies) {
@@ -74,8 +80,8 @@ export class RevenueChartComponent implements OnInit {
     });
 
     this.revenueChartData$.subscribe(rvn => {
-      if (rvn) {
-        if (rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
+      // if (rvn) {
+        if (rvn && rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
           let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
           let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
           let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
@@ -84,7 +90,7 @@ export class RevenueChartComponent implements OnInit {
           this.resetActiveYearChartData();
         }
 
-        if (rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
+        if (rvn && rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
           let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
           let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
           let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
@@ -93,10 +99,10 @@ export class RevenueChartComponent implements OnInit {
           this.resetLastYearChartData();
         }
         this.generateCharts();
-      } else {
-        this.resetActiveYearChartData();
-        this.resetLastYearChartData();
-      }
+      // } else {
+        // this.resetActiveYearChartData();
+        // this.resetLastYearChartData();
+      // }
       this.requestInFlight = false;
     });
 
@@ -142,11 +148,19 @@ export class RevenueChartComponent implements OnInit {
       lastAccounts.push({ name: p.name, amount: p.lastYear });
     });
 
-    this.activeYearAccountsRanks = new ObservableArray(activeAccounts);
+    while (this.activeYearAccountsRanks.length) {
+      this.activeYearAccountsRanks.pop();
+    }
+    this.activeYearAccountsRanks.push(activeAccounts);
+    console.log(activeAccounts);
     this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
     this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
 
-    this.lastYearAccountsRanks = new ObservableArray(lastAccounts);
+    while (this.lastYearAccountsRanks.length) {
+      this.lastYearAccountsRanks.pop();
+    }
+    this.lastYearAccountsRanks.push(lastAccounts);
+    console.log(lastAccounts)
     this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
     this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
   }
@@ -186,6 +200,10 @@ export class RevenueChartComponent implements OnInit {
 
   public resetActiveYearChartData() {
     this.activeYearAccounts = [];
+    while (this.activeYearAccountsRanks.length) {
+      this.activeYearAccountsRanks.pop();
+    }
+    // this.activeBarSeries.nativeElement.items.length = 0;
     // this.activeYearAccountsRanks = new ObservableArray([]);
     this.activeYearGrandAmount = 0;
     this.activePieChartAmount = 0;
@@ -193,6 +211,9 @@ export class RevenueChartComponent implements OnInit {
 
   public resetLastYearChartData() {
     this.lastYearAccounts = [];
+    while (this.lastYearAccountsRanks.length) {
+      this.lastYearAccountsRanks.pop();
+    }
     // this.lastYearAccountsRanks = new ObservableArray([]);
     this.lastYearGrandAmount = 0;
     this.lastPieChartAmount = 0;
@@ -282,5 +303,10 @@ export class RevenueChartComponent implements OnInit {
       default:
         return config;
     }
+  }
+
+  public ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
