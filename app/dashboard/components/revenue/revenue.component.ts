@@ -38,6 +38,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public lastPieChartAmount: number = 0;
   public chartFilterType$: Observable<string>;
   public chartFilterTitle: string = 'Custom';
+  public activeYearChartFormatedDate: string;
+  public lastYearChartFormatedDate: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
     this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
@@ -179,9 +181,11 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
   public fetchChartData() {
     this.requestInFlight = true;
+    this.activeYearChartFormatedDate = `FY- ${moment().year((this.activeFinancialYear.financialYearStarts) as any).format('YY')} / ${moment().year((this.activeFinancialYear.financialYearEnds) as any).format('YY')}`;
     this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(this.activeFinancialYear.financialYearStarts,
       this.activeFinancialYear.financialYearEnds, false));
     if (this.lastFinancialYear) {
+      this.lastYearChartFormatedDate = `FY- ${moment().year((this.lastFinancialYear.financialYearStarts) as any).format('YY')} / ${moment().year((this.lastFinancialYear.financialYearEnds) as any).format('YY')}`;
       this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(this.lastFinancialYear.financialYearStarts, this.lastFinancialYear.financialYearEnds, false));
     }
   }

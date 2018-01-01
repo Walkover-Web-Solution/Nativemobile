@@ -13,8 +13,8 @@
     </FlexboxLayout>
 
     <FlexboxLayout justifyContent="space-around">
-      <Label text="Rs. 60,000"></Label>
-      <Label text="Rs. 60,000"></Label>
+      <Label color="#404040" text="Rs. {{ ((activePieChartAmount * activeYearGrandAmount) / 100) | number: '1.1-2' }}"></Label>
+      <Label color="#404040" text="Rs. {{ ((lastPieChartAmount * lastYearGrandAmount) / 100) | number: '1.1-2' }}"></Label>
     </FlexboxLayout>
 
     <FlexboxLayout justifyContent="space-around">
