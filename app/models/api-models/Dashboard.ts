@@ -70,3 +70,15 @@ export class RefreshBankAccountResponse {
   // tslint:disable-next-line:variable-name
   public token_URL: string;
 }
+
+export class ChartFilterConfigs {
+  public activeYear: {
+    startDate: string,
+    endDate: string
+  } = { startDate: '', endDate: '' };
+
+  public lastYear: {
+    startDate: string,
+    endDate: string
+  } = { startDate: '', endDate: '' };
+}

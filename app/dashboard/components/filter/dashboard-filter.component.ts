@@ -3,6 +3,7 @@ import { RouterExtensions, PageRoute } from 'nativescript-angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '~/store';
 import { DashboardActions } from '~/actions/dashboard/dashboard.action';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'ns-dashboard-filter',
@@ -36,14 +37,15 @@ export class DashboardFilterComponent implements OnInit {
       .subscribe((params) => {
         this.chartType = params['chartType'];
       });
-
-    // this.store.select(p => p.dashboard).map(f => {
-    //   if (this.chartType === 'revenue') {
-    //     this.selectedFilterVal = f.revenueChartFilter;
-    //   } else {
-    //     this.selectedFilterVal = f.expensesChartFilter;
-    //   }
-    // })
+    if (this.chartType === 'revenue') {
+      this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(s => {
+        this.setSelectedItem(s);
+      });
+    } else {
+      this.store.select(p => p.dashboard.expensesChartFilter).take(1).subscribe(s => {
+        this.setSelectedItem(s);
+      });
+    }
   }
 
   onNavBtnTap() {
@@ -59,7 +61,8 @@ export class DashboardFilterComponent implements OnInit {
   saveAndClose() {
     let item = this.items.find(f => f.selected);
     this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val));
-    this.routerExtensions.backToPreviousPage();
+    // this.routerExtensions.backToPreviousPage();
+    this.routerExtensions.navigateByUrl('/dashboard', { clearHistory: true });
   }
 
   setSelectedItem(selVal) {
@@ -67,6 +70,6 @@ export class DashboardFilterComponent implements OnInit {
       if (p.val === selVal) {
         p.selected = true;
       }
-    })
+    });
   }
 }

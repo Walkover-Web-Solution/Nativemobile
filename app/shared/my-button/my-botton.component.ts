@@ -28,7 +28,6 @@ export class MyButonComponent implements OnInit, OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.lodder && !changes.lodder.firstChange && changes.lodder.currentValue !== changes.lodder.previousValue) {
-      console.log('lodder ' + changes.lodder.currentValue);
     }
   }
 
