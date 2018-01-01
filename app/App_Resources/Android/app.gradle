@@ -8,7 +8,7 @@
 android {
   defaultConfig {
     generatedDensities = []
-    applicationId = "org.walkover.giddh"
+    applicationId = "com.giddh.accounts"
   }
   aaptOptions {
     additionalParameters "--no-version-vectors"
