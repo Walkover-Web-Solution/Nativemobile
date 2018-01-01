@@ -1,21 +1,54 @@
-<StackLayout>
-
-  <FlexboxLayout justifyContent="space-between" margin="10">
-    <ns-pie-chart [maxPoint]="activePieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#e56830'"></ns-pie-chart>
-    <ns-pie-chart [maxPoint]="lastPieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#e56830'"></ns-pie-chart>
+<StackLayout rows="10,*" columns="*">
+  <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
+    <Label text="Expenses ({{ chartFilterTitle }})"></Label>
+    <Label text="&#xf1de;" [nsRouterLink]="['/dashboard','filter', 'expenses']" fontFamily="FontAwesome"></Label>
   </FlexboxLayout>
+  <StackLayout class="hr-light"></StackLayout>
 
-  <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
-    <RadCartesianChartGrid tkCartesianGrid horizontalLinesVisible="true" horizontalStripLinesVisible="true" horizontalStrokeWidth="0.5"
-      horizontalStripLineColor="#fafafa, #fff"></RadCartesianChartGrid>
-    <CategoricalAxis tkCartesianHorizontalAxis labelFitMode="Rotate"></CategoricalAxis>
-    <LinearAxis tkCartesianVerticalAxis labelFormat="%.0f" lineHidden="true"></LinearAxis>
+  <StackLayout>
+
+    <FlexboxLayout justifyContent="space-around">
+      <ns-pie-chart [maxPoint]="activePieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#4e9895'"></ns-pie-chart>
+      <ns-pie-chart [maxPoint]="lastPieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#3b8d8a'"></ns-pie-chart>
+    </FlexboxLayout>
+
+    <FlexboxLayout justifyContent="space-around">
+      <Label text="Rs. 60,000"></Label>
+      <Label text="Rs. 60,000"></Label>
+    </FlexboxLayout>
+
+    <FlexboxLayout justifyContent="space-around">
+      <Label text="September"></Label>
+      <Label text="October"></Label>
+    </FlexboxLayout>
+
+    <StackLayout *ngIf="activeYearAccounts.length > 0 || lastYearAccounts.length > 0">
+      <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
+        <RadCartesianChartGrid tkCartesianGrid horizontalLinesVisible="true" horizontalStripLinesVisible="true" horizontalStrokeWidth="0.5"
+          horizontalStripLineColor="#fafafa, #fff"></RadCartesianChartGrid>
+        <CategoricalAxis tkCartesianHorizontalAxis labelFitMode="Rotate"></CategoricalAxis>
+        <LinearAxis tkCartesianVerticalAxis labelFormat="%.0f" lineHidden="true"></LinearAxis>
 
 
-    <BarSeries tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name" valueProperty="amount"
-      showLabels="true"></BarSeries>
+        <BarSeries seriesName="activeYearSeries" tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name"
+          valueProperty="amount"></BarSeries>
 
-    <BarSeries tkCartesianSeries [items]="lastYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name" valueProperty="amount"
-      showLabels="true"></BarSeries>
-  </RadCartesianChart>
+        <BarSeries seriesName="lastYearSeries" tkCartesianSeries [items]="lastYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name"
+          valueProperty="amount"></BarSeries>
+
+        <Palette tkCartesianPalette seriesName="activeYearSeries">
+          <PaletteEntry tkCartesianPaletteEntry fillColor="#f39660" strokeWidth="0"></PaletteEntry>
+        </Palette>
+
+        <Palette tkCartesianPalette seriesName="lastYearSeries">
+          <PaletteEntry tkCartesianPaletteEntry fillColor="#e56830" strokeWidth="0"></PaletteEntry>
+        </Palette>
+      </RadCartesianChart>
+
+    </StackLayout>
+
+    <ActivityIndicator *ngIf="requestInFlight" #activityIndicator [busy]="requestInFlight" width="100" height="100" class="activity-indicator"></ActivityIndicator>
+    <Label *ngIf="activeYearAccounts.length === 0 && lastYearAccounts.length === 0" text="No Data"></Label>
+  </StackLayout>
+
 </StackLayout>

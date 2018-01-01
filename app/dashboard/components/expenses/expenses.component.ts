@@ -12,6 +12,8 @@ import { AccountChartDataLastCurrentYear } from '~/models/view-models/AccountCha
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 import { createSelector } from 'reselect';
 import { ChartFilterConfigs } from '~/models/api-models/Dashboard';
+import { Page } from 'tns-core-modules/ui/page/page';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Component({
   selector: 'ns-expenses-chart',
@@ -19,6 +21,7 @@ import { ChartFilterConfigs } from '~/models/api-models/Dashboard';
   templateUrl: `./expenses.component.html`
 })
 export class ExpensesChartComponent implements OnInit {
+  public requestInFlight: boolean;
   public activeFinancialYear: ActiveFinancialYear;
   public lastFinancialYear: ActiveFinancialYear;
   public activeYearAccounts: IChildGroups[] = [];
@@ -26,20 +29,23 @@ export class ExpensesChartComponent implements OnInit {
   public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
-  public activeYearAccountsRanks: ObservableArray<any>;
-  public lastYearAccountsRanks: ObservableArray<any>;
+  public activeYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
+  public lastYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
   public activeYearGrandAmount: number = 0;
   public lastYearGrandAmount: number = 0;
   public activePieChartAmount: number = 0;
   public lastPieChartAmount: number = 0;
   public chartFilterType$: Observable<string>;
+  public chartFilterTitle: string = 'Custom';
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
+  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
     this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart);
     this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
       return { companies, uniqueName };
     }));
     this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter);
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   ngOnInit() {
@@ -74,27 +80,33 @@ export class ExpensesChartComponent implements OnInit {
     });
 
     this.expensesChartData$.subscribe(exp => {
-      if (exp) {
-        if (exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
-          let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
-          let operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
-          let accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
-          this.activeYearAccounts = accounts;
-        }
-
-        if (exp.operatingcostLastyear && exp.indirectexpensesLastyear) {
-          let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
-          let operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
-          let lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
-          this.lastYearAccounts = lastAccounts;
-        }
+      // if (exp) {
+      if (exp && exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
+        let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
+        let operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
+        let accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+        this.activeYearAccounts = accounts;
+      } else {
+        this.resetActiveYearChartData();
       }
+
+      if (exp && exp.operatingcostLastyear && exp.indirectexpensesLastyear) {
+        let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
+        let operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
+        let lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+        this.lastYearAccounts = lastAccounts;
+      } else {
+        this.resetLastYearChartData();
+      }
+      // }
       this.generateCharts();
+      this.requestInFlight = false;
     });
 
     this.chartFilterType$.subscribe(p => {
       if (p) {
         let dates = this.parseDates(p);
+        this.requestInFlight = true;
         this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(dates.activeYear.startDate, dates.activeYear.endDate, false));
         this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(dates.lastYear.startDate, dates.lastYear.endDate, false));
       }
@@ -133,11 +145,19 @@ export class ExpensesChartComponent implements OnInit {
       lastAccounts.push({ name: p.name, amount: p.lastYear });
     });
 
-    this.activeYearAccountsRanks = new ObservableArray(activeAccounts);
+    while (this.activeYearAccountsRanks.length) {
+      this.activeYearAccountsRanks.pop();
+    }
+
+    this.activeYearAccountsRanks.push(activeAccounts);
     this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
     this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
 
-    this.lastYearAccountsRanks = new ObservableArray(lastAccounts);
+    while (this.lastYearAccountsRanks.length) {
+      this.lastYearAccountsRanks.pop();
+    }
+
+    this.lastYearAccountsRanks.push(lastAccounts);
     this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
     this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
   }
@@ -160,6 +180,7 @@ export class ExpensesChartComponent implements OnInit {
 
 
   public fetchChartData() {
+    this.requestInFlight = true;
     this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(this.activeFinancialYear.financialYearStarts, this.activeFinancialYear.financialYearEnds, false));
 
     if (this.lastFinancialYear) {
@@ -175,17 +196,32 @@ export class ExpensesChartComponent implements OnInit {
     this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;
   }
 
-  public resetChartData() {
+  public resetActiveYearChartData() {
     this.activeYearAccounts = [];
-    this.activeYearAccountsRanks = new ObservableArray([]);
+    while (this.activeYearAccountsRanks.length) {
+      this.activeYearAccountsRanks.pop();
+    }
+    // this.activeBarSeries.nativeElement.items.length = 0;
+    // this.activeYearAccountsRanks = new ObservableArray([]);
     this.activeYearGrandAmount = 0;
-    // this.pieChartAmount = 0;
+    this.activePieChartAmount = 0;
+  }
+
+  public resetLastYearChartData() {
+    this.lastYearAccounts = [];
+    while (this.lastYearAccountsRanks.length) {
+      this.lastYearAccountsRanks.pop();
+    }
+    // this.lastYearAccountsRanks = new ObservableArray([]);
+    this.lastYearGrandAmount = 0;
+    this.lastPieChartAmount = 0;
   }
 
   public parseDates(filterType: string): ChartFilterConfigs {
     let config = new ChartFilterConfigs();
     switch (filterType) {
-      case '1': // This Month to DateS
+      case '1': // This Month to Date
+        this.chartFilterTitle = 'This Month to Date';
         config.activeYear.startDate = moment().startOf('month').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
@@ -193,6 +229,7 @@ export class ExpensesChartComponent implements OnInit {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         return config;
       case '2': // This Quarter to Date
+        this.chartFilterTitle = 'This Quarter to Date';
         config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
@@ -200,6 +237,7 @@ export class ExpensesChartComponent implements OnInit {
         config.lastYear.endDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         return config;
       case '3': // This Financial Year to Date
+        this.chartFilterTitle = 'This Financial Year to Date';
         if (this.activeFinancialYear) {
           config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('DD-MM-YYYY');
           config.activeYear.endDate = moment(this.activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
@@ -217,6 +255,7 @@ export class ExpensesChartComponent implements OnInit {
         }
         return config;
       case '4': // This Year to Date
+        this.chartFilterTitle = 'This Year to Date';
         config.activeYear.startDate = moment().startOf('year').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
@@ -224,6 +263,7 @@ export class ExpensesChartComponent implements OnInit {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         return config;
       case '5': // Last Month
+        this.chartFilterTitle = 'Last Month';
         config.activeYear.startDate = moment().startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
 
@@ -231,6 +271,7 @@ export class ExpensesChartComponent implements OnInit {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         return config;
       case '6': // Last Quater
+        this.chartFilterTitle = 'Last Quater';
         config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
 
@@ -238,6 +279,7 @@ export class ExpensesChartComponent implements OnInit {
         config.lastYear.endDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         return config;
       case '7': // Last Fiancial Year
+        this.chartFilterTitle = 'Last Fiancial Year';
         if (this.activeFinancialYear) {
           config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
           config.activeYear.endDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
@@ -255,6 +297,7 @@ export class ExpensesChartComponent implements OnInit {
         }
         return config;
       case '8': // Last Year
+        this.chartFilterTitle = 'Last Year';
         config.activeYear.startDate = moment().startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
 
@@ -262,9 +305,15 @@ export class ExpensesChartComponent implements OnInit {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         return config;
       case '9':
+        this.chartFilterTitle = 'Custom';
         return config;
       default:
         return config;
     }
+  }
+
+  public ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

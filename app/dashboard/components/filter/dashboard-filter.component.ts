@@ -37,7 +37,7 @@ export class DashboardFilterComponent implements OnInit {
       .subscribe((params) => {
         this.chartType = params['chartType'];
       });
-    if (this.chartType === '') {
+    if (this.chartType === 'revenue') {
       this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(s => {
         this.setSelectedItem(s);
       });
@@ -61,6 +61,7 @@ export class DashboardFilterComponent implements OnInit {
   saveAndClose() {
     let item = this.items.find(f => f.selected);
     this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val));
+    // this.routerExtensions.backToPreviousPage();
     this.routerExtensions.navigateByUrl('/dashboard', { clearHistory: true });
   }
 

@@ -41,10 +41,10 @@ const printBuffer = options => logBuffer => {
         try {
             if (isCollapsed) {
                 if (colors.title) logger.groupCollapsed(`%c ${title}`, titleCSS);
-                else logger.groupCollapsed(title);
+                else logger.log(title);
             } else {
                 if (colors.title) logger.group(`%c ${title}`, titleCSS);
-                else logger.group(title);
+                else logger.log(title);
             }
         } catch (e) {
             logger.log(title);

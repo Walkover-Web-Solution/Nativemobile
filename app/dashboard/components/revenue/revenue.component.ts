@@ -37,6 +37,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public activePieChartAmount: number = 0;
   public lastPieChartAmount: number = 0;
   public chartFilterType$: Observable<string>;
+  public chartFilterTitle: string = 'Custom';
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
     this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
@@ -81,27 +82,24 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     this.revenueChartData$.subscribe(rvn => {
       // if (rvn) {
-        if (rvn && rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
-          let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
-          let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
-          let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
-          this.activeYearAccounts = groups;
-        } else {
-          this.resetActiveYearChartData();
-        }
+      if (rvn && rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
+        let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
+        let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
+        let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
+        this.activeYearAccounts = groups;
+      } else {
+        this.resetActiveYearChartData();
+      }
 
-        if (rvn && rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
-          let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
-          let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
-          let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
-          this.lastYearAccounts = lastAccounts;
-        } else {
-          this.resetLastYearChartData();
-        }
-        this.generateCharts();
-      // } else {
-        // this.resetActiveYearChartData();
-        // this.resetLastYearChartData();
+      if (rvn && rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
+        let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
+        let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
+        let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
+        this.lastYearAccounts = lastAccounts;
+      } else {
+        this.resetLastYearChartData();
+      }
+      this.generateCharts();
       // }
       this.requestInFlight = false;
     });
@@ -152,7 +150,6 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
       this.activeYearAccountsRanks.pop();
     }
     this.activeYearAccountsRanks.push(activeAccounts);
-    console.log(activeAccounts);
     this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
     this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
 
@@ -160,7 +157,6 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
       this.lastYearAccountsRanks.pop();
     }
     this.lastYearAccountsRanks.push(lastAccounts);
-    console.log(lastAccounts)
     this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
     this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
   }
@@ -222,7 +218,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public parseDates(filterType: string): ChartFilterConfigs {
     let config = new ChartFilterConfigs();
     switch (filterType) {
-      case '1': // This Month to DateS
+      case '1': // This Month to Date
+        this.chartFilterTitle = 'This Month to Date';
         config.activeYear.startDate = moment().startOf('month').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
@@ -230,6 +227,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         return config;
       case '2': // This Quarter to Date
+        this.chartFilterTitle = 'This Quarter to Date';
         config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
@@ -237,6 +235,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         config.lastYear.endDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         return config;
       case '3': // This Financial Year to Date
+        this.chartFilterTitle = 'This Financial Year to Date';
         if (this.activeFinancialYear) {
           config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('DD-MM-YYYY');
           config.activeYear.endDate = moment(this.activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
@@ -254,6 +253,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         }
         return config;
       case '4': // This Year to Date
+        this.chartFilterTitle = 'This Year to Date';
         config.activeYear.startDate = moment().startOf('year').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
 
@@ -261,6 +261,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         return config;
       case '5': // Last Month
+        this.chartFilterTitle = 'Last Month';
         config.activeYear.startDate = moment().startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
 
@@ -268,6 +269,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         return config;
       case '6': // Last Quater
+        this.chartFilterTitle = 'Last Quater';
         config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
 
@@ -275,6 +277,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         config.lastYear.endDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         return config;
       case '7': // Last Fiancial Year
+        this.chartFilterTitle = 'Last Fiancial Year';
         if (this.activeFinancialYear) {
           config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
           config.activeYear.endDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
@@ -292,6 +295,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         }
         return config;
       case '8': // Last Year
+        this.chartFilterTitle = 'Last Year';
         config.activeYear.startDate = moment().startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
 
@@ -299,6 +303,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         return config;
       case '9':
+        this.chartFilterTitle = 'Custom';
         return config;
       default:
         return config;
