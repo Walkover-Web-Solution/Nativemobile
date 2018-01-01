@@ -6,7 +6,7 @@
   "readme": "NativeScript Application",
   "repository": "<fill-your-repository-here>",
   "nativescript": {
-    "id": "org.walkover.giddh",
+    "id": "com.giddh.accounts",
     "name": "giddh",
     "hooks": [
       {
@@ -15,10 +15,10 @@
       }
     ],
     "tns-android": {
-      "version": "3.4.0"
+      "version": "3.5.0-2017-12-8-8"
     },
     "tns-ios": {
-      "version": "3.4.0"
+      "version": "3.5.0-2017-12-8-8"
     }
   },
   "dependencies": {
@@ -92,7 +92,7 @@
     "debug:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "debug:ios": "cross-env BUILD_PROFILE=test tns debug ios",
     "debug": "cross-env BUILD_PROFILE=dev tns debug ios --chrome",
-    "clean": "npm run js.clean && npm run css",
+    "clean": "npm run js.clean && npm run css.clean",
     "css.clean": "find app -type f -iname '*.css' -and ! -iname 'font-awesome.min.css' -delete",
     "css.generate": "node -e 'require(\"./node_modules/nativescript-dev-sass/lib/converter.js\").convert(console, \".\");'",
     "css": "npm run css.clean && npm run css.generate",
@@ -101,8 +101,9 @@
     "start-android-bundle": "cross-env BUILD_PROFILE=dev tns run android --bundle --env.aot --env.uglify",
     "start-ios-bundle": "cross-env BUILD_PROFILE=dev tns run ios --bundle --env.aot --env.uglify",
     "build-android-bundle": "cross-env BUILD_PROFILE=dev tns build android --env.aot --env.uglify",
-    "build-ios-bundle": "cross-env BUILD_PROFILE=dev tns build ios --bundle --env.aot --env.uglify",
-    "publish-ios-bundle": "cross-env BUILD_PROFILE=dev tns build ios --bundle --env.aot --env.uglify",
+    "build-ios-bundle": "cross-env BUILD_PROFILE=prod tns build ios     --release --for-device --provision a1a56f83-05bf-4ae3-8d53-09e2b45cbd02 --bundle --env.aot --env.uglify",
+    "prepare-ios-bundle": "cross-env BUILD_PROFILE=prod tns prepare ios --release --for-device --team-id F3U6Z5L2EJ --provision a1a56f83-05bf-4ae3-8d53-09e2b45cbd02 --bundle --env.aot --env.uglify",
+    "publish-ios-bundle": "cross-env BUILD_PROFILE=prod tns publish ios --release --for-device --team-id F3U6Z5L2EJ --provision a1a56f83-05bf-4ae3-8d53-09e2b45cbd02 --bundle --env.aot --env.uglify",
     "e2e": "tsc -p e2e && mocha --opts ./e2e/config/mocha.opts",
     "compile-tests": "tsc -p e2e --watch"
   }
