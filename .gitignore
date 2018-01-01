@@ -91,3 +91,5 @@ app.component.js
 times.html
 package-lock.json
 package-lock.json
+
+app/**/*.css
