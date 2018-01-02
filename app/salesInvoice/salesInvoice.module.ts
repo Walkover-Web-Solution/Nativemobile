@@ -17,6 +17,8 @@ import { SaleAddComponent } from '~/salesInvoice/component/saleAdd/saleAdd.compo
 import { StockAddComponent } from '~/salesInvoice/component/stockAdd/stockAdd.component';
 import { TaxRateComponent } from '~/salesInvoice/component/taxRate/taxRate.component';
 import { CreateStockComponent } from '~/salesInvoice/component/createStock/createStock.component';
+import { CreateStockAddProductComponent } from '~/salesInvoice/component/createStockAddProduct/createStockAddProduct.component';
+import { CreateStockAddServiceComponent } from '~/salesInvoice/component/createStockAddService/createStockAddService.component';
 
 
 
@@ -31,7 +33,8 @@ import { CreateStockComponent } from '~/salesInvoice/component/createStock/creat
     SalesInvoiceRoutingModule,
     NativeScriptUIChartModule
   ],
-  declarations: [SalesInvoiceComponent, SaleListComponent, SaleAddComponent, StockAddComponent, TaxRateComponent, CreateStockComponent],
+  declarations: [SalesInvoiceComponent, SaleListComponent, SaleAddComponent, StockAddComponent,
+    TaxRateComponent, CreateStockComponent, CreateStockAddProductComponent, CreateStockAddServiceComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]

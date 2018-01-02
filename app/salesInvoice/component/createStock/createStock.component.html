@@ -12,11 +12,12 @@
 <StackLayout>
   <SegmentedBar [items]="myItems" selectedIndex="0" (selectedIndexChange)="onSelectedIndexChange($event)" class="m-5"></SegmentedBar>
 
-  <StackLayout>
-      <!-- add product -->
+  <StackLayout visibility="{{ selectedIndex === 0 ? 'visible' : 'collapsed' }}">
+    <!-- add product -->
+    <ns-stock-create-add-product></ns-stock-create-add-product>
   </StackLayout>
 
-  <StackLayout>
-      <!-- add stock -->
+  <StackLayout visibility="{{ selectedIndex === 1 ? 'visible' : 'collapsed' }}">
+    <ns-stock-create-add-service></ns-stock-create-add-service>
   </StackLayout>
 </StackLayout>

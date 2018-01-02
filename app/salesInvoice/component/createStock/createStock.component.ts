@@ -13,10 +13,14 @@ export class CreateStockComponent {
   public myItems: SegmentedBarItem[];
   public selectedIndex: number = 0;
   constructor() {
-    this.myItems = [
-      { title: 'Add Product' } as SegmentedBarItem,
-      { title: 'Add Service' } as SegmentedBarItem
-    ];
+    this.myItems = [];
+    let productItem = new SegmentedBarItem();
+    let serviceItem = new SegmentedBarItem();
+
+    productItem.title = 'Add Product';
+    serviceItem.title = 'Add Service';
+
+    this.myItems.push(productItem, serviceItem);
   }
 
   public onSelectedIndexChange(args) {
