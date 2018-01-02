@@ -11,13 +11,14 @@
 
 <ScrollView>
   <StackLayout margin="10">
+
     <CardView margin="5" elevation="10" radius="1">
       <StackLayout margin="5">
         <Label color="#59595B" text="Customer Name"></Label>
 
         <StackLayout orientation="horizontal">
-          <DropDown #dd backroundColor="red" width="80%" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
-          <Label text="&#xf067;" fontFamily="FontAwesome" verticalAlignment="center"></Label>
+          <DropDown #dd backroundColor="red" width="95%" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          <Label text="&#xf067;" color="#428ECB" fontFamily="FontAwesome" verticalAlignment="center"></Label>
         </StackLayout>
 
         <StackLayout class="hr-light"></StackLayout>
@@ -35,26 +36,89 @@
 
           <StackLayout width="50%">
             <Label color="#59595B" text="Country"></Label>
-            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+            <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
 
           <StackLayout width="50%">
             <Label color="#59595B" text="Invoice Number"></Label>
-            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+            <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
         </StackLayout>
 
-        <StackLayout orientation="horizontal" row="1" margin="5">
+        <StackLayout orientation="horizontal" margin="5">
           <StackLayout width="50%">
             <Label color="#59595B" text="Date"></Label>
-            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+            <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
 
           <StackLayout width="50%">
             <Label color="#59595B" text="Due"></Label>
-            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+            <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
         </StackLayout>
+      </StackLayout>
+    </CardView>
+
+    <CardView margin="5" elevation="10" radius="1">
+      <StackLayout margin="5">
+        <StackLayout>
+          <Label text="Billing Address" textWrap="true"></Label>
+          <TextField hint="Text" text=""></TextField>
+        </StackLayout>
+
+
+        <StackLayout orientation="horizontal">
+          <StackLayout width="50%">
+            <Label color="#59595B" text="Date"></Label>
+            <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          </StackLayout>
+
+          <StackLayout width="50%">
+            <Label color="#59595B" text="Due"></Label>
+            <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          </StackLayout>
+        </StackLayout>
+      </StackLayout>
+    </CardView>
+
+    <CardView margin="5" elevation="10" radius="1">
+      <StackLayout margin="5">
+
+        <StackLayout orientation="horizontal">
+          <Label text="&#xf067;" color="#428ECB" fontFamily="FontAwesome" verticalAlignment="center"></Label>
+          <Label text="Add Stock" color="#4290D5" fontSize="16" textWrap="true"></Label>
+        </StackLayout>
+
+        <FlexboxLayout justifyContent="space-between">
+          <Label text="Subtotal" textWrap="true"></Label>
+          <Label text="0000" textWrap="true"></Label>
+        </FlexboxLayout>
+
+        <FlexboxLayout justifyContent="space-between">
+          <Label text="Discount" textWrap="true"></Label>
+          <Label text="000" textWrap="true"></Label>
+        </FlexboxLayout>
+
+        <FlexboxLayout justifyContent="space-between">
+          <Label text="Deposit" textWrap="true"></Label>
+          <Label text="000" textWrap="true"></Label>
+        </FlexboxLayout>
+
+        <FlexboxLayout justifyContent="space-between">
+          <Label text="Balance Due" textWrap="true"></Label>
+          <Label text="0000" textWrap="true"></Label>
+        </FlexboxLayout>
+
+      </StackLayout>
+    </CardView>
+
+    <CardView margin="5" elevation="10" radius="1">
+      <StackLayout margin="5">
+        <StackLayout>
+          <Label text="Footer Note" color="#59595B" textWrap="true"></Label>
+          <TextField hint="Thanks for your business" text=""></TextField>
+        </StackLayout>
+
       </StackLayout>
     </CardView>
 
