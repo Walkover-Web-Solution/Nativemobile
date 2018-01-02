@@ -15,7 +15,7 @@ import { AnimationCurve } from 'ui/enums';
   selector: 'ns-login-with-email',
   moduleId: module.id,
   templateUrl: './login-with-email.component.html',
-  styleUrls: ['./login-with-email.component.scss']
+  styleUrls: ['./login-with-email.component.css']
 })
 export class LoginWithEmailComponent implements OnInit, OnDestroy {
   public isLoginWithEmailInProcess$: Observable<boolean>;

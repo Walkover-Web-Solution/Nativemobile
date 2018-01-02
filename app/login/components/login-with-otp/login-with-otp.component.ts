@@ -17,7 +17,7 @@ import { AnimationCurve } from 'ui/enums';
   selector: 'ns-login-with-otp',
   moduleId: module.id,
   templateUrl: './login-with-otp.component.html',
-  styleUrls: ['./login-with-otp.component.scss']
+  styleUrls: ['./login-with-otp.component.css']
 })
 export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   public mobileVerifyForm: FormGroup;

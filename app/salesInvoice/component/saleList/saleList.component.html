@@ -5,7 +5,9 @@
     </Button>
     <Label row="0" col="1" class="action-bar-title" [text]="'Sales'" horizontalAlignment="center"></Label>
 
-    <LogoutButton row="0" col="2"></LogoutButton>
+    <Button row="0" col="2" class="button" [nsRouterLink]="['/add']" height="50" textAlignment="center" text="Add" fontFamily="FontAwesome">
+    </Button>
+
   </GridLayout>
 </ActionBar>
 

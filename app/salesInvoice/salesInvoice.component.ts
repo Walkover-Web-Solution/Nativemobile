@@ -11,7 +11,7 @@ import { RouterExtensions } from 'nativescript-angular/router';
   selector: 'ns-sales-invoice',
   moduleId: module.id,
   templateUrl: `./salesInvoice.component.html`,
-  styleUrls: ['./salesInvoice.component.scss']
+  styleUrls: ['./salesInvoice.component.css']
 })
 export class SalesInvoiceComponent implements OnInit {
 

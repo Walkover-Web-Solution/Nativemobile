@@ -9,6 +9,54 @@
   </GridLayout>
 </ActionBar>
 
-<FlexboxLayout flexDirection="column">
-  <Label row="0" col="1" class="action-bar-title" [text]="'Sales Invoice'" horizontalAlignment="center"></Label>
-</FlexboxLayout>
+<ScrollView>
+  <StackLayout margin="10">
+    <CardView margin="5" elevation="10" radius="1">
+      <StackLayout margin="5">
+        <Label color="#59595B" text="Customer Name"></Label>
+
+        <StackLayout orientation="horizontal">
+          <DropDown #dd backroundColor="red" width="80%" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          <Label text="&#xf067;" fontFamily="FontAwesome" verticalAlignment="center"></Label>
+        </StackLayout>
+
+        <StackLayout class="hr-light"></StackLayout>
+
+        <Button backgroundColor="white" color="#478ECB" text="Add Entry Against Cash/Bank" width="100%"></Button>
+        <Label text="will be used in invoice" textWrap="true"></Label>
+
+        <StackLayout class="hr-light"></StackLayout>
+      </StackLayout>
+    </CardView>
+
+    <CardView margin="5" elevation="10" radius="1">
+      <StackLayout margin="5">
+        <StackLayout orientation="horizontal" margin="5">
+
+          <StackLayout width="50%">
+            <Label color="#59595B" text="Country"></Label>
+            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          </StackLayout>
+
+          <StackLayout width="50%">
+            <Label color="#59595B" text="Invoice Number"></Label>
+            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          </StackLayout>
+        </StackLayout>
+
+        <StackLayout orientation="horizontal" row="1" margin="5">
+          <StackLayout width="50%">
+            <Label color="#59595B" text="Date"></Label>
+            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          </StackLayout>
+
+          <StackLayout width="50%">
+            <Label color="#59595B" text="Due"></Label>
+            <DropDown backroundColor="red" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+          </StackLayout>
+        </StackLayout>
+      </StackLayout>
+    </CardView>
+
+  </StackLayout>
+</ScrollView>

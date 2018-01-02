@@ -15,7 +15,7 @@ import { AnimationCurve } from 'ui/enums';
   selector: 'ns-login-two-way',
   moduleId: module.id,
   templateUrl: './login-two-way.component.html',
-  styleUrls: ['./login-two-way.component.scss']
+  styleUrls: ['./login-two-way.component.css']
 })
 export class LoginTwoWayComponent implements OnInit, OnDestroy {
   public isTwoWayAuthSuccess$: Observable<boolean>;

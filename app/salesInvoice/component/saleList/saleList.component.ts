@@ -15,7 +15,7 @@ import { MyDrawerItem } from '~/shared/my-drawer-item/my-drawer-item';
   selector: 'ns-sale-list',
   moduleId: module.id,
   templateUrl: `./saleList.component.html`,
-  styleUrls: ['./salesList.component.scss']
+  styleUrls: ['./salesList.component.css']
 })
 export class SaleListComponent implements OnInit {
   public navItemObj$: Observable<MyDrawerItem[]>;
