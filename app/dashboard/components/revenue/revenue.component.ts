@@ -17,9 +17,10 @@ import { ChartFilterConfigs } from '~/models/api-models/Dashboard';
 import { Page } from 'tns-core-modules/ui/page/page';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 @Component({
-  selector: 'ns-revenue-chart',
+  selector: 'ns-revenue-chart,[ns-revenue-chart]',
   moduleId: module.id,
-  templateUrl: `./revenue.component.html`
+  templateUrl: `./revenue.component.html`,
+  styleUrls: ["./revenue.component.css"]
 })
 export class RevenueChartComponent implements OnInit, OnDestroy {
   public requestInFlight: boolean;

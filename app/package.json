@@ -1,7 +1,9 @@
 {
   "name": "giddh_mobile",
   "android": {
-    "v8Flags": "--expose_gc"
+    "v8Flags": "--expose_gc",
+    "markingMode": "none"
+
   },
   "main": "main.js",
   "version": "1.0.1"

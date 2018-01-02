@@ -16,9 +16,10 @@ import { Page } from 'tns-core-modules/ui/page/page';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Component({
-  selector: 'ns-expenses-chart',
+  selector: 'ns-expenses-chart,[ns-expenses-chart]',
   moduleId: module.id,
-  templateUrl: `./expenses.component.html`
+  templateUrl: `./expenses.component.html`,
+  styleUrls: ["./expenses.component.css"]
 })
 export class ExpensesChartComponent implements OnInit {
   public requestInFlight: boolean;
