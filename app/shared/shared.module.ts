@@ -22,7 +22,7 @@ import { DropDownModule } from "nativescript-drop-down/angular";
     MyDrawerItemComponent,
     MyButonComponent,
     MyLogoutComponent,
-    PieChartComponent
+    PieChartComponent,
   ],
   exports: [
     MyDrawerComponent,
@@ -30,7 +30,7 @@ import { DropDownModule } from "nativescript-drop-down/angular";
     MyLogoutComponent,
     PieChartComponent,
     NativeScriptUISideDrawerModule,
-    NativeScriptUIGaugesModule
+    NativeScriptUIGaugesModule,
   ],
   schemas: [
     NO_ERRORS_SCHEMA
