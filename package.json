@@ -41,6 +41,7 @@
     "nativescript-angular": "5.0.0",
     "nativescript-cardview": "2.0.4",
     "nativescript-checkbox": "3.0.3",
+    "nativescript-drop-down": "^3.2.0",
     "nativescript-intl": "3.0.0",
     "nativescript-ngx-fonticon": "4.0.0",
     "nativescript-pro-ui": "3.2.0",
