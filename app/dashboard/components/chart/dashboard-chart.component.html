@@ -19,15 +19,12 @@
   <StackLayout tkDrawerContent>
     <MyDrawer [pages]="navItemObj$ | async"></MyDrawer>
   </StackLayout>
-
   <ScrollView tkMainContent>
     <StackLayout>
-      <CardView margin="10" elevation="40" radius="1">
-        <ns-revenue-chart></ns-revenue-chart>
+      <CardView margin="10" elevation="40" radius="1" ns-revenue-chart>
       </CardView>
 
-      <CardView margin="10" elevation="40" radius="1">
-        <ns-expenses-chart></ns-expenses-chart>
+      <CardView margin="10" elevation="40" radius="1" ns-expenses-chart>
       </CardView>
 
     </StackLayout>
