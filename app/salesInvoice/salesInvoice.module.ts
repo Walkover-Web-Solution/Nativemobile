@@ -19,6 +19,9 @@ import { TaxRateComponent } from '~/salesInvoice/component/taxRate/taxRate.compo
 import { CreateStockComponent } from '~/salesInvoice/component/createStock/createStock.component';
 import { CreateStockAddProductComponent } from '~/salesInvoice/component/createStockAddProduct/createStockAddProduct.component';
 import { CreateStockAddServiceComponent } from '~/salesInvoice/component/createStockAddService/createStockAddService.component';
+import { CreateGroupComponent } from '~/salesInvoice/component/createGroup/createGroup.component';
+import { CreateGroupAddProductComponent } from '~/salesInvoice/component/createGroupAddProduct/createGroupAddProduct.component';
+import { CreateGroupAddServiceComponent } from '~/salesInvoice/component/createGroupAddService/createGroupAddService.component';
 
 
 
@@ -34,7 +37,8 @@ import { CreateStockAddServiceComponent } from '~/salesInvoice/component/createS
     NativeScriptUIChartModule
   ],
   declarations: [SalesInvoiceComponent, SaleListComponent, SaleAddComponent, StockAddComponent,
-    TaxRateComponent, CreateStockComponent, CreateStockAddProductComponent, CreateStockAddServiceComponent],
+    TaxRateComponent, CreateStockComponent, CreateStockAddProductComponent, CreateStockAddServiceComponent,
+    CreateGroupComponent, CreateGroupAddProductComponent, CreateGroupAddServiceComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]

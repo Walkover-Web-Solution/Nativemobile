@@ -9,13 +9,15 @@ import { MyButonComponent } from "./my-button/my-botton.component";
 import { MyLogoutComponent } from "./logout-button/logout-botton.component";
 import { PieChartComponent } from "~/shared/pie-chart/pie-chart.component";
 import { DropDownModule } from "nativescript-drop-down/angular";
+import { TNSCheckBoxModule } from 'nativescript-checkbox/angular';
 
 @NgModule({
   imports: [
     NativeScriptCommonModule,
     NativeScriptUISideDrawerModule,
     NativeScriptUIGaugesModule,
-    DropDownModule
+    DropDownModule,
+    TNSCheckBoxModule
   ],
   declarations: [
     MyDrawerComponent,
@@ -31,6 +33,7 @@ import { DropDownModule } from "nativescript-drop-down/angular";
     PieChartComponent,
     NativeScriptUISideDrawerModule,
     NativeScriptUIGaugesModule,
+    TNSCheckBoxModule
   ],
   schemas: [
     NO_ERRORS_SCHEMA
