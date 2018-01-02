@@ -11,7 +11,7 @@ import { createSelector } from 'reselect';
   selector: 'ns-sale-add',
   moduleId: module.id,
   templateUrl: `./saleAdd.component.html`,
-  styleUrls: ['./salesAdd.component.scss']
+  styleUrls: ['./salesAdd.component.css']
 })
 export class SaleAddComponent implements OnInit {
 

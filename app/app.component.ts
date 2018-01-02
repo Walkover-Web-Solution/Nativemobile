@@ -8,7 +8,7 @@ import { GeneralService } from './services/general.service';
 @Component({
   selector: 'ns-app',
   templateUrl: 'app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
   constructor(private store: Store<AppState>, private router: Router, private _generalService: GeneralService) {

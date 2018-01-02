@@ -14,7 +14,7 @@ import { RouterExtensions } from 'nativescript-angular/router';
   selector: 'ns-login',
   moduleId: module.id,
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit, OnDestroy {
   public loginProcess$: Observable<boolean>;

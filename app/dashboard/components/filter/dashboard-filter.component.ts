@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   selector: 'ns-dashboard-filter',
   moduleId: module.id,
   templateUrl: `./dashboard-filter.component.html`,
-  styleUrls: ['./dashboard-filter.component.scss']
+  styleUrls: ['./dashboard-filter.component.css']
 })
 export class DashboardFilterComponent implements OnInit {
   public chartType: string;

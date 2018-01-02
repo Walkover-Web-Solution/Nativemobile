@@ -14,7 +14,7 @@ import { AnimationCurve } from 'ui/enums';
   selector: 'ns-signup',
   moduleId: module.id,
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.css']
 })
 export class SignUpComponent implements OnInit, OnDestroy {
   public signUpProcess$: Observable<boolean>;
