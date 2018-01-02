@@ -10,6 +10,7 @@ import { MyLogoutComponent } from "./logout-button/logout-botton.component";
 import { PieChartComponent } from "~/shared/pie-chart/pie-chart.component";
 import { DropDownModule } from "nativescript-drop-down/angular";
 import { TNSCheckBoxModule } from 'nativescript-checkbox/angular';
+import { MyChipsComponent } from "~/shared/my-chips/my-chips.component";
 
 @NgModule({
   imports: [
@@ -25,11 +26,13 @@ import { TNSCheckBoxModule } from 'nativescript-checkbox/angular';
     MyButonComponent,
     MyLogoutComponent,
     PieChartComponent,
+    MyChipsComponent
   ],
   exports: [
     MyDrawerComponent,
     MyButonComponent,
     MyLogoutComponent,
+    MyChipsComponent,
     PieChartComponent,
     NativeScriptUISideDrawerModule,
     NativeScriptUIGaugesModule,

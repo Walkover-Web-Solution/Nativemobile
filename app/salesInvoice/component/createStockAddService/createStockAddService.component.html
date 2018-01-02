@@ -43,6 +43,12 @@
         <Label color="#59595B" text="Applicable Taxes"></Label>
         <DropDown backroundColor="red" [hint]="'Select Account'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
 
+        <Label text="Applied Taxes" textWrap="true"></Label>
+        <WrapLayout orientation="horizontal">
+          <MyChips [text]="'VAT 14%'"></MyChips>
+          <MyChips [text]="'GST 12%'"></MyChips>
+          <MyChips [text]="'GST 12%'"></MyChips>
+        </WrapLayout>
 
       </StackLayout>
     </CardView>
