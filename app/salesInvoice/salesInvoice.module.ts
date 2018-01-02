@@ -14,6 +14,7 @@ import { SalesInvoiceRoutingModule } from '~/salesInvoice/salesInvoice.routing.m
 import { SalesInvoiceComponent } from '~/salesInvoice/salesInvoice.component';
 import { SaleListComponent } from '~/salesInvoice/component/saleList/saleList.component';
 import { SaleAddComponent } from '~/salesInvoice/component/saleAdd/saleAdd.component';
+import { StockAddComponent } from '~/salesInvoice/component/stockAdd/stockAdd.component';
 
 
 
@@ -28,7 +29,7 @@ import { SaleAddComponent } from '~/salesInvoice/component/saleAdd/saleAdd.compo
     SalesInvoiceRoutingModule,
     NativeScriptUIChartModule
   ],
-  declarations: [SalesInvoiceComponent, SaleListComponent, SaleAddComponent],
+  declarations: [SalesInvoiceComponent, SaleListComponent, SaleAddComponent, StockAddComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]

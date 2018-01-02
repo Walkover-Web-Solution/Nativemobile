@@ -5,6 +5,7 @@ import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { SalesInvoiceComponent } from "~/salesInvoice/salesInvoice.component";
 import { SaleListComponent } from "~/salesInvoice/component/saleList/saleList.component";
 import { SaleAddComponent } from "~/salesInvoice/component/saleAdd/saleAdd.component";
+import { StockAddComponent } from "~/salesInvoice/component/stockAdd/stockAdd.component";
 
 
 export const routes: Routes = [
@@ -15,6 +16,7 @@ export const routes: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'list' },
       { path: 'list', pathMatch: 'full', component: SaleListComponent },
       { path: 'add', pathMatch: 'full', component: SaleAddComponent },
+      { path: 'add-stock', pathMatch: 'full', component: StockAddComponent }
     ]
   },
 ];
