@@ -19,7 +19,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
   selector: 'ns-expenses-chart,[ns-expenses-chart]',
   moduleId: module.id,
   templateUrl: `./expenses.component.html`,
-  styleUrls: ["./expenses.component.css"]
+  styleUrls: ["./expenses.component.scss"]
 })
 export class ExpensesChartComponent implements OnInit {
   public requestInFlight: boolean;

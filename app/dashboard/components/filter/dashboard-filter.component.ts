@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from '~/store';
 import { DashboardActions } from '~/actions/dashboard/dashboard.action';
 import { Observable } from 'rxjs';
+import { ChartFilterType, ChartType } from '~/models/interfaces/dashboard.interface';
 
 @Component({
   selector: 'ns-dashboard-filter',
@@ -12,21 +13,21 @@ import { Observable } from 'rxjs';
   styleUrls: ['./dashboard-filter.component.css']
 })
 export class DashboardFilterComponent implements OnInit {
-  public chartType: string;
-  public items: Array<{ text: string, selected: boolean, val: string }>;
+  public chartType: ChartType;
+  public items: Array<{ text: string, selected: boolean, val: ChartFilterType }>;
   constructor(private routerExtensions: RouterExtensions, private pageRoute: PageRoute, private store: Store<AppState>,
     private _dashboardActions: DashboardActions) {
 
     this.items = [
-      { val: '1', text: 'This Month to Date', selected: false },
-      { val: '2', text: 'This Quarter to Date', selected: false },
-      { val: '3', text: 'This Financial Year to Date', selected: false },
-      { val: '4', text: 'This Year to Date', selected: false },
-      { val: '5', text: 'Last Month', selected: false },
-      { val: '6', text: 'Last Quater', selected: false },
-      { val: '7', text: 'Last Fiancial Year', selected: false },
-      { val: '8', text: 'Last Year', selected: false },
-      { val: '9', text: 'Custom', selected: false },
+      { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date', selected: false },
+      { val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date', selected: false },
+      { val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date', selected: false },
+      { val: ChartFilterType.ThisYearToDate, text: 'This Year to Date', selected: false },
+      { val: ChartFilterType.LastMonth, text: 'Last Month', selected: false },
+      { val: ChartFilterType.LastQuater, text: 'Last Quater', selected: false },
+      { val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year', selected: false },
+      { val: ChartFilterType.LastYear, text: 'Last Year', selected: false },
+      { val: ChartFilterType.Custom, text: 'Custom', selected: false },
     ];
 
   }
@@ -35,9 +36,9 @@ export class DashboardFilterComponent implements OnInit {
     this.pageRoute.activatedRoute
       .switchMap(activatedRoute => activatedRoute.params)
       .subscribe((params) => {
-        this.chartType = params['chartType'];
+        this.chartType = params['chartType'] as ChartType;
       });
-    if (this.chartType === 'revenue') {
+    if (this.chartType === ChartType.Revenue) {
       this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(s => {
         this.setSelectedItem(s);
       });
@@ -52,7 +53,7 @@ export class DashboardFilterComponent implements OnInit {
     this.routerExtensions.backToPreviousPage();
   }
 
-  changeCheckedRadio(item: { val: string, text: string, selected: boolean }) {
+  changeCheckedRadio(item: { val: ChartFilterType, text: string, selected: boolean }) {
     this.items.forEach(option => {
       option.selected = option.val === item.val;
     });

@@ -61,6 +61,7 @@ export interface ICbAccount {
 }
 
 export interface IExpensesChartClosingBalanceResponse {
+  lable?: string;
   operatingcostActiveyear?: ClosingBalanceResponse;
   operatingcostLastyear?: ClosingBalanceResponse;
   indirectexpensesActiveyear?: ClosingBalanceResponse;
@@ -68,6 +69,7 @@ export interface IExpensesChartClosingBalanceResponse {
 }
 
 export interface IRevenueChartClosingBalanceResponse {
+  lable?: string;
   revenuefromoperationsActiveyear?: ClosingBalanceResponse;
   revenuefromoperationsLastyear?: ClosingBalanceResponse;
   otherincomeActiveyear?: ClosingBalanceResponse;
@@ -167,3 +169,21 @@ let cost = {
   ProfitLossLastYearMonthly: [],
   ProfitLossLastYearYearly: [],
 };
+
+
+export enum ChartFilterType {
+  ThisMonthToDate,
+  ThisQuarterToDate,
+  ThisFinancialYearToDate,
+  ThisYearToDate,
+  LastMonth,
+  LastQuater,
+  LastFiancialYear,
+  LastYear,
+  Custom
+}
+
+export enum ChartType {
+  Revenue,
+  Expense
+}

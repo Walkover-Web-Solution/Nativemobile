@@ -72,13 +72,16 @@ export class RefreshBankAccountResponse {
 }
 
 export class ChartFilterConfigs {
+  public ChartTitle: string;
   public activeYear: {
     startDate: string,
     endDate: string
-  } = { startDate: '', endDate: '' };
+    lable?: string
+  } = { lable: '', startDate: '', endDate: '' };
 
   public lastYear: {
     startDate: string,
-    endDate: string
-  } = { startDate: '', endDate: '' };
+    endDate: string,
+    lable?: string
+  } = { lable: '', startDate: '', endDate: '' };
 }
