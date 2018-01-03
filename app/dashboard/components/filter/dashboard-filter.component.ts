@@ -29,14 +29,13 @@ export class DashboardFilterComponent implements OnInit {
       { val: ChartFilterType.LastYear, text: 'Last Year', selected: false },
       { val: ChartFilterType.Custom, text: 'Custom', selected: false },
     ];
-
   }
 
   ngOnInit() {
     this.pageRoute.activatedRoute
       .switchMap(activatedRoute => activatedRoute.params)
       .subscribe((params) => {
-        this.chartType = params['chartType'] as ChartType;
+        this.chartType = Number(params['chartType']) as ChartType;
       });
     if (this.chartType === ChartType.Revenue) {
       this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(s => {

@@ -50,7 +50,6 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    // this.chartFilterType$.subscribe(p => this.fetchChartData())
     this.fetchChartData();
     this.revenueChartData$.subscribe(rvn => {
       // if (rvn) {
@@ -71,6 +70,16 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
       } else {
         this.resetLastYearChartData();
       }
+
+      if (rvn && rvn.chartTitle) {
+        this.chartFilterTitle = rvn.chartTitle;
+      }
+
+      if (rvn && rvn.lable) {
+        this.activeYearChartFormatedDate = rvn.lable.activeYearLabel || '';
+        this.lastYearChartFormatedDate = rvn.lable.lastYearLabel || '';
+      }
+
       this.generateCharts();
       // }
       this.requestInFlight = false;
@@ -174,7 +183,6 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     this.lastYearGrandAmount = 0;
     this.lastPieChartAmount = 0;
   }
-
 
 
   public ngOnDestroy() {

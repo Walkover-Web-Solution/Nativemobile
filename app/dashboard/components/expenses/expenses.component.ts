@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActiveFinancialYear, CompanyResponse } from '~/models/api-models/Company';
-import { IChildGroups, IExpensesChartClosingBalanceResponse } from '~/models/interfaces/dashboard.interface';
+import { IChildGroups, IExpensesChartClosingBalanceResponse, ChartFilterType, ChartType } from '~/models/interfaces/dashboard.interface';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
@@ -22,12 +22,10 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
   styleUrls: ["./expenses.component.scss"]
 })
 export class ExpensesChartComponent implements OnInit {
+  public chartType: ChartType = ChartType.Expense;
   public requestInFlight: boolean;
-  public activeFinancialYear: ActiveFinancialYear;
-  public lastFinancialYear: ActiveFinancialYear;
   public activeYearAccounts: IChildGroups[] = [];
   public lastYearAccounts: IChildGroups[] = [];
-  public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
   public activeYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
@@ -36,50 +34,21 @@ export class ExpensesChartComponent implements OnInit {
   public lastYearGrandAmount: number = 0;
   public activePieChartAmount: number = 0;
   public lastPieChartAmount: number = 0;
-  public chartFilterType$: Observable<string>;
+  public chartFilterType$: Observable<ChartFilterType>;
   public chartFilterTitle: string = 'Custom';
+  public activeYearChartFormatedDate: string;
+  public lastYearChartFormatedDate: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
-    this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart);
-    this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-      return { companies, uniqueName };
-    }));
-    this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter);
+    this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
+
+    this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   ngOnInit() {
-    // get activeCompany and set activeFinacial Year and LastFinacial Year
-    this.companyData$.subscribe(res => {
-      if (!res.companies) {
-        return;
-      }
-      let financialYears = [];
-      let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
-      if (activeCmp) {
-        this.activeFinancialYear = activeCmp.activeFinancialYear;
-
-        if (activeCmp.financialYears.length > 1) {
-          financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== this.activeFinancialYear.uniqueName);
-          financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-            let a = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
-
-            return b.diff(a, 'days') < 0;
-          });
-          financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-            let a = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
-            return b.diff(a, 'days');
-          }, 'desc');
-          this.lastFinancialYear = financialYears[0];
-        }
-
-        this.fetchChartData();
-      }
-    });
-
+    this.fetchChartData();
     this.expensesChartData$.subscribe(exp => {
       // if (exp) {
       if (exp && exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
@@ -99,18 +68,17 @@ export class ExpensesChartComponent implements OnInit {
       } else {
         this.resetLastYearChartData();
       }
+      if (exp && exp.chartTitle) {
+        this.chartFilterTitle = exp.chartTitle;
+      }
+
+      if (exp && exp.lable) {
+        this.activeYearChartFormatedDate = exp.lable.activeYearLabel || '';
+        this.lastYearChartFormatedDate = exp.lable.lastYearLabel || '';
+      }
       // }
       this.generateCharts();
       this.requestInFlight = false;
-    });
-
-    this.chartFilterType$.subscribe(p => {
-      if (p) {
-        let dates = this.parseDates(p);
-        this.requestInFlight = true;
-        this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(dates.activeYear.startDate, dates.activeYear.endDate, false));
-        this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(dates.lastYear.startDate, dates.lastYear.endDate, false));
-      }
     });
   }
 
@@ -182,11 +150,8 @@ export class ExpensesChartComponent implements OnInit {
 
   public fetchChartData() {
     this.requestInFlight = true;
-    this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(this.activeFinancialYear.financialYearStarts, this.activeFinancialYear.financialYearEnds, false));
-
-    if (this.lastFinancialYear) {
-      this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(this.lastFinancialYear.financialYearStarts, this.lastFinancialYear.financialYearEnds, false));
-    }
+    this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(false));
+    this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(false));
   }
 
   public calculatePieChartPer(t) {
@@ -216,101 +181,6 @@ export class ExpensesChartComponent implements OnInit {
     // this.lastYearAccountsRanks = new ObservableArray([]);
     this.lastYearGrandAmount = 0;
     this.lastPieChartAmount = 0;
-  }
-
-  public parseDates(filterType: string): ChartFilterConfigs {
-    let config = new ChartFilterConfigs();
-    switch (filterType) {
-      case '1': // This Month to Date
-        this.chartFilterTitle = 'This Month to Date';
-        config.activeYear.startDate = moment().startOf('month').format('DD-MM-YYYY');
-        config.activeYear.endDate = moment().format('DD-MM-YYYY');
-
-        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('DD-MM-YYYY');
-        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
-        return config;
-      case '2': // This Quarter to Date
-        this.chartFilterTitle = 'This Quarter to Date';
-        config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').format('DD-MM-YYYY');
-        config.activeYear.endDate = moment().format('DD-MM-YYYY');
-
-        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
-        config.lastYear.endDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
-        return config;
-      case '3': // This Financial Year to Date
-        this.chartFilterTitle = 'This Financial Year to Date';
-        if (this.activeFinancialYear) {
-          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('DD-MM-YYYY');
-          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
-        } else {
-          config.activeYear.startDate = '00-00-0000';
-          config.activeYear.endDate = '00-00-0000';
-        }
-
-        if (this.lastFinancialYear) {
-          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').subtract(1, 'year').startOf('day').format('DD-MM-YYYY');
-          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
-        } else {
-          config.lastYear.startDate = '00-00-0000';
-          config.lastYear.endDate = '00-00-0000';
-        }
-        return config;
-      case '4': // This Year to Date
-        this.chartFilterTitle = 'This Year to Date';
-        config.activeYear.startDate = moment().startOf('year').format('DD-MM-YYYY');
-        config.activeYear.endDate = moment().format('DD-MM-YYYY');
-
-        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'year').format('DD-MM-YYYY');
-        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
-        return config;
-      case '5': // Last Month
-        this.chartFilterTitle = 'Last Month';
-        config.activeYear.startDate = moment().startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
-        config.activeYear.endDate = moment().endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
-
-        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
-        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
-        return config;
-      case '6': // Last Quater
-        this.chartFilterTitle = 'Last Quater';
-        config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
-        config.activeYear.endDate = moment().quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
-
-        config.lastYear.startDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
-        config.lastYear.endDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
-        return config;
-      case '7': // Last Fiancial Year
-        this.chartFilterTitle = 'Last Fiancial Year';
-        if (this.activeFinancialYear) {
-          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
-          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
-        } else {
-          config.activeYear.startDate = '00-00-0000';
-          config.activeYear.endDate = '00-00-0000';
-        }
-
-        if (this.lastFinancialYear) {
-          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
-          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
-        } else {
-          config.lastYear.startDate = '00-00-0000';
-          config.lastYear.endDate = '00-00-0000';
-        }
-        return config;
-      case '8': // Last Year
-        this.chartFilterTitle = 'Last Year';
-        config.activeYear.startDate = moment().startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
-        config.activeYear.endDate = moment().endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
-
-        config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
-        config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
-        return config;
-      case '9':
-        this.chartFilterTitle = 'Custom';
-        return config;
-      default:
-        return config;
-    }
   }
 
   public ngOnDestroy() {
