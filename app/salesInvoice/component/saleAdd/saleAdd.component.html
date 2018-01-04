@@ -18,7 +18,7 @@
 
         <StackLayout orientation="horizontal">
           <DropDown #dd backroundColor="red" width="95%" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
-          <Label text="&#xf067;" color="#428ECB" fontFamily="FontAwesome" verticalAlignment="center"></Label>
+          <Label text="&#xf067;" [nsRouterLink]="['/create-account']" color="#428ECB" fontFamily="FontAwesome" verticalAlignment="center"></Label>
         </StackLayout>
 
         <StackLayout class="hr-light"></StackLayout>

@@ -14,6 +14,8 @@ import { GroupsWithAccountsResponse } from '../models/api-models/GroupsWithAccou
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
 
+let config = require('../config/config');
+
 // import { UserManager, Log, MetadataService, User } from 'oidc-client';
 @Injectable()
 export class GroupService {
@@ -193,7 +195,7 @@ export class GroupService {
   public GetGroupSubgroups(groupUniqueName: string): Observable<BaseResponse<any, string>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.get(this.config.apiUrl + GROUP_API.GET_SUB_GROUPS.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':groupUniqueName', encodeURIComponent(groupUniqueName))).map((res) => {
+    return this._http.get(config.config.ApiUrl + GROUP_API.GET_SUB_GROUPS.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':groupUniqueName', encodeURIComponent(groupUniqueName))).map((res) => {
       let data: BaseResponse<any, string> = res.json();
       data.request = groupUniqueName;
       data.queryString = {groupUniqueName};

@@ -18,7 +18,18 @@ export class DashboardChartComponent implements OnInit {
   @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
   private _sideDrawerTransition: DrawerTransitionBase;
   constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions) {
-    this.navItemObj$ = this.store.select(p => p.general.navDrawerObj);
+    this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+      for (const iterator of p) {
+        if (iterator.router) {
+          if (iterator.router === '/dashboard') {
+            iterator.isSelected = true;
+          } else {
+            iterator.isSelected = false;
+          }
+        }
+      }
+      return p;
+    });
   }
 
   ngOnInit() {

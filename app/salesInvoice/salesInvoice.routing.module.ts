@@ -8,6 +8,7 @@ import { SaleAddComponent } from "~/salesInvoice/component/saleAdd/saleAdd.compo
 import { StockAddComponent } from "~/salesInvoice/component/stockAdd/stockAdd.component";
 import { CreateStockComponent } from "~/salesInvoice/component/createStock/createStock.component";
 import { CreateGroupComponent } from "~/salesInvoice/component/createGroup/createGroup.component";
+import { CreateAccountComponent } from "~/salesInvoice/component/createAccount/createAccount.component";
 
 
 export const routes: Routes = [
@@ -21,6 +22,7 @@ export const routes: Routes = [
       { path: 'add-stock', pathMatch: 'full', component: StockAddComponent },
       { path: 'create-group', pathMatch: 'full', component: CreateGroupComponent },
       { path: 'create-stock', pathMatch: 'full', component: CreateStockComponent },
+      { path: 'create-account', pathMatch: 'full', component: CreateAccountComponent }
     ]
   },
 ];

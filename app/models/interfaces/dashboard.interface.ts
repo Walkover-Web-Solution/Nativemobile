@@ -61,7 +61,8 @@ export interface ICbAccount {
 }
 
 export interface IExpensesChartClosingBalanceResponse {
-  lable?: string;
+  lable?: IChartLabelType;
+  chartTitle?: string;
   operatingcostActiveyear?: ClosingBalanceResponse;
   operatingcostLastyear?: ClosingBalanceResponse;
   indirectexpensesActiveyear?: ClosingBalanceResponse;
@@ -69,7 +70,8 @@ export interface IExpensesChartClosingBalanceResponse {
 }
 
 export interface IRevenueChartClosingBalanceResponse {
-  lable?: string;
+  lable?: IChartLabelType;
+  chartTitle?: string;
   revenuefromoperationsActiveyear?: ClosingBalanceResponse;
   revenuefromoperationsLastyear?: ClosingBalanceResponse;
   otherincomeActiveyear?: ClosingBalanceResponse;
@@ -186,4 +188,9 @@ export enum ChartFilterType {
 export enum ChartType {
   Revenue,
   Expense
+}
+
+export interface IChartLabelType {
+  activeYearLabel?: string;
+  lastYearLabel?: string;
 }

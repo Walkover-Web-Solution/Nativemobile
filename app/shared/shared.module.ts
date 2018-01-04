@@ -36,7 +36,8 @@ import { MyChipsComponent } from "~/shared/my-chips/my-chips.component";
     PieChartComponent,
     NativeScriptUISideDrawerModule,
     NativeScriptUIGaugesModule,
-    TNSCheckBoxModule
+    TNSCheckBoxModule,
+    DropDownModule
   ],
   schemas: [
     NO_ERRORS_SCHEMA

@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActiveFinancialYear, CompanyResponse } from '~/models/api-models/Company';
+<<<<<<< HEAD
 import { IChildGroups, IExpensesChartClosingBalanceResponse, ChartFilterType } from '~/models/interfaces/dashboard.interface';
+=======
+import { IChildGroups, IExpensesChartClosingBalanceResponse, ChartFilterType, ChartType } from '~/models/interfaces/dashboard.interface';
+>>>>>>> 66f5b58428db7ba9539d52a075cf810b2f929b7d
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
@@ -22,12 +26,10 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
   styleUrls: ["./expenses.component.scss"]
 })
 export class ExpensesChartComponent implements OnInit {
+  public chartType: ChartType = ChartType.Expense;
   public requestInFlight: boolean;
-  public activeFinancialYear: ActiveFinancialYear;
-  public lastFinancialYear: ActiveFinancialYear;
   public activeYearAccounts: IChildGroups[] = [];
   public lastYearAccounts: IChildGroups[] = [];
-  public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
   public activeYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
@@ -38,48 +40,19 @@ export class ExpensesChartComponent implements OnInit {
   public lastPieChartAmount: number = 0;
   public chartFilterType$: Observable<ChartFilterType>;
   public chartFilterTitle: string = 'Custom';
+  public activeYearChartFormatedDate: string;
+  public lastYearChartFormatedDate: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
-    this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart);
-    this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-      return { companies, uniqueName };
-    }));
-    this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter);
+    this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
+
+    this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   ngOnInit() {
-    // get activeCompany and set activeFinacial Year and LastFinacial Year
-    this.companyData$.subscribe(res => {
-      if (!res.companies) {
-        return;
-      }
-      let financialYears = [];
-      let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
-      if (activeCmp) {
-        this.activeFinancialYear = activeCmp.activeFinancialYear;
-
-        if (activeCmp.financialYears.length > 1) {
-          financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== this.activeFinancialYear.uniqueName);
-          financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-            let a = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
-
-            return b.diff(a, 'days') < 0;
-          });
-          financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-            let a = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
-            return b.diff(a, 'days');
-          }, 'desc');
-          this.lastFinancialYear = financialYears[0];
-        }
-
-        this.fetchChartData();
-      }
-    });
-
+    this.fetchChartData();
     this.expensesChartData$.subscribe(exp => {
       // if (exp) {
       if (exp && exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
@@ -99,10 +72,19 @@ export class ExpensesChartComponent implements OnInit {
       } else {
         this.resetLastYearChartData();
       }
+      if (exp && exp.chartTitle) {
+        this.chartFilterTitle = exp.chartTitle;
+      }
+
+      if (exp && exp.lable) {
+        this.activeYearChartFormatedDate = exp.lable.activeYearLabel || '';
+        this.lastYearChartFormatedDate = exp.lable.lastYearLabel || '';
+      }
       // }
       this.generateCharts();
       this.requestInFlight = false;
     });
+<<<<<<< HEAD
 
     this.chartFilterType$.subscribe(p => {
       if (p) {
@@ -112,6 +94,8 @@ export class ExpensesChartComponent implements OnInit {
         this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(dates.lastYear.startDate, dates.lastYear.endDate, false));
       }
     });
+=======
+>>>>>>> 66f5b58428db7ba9539d52a075cf810b2f929b7d
   }
 
   public generateCharts() {
@@ -182,11 +166,8 @@ export class ExpensesChartComponent implements OnInit {
 
   public fetchChartData() {
     this.requestInFlight = true;
-    this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(this.activeFinancialYear.financialYearStarts, this.activeFinancialYear.financialYearEnds, false));
-
-    if (this.lastFinancialYear) {
-      this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(this.lastFinancialYear.financialYearStarts, this.lastFinancialYear.financialYearEnds, false));
-    }
+    this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(false));
+    this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(false));
   }
 
   public calculatePieChartPer(t) {
@@ -218,6 +199,7 @@ export class ExpensesChartComponent implements OnInit {
     this.lastPieChartAmount = 0;
   }
 
+<<<<<<< HEAD
   public parseDates(filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear): ChartFilterConfigs {
     let config = new ChartFilterConfigs();
     switch (filterType) {
@@ -329,6 +311,8 @@ export class ExpensesChartComponent implements OnInit {
     }
   }
 
+=======
+>>>>>>> 66f5b58428db7ba9539d52a075cf810b2f929b7d
   public ngOnDestroy() {
     this.destroyed$.next(true);
     this.destroyed$.complete();
