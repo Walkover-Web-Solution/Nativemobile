@@ -1,5 +1,5 @@
 exports.config = {
-  "AppUrl": "http://prod:8081/",
-  "ApiUrl": "local",
+  "AppUrl": "http://api.giddh.com/",
+  "ApiUrl": "http://api.giddh.com/",
   "buildProfile": "prod"
 };
