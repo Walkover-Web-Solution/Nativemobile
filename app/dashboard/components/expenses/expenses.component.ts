@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActiveFinancialYear, CompanyResponse } from '~/models/api-models/Company';
-import { IChildGroups, IExpensesChartClosingBalanceResponse } from '~/models/interfaces/dashboard.interface';
+import { IChildGroups, IExpensesChartClosingBalanceResponse, ChartFilterType } from '~/models/interfaces/dashboard.interface';
 import { Observable } from 'rxjs';
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
@@ -36,7 +36,7 @@ export class ExpensesChartComponent implements OnInit {
   public lastYearGrandAmount: number = 0;
   public activePieChartAmount: number = 0;
   public lastPieChartAmount: number = 0;
-  public chartFilterType$: Observable<string>;
+  public chartFilterType$: Observable<ChartFilterType>;
   public chartFilterTitle: string = 'Custom';
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -106,7 +106,7 @@ export class ExpensesChartComponent implements OnInit {
 
     this.chartFilterType$.subscribe(p => {
       if (p) {
-        let dates = this.parseDates(p);
+        let dates = this.parseDates(p, this.activeFinancialYear, this.lastFinancialYear);
         this.requestInFlight = true;
         this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(dates.activeYear.startDate, dates.activeYear.endDate, false));
         this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(dates.lastYear.startDate, dates.lastYear.endDate, false));
@@ -218,95 +218,111 @@ export class ExpensesChartComponent implements OnInit {
     this.lastPieChartAmount = 0;
   }
 
-  public parseDates(filterType: string): ChartFilterConfigs {
+  public parseDates(filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear): ChartFilterConfigs {
     let config = new ChartFilterConfigs();
     switch (filterType) {
-      case '1': // This Month to Date
-        this.chartFilterTitle = 'This Month to Date';
+      case ChartFilterType.ThisMonthToDate: // This Month to Date
+        config.ChartTitle = 'This Month to Date';
         config.activeYear.startDate = moment().startOf('month').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
+        config.activeYear.lable = moment().format('MMM/YY')
 
         config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('DD-MM-YYYY');
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
+        config.lastYear.lable = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('MMM/YY')
         return config;
-      case '2': // This Quarter to Date
-        this.chartFilterTitle = 'This Quarter to Date';
+      case ChartFilterType.ThisQuarterToDate: // This Quarter to Date
+        config.ChartTitle = 'This Quarter to Date';
         config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
+        config.activeYear.lable = 'Q' + moment().quarter();
 
         config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         config.lastYear.endDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
+        config.lastYear.lable = 'Q' + moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').quarter();
         return config;
-      case '3': // This Financial Year to Date
-        this.chartFilterTitle = 'This Financial Year to Date';
-        if (this.activeFinancialYear) {
-          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('DD-MM-YYYY');
-          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
+      case ChartFilterType.ThisFinancialYearToDate: // This Financial Year to Date
+        config.ChartTitle = 'This Financial Year to Date';
+        if (activeFinancialYear) {
+          config.activeYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('DD-MM-YYYY');
+          config.activeYear.endDate = moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
+          config.activeYear.lable = 'FY-' + moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('YY') + ' - FY-' + moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('YY');
         } else {
           config.activeYear.startDate = '00-00-0000';
           config.activeYear.endDate = '00-00-0000';
         }
 
-        if (this.lastFinancialYear) {
-          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').subtract(1, 'year').startOf('day').format('DD-MM-YYYY');
-          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+        if (lastFinancialYear) {
+          config.lastYear.startDate = moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').subtract(1, 'year').startOf('day').format('DD-MM-YYYY');
+          config.lastYear.endDate = moment(lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+          config.lastYear.lable = 'FY-' + moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('YY') + ' - FY-' + moment(lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('YY');
         } else {
           config.lastYear.startDate = '00-00-0000';
           config.lastYear.endDate = '00-00-0000';
         }
         return config;
-      case '4': // This Year to Date
-        this.chartFilterTitle = 'This Year to Date';
+      case ChartFilterType.ThisYearToDate: // This Year to Date
+        config.ChartTitle = 'This Year to Date';
         config.activeYear.startDate = moment().startOf('year').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().format('DD-MM-YYYY');
+        config.activeYear.lable = moment().format('YYYY');
 
         config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'year').format('DD-MM-YYYY');
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
+        config.lastYear.lable = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'year').format('YYYY')
         return config;
-      case '5': // Last Month
-        this.chartFilterTitle = 'Last Month';
+      case ChartFilterType.LastMonth: // Last Month
+        config.ChartTitle = 'Last Month';
         config.activeYear.startDate = moment().startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
+        config.activeYear.lable = moment().startOf('month').subtract(1, 'month').format('MMM/YY')
 
         config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
+        config.lastYear.lable = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('MMM/YY')
         return config;
-      case '6': // Last Quater
-        this.chartFilterTitle = 'Last Quater';
+      case ChartFilterType.LastQuater: // Last Quater
+        config.ChartTitle = 'Last Quater';
         config.activeYear.startDate = moment().quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().quarter(moment().quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
+        config.activeYear.lable = 'Q' + moment().quarter(moment().quarter()).startOf('quarter').subtract(1, 'quarter').quarter();
 
         config.lastYear.startDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).startOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
         config.lastYear.endDate = moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).endOf('quarter').subtract(1, 'quarter').format('DD-MM-YYYY');
+        config.lastYear.lable = 'Q' + moment().quarter(moment(config.activeYear.startDate, 'DD-MM-YYYY').quarter()).endOf('quarter').subtract(1, 'quarter').quarter();
         return config;
-      case '7': // Last Fiancial Year
-        this.chartFilterTitle = 'Last Fiancial Year';
-        if (this.activeFinancialYear) {
-          config.activeYear.startDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
-          config.activeYear.endDate = moment(this.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+      case ChartFilterType.LastFiancialYear: // Last Fiancial Year
+        config.ChartTitle = 'Last Fiancial Year';
+        if (activeFinancialYear) {
+          config.activeYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+          config.activeYear.endDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+          config.activeYear.lable = 'FY-' + moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('YY') + ' - FY-' + moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('YY');
         } else {
           config.activeYear.startDate = '00-00-0000';
           config.activeYear.endDate = '00-00-0000';
         }
 
-        if (this.lastFinancialYear) {
-          config.lastYear.startDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
-          config.lastYear.endDate = moment(this.lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+        if (lastFinancialYear) {
+          config.lastYear.startDate = moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+          config.lastYear.endDate = moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+          config.activeYear.lable = 'FY-' + moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('YY') + ' - FY-' + moment(lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('YY');
         } else {
           config.lastYear.startDate = '00-00-0000';
           config.lastYear.endDate = '00-00-0000';
         }
         return config;
-      case '8': // Last Year
-        this.chartFilterTitle = 'Last Year';
+      case ChartFilterType.LastYear: // Last Year
+        config.ChartTitle = 'Last Year';
         config.activeYear.startDate = moment().startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         config.activeYear.endDate = moment().endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
+        config.activeYear.lable = moment().startOf('year').subtract(1, 'year').format('YYYY');
 
         config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
         config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
+        config.lastYear.lable = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('year').subtract(1, 'year').format('YYYY');
         return config;
-      case '9':
-        this.chartFilterTitle = 'Custom';
+      case ChartFilterType.Custom:
+        config.ChartTitle = 'Custom';
         return config;
       default:
         return config;
