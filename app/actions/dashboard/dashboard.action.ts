@@ -146,7 +146,6 @@ export class DashboardActions {
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
       this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(p => filterType = p);
-      console.log('active filter', filterType);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
       })).take(1).subscribe(res => {
@@ -182,7 +181,6 @@ export class DashboardActions {
         of(op)
       );
     }).map((res) => {
-      console.log('dada', JSON.stringify(res[0].message));
       if (res[0].status === 'success' && res[1].status === 'success') {
         let obj: IRevenueChartClosingBalanceResponse = {
           revenuefromoperationsActiveyear: res[0].body[0],
@@ -243,7 +241,6 @@ export class DashboardActions {
         of(op)
       );
     }).map((res) => {
-      console.log('lada', JSON.stringify(res[0].message));
       if (res[0].status === 'success' && res[1].status === 'success') {
         let obj: IRevenueChartClosingBalanceResponse = {
           revenuefromoperationsLastyear: res[0].body[0],

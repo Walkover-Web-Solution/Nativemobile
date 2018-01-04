@@ -115,7 +115,6 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
     // expenses chart
 
     case DashboardConst.SET_CHART_FILTER_TYPE: {
-      console.log('sasa', JSON.stringify(action.payload));
       if (action.payload.chartType === ChartType.Revenue) {
         return {
           ...state, revenueChartFilter: action.payload.filterType
