@@ -22,6 +22,7 @@ import { CreateStockAddServiceComponent } from '~/salesInvoice/component/createS
 import { CreateGroupComponent } from '~/salesInvoice/component/createGroup/createGroup.component';
 import { CreateGroupAddProductComponent } from '~/salesInvoice/component/createGroupAddProduct/createGroupAddProduct.component';
 import { CreateGroupAddServiceComponent } from '~/salesInvoice/component/createGroupAddService/createGroupAddService.component';
+import { CreateAccountComponent } from '~/salesInvoice/component/createAccount/createAccount.component';
 
 
 
@@ -38,7 +39,7 @@ import { CreateGroupAddServiceComponent } from '~/salesInvoice/component/createG
   ],
   declarations: [SalesInvoiceComponent, SaleListComponent, SaleAddComponent, StockAddComponent,
     TaxRateComponent, CreateStockComponent, CreateStockAddProductComponent, CreateStockAddServiceComponent,
-    CreateGroupComponent, CreateGroupAddProductComponent, CreateGroupAddServiceComponent],
+    CreateGroupComponent, CreateGroupAddProductComponent, CreateGroupAddServiceComponent, CreateAccountComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]
