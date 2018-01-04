@@ -27,7 +27,7 @@ module.exports = env => {
   }
   const platforms = ['ios', 'android'];
   const ngToolsWebpackOptions = {
-    tsConfigPath: 'tsconfig.aot.json'
+    tsConfigPath: 'tsconfig.json'
   };
   const {
     snapshot,

@@ -86,7 +86,8 @@
     "webpack": "3.10.0",
     "webpack-bundle-analyzer": "2.8.2",
     "webpack-parallel-uglify-plugin": "1.0.2",
-    "webpack-sources": "1.1.0"
+    "webpack-sources": "1.1.0",
+    "awesome-typescript-loader": "~3.1.3"
   },
   "scripts": {
     "u": "update-ns-webpack",
@@ -101,10 +102,11 @@
     "css": "npm run css.clean && npm run css.generate",
     "js.clean": "npx rimraf -- app/**/*.js",
     "ns-bundle": "ns-bundle",
-    "start-android-bundle": "cross-env BUILD_PROFILE=dev tns run android --bundle --env.aot --env.uglify",
-    "start-ios-bundle": "cross-env BUILD_PROFILE=dev tns run ios --bundle --env.aot --env.uglify",
-    "build-android-bundle": "cross-env BUILD_PROFILE=dev tns build android --env.aot --env.uglify",
+    "start-android-bundle": "cross-env BUILD_PROFILE=dev tns run android --bundle --env.aot --env.uglify --env.snapshot",
+    "start-ios-bundle": "cross-env BUILD_PROFILE=dev tns run ios --bundle --env.aot --env.uglify ",
+    "build-android-bundle": "cross-env BUILD_PROFILE=dev tns build android  --bundle  --env.aot --env.snapshot",
     "build-ios-bundle": "cross-env BUILD_PROFILE=prod tns build ios     --release --for-device --provision a1a56f83-05bf-4ae3-8d53-09e2b45cbd02 --bundle --env.aot --env.uglify",
+    "prepare-android-bundle": "cross-env BUILD_PROFILE=prod tns prepare android  --bundle  --env.aot --env.uglify",
     "prepare-ios-bundle": "cross-env BUILD_PROFILE=prod tns prepare ios --release --for-device --team-id F3U6Z5L2EJ --provision a1a56f83-05bf-4ae3-8d53-09e2b45cbd02 --bundle --env.aot --env.uglify",
     "publish-ios-bundle": "cross-env BUILD_PROFILE=prod tns publish ios --release --for-device --team-id F3U6Z5L2EJ --provision a1a56f83-05bf-4ae3-8d53-09e2b45cbd02 --bundle --env.aot --env.uglify",
     "e2e": "tsc -p e2e && mocha --opts ./e2e/config/mocha.opts",
