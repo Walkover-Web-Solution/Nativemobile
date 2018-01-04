@@ -12,12 +12,13 @@
           <StackLayout width="50%">
             <Label color="#59595B" text="Parent Group"></Label>
             <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" [items]='flatAccountWGroupsList' verticalAlignment="center"
-              formControlName="parentGroupUniqueName" name="parentGroupUniqueName" (selectedIndexChanged)="onchange($event)"></DropDown>
+              formControlName="parentGroupUniqueName" name="parentGroupUniqueName"></DropDown>
           </StackLayout>
 
           <StackLayout width="50%" formGroupName="country">
             <Label color="#59595B" text="Country"></Label>
-            <DropDown backroundColor="red" formControlName="countryCode" marginTop="15" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+            <DropDown backroundColor="red" formControlName="countryCode" marginTop="15" [hint]="'Select'"
+            [items]='countrySource' verticalAlignment="center"></DropDown>
           </StackLayout>
 
         </StackLayout>
@@ -39,7 +40,7 @@
 
           <StackLayout width="50%">
             <Label color="#59595B" text="Currency"></Label>
-            <DropDown backroundColor="red" marginTop="15" formControlName="currency" [hint]="'INR-India'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
+            <TextField hint="INR-India" formControlName="currency" text="" verticalAlignment="bottom"></TextField>
           </StackLayout>
         </StackLayout>
 

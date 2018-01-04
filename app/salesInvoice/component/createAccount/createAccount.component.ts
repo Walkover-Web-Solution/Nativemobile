@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '~/store';
@@ -7,24 +7,48 @@ import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { GroupResponse } from '~/models/api-models/Group';
 import { SelectedIndexChangedEventData, ValueList } from "nativescript-drop-down";
+import { IContriesWithCodes } from '~/shared/static-data/countryWithCodes';
+import { ReplaySubject } from 'rxjs//ReplaySubject';
+import { Page } from 'tns-core-modules/ui/page/page';
+import { NsDropDownOptions } from '~/models/other-models/HelperModels';
+import { CompanyResponse } from '~/models/api-models/Company';
+import { createSelector } from 'reselect';
 
 @Component({
   selector: 'ns-create-account',
   templateUrl: `./createAccount.component.html`,
   moduleId: module.id
 })
-export class CreateAccountComponent implements OnInit {
+export class CreateAccountComponent implements OnInit, OnDestroy {
   public addAccountForm: FormGroup;
   public flatAccountWGroupsList: ValueList<string>;
-  constructor(private _fb: FormBuilder, private store: Store<AppState>, private groupService: GroupService) {
-    //
+  public countrySource: ValueList<string>;
+  public selectedCompany$: Observable<CompanyResponse>;
+  public countrySourceStream$: Observable<IContriesWithCodes[]>;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  constructor(private _fb: FormBuilder, private store: Store<AppState>, private groupService: GroupService,
+    private page: Page) {
+    this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes);
+
+    this.selectedCompany$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+      if (!companies) {
+        return;
+      }
+
+      return companies.find(cmp => {
+        return cmp.uniqueName === uniqueName;
+      });
+    })).takeUntil(this.destroyed$);
+
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   public ngOnInit() {
     this.initializeNewForm();
+
     // get groups list and refine list
     this.groupService.GetGroupSubgroups('currentassets').subscribe(res => {
-      let result: Array<{ value: string, display: string }> = [];
+      let result: NsDropDownOptions[] = [];
       if (res.status === 'success' && res.body.length > 0) {
         let sundryGrp = _.find(res.body, { uniqueName: 'sundrydebtors' });
         if (sundryGrp) {
@@ -36,6 +60,23 @@ export class CreateAccountComponent implements OnInit {
       }
       this.flatAccountWGroupsList = new ValueList(result);
     });
+
+    this.countrySourceStream$.subscribe(countries => {
+      let cntArray: NsDropDownOptions[] = [];
+      if (countries) {
+        countries.forEach(cnt => {
+          cntArray.push({ display: `${cnt.countryflag} - ${cnt.countryName}`, value: cnt.countryflag });
+        });
+      }
+      this.countrySource = new ValueList(cntArray);
+    });
+
+    this.selectedCompany$.subscribe(s => {
+      if (s) {
+        this.setCountryByCompany(s);
+      }
+    })
+
   }
 
   public initializeNewForm() {
@@ -56,8 +97,21 @@ export class CreateAccountComponent implements OnInit {
     });
   }
 
-  public onchange(args: SelectedIndexChangedEventData) {
-    console.log(`Drop Down selected index changed from ${args.oldIndex} to ${args.newIndex}`);
+  public setCountryByCompany(company: CompanyResponse) {
+    console.log('cmp index: ', JSON.stringify(company.country));
+    let countryIndex = this.countrySource.getIndex(company.country);
+    console.log('cmp index: ', JSON.stringify(countryIndex));
+    let result: string = this.countrySource.getValue(countryIndex);
+    console.log('cmp result: ', JSON.stringify(result));
+    if (result) {
+      this.addAccountForm.get('country').get('countryCode').patchValue(result);
+    } else {
+      this.addAccountForm.get('country').get('countryCode').patchValue('IN');
+    }
   }
 
+  public ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }
 }

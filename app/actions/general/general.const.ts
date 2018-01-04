@@ -1,0 +1,3 @@
+export const GeneralConst = {
+  SET_COUNTRIES_WITH_CODES: 'SET_COUNTRIES_WITH_CODES'
+}

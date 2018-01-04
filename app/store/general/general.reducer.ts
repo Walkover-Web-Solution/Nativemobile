@@ -1,5 +1,7 @@
 import { MyDrawerItem } from "~/shared/my-drawer-item/my-drawer-item";
 import { CustomActions } from "~/store/customActions";
+import { IContriesWithCodes } from "~/shared/static-data/countryWithCodes";
+import { GeneralConst } from "~/actions/general/general.const";
 
 const initialNavObj: MyDrawerItem[] = [
   {
@@ -54,14 +56,22 @@ const initialNavObj: MyDrawerItem[] = [
 
 export interface GeneralState {
   navDrawerObj: MyDrawerItem[];
+  contriesWithCodes: IContriesWithCodes[];
 }
 
 const initialState: GeneralState = {
-  navDrawerObj: initialNavObj
+  navDrawerObj: initialNavObj,
+  contriesWithCodes: []
 }
 
 export function GeneralReducer(state: GeneralState = initialState, action: CustomActions): GeneralState {
   switch (action.type) {
+    case GeneralConst.SET_COUNTRIES_WITH_CODES: {
+      return {
+        ...state,
+        contriesWithCodes: action.payload
+      }
+    }
     default:
       return state;
   }
