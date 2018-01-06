@@ -8,48 +8,56 @@ const initialNavObj: MyDrawerItem[] = [
     title: 'Back',
     icon: String.fromCharCode(0xf060),
     needTopHr: true,
-    router: '/home'
+    router: '/home',
+    fontFamily:'FontAwesome',
   } as MyDrawerItem,
   {
     title: 'Home',
-    icon: String.fromCharCode(0xf015),
+    icon: String.fromCharCode(0x66),
     needTopHr: true,
+    fontFamily:'1515160234',
     router: '/home'
   } as MyDrawerItem,
   {
     title: 'Dashboard',
-    icon: String.fromCharCode(0xf060),
+    icon: String.fromCharCode(0x64),
     needTopHr: true,
+    fontFamily:'1515160234',
     router: '/dashboard'
   } as MyDrawerItem,
   {
     title: 'Trail Balance',
-    icon: String.fromCharCode(0xf060),
+    icon: String.fromCharCode(0x63),
     needTopHr: true,
+    fontFamily:'1515160234',
     router: '/tb'
   } as MyDrawerItem,
   {
     title: 'Sales Invoice',
-    icon: String.fromCharCode(0xf060),
+    icon: String.fromCharCode(0x6a),
     needTopHr: true,
+    fontFamily:'1515160234',
     router: '/sale'
   } as MyDrawerItem,
   {
     title: 'Purchase Invoice',
-    icon: String.fromCharCode(0xf060),
+    icon: String.fromCharCode(0x6b),
     needTopHr: true,
+    fontFamily:'1515160234',
     router: '/purchase'
   } as MyDrawerItem,
   {
     title: 'Reports',
-    icon: String.fromCharCode(0xf060),
+    icon: String.fromCharCode(0x69),
     needTopHr: true,
+    fontFamily:'1515160234',
     router: '/report'
   } as MyDrawerItem,
   {
     title: 'Settings',
-    icon: String.fromCharCode(0xf013),
+    icon: String.fromCharCode(0x6c),
     needTopHr: true,
+    fontFamily:'1515160234',
     router: '/settings'
   } as MyDrawerItem,
 ];

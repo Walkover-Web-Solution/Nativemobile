@@ -23,7 +23,6 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
   styleUrls: ["./revenue.component.scss"]
 })
 export class RevenueChartComponent implements OnInit, OnDestroy {
-
   public chartType: ChartType = ChartType.Revenue;
   public requestInFlight: boolean;
   public activeYearAccounts: IChildGroups[] = [];

@@ -80,7 +80,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
           operatingcostActiveyear: data.operatingcostActiveyear,
           indirectexpensesActiveyear: data.indirectexpensesActiveyear,
           chartTitle: data.chartTitle,
-          label: {
+          lable: {
             ...state.expensesChart.lable,
             activeYearLabel: data.lable.activeYearLabel
           }
@@ -105,7 +105,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
           operatingcostLastyear: data.operatingcostLastyear,
           indirectexpensesLastyear: data.indirectexpensesLastyear,
           chartTitle: data.chartTitle,
-          label: {
+          lable: {
             ...state.expensesChart.lable,
             lastYearLabel: data.lable.lastYearLabel
           }

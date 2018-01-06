@@ -98,11 +98,8 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
   }
 
   public setCountryByCompany(company: CompanyResponse) {
-    console.log('cmp index: ', JSON.stringify(company.country));
     let countryIndex = this.countrySource.getIndex(company.country);
-    console.log('cmp index: ', JSON.stringify(countryIndex));
     let result: string = this.countrySource.getValue(countryIndex);
-    console.log('cmp result: ', JSON.stringify(result));
     if (result) {
       this.addAccountForm.get('country').get('countryCode').patchValue(result);
     } else {

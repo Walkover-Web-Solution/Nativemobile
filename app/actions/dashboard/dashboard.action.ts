@@ -56,8 +56,8 @@ export class DashboardActions {
       });
       let op = parseDates(filterType, activeFinancialYear, lastFinancialYear)
       return zip(
-        this._dashboardService.GetClosingBalance('operatingcost', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
-        this._dashboardService.GetClosingBalance('indirectexpenses', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
+        this._dashboardService.GetClosingBalance('operatingcost', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
+        this._dashboardService.GetClosingBalance('indirectexpenses', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
         of(op)
       );
     }).map((res) => {
@@ -73,9 +73,50 @@ export class DashboardActions {
           payload: obj
         };
       }
-      return {
-        type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE
-      };
+      else {
+        let obj: IExpensesChartClosingBalanceResponse = {
+          operatingcostLastyear: {
+            forwardedBalance: {
+              amount: 0,
+              type: ''
+            },
+            creditTotal: 0,
+            debitTotal: 0,
+            closingBalance: {
+              amount: 0,
+              type: ''
+            },
+            childGroups: [],
+            accounts: [],
+            uniqueName: '',
+            category: '',
+            groupName: 'string'
+          },
+          indirectexpensesLastyear: {
+            forwardedBalance: {
+              amount: 0,
+              type: ''
+            },
+            creditTotal: 0,
+            debitTotal: 0,
+            closingBalance: {
+              amount: 0,
+              type: ''
+            },
+            childGroups: [],
+            accounts: [],
+            uniqueName: '',
+            category: '',
+            groupName: 'string'
+          },
+          lable: { activeYearLabel: res[2].lastYear.lable },
+          chartTitle: res[2].ChartTitle
+        };
+        return {
+          type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
+          payload: obj
+        };
+      }
     });
 
   @Effect()
@@ -85,7 +126,7 @@ export class DashboardActions {
       let filterType: ChartFilterType;
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
-      this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(p => filterType = p);
+      this.store.select(p => p.dashboard.expensesChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
       })).take(1).subscribe(res => {
@@ -116,8 +157,8 @@ export class DashboardActions {
       });
       let op = parseDates(filterType, activeFinancialYear, lastFinancialYear)
       return zip(
-        this._dashboardService.GetClosingBalance('operatingcost', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
-        this._dashboardService.GetClosingBalance('indirectexpenses', action.payload.fromDate, action.payload.toDate, action.payload.refresh),
+        this._dashboardService.GetClosingBalance('operatingcost', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
+        this._dashboardService.GetClosingBalance('indirectexpenses', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
         of(op)
       );
     }).map((res) => {
@@ -125,7 +166,50 @@ export class DashboardActions {
         let obj: IExpensesChartClosingBalanceResponse = {
           operatingcostLastyear: res[0].body[0],
           indirectexpensesLastyear: res[1].body[0],
-          lable: { activeYearLabel: res[2].lastYear.lable },
+          lable: { lastYearLabel: res[2].lastYear.lable },
+          chartTitle: res[2].ChartTitle
+        };
+        return {
+          type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE,
+          payload: obj
+        };
+      } else {
+        let obj: IExpensesChartClosingBalanceResponse = {
+          operatingcostLastyear: {
+            forwardedBalance: {
+              amount: 0,
+              type: ''
+            },
+            creditTotal: 0,
+            debitTotal: 0,
+            closingBalance: {
+              amount: 0,
+              type: ''
+            },
+            childGroups: [],
+            accounts: [],
+            uniqueName: '',
+            category: '',
+            groupName: 'string'
+          },
+          indirectexpensesLastyear: {
+            forwardedBalance: {
+              amount: 0,
+              type: ''
+            },
+            creditTotal: 0,
+            debitTotal: 0,
+            closingBalance: {
+              amount: 0,
+              type: ''
+            },
+            childGroups: [],
+            accounts: [],
+            uniqueName: '',
+            category: '',
+            groupName: 'string'
+          },
+          lable: { lastYearLabel: res[2].lastYear.lable },
           chartTitle: res[2].ChartTitle
         };
         return {
@@ -133,9 +217,6 @@ export class DashboardActions {
           payload: obj
         };
       }
-      return {
-        type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE
-      };
     });
 
   @Effect()
@@ -258,7 +339,7 @@ export class DashboardActions {
       };
     });
 
-    constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>) {
+  constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>) {
 
   }
 
@@ -309,7 +390,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
 
       config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('DD-MM-YYYY');
       config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
-      config.lastYear.lable = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('MMMM')
+      config.lastYear.lable = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('MMMM');
       return config;
     case ChartFilterType.ThisQuarterToDate: // This Quarter to Date
       config.ChartTitle = 'This Quarter to Date';
@@ -330,6 +411,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
       } else {
         config.activeYear.startDate = '00-00-0000';
         config.activeYear.endDate = '00-00-0000';
+        config.activeYear.lable = '-None-';
       }
 
       if (lastFinancialYear) {
@@ -339,6 +421,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
       } else {
         config.lastYear.startDate = '00-00-0000';
         config.lastYear.endDate = '00-00-0000';
+        config.lastYear.lable = '-None-';
       }
       return config;
     case ChartFilterType.ThisYearToDate: // This Year to Date
@@ -380,6 +463,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
       } else {
         config.activeYear.startDate = '00-00-0000';
         config.activeYear.endDate = '00-00-0000';
+        config.activeYear.lable = '-None-';
       }
 
       if (lastFinancialYear) {
@@ -389,6 +473,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
       } else {
         config.lastYear.startDate = '00-00-0000';
         config.lastYear.endDate = '00-00-0000';
+        config.lastYear.lable = '-None-';
       }
       return config;
     case ChartFilterType.LastYear: // Last Year

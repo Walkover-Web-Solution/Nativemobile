@@ -44,12 +44,12 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (!res.companies) {
         return;
       }
-
       let allCmps: MyDrawerItem[] = [];
       res.companies.forEach(cmp => {
         let item = new MyDrawerItem();
         item.title = cmp.name;
         item.needTopHr = true;
+        item.fontFamily = 'FontAwesome';
         item.customData = cmp;
         if (cmp.uniqueName === res.uniqueName) {
           item.icon = String.fromCharCode(0xf00c);

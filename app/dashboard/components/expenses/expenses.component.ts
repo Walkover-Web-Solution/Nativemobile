@@ -150,8 +150,8 @@ export class ExpensesChartComponent implements OnInit {
 
   public fetchChartData() {
     this.requestInFlight = true;
-    this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(false));
-    this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(false));
+    this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(false));
+    this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(false));
   }
 
   public calculatePieChartPer(t) {
