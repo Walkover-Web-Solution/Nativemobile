@@ -32,6 +32,11 @@ export const routes: Routes = [
     path: 'sale',
     loadChildren: './salesInvoice/salesInvoice.module#SalesInvoiceModule',
     canActivate: [NeedsAuthentication]
+  },
+  {
+    path: 'settings',
+    loadChildren: './settings/settings.module#SettingsModule',
+    canActivate: [NeedsAuthentication]
   }
 ];
 

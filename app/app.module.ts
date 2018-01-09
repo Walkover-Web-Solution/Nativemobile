@@ -27,6 +27,7 @@ import { LocationStrategy } from "@angular/common";
 import { SalesInvoiceModule } from "~/salesInvoice/salesInvoice.module";
 import * as elementRegistryModule from 'nativescript-angular/element-registry';
 import { storeLogger } from "~/store/middleware/storeLogger";
+import { SettingsModule } from "~/settings/settings.module";
 
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
@@ -52,7 +53,8 @@ elementRegistryModule.registerElement("CardView", () => require("nativescript-ca
     ActionModule.forRoot(),
     LoginModule,
     HomeModule,
-    SalesInvoiceModule
+    SalesInvoiceModule,
+    SettingsModule
   ],
   declarations: [AppComponent],
   providers: [
