@@ -5,9 +5,7 @@ import { SegmentedBar, SegmentedBarItem } from "ui/segmented-bar";
   selector: 'ns-stock-create-add-service',
   templateUrl: `./createStockAddService.component.html`,
   moduleId: module.id,
-  styleUrls: [
-    `./createStockAddService.component.css`
-  ]
+  styleUrls: ['./createStockAddService.component.css']
 })
 export class CreateStockAddServiceComponent {
   constructor() {

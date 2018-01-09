@@ -110,7 +110,28 @@ export class AuthenticationService {
     args.headers.append('Content-Type', 'application/json');
     args.headers.append('Accept', 'application/json');
     args.headers.append('Access-Token', token);
+
     return this._Http.get(this.config.apiUrl + LOGIN_API.LOGIN_WITH_GOOGLE, args).map((res) => {
+      let data: BaseResponse<VerifyEmailResponseModel, string> = res.json();
+      return data;
+    }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, string>(e, args));
+  }
+
+  public GetAtuhToken(token: any) {
+    let args: any = {};
+    args.headers = new Headers();
+    args.headers.append('cache-control', 'no-cache');
+    args.headers.append('Content-Type', 'application/json');
+    args.headers.append('Accept', 'application/json');
+    let params = {
+      code: token.authCode,
+      client_id: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
+      client_secret: 'eWzLFEb_T9VrzFjgE40Bz6_l',
+      redirect_uri: 'https://giddh.com',
+      grant_type: 'authorization_code'
+    };
+    return this._Http.post('https://accounts.google.com/o/oauth2/token', params, args).map((res) => {
+      console.log(JSON.stringify(res.json()));
       let data: BaseResponse<VerifyEmailResponseModel, string> = res.json();
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, string>(e, args));

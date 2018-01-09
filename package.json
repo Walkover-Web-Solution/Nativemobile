@@ -92,7 +92,7 @@
   },
   "scripts": {
     "u": "update-ns-webpack",
-    "start": "cross-env BUILD_PROFILE=test tns run android --release --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123 ",
+    "start": "cross-env BUILD_PROFILE=test tns run android --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123 ",
     "start:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "start:ios": "cross-env BUILD_PROFILE=test tns run ios",
     "debug:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",

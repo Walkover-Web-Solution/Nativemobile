@@ -12,6 +12,7 @@ import { RouterExtensions } from 'nativescript-angular/router';
 import * as SocialLogin from "nativescript-social-login";
 import * as application from "application";
 import * as dialogs from "ui/dialogs";
+import { AuthenticationService } from '~/services/authentication.service';
 
 @Component({
   selector: 'ns-login',
@@ -24,7 +25,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   public loginSuccess$: Observable<boolean>;
   public loginWithPasswordForm: FormGroup;
   constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions,
-    private page: Page) {
+    private page: Page, private authservice: AuthenticationService) {
     this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
     this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
   }
@@ -86,6 +87,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   public googleLogin() {
     SocialLogin.loginWithGoogle((result) => {
       dialogs.alert(JSON.stringify(result));
+      this.authservice.GetAtuhToken(result).subscribe(p=>{
+        console.log(JSON.stringify(p));
+      });
       console.log(JSON.stringify(result));
       console.log("code: " + result.code);
       console.log("error: " + result.error);

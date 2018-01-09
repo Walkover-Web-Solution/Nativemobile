@@ -6,7 +6,7 @@ import { SegmentedBar, SegmentedBarItem } from "ui/segmented-bar";
   templateUrl: `./createGroupAddProduct.component.html`,
   moduleId: module.id,
   styleUrls: [
-    `./createGroupAddProduct.component.css`
+    './createGroupAddProduct.component.css'
   ]
 })
 export class CreateGroupAddProductComponent {
