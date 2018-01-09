@@ -9,6 +9,9 @@ import { Observable } from 'rxjs/Observable';
 import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RouterExtensions } from 'nativescript-angular/router';
+import * as SocialLogin from "nativescript-social-login";
+import * as application from "application";
+import * as dialogs from "ui/dialogs";
 
 @Component({
   selector: 'ns-login',
@@ -41,7 +44,27 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (s) {
         this.routerExtensions.navigate(['/home'], { clearHistory: true });
       }
-    })
+    });
+    if (application.ios) {
+      SocialLogin.init({
+        google: {
+          initialize: true,
+          isRequestAuthCode: true,
+          scopes: ["profile", "email"],
+          serverClientId: '641015054140-22m4v5kgtpnedfiq4peo9u3vcojmespu.apps.googleusercontent.com',
+          shouldFetchBasicProfile: true,
+        },
+        facebook: {
+          initialize: false
+        },
+        onActivityResult: (requestCode: number, resultCode: number, data: any) => {
+          console.log(requestCode);
+          console.log(resultCode);
+          console.log(JSON.stringify(data));
+        }
+      });
+    }
+
   }
   public ngOnDestroy(): void {
     // this.lo
@@ -59,5 +82,17 @@ export class LoginComponent implements OnInit, OnDestroy {
     let formValues = this.loginWithPasswordForm.value;
     formValues.uniqueKey = formValues.uniqueKey.toLowerCase();
     this.store.dispatch(this._loginActions.loginWithPassword(this.loginWithPasswordForm.value));
+  }
+  public googleLogin() {
+    SocialLogin.loginWithGoogle((result) => {
+      dialogs.alert(JSON.stringify(result));
+      console.log(JSON.stringify(result));
+      console.log("code: " + result.code);
+      console.log("error: " + result.error);
+      console.log("userToken: " + result.userToken);
+      console.log("displayName: " + result.displayName);
+      console.log("photo: " + result.photo);
+      console.log("authToken: " + result.authToken);
+    });
   }
 }
