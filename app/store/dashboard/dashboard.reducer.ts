@@ -38,21 +38,19 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
           revenuefromoperationsActiveyear: data.revenuefromoperationsActiveyear,
           otherincomeActiveyear: data.otherincomeActiveyear,
           chartTitle: data.chartTitle,
-          lable: {
-            ...state.revenueChart.lable,
+          lable: Object.assign({}, state.revenueChart.lable, {
             activeYearLabel: data.lable.activeYearLabel
-          }
+          })
         })
       });
     }
     case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE: {
-      return {
-        ...state,
+      return Object.assign({}, state, {
         revenueChart: {
           chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, otherincomeActiveyear: null,
           otherincomeLastyear: null, revenuefromoperationsActiveyear: null, revenuefromoperationsLastyear: null
         }
-      }
+      })
     }
 
     case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE: {
@@ -62,10 +60,9 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
           revenuefromoperationsLastyear: data.revenuefromoperationsLastyear,
           otherincomeLastyear: data.otherincomeLastyear,
           chartTitle: data.chartTitle,
-          lable: {
-            ...state.revenueChart.lable,
+          lable: Object.assign({}, state.revenueChart.lable, {
             lastYearLabel: data.lable.activeYearLabel
-          }
+          })
         })
       })
     };
@@ -80,22 +77,20 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
           operatingcostActiveyear: data.operatingcostActiveyear,
           indirectexpensesActiveyear: data.indirectexpensesActiveyear,
           chartTitle: data.chartTitle,
-          lable: {
-            ...state.expensesChart.lable,
+          lable: Object.assign({}, state.expensesChart.lable, {
             activeYearLabel: data.lable.activeYearLabel
-          }
+          })
         })
       });
     }
 
     case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE: {
-      return {
-        ...state,
+      return Object.assign({}, state, {
         expensesChart: {
           chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, indirectexpensesActiveyear: null,
           indirectexpensesLastyear: null, operatingcostActiveyear: null, operatingcostLastyear: null
         },
-      }
+      })
     }
 
     case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE: {
@@ -105,10 +100,9 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
           operatingcostLastyear: data.operatingcostLastyear,
           indirectexpensesLastyear: data.indirectexpensesLastyear,
           chartTitle: data.chartTitle,
-          lable: {
-            ...state.expensesChart.lable,
+          lable: Object.assign({}, state.expensesChart.lable, {
             lastYearLabel: data.lable.lastYearLabel
-          }
+          })
         })
       });
     }
@@ -116,14 +110,14 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
 
     case DashboardConst.SET_CHART_FILTER_TYPE: {
       if (action.payload.chartType === ChartType.Revenue) {
-        return {
-          ...state, revenueChartFilter: action.payload.filterType
-        };
+        return Object.assign({}, state, {
+          revenueChartFilter: action.payload.filterType
+        });
       }
 
-      return {
-        ...state, expensesChartFilter: action.payload.filterType
-      }
+      return Object.assign({}, state, {
+        expensesChartFilter: action.payload.filterType
+      })
     }
 
     default:

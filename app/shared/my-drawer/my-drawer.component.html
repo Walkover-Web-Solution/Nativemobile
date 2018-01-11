@@ -5,8 +5,8 @@ Feel free to customize layouts and components to change how your app drawer look
 <GridLayout rows="auto, *" class="sidedrawer sidedrawer-left">
   <StackLayout row="0" class="sidedrawer-header">
     <Label class="sidedrawer-header-image fa" text="&#xf2bd;"></Label>
-    <Label class="sidedrawer-header-brand" [text]="(user$ | async)?.name"></Label>
-    <Label class="footnote" [text]="(user$ | async)?.email"></Label>
+    <Label class="sidedrawer-header-brand" [text]="(user$ | async)?.user?.name"></Label>
+    <Label class="footnote" [text]="(user$ | async)?.user?.email"></Label>
   </StackLayout>
 
   <ScrollView row="1">

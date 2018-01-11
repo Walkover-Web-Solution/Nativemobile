@@ -95,7 +95,7 @@
     "start": "cross-env BUILD_PROFILE=test tns run android --chrome  --release --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123 ",
     "start:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "start:ios": "cross-env BUILD_PROFILE=test tns run ios",
-    "debug:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
+    "debug:android": "cross-env BUILD_PROFILE=test tns debug android --chrome",
     "debug:ios": "cross-env BUILD_PROFILE=test tns debug ios",
     "debug": "cross-env BUILD_PROFILE=dev tns debug ios --chrome",
     "clean": "npm run js.clean && npm run css.clean",

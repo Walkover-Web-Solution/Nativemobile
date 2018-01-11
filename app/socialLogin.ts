@@ -18,9 +18,7 @@ import * as SocialLogin from "nativescript-social-login";
 
 
 if (application.android) {
-  console.log("Hello I am here");
   application.android.on(application.AndroidApplication.activityCreatedEvent, (args) => {
-    console.log("Event: " + args.eventName + ", Activity: " + args.activity);
     let result = SocialLogin.init({
       activity: args.activity,
       google: {
@@ -33,13 +31,9 @@ if (application.android) {
         initialize: false
       },
       onActivityResult: (requestCode: number, resultCode: number, data: any) => {
-        console.log(requestCode);
-        console.log(resultCode);
-        console.log(JSON.stringify(data));
       }
     });
     SocialLogin.addLogger(function (msg, tag) {
-      console.log('[nativescript-social-login]: (' + tag + '): ' + msg);
     });
   });
 }
@@ -49,8 +43,6 @@ if (application.ios) {
 
     applicationDidFinishLaunchingWithOptions(application: UIApplication, launchOptions: any): boolean {
       let gglDelegate = false;
-      console.log(JSON.stringify(launchOptions));
-      console.log('2');
       try {
         const errorRef = new interop.Reference();
         GGLContext.sharedInstance().configureWithError(errorRef);
@@ -58,13 +50,11 @@ if (application.ios) {
         const signIn = GIDSignIn.sharedInstance();
         gglDelegate = true;
       } catch (error) {
-        console.log(error);
       }
       return gglDelegate || true;
     }
 
     applicationOpenURLSourceApplicationAnnotation(application, url, sourceApplication, annotation) {
-      console.log('3');
       const gglDelegate = GIDSignIn.sharedInstance().handleURLSourceApplicationAnnotation(url, sourceApplication, annotation); // google login delegate
 
       return true || gglDelegate;

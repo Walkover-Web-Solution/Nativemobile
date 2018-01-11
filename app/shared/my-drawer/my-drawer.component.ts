@@ -2,7 +2,7 @@ import { Component, Input, OnInit, EventEmitter, Output } from "@angular/core";
 import { MyDrawerItem } from "../my-drawer-item/my-drawer-item";
 import { Store } from "@ngrx/store";
 import { AppState } from "~/store";
-import { UserDetails } from "~/models/api-models/loginModels";
+import { UserDetails, VerifyEmailResponseModel } from "~/models/api-models/loginModels";
 import { Observable } from "rxjs/Observable";
 import { RouterExtensions } from "nativescript-angular/router";
 
@@ -17,13 +17,13 @@ import { RouterExtensions } from "nativescript-angular/router";
   styleUrls: ["./my-drawer.component.css"]
 })
 export class MyDrawerComponent implements OnInit {
-  public user$: Observable<UserDetails>;
+  public user$: Observable<VerifyEmailResponseModel>;
   @Input() selectedPage: string;
   @Output() public itemSelected: EventEmitter<MyDrawerItem> = new EventEmitter();
   @Input() pages: MyDrawerItem[];
 
   constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions) {
-    this.user$ = this.store.select(p => p.session.user.user);
+    this.user$ = this.store.select(p => p.session.user);
   }
 
   ngOnInit(): void {

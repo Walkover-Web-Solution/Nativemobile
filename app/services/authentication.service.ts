@@ -113,7 +113,6 @@ export class AuthenticationService {
 
     return this._Http.get(config.config.ApiUrl + LOGIN_API.LOGIN_WITH_GOOGLE, args).map((res) => {
       let data: BaseResponse<VerifyEmailResponseModel, string> = res.json();
-      // console.log(JSON.stringify(data));
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, string>(e, args));
   }
@@ -127,7 +126,6 @@ export class AuthenticationService {
       + '&grant_type=authorization_code'
       + '&code=' + token.authCode;
     return this._Http.post('https://accounts.google.com/o/oauth2/token', creds, options).map((res) => {
-      console.log(JSON.stringify(res.json()));
       let data = res.json();
       // let resp: BaseResponse<VerifyEmailResponseModel, string>;
       // return this.LoginWithGoogle(data.access_token);

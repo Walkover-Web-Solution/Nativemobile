@@ -17,7 +17,7 @@ export class TlPlService {
   private user: UserDetails;
 
   constructor(private errorHandler: ErrorHandler, public _http: HttpWrapperService, public _router: Router,
-              private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
+    private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
   }
 
   /**
@@ -27,7 +27,7 @@ export class TlPlService {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
     return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_TRIAL_BALANCE
-      .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), {from: request.from, to: request.to, refresh: request.refresh})
+      .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), { from: request.from, to: request.to, refresh: request.refresh })
       .map((res) => {
         let data: BaseResponse<AccountDetails, TrialBalanceRequest> = res.json();
         data.request = request;
@@ -44,7 +44,7 @@ export class TlPlService {
     this.companyUniqueName = this._generalService.companyUniqueName;
     let filteredRequest = (Object.keys(request)
       .filter(p => request[p] != null)
-      .reduce((r, i) => ({...r, [i]: request[i]}), {}));
+      .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
     return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_PROFIT_LOSS
       .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
@@ -64,7 +64,7 @@ export class TlPlService {
     this.companyUniqueName = this._generalService.companyUniqueName;
     let filteredRequest = (Object.keys(request)
       .filter(p => request[p] != null)
-      .reduce((r, i) => ({...r, [i]: request[i]}), {}));
+      .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
     return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_BALANCE_SHEET
       .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
@@ -94,7 +94,7 @@ export class TlPlService {
     this.companyUniqueName = this._generalService.companyUniqueName;
     let filteredRequest = (Object.keys(request)
       .filter(p => request[p] != null)
-      .reduce((r, i) => ({...r, [i]: request[i]}), {}));
+      .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
     return this._http.get(this.config.apiUrl + TB_PL_BS_API.DOWNLOAD_BALANCE_SHEET_EXCEL
       .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
@@ -110,7 +110,7 @@ export class TlPlService {
     this.companyUniqueName = this._generalService.companyUniqueName;
     let filteredRequest = (Object.keys(request)
       .filter(p => request[p] != null)
-      .reduce((r, i) => ({...r, [i]: request[i]}), {}));
+      .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
     return this._http.get(this.config.apiUrl + TB_PL_BS_API.DOWNLOAD_PROFIT_LOSS_EXCEL
       .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)

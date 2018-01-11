@@ -54,7 +54,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     });
 
     this.signupWithGoogleSuccess$.subscribe(s => {
-      console.log('from reducer', JSON.stringify(s));
       if (s) {
         this.routerExtensions.navigate(['/home'], { clearHistory: true });
       }
@@ -73,9 +72,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           initialize: false
         },
         onActivityResult: (requestCode: number, resultCode: number, data: any) => {
-          console.log(requestCode);
-          console.log(resultCode);
-          console.log(JSON.stringify(data));
         }
       });
     }
