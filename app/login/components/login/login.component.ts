@@ -86,17 +86,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   public googleLogin() {
     SocialLogin.loginWithGoogle((result) => {
-      dialogs.alert(JSON.stringify(result));
-      this.authservice.GetAtuhToken(result).subscribe(p=>{
+      this.authservice.GetAtuhToken(result).subscribe(p => {
         console.log(JSON.stringify(p));
+        // this.authservice.LoginWithGoogle(p)
+        console.log(JSON.stringify(result));
+        console.log("code: " + result.code);
+        console.log("error: " + result.error);
+        console.log("userToken: " + result.userToken);
+        console.log("displayName: " + result.displayName);
+        console.log("photo: " + result.photo);
+        console.log("authToken: " + result.authToken);
       });
-      console.log(JSON.stringify(result));
-      console.log("code: " + result.code);
-      console.log("error: " + result.error);
-      console.log("userToken: " + result.userToken);
-      console.log("displayName: " + result.displayName);
-      console.log("photo: " + result.photo);
-      console.log("authToken: " + result.authToken);
+
     });
   }
 }

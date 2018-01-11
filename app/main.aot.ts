@@ -6,7 +6,7 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/takeUntil';
-
+import './socialLogin';
 // "./app.module.ngfactory" is a dynamically generated module when compiled with AoT.
 import { AppModuleNgFactory } from "./app.module.ngfactory";
 import { enableProdMode } from "@angular/core";

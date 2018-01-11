@@ -92,7 +92,7 @@
   },
   "scripts": {
     "u": "update-ns-webpack",
-    "start": "cross-env BUILD_PROFILE=test tns run android --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123 ",
+    "start": "cross-env BUILD_PROFILE=test tns run android --chrome  --release --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123 ",
     "start:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "start:ios": "cross-env BUILD_PROFILE=test tns run ios",
     "debug:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
@@ -104,7 +104,7 @@
     "css": "npm run css.clean && npm run css.generate",
     "js.clean": "npx rimraf -- app/**/*.js",
     "ns-bundle": "ns-bundle",
-    "start-android-bundle": "cross-env BUILD_PROFILE=test tns run android --bundle --env.aot --env.uglify --env.snapshot",
+    "start-android-bundle": "cross-env BUILD_PROFILE=test tns run android --bundle",
     "start-ios-bundle": "cross-env BUILD_PROFILE=test tns run ios --bundle --env.aot --env.uglify | tee log.txt ",
     "build-android-bundle": "cross-env BUILD_PROFILE=prod tns build android --compileSdk 23 --bundle --release --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123  --env.aot --env.snapshot",
     "build-ios-bundle": "cross-env BUILD_PROFILE=prod tns build ios     --release --for-device --provision a1a56f83-05bf-4ae3-8d53-09e2b45cbd02 --bundle --env.aot --env.uglify",

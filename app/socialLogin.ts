@@ -26,9 +26,8 @@ if (application.android) {
       google: {
         initialize: true,
         isRequestAuthCode: true,
-        scopes: ["profile", "email"],
         serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
-        shouldFetchBasicProfile: true,
+        shouldFetchBasicProfile: true
       },
       facebook: {
         initialize: false
