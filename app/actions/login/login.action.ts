@@ -109,6 +109,20 @@ export class LoginActions {
     });
 
   @Effect()
+  public signupWithGoogle$: Observable<CustomActions> = this.actions$
+    .ofType(LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE)
+    .map((action: CustomActions) => {
+      console.log('Effect received', JSON.stringify(action.payload));
+      let res: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
+      if (res.status !== 'success') {
+        dialogs.alert(res.message);
+      }
+      return {
+        type: 'EmptyAction'
+      }
+    });
+
+  @Effect()
   public forgotPassword$: Observable<CustomActions> = this.actions$
     .ofType(LoginConstants.FORGOT_PASSWORD_REQUEST)
     .switchMap((action: CustomActions) =>
@@ -207,6 +221,14 @@ export class LoginActions {
   public signupWithEmailResponce(value: BaseResponse<string, string>): CustomActions {
     return {
       type: LoginConstants.SIGNUP_WITH_EMAIL_RESPONCE,
+      payload: value
+    };
+  }
+
+  public signupWithGoogleResponse(value: BaseResponse<VerifyEmailResponseModel, string>): CustomActions {
+    console.log('action fired', JSON.stringify(value));
+    return {
+      type: LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE,
       payload: value
     };
   }

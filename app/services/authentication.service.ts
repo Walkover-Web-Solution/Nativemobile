@@ -127,11 +127,11 @@ export class AuthenticationService {
       + '&grant_type=authorization_code'
       + '&code=' + token.authCode;
     return this._Http.post('https://accounts.google.com/o/oauth2/token', creds, options).map((res) => {
-      // console.log(JSON.stringify(res.json()));
+      console.log(JSON.stringify(res.json()));
       let data = res.json();
-      let resp: BaseResponse<VerifyEmailResponseModel, string>;
-      this.LoginWithGoogle(data.access_token).take(1).subscribe(p => resp = p);
-      return resp;
+      // let resp: BaseResponse<VerifyEmailResponseModel, string>;
+      // return this.LoginWithGoogle(data.access_token);
+      return data;
     });//.catch((e) => this.errorHandler.HandleCatch<VerifyEmailResponseModel, string>(e));
   }
   public LoginWithLinkedin(model: LinkedInRequestModel) {

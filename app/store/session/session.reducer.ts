@@ -74,6 +74,20 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
       return state;
     }
 
+    case LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE: {
+      console.log('in session reducer', JSON.stringify(action.payload));
+      let data: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
+      if (data.status === 'success') {
+        return Object.assign({}, state, {
+          user: data.body
+        });
+      } else {
+        return Object.assign({}, state, {
+          user: null
+        });
+      }
+    }
+
     case CompanyConstants.REFRESH_COMPANIES_RESPONSE: {
       let companies: BaseResponse<CompanyResponse[], string> = action.payload;
       if (companies.status === 'success') {

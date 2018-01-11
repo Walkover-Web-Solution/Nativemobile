@@ -23,11 +23,17 @@ import { AuthenticationService } from '~/services/authentication.service';
 export class LoginComponent implements OnInit, OnDestroy {
   public loginProcess$: Observable<boolean>;
   public loginSuccess$: Observable<boolean>;
+
+  public signupWithGoogleInProcess$: Observable<boolean>;
+  public signupWithGoogleSuccess$: Observable<boolean>;
+
   public loginWithPasswordForm: FormGroup;
   constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions,
     private page: Page, private authservice: AuthenticationService) {
     this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
     this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
+    this.signupWithGoogleInProcess$ = this.store.select(s => s.login.isSignupWithGoogleInProcess);
+    this.signupWithGoogleSuccess$ = this.store.select(s => s.login.isSignupWithGoogleSuccess);
   }
 
   public ngOnInit(): void {
@@ -46,6 +52,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.routerExtensions.navigate(['/home'], { clearHistory: true });
       }
     });
+
+    this.signupWithGoogleSuccess$.subscribe(s => {
+      console.log('from reducer', JSON.stringify(s));
+      if (s) {
+        this.routerExtensions.navigate(['/home'], { clearHistory: true });
+      }
+    });
+
     if (application.ios) {
       SocialLogin.init({
         google: {
@@ -86,18 +100,19 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
   public googleLogin() {
     SocialLogin.loginWithGoogle((result) => {
-      this.authservice.GetAtuhToken(result).subscribe(p => {
-        console.log(JSON.stringify(p));
-        // this.authservice.LoginWithGoogle(p)
-        console.log(JSON.stringify(result));
-        console.log("code: " + result.code);
-        console.log("error: " + result.error);
-        console.log("userToken: " + result.userToken);
-        console.log("displayName: " + result.displayName);
-        console.log("photo: " + result.photo);
-        console.log("authToken: " + result.authToken);
-      });
-
+      if (result.error || !result.authCode) {
+        dialogs.alert('Something Went Wrong! Please Try Again');
+      } else {
+        this.authservice.GetAtuhToken(result)
+          .mergeMap(token => this.authservice.LoginWithGoogle(token.access_token))
+          .subscribe(LoginResult => {
+            this.store.dispatch(this._loginActions.signupWithGoogleResponse(LoginResult));
+          }, err => {
+            if (err) {
+              dialogs.alert('Something Went Wrong! Please Try Again');
+            }
+          })
+      }
     });
   }
 }

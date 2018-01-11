@@ -23,6 +23,8 @@ export interface LoginState {
   isForgotPasswordSuccess: boolean;
   isResetPasswordInProcess: boolean;
   isResetPasswordSuccess: boolean;
+  isSignupWithGoogleInProcess: boolean;
+  isSignupWithGoogleSuccess: boolean;
   user: VerifyEmailResponseModel;
 }
 
@@ -45,7 +47,9 @@ const initialState: LoginState = {
   isForgotPasswordInProcess: false,
   isForgotPasswordSuccess: false,
   isResetPasswordInProcess: false,
-  isResetPasswordSuccess: false
+  isResetPasswordSuccess: false,
+  isSignupWithGoogleInProcess: false,
+  isSignupWithGoogleSuccess: false
 }
 
 export function LoginReducer(state: LoginState = initialState, action: CustomActions): LoginState {
@@ -135,6 +139,27 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
           isVerifyMobileSuccess: false
         };
       }
+    }
+
+    case LoginConstants.SIGNUP_WITH_GOOGLE_REQUEST:
+      return {
+        ...state,
+        isSignupWithGoogleInProcess: true
+      }
+
+    case LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE: {
+      console.log('in login reducer', JSON.stringify(action.payload));
+      let data: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
+      if (data.status === 'success') {
+        return Object.assign({}, state, {
+          isSignupWithGoogleInProcess: false,
+          isSignupWithGoogleSuccess: true
+        })
+      }
+      return Object.assign({}, state, {
+        isSignupWithGoogleInProcess: false,
+        isSignupWithGoogleSuccess: false
+      })
     }
 
     case LoginConstants.VERIFY_TWOWAYAUTH_REQUEST: {
