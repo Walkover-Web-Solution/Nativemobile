@@ -1,0 +1,66 @@
+<ActionBar class="action-bar" width="100%">
+    <GridLayout columns="auto,*,auto" rows="*" width="100%">
+      <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf0c9;" fontFamily="FontAwesome"
+        (tap)="onDrawerButtonTap()">
+      </Button>
+      <Label row="0" col="1" class="action-bar-title" text="Create Taxes" horizontalAlignment="center"></Label>
+
+      <Button class="button" row="0" col="2" textAlignment="center" text="Save">
+      </Button>
+    </GridLayout>
+  </ActionBar>
+
+
+  <RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
+    <!--
+          Use the tkDrawerContent directive to display the content of the app drawer on this page.
+          -->
+    <StackLayout tkDrawerContent>
+      <MyDrawer [pages]="navItemObj$ | async"></MyDrawer>
+    </StackLayout>
+
+    <ScrollView tkMainContent>
+      <StackLayout margin="10">
+
+        <CardView margin="5" elevation="10" radius="1">
+          <StackLayout margin="5">
+
+            <Label color="#59595B" text="Tax Name"></Label>
+            <TextField hint="Name" text=""></TextField>
+
+            <StackLayout marginTop="5">
+              <Label text="Tax Type" textWrap="true"></Label>
+              <DropDown backroundColor="red" marginTop="15" [hint]="'Select Tax Type'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+            </StackLayout>
+
+            <StackLayout orientation="horizontal" marginTop="5">
+              <StackLayout width="50%">
+                <Label color="#59595B" text="Tax Rate"></Label>
+                <TextField hint="2" text=""></TextField>
+              </StackLayout>
+
+              <StackLayout width="50%">
+                <Label color="#59595B" text="Apply Tax From"></Label>
+                <DropDown backroundColor="red" marginTop="15" [hint]="'Select Tax Type'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+              </StackLayout>
+            </StackLayout>
+
+            <StackLayout orientation="horizontal" marginTop="5">
+                <StackLayout width="50%">
+                  <Label color="#59595B" text="Tax Duration"></Label>
+                  <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+                </StackLayout>
+
+                <StackLayout width="50%">
+                  <Label color="#59595B" text="Tax File Date"></Label>
+                  <TextField hint="2" text=""></TextField>
+                </StackLayout>
+              </StackLayout>
+
+          </StackLayout>
+        </CardView>
+
+      </StackLayout>
+    </ScrollView>
+
+  </RadSideDrawer>
