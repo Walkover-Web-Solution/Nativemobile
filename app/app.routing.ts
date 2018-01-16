@@ -37,6 +37,11 @@ export const routes: Routes = [
     path: 'settings',
     loadChildren: './settings/settings.module#SettingsModule',
     canActivate: [NeedsAuthentication]
+  },
+  {
+    path: 'reports',
+    loadChildren: './reports/reports.module#ReportsModule',
+    canActivate: [NeedsAuthentication]
   }
 ];
 

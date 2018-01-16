@@ -29,7 +29,8 @@ import * as elementRegistryModule from 'nativescript-angular/element-registry';
 import { storeLogger } from "~/store/middleware/storeLogger";
 import { SettingsModule } from "~/settings/settings.module";
 import { Fab } from 'nativescript-floatingactionbutton';
-
+import { ReportsModule } from "~/reports/reports.module";
+// import { Carousel } from 'nativescript-carousel';
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
   return localStorageSync({ keys: ['session'], rehydrate: true })(reducer);
@@ -43,6 +44,8 @@ let config = require('./config/config')
 
 elementRegistryModule.registerElement("CardView", () => require("nativescript-cardview").CardView);
 elementRegistryModule.registerElement("Fab", () => Fab);
+elementRegistryModule.registerElement("Carousel", () => require("nativescript-carousel").Carousel);
+elementRegistryModule.registerElement("CarouselItem", () => require("nativescript-carousel").CarouselItem);
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -57,7 +60,8 @@ elementRegistryModule.registerElement("Fab", () => Fab);
     LoginModule,
     HomeModule,
     SalesInvoiceModule,
-    SettingsModule
+    SettingsModule,
+    ReportsModule
   ],
   declarations: [AppComponent],
   providers: [
