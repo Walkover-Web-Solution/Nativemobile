@@ -10,6 +10,7 @@ import { SettingsRoutingModule } from '~/settings/settings.routing.module';
 import { SettingsComponent } from '~/settings/settings.component';
 import { CompanyProfileComponent } from '~/settings/components/company-profile/company-profile.component';
 import { CurrenciesComponent } from '~/settings/components/currencies/currencies.component';
+import { CreateCurrenciesComponent } from '~/settings/components/create-currencies/create-currencies.component';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { CurrenciesComponent } from '~/settings/components/currencies/currencies
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [SettingsComponent, CompanyProfileComponent, CurrenciesComponent],
+  declarations: [SettingsComponent, CompanyProfileComponent, CurrenciesComponent, CreateCurrenciesComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]

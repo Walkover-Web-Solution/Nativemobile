@@ -5,21 +5,19 @@ import { RadSideDrawerComponent } from 'nativescript-pro-ui/sidedrawer/angular';
 import { AppState } from '~/store';
 import { Store } from '@ngrx/store';
 import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
-import { RouterExtensions } from 'nativescript-angular/router';
 
 @Component({
-  selector: 'ns-currencies',
+  selector: 'ns-create-currencies',
   moduleId: module.id,
-  templateUrl: './currencies.component.html'
+  templateUrl: './create-currencies.component.html'
 })
 
-export class CurrenciesComponent {
+export class CreateCurrenciesComponent {
 
   public navItemObj$: Observable<MyDrawerItem[]>;
   @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
-  public items: Array<{ name: string, shortName: string }>;
   private _sideDrawerTransition: DrawerTransitionBase;
-  constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions) {
+  constructor(private store: Store<AppState>) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -32,13 +30,6 @@ export class CurrenciesComponent {
       }
       return p;
     });
-
-    this.items = [
-      { shortName: 'CAD', name: 'Canadian Dollar'},
-      { shortName: 'EUR', name: 'Euro'},
-      { shortName: 'IND', name: 'India'},
-      { shortName: 'USD', name: 'Us Dollar'}
-    ];
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {
@@ -49,7 +40,4 @@ export class CurrenciesComponent {
     this.drawerComponent.sideDrawer.showDrawer();
   }
 
-  public createCurrencies() {
-    this.routerExtensions.navigate(['/create-currencies']);
-  }
 }
