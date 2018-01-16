@@ -36,57 +36,75 @@ ActionBar {
   margin: 0;
 }
 
-
-
-
 .icon-1:before {
   content: "\61";
 }
+
 .icon-2:before {
   content: "\62";
 }
+
 .icon-3:before {
   content: "\63";
 }
+
 .icon-4:before {
   content: "\64";
 }
+
 .icon-5:before {
   content: "\65";
 }
+
 .icon-6:before {
   content: "\66";
 }
+
 .icon-7:before {
   content: "\67";
 }
+
 .icon-8:before {
   content: "\68";
 }
+
 .icon-9:before {
   content: "\69";
 }
+
 .icon-10:before {
   content: "\6a";
 }
+
 .icon-11:before {
   content: "\6b";
 }
+
 .icon-12:before {
   content: "\6c";
 }
+
 .icon-13:before {
   content: "\6d";
 }
+
 .icon-14:before {
   content: "\6e";
 }
+
 .icon-15:before {
   content: "\6f";
 }
+
 .icon-16:before {
   content: "\70";
 }
+
 .icon-17:before {
   content: "\71";
+}
+
+.setting_list,
+.setting_flexbox {
+  margin: 15;
 }

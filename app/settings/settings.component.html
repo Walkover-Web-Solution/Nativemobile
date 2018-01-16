@@ -8,17 +8,12 @@
 
 <StackLayout>
 
-  <CardView margin="10" elevation="40" radius="1">
-    <ListView [items]="items">
-      <ng-template let-item="item" let-i="index">
-
-        <FlexboxLayout>
-            <Label text="&#xf060;" flexShrink="0" fontFamily="FontAwesome"></Label>
-            <Label text="{{ item.text }}" textWrap="true" flexGrow="1"></Label>
-        </FlexboxLayout>
-
-      </ng-template>
-    </ListView>
+  <CardView margin="10" elevation="40" radius="1" class="sidedrawer">
+    <StackLayout class="sidedrawer-content">
+      <GridLayout columns="auto, *" class="sidedrawer-list-item" *ngFor="let item of items">
+        <Label col="0" [text]="item.icon" class="icon" fontFamily="1515160234"></Label>
+        <Label col="1" [text]="item.text" class="p-r-10" fontFamily="HELR45W"></Label>
+      </GridLayout>
+    </StackLayout>
   </CardView>
-
 </StackLayout>
