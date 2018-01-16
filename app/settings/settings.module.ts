@@ -9,6 +9,7 @@ import { SharedModule } from './../shared/shared.module';
 import { SettingsRoutingModule } from '~/settings/settings.routing.module';
 import { SettingsComponent } from '~/settings/settings.component';
 import { CompanyProfileComponent } from '~/settings/components/company-profile/company-profile.component';
+import { CurrenciesComponent } from '~/settings/components/currencies/currencies.component';
 
 
 @NgModule({
@@ -20,7 +21,7 @@ import { CompanyProfileComponent } from '~/settings/components/company-profile/c
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [SettingsComponent, CompanyProfileComponent],
+  declarations: [SettingsComponent, CompanyProfileComponent, CurrenciesComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]

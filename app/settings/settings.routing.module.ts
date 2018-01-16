@@ -3,6 +3,7 @@ import { Routes } from "@angular/router";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { SettingsComponent } from "~/settings/settings.component";
 import { CompanyProfileComponent } from "~/settings/components/company-profile/company-profile.component";
+import { CurrenciesComponent } from "~/settings/components/currencies/currencies.component";
 
 
 export const routes: Routes = [
@@ -13,6 +14,10 @@ export const routes: Routes = [
   {
     path: 'company-profile',
     component: CompanyProfileComponent
+  },
+  {
+    path: 'currencies',
+    component: CurrenciesComponent
   }
 ];
 @NgModule({

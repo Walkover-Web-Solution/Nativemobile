@@ -1,0 +1,38 @@
+<ActionBar class="action-bar" width="100%">
+  <GridLayout columns="auto,*,auto" rows="*" width="100%">
+    <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf0c9;" fontFamily="FontAwesome"
+      (tap)="onDrawerButtonTap()">
+    </Button>
+    <Label row="0" col="1" class="action-bar-title" text="Currencies" horizontalAlignment="center"></Label>
+
+    <Button class="button" row="0" col="2" textAlignment="center" text="Save">
+    </Button>
+  </GridLayout>
+</ActionBar>
+
+
+<RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
+  <!--
+      Use the tkDrawerContent directive to display the content of the app drawer on this page.
+      -->
+  <StackLayout tkDrawerContent>
+    <MyDrawer [pages]="navItemObj$ | async"></MyDrawer>
+  </StackLayout>
+
+  <GridLayout tkMainContent>
+
+    <CardView margin="10" elevation="40" radius="1">
+
+      <ListView [items]="items" class="list-group">
+        <ng-template let-item="item" let-i="index">
+          <StackLayout>
+            <Label class="list-group-item" text="{{ item.shortName }} - {{ item.name }}" textWrap="true"></Label>
+          </StackLayout>
+        </ng-template>
+      </ListView>
+
+    </CardView>
+
+  </GridLayout>
+
+</RadSideDrawer>
