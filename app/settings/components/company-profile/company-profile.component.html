@@ -1,0 +1,94 @@
+<ActionBar class="action-bar" width="100%">
+  <GridLayout columns="auto,*,auto" rows="*" width="100%">
+    <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf0c9;" fontFamily="FontAwesome"
+      (tap)="onDrawerButtonTap()">
+    </Button>
+    <Label row="0" col="1" class="action-bar-title" text="Company Profile" horizontalAlignment="center"></Label>
+
+    <Button class="button" row="0" col="2" textAlignment="center" text="Save">
+    </Button>
+  </GridLayout>
+</ActionBar>
+
+
+<RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
+  <!--
+    Use the tkDrawerContent directive to display the content of the app drawer on this page.
+    -->
+  <StackLayout tkDrawerContent>
+    <MyDrawer [pages]="navItemObj$ | async"></MyDrawer>
+  </StackLayout>
+
+  <ScrollView tkMainContent>
+    <StackLayout margin="10">
+
+      <CardView margin="5" elevation="10" radius="1">
+        <StackLayout margin="5">
+
+          <Label color="#59595B" text="Company Name"></Label>
+          <TextField hint="Test1234" text=""></TextField>
+
+          <StackLayout marginTop="5">
+            <Label text="Email Address" textWrap="true"></Label>
+            <TextField hint="dummy@gmail.com" text=""></TextField>
+          </StackLayout>
+
+          <StackLayout orientation="horizontal" marginTop="5">
+            <StackLayout width="50%">
+              <Label color="#59595B" text="Mobile Number"></Label>
+              <TextField hint="+91 98xxxxxxxx" text=""></TextField>
+            </StackLayout>
+
+            <StackLayout width="50%">
+              <Label color="#59595B" text="Pan Number"></Label>
+              <TextField hint="ABCDE0011A" text=""></TextField>
+            </StackLayout>
+          </StackLayout>
+
+          <StackLayout orientation="horizontal" marginTop="5">
+            <StackLayout width="50%">
+              <Label color="#59595B" text="Country"></Label>
+              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+            </StackLayout>
+
+            <StackLayout width="50%">
+              <Label color="#59595B" text="State"></Label>
+              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+            </StackLayout>
+          </StackLayout>
+
+          <StackLayout orientation="horizontal" marginTop="5">
+            <StackLayout width="50%">
+              <Label color="#59595B" text="City"></Label>
+              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+            </StackLayout>
+
+            <StackLayout width="50%">
+              <Label color="#59595B" text="Pincode"></Label>
+              <TextField hint="452010" text=""></TextField>
+            </StackLayout>
+          </StackLayout>
+
+          <StackLayout marginTop="5">
+            <Label text="Postal Address" textWrap="true"></Label>
+            <TextField hint="Dummy Address" text=""></TextField>
+          </StackLayout>
+
+          <StackLayout orientation="horizontal" marginTop="5">
+            <StackLayout width="50%">
+              <Label color="#59595B" text="Currency"></Label>
+              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+            </StackLayout>
+
+            <StackLayout width="50%" verticalAlignment="bottom">
+              <CheckBox #elem text="Multicurrency" [checked]="true"></CheckBox>
+            </StackLayout>
+          </StackLayout>
+
+        </StackLayout>
+      </CardView>
+
+    </StackLayout>
+  </ScrollView>
+
+</RadSideDrawer>

@@ -8,6 +8,7 @@ import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { SharedModule } from './../shared/shared.module';
 import { SettingsRoutingModule } from '~/settings/settings.routing.module';
 import { SettingsComponent } from '~/settings/settings.component';
+import { CompanyProfileComponent } from '~/settings/components/company-profile/company-profile.component';
 
 
 @NgModule({
@@ -19,7 +20,7 @@ import { SettingsComponent } from '~/settings/settings.component';
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [SettingsComponent],
+  declarations: [SettingsComponent, CompanyProfileComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]
