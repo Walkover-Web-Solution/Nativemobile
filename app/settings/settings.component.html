@@ -10,7 +10,7 @@
 
   <CardView margin="10" elevation="40" radius="1" class="sidedrawer">
     <StackLayout class="sidedrawer-content">
-      <GridLayout columns="auto, *" class="sidedrawer-list-item" *ngFor="let item of items">
+      <GridLayout columns="auto, *" class="sidedrawer-list-item" *ngFor="let item of items" (tap)="doAction(item)">
         <Label col="0" [text]="item.icon" class="icon" fontFamily="1515160234"></Label>
         <Label col="1" [text]="item.text" class="p-r-10" fontFamily="HELR45W"></Label>
       </GridLayout>

@@ -1,4 +1,8 @@
 import { Component } from '@angular/core';
+import { RouterExtensions } from 'nativescript-angular/router';
+import { AppState } from '~/store';
+import { Store } from '@ngrx/store';
+import { LoginActions } from '~/actions/login/login.action';
 
 @Component({
   selector: 'ns-settings',
@@ -8,7 +12,7 @@ import { Component } from '@angular/core';
 })
 export class SettingsComponent {
   public items: Array<{ icon: string, text: string, path: string }>;
-  constructor() {
+  constructor(private routerExtensions: RouterExtensions, private store: Store<AppState>, private _loginActions: LoginActions) {
     this.items = [
       { text: 'Company Profile', icon: String.fromCharCode(0x61), path: '' },
       { text: 'Currencies', icon: String.fromCharCode(0x61), path: '' },
@@ -16,5 +20,13 @@ export class SettingsComponent {
       { text: 'Permission', icon: String.fromCharCode(0x68), path: '' },
       { text: 'Logout', icon: String.fromCharCode(0x67), path: '' },
     ]
+  }
+
+  public doAction(item) {
+    if (item.text === 'Logout') {
+      this.store.dispatch(this._loginActions.logout());
+    } else {
+      this.routerExtensions.navigate([item.path]);
+    }
   }
 }
