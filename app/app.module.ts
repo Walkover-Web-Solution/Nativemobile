@@ -28,6 +28,7 @@ import { SalesInvoiceModule } from "~/salesInvoice/salesInvoice.module";
 import * as elementRegistryModule from 'nativescript-angular/element-registry';
 import { storeLogger } from "~/store/middleware/storeLogger";
 import { SettingsModule } from "~/settings/settings.module";
+import { Fab } from 'nativescript-floatingactionbutton';
 
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
@@ -41,6 +42,8 @@ let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logge
 let config = require('./config/config')
 
 elementRegistryModule.registerElement("CardView", () => require("nativescript-cardview").CardView);
+elementRegistryModule.registerElement("Fab", () => Fab);
+
 @NgModule({
   bootstrap: [AppComponent],
   imports: [
