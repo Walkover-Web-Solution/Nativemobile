@@ -79,6 +79,21 @@ export class CreateTaxesComponent implements OnInit {
     this.drawerComponent.sideDrawer.showDrawer();
   }
 
+  public openDatePicker() {
+    const ModalPicker = require("nativescript-modal-datetimepicker").ModalDatetimepicker;
+    const picker = new ModalPicker();
+    picker.pickDate({
+      title: "Select Your Birthday",
+      theme: "dark",
+      maxDate: new Date(new Date().getFullYear(), 11, 31)
+    }).then((result) => {
+      let date = `${result.day}-${result.month}-${result.year}`
+      this.taxForm.get('date').patchValue(date);
+    }).catch((error) => {
+      console.log("Error: " + JSON.stringify(error));
+    });
+  }
+
   public ngOnDestroy() {
     this.destroyed$.next(true);
     this.destroyed$.complete();

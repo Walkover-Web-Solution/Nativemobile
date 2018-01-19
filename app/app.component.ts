@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
       if (ss.user) {
         this._generalService.user = ss.user.user;
         this.store.dispatch(this._generalActions.setCountriesWithCodes());
-        this.store.dispatch(this._generalActions.getStatesData());
+        // this.store.dispatch(this._generalActions.getStatesData());
         if (ss.user.statusCode !== 'AUTHENTICATE_TWO_WAY') {
           this._generalService.sessionId = ss.user.session.id;
         }
@@ -33,7 +33,7 @@ export class AppComponent implements OnInit {
         this._generalService.sessionId = null;
       }
       this._generalService.companyUniqueName = ss.companyUniqueName;
-      this.store.dispatch(this._companyActions.getTax());
+      // this.store.dispatch(this._companyActions.getTax());
     });
   }
 }
