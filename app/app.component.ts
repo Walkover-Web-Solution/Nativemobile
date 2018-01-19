@@ -4,6 +4,7 @@ import { AppState } from './store';
 import { Router, NavigationEnd } from '@angular/router';
 import { GeneralService } from './services/general.service';
 import { GeneralActions } from '~/actions/general/general.actions';
+import { CompanyActions } from '~/actions/company/company.action';
 
 // app
 @Component({
@@ -13,10 +14,13 @@ import { GeneralActions } from '~/actions/general/general.actions';
 })
 export class AppComponent implements OnInit {
   constructor(private store: Store<AppState>, private router: Router, private _generalService: GeneralService,
-  private _generalActions: GeneralActions) {
+  private _generalActions: GeneralActions, private _companyActions: CompanyActions) {
   }
   ngOnInit(): void {
-    this.store.select(s => s.session).subscribe(ss => {
+    this.store.select(s => s.session).distinctUntilChanged((x, y) => {
+      return x.userLoginState === y.userLoginState
+    }).subscribe(ss => {
+      console.log('key changed');
       if (ss.user) {
         this._generalService.user = ss.user.user;
         this.store.dispatch(this._generalActions.setCountriesWithCodes());
@@ -29,6 +33,7 @@ export class AppComponent implements OnInit {
         this._generalService.sessionId = null;
       }
       this._generalService.companyUniqueName = ss.companyUniqueName;
+      this.store.dispatch(this._companyActions.getTax());
     });
   }
 }

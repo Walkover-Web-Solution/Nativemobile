@@ -10,6 +10,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator//distinctUntilChanged';
 
 import { AppModule } from "./app.module";
 

@@ -11,7 +11,7 @@ import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyE
 import * as dialogs from "ui/dialogs";
 import { action } from "ui/dialogs";
 import { CompanyService } from "../../services/companyService.service";
-import { CompanyResponse, StateDetailsResponse } from "../../models/api-models/Company";
+import { CompanyResponse, StateDetailsResponse, TaxResponse } from "../../models/api-models/Company";
 import { AppState } from "~/store";
 import { Store } from "@ngrx/store";
 
@@ -73,6 +73,20 @@ export class CompanyActions {
       }
       return this.changeCompanyResponse(response);
     });
+
+  @Effect()
+  public CompanyTax$: Observable<CustomActions> = this.actions$
+    .ofType(CompanyConstants.GET_COMPANY_TAX)
+    .switchMap((action: CustomActions) => this._companyService.getComapnyTaxes())
+    .map(response => {
+      if (response.status === 'error') {
+        console.log(JSON.stringify(response.message));
+      }
+      return {
+        type: CompanyConstants.GET_COMPANY_TAX_RESPONSE,
+        payload: response
+      }
+    });
   constructor(private actions$: Actions, private _authService: AuthenticationService, private _companyService: CompanyService,
     private store: Store<AppState>) {
 
@@ -105,17 +119,23 @@ export class CompanyActions {
     };
   }
 
-  private validateResponse<TResponse, TRequest>(response: BaseResponse<TResponse, TRequest>, successAction: CustomActions, showToast: boolean = false, errorAction: CustomActions = { type: 'EmptyAction' }): CustomActions {
-    if (response.status === 'error') {
-      if (showToast) {
-        // this._toasty.errorToast(response.message);
-      }
-      return errorAction;
-    } else {
-      if (showToast && typeof response.body === 'string') {
-        // this._toasty.successToast(response.body);
-      }
-    }
-    return successAction;
+  public getTax(): CustomActions {
+    return {
+      type: CompanyConstants.GET_COMPANY_TAX
+    };
   }
+
+  // private validateResponse<TResponse, TRequest>(response: BaseResponse<TResponse, TRequest>, successAction: CustomActions, showToast: boolean = false, errorAction: CustomActions = { type: 'EmptyAction' }): CustomActions {
+  //   if (response.status === 'error') {
+  //     if (showToast) {
+  //       this._toasty.errorToast(response.message);
+  //     }
+  //     return errorAction;
+  //   } else {
+  //     if (showToast && typeof response.body === 'string') {
+  //       // this._toasty.successToast(response.body);
+  //     }
+  //   }
+  //   return successAction;
+  // }
 }

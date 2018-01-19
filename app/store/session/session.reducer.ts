@@ -3,20 +3,31 @@ import { VerifyEmailResponseModel, VerifyMobileResponseModel, VerifyMobileModel,
 import { LoginConstants } from '../../actions/login/login.const';
 import { BaseResponse } from '../../models/api-models/BaseResponse';
 import { LoginWithPassword } from '../../models/api-models/Login';
-import { CompanyResponse, StateDetailsResponse } from '../../models/api-models/Company';
+import { CompanyResponse, StateDetailsResponse, TaxResponse } from '../../models/api-models/Company';
 import { CompanyConstants } from '~/actions/company/company.const';
+
+export enum userLoginStateEnum {
+  notLoggedIn,
+  userLoggedIn,
+  needTwoWayAuth
+}
+
 export interface SessionState {
   user: VerifyEmailResponseModel,
   companyUniqueName: string;                   // current user | null
   companies: CompanyResponse[];
   lastState: string;
+  taxes: TaxResponse[];
+  userLoginState: userLoginStateEnum;
 }
 
 const initialState: SessionState = {
   user: null,
   companyUniqueName: '',
   companies: [],
-  lastState: ''
+  lastState: '',
+  taxes: null,
+  userLoginState: userLoginStateEnum.notLoggedIn
 }
 
 export function SessionReducer(state: SessionState = initialState, action: CustomActions): SessionState {
@@ -30,11 +41,13 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
       let resp: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = action.payload;
       if (resp.status === 'success') {
         return Object.assign({}, state, {
-          user: resp.body
+          user: resp.body,
+          userLoginState: userLoginStateEnum.userLoggedIn
         });
       } else {
         return Object.assign({}, state, {
-          user: null
+          user: null,
+          userLoginState: userLoginStateEnum.notLoggedIn
         });
       }
     }
@@ -42,11 +55,13 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
       let resp: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
       if (resp.status === 'success') {
         return Object.assign({}, state, {
-          user: resp.body
+          user: resp.body,
+          userLoginState: userLoginStateEnum.userLoggedIn
         });
       } else {
         return Object.assign({}, state, {
-          user: null
+          user: null,
+          userLoginState: userLoginStateEnum.notLoggedIn
         });
       }
     }
@@ -55,11 +70,13 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
       let data: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = action.payload;
       if (data.status === 'success') {
         return Object.assign({}, state, {
-          user: data.body
+          user: data.body,
+          userLoginState: userLoginStateEnum.userLoggedIn
         });
       } else {
         return Object.assign({}, state, {
-          user: null
+          user: null,
+          userLoginState: userLoginStateEnum.notLoggedIn
         });
       }
     }
@@ -78,11 +95,13 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
       let data: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
       if (data.status === 'success') {
         return Object.assign({}, state, {
-          user: data.body
+          user: data.body,
+          userLoginState: userLoginStateEnum.userLoggedIn
         });
       } else {
         return Object.assign({}, state, {
-          user: null
+          user: null,
+          userLoginState: userLoginStateEnum.notLoggedIn
         });
       }
     }
@@ -106,6 +125,14 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
         });
       }
       return state;
+    }
+
+    case CompanyConstants.GET_COMPANY_TAX_RESPONSE: {
+      if (action.payload.status === 'success') {
+        return Object.assign({}, state, {
+          taxes: action.payload.body
+        });
+      }
     }
 
     case LoginConstants.LOGOUT: {

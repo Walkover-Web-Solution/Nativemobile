@@ -6,6 +6,8 @@ import { AppState } from '~/store';
 import { Store } from '@ngrx/store';
 import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
 import { RouterExtensions } from 'nativescript-angular/router';
+import { TaxResponse } from '~/models/api-models/Company';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Component({
   selector: 'ns-taxes',
@@ -17,8 +19,9 @@ export class TaxesComponent {
 
   public navItemObj$: Observable<MyDrawerItem[]>;
   @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
-  public items: Array<{ name: string }>;
+  public taxList$: Observable<TaxResponse[]>;
   private _sideDrawerTransition: DrawerTransitionBase;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
@@ -33,17 +36,7 @@ export class TaxesComponent {
       return p;
     });
 
-    this.items = [
-      { name: 'GST 0%'},
-      { name: 'GST 5%'},
-      { name: 'GST 12%'},
-      { name: 'GST 18%'},
-      { name: 'IGST 0%'},
-      { name: 'IGST 5%'},
-      { name: 'IGST 12%'},
-      { name: 'IGST 18%'},
-
-    ];
+    this.taxList$ = this.store.select(p => p.session.taxes).takeUntil(this.destroyed$);
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {

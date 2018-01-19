@@ -24,7 +24,7 @@
       <CardView margin="10" elevation="40" radius="1">
         <GridLayout rows="auto, *">
 
-          <ListView row="1" [items]="items" class="list-group">
+          <ListView row="1" [items]="taxList$ | async" class="list-group">
             <ng-template let-item="item" let-i="index">
               <StackLayout>
                 <Label class="list-group-item" text="{{ item.name }}" textWrap="true"></Label>
