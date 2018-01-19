@@ -5,7 +5,7 @@
     </Button>
     <Label row="0" col="1" class="action-bar-title" text="Company Profile" horizontalAlignment="center"></Label>
 
-    <Button class="button" row="0" col="2" textAlignment="center" text="Save">
+    <Button class="button" row="0" col="2" textAlignment="center" text="Save" (tap)="submit()">
     </Button>
   </GridLayout>
 </ActionBar>
@@ -20,68 +20,73 @@
   </StackLayout>
 
   <ScrollView tkMainContent>
-    <StackLayout margin="10">
+    <StackLayout margin="10" [formGroup]="companyProfileForm">
 
       <CardView margin="5" elevation="10" radius="1">
         <StackLayout margin="5">
 
           <Label color="#59595B" text="Company Name"></Label>
-          <TextField hint="Test1234" text=""></TextField>
+          <TextField hint="Test1234" text="" formControlName="name"></TextField>
 
           <StackLayout marginTop="5">
             <Label text="Email Address" textWrap="true"></Label>
-            <TextField hint="dummy@gmail.com" text=""></TextField>
+            <TextField hint="dummy@gmail.com" text="" formControlName="email"></TextField>
           </StackLayout>
 
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
               <Label color="#59595B" text="Mobile Number"></Label>
-              <TextField hint="+91 98xxxxxxxx" text=""></TextField>
+              <TextField hint="+91 98xxxxxxxx" text="" formControlName="contactNo"></TextField>
             </StackLayout>
 
             <StackLayout width="50%">
               <Label color="#59595B" text="Pan Number"></Label>
-              <TextField hint="ABCDE0011A" text=""></TextField>
+              <TextField hint="ABCDE0011A" text="" formControlName="panNumber"></TextField>
             </StackLayout>
           </StackLayout>
 
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
               <Label color="#59595B" text="Country"></Label>
-              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+              <TextField hint="Select" text="" formControlName="country"></TextField>
+              <!-- <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" formControlName="country" verticalAlignment="bottom"
+              [items]='countrySource'></DropDown> -->
             </StackLayout>
 
             <StackLayout width="50%">
               <Label color="#59595B" text="State"></Label>
-              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+              <DropDown backroundColor="red" marginTop="15" formControlName="state" [hint]="'Select'" verticalAlignment="bottom"
+              [items]='stateSource'></DropDown>
             </StackLayout>
           </StackLayout>
 
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
               <Label color="#59595B" text="City"></Label>
-              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+              <TextField hint="Select" text="" formControlName="city"></TextField>
+              <!-- <DropDown backroundColor="red" formControlName="city" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown> -->
             </StackLayout>
 
             <StackLayout width="50%">
               <Label color="#59595B" text="Pincode"></Label>
-              <TextField hint="452010" text=""></TextField>
+              <TextField hint="452010" formControlName="pincode" text=""></TextField>
             </StackLayout>
           </StackLayout>
 
           <StackLayout marginTop="5">
             <Label text="Postal Address" textWrap="true"></Label>
-            <TextField hint="Dummy Address" text=""></TextField>
+            <TextField hint="Dummy Address" formControlName="address" text=""></TextField>
           </StackLayout>
 
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
               <Label color="#59595B" text="Currency"></Label>
-              <DropDown backroundColor="red" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+              <DropDown backroundColor="red" formControlName="baseCurrency" marginTop="15" [hint]="'Select'" verticalAlignment="bottom"
+                [items]='[1,2,3,4]'></DropDown>
             </StackLayout>
 
             <StackLayout width="50%" verticalAlignment="bottom">
-              <CheckBox #elem text="Multicurrency" [checked]="true"></CheckBox>
+              <CheckBox #elem text="Multicurrency" formControlName="isMultipleCurrency" [checked]="true"></CheckBox>
             </StackLayout>
           </StackLayout>
 

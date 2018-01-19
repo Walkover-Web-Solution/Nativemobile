@@ -57,7 +57,7 @@ export class CompanyService {
     return this._http.delete(this.config.apiUrl + COMPANY_API.DELETE_COMPANY.replace(':uniqueName', uniqueName))
       .map((res) => {
         let data: BaseResponse<string, string> = res.json();
-        data.queryString = {uniqueName};
+        data.queryString = { uniqueName };
         return data;
       }).catch((e) => this.errorHandler.HandleCatch<string, string>(e, ''));
   }
@@ -124,31 +124,31 @@ export class CompanyService {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
     return this._http.post(this.config.apiUrl + COMPANY_API.SEND_EMAIL
-        .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName))
-        .replace(':from', encodeURIComponent(request.params.from))
-        .replace(':to', encodeURIComponent(request.params.to))
+      .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName))
+      .replace(':from', encodeURIComponent(request.params.from))
+      .replace(':to', encodeURIComponent(request.params.to))
       , request.data).map((res) => {
-      return res.json();
-    }).catch((e) => this.errorHandler.HandleCatch<string, BulkEmailRequest>(e));
+        return res.json();
+      }).catch((e) => this.errorHandler.HandleCatch<string, BulkEmailRequest>(e));
   }
 
   public sendSms(request: BulkEmailRequest): Observable<BaseResponse<string, BulkEmailRequest>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
     return this._http.post(this.config.apiUrl + COMPANY_API.SEND_SMS
-        .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName))
-        .replace(':from', encodeURIComponent(request.params.from))
-        .replace(':to', encodeURIComponent(request.params.to))
+      .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName))
+      .replace(':from', encodeURIComponent(request.params.from))
+      .replace(':to', encodeURIComponent(request.params.to))
       , request.data).map((res) => {
-      return res.json();
-    }).catch((e) => this.errorHandler.HandleCatch<string, BulkEmailRequest>(e));
+        return res.json();
+      }).catch((e) => this.errorHandler.HandleCatch<string, BulkEmailRequest>(e));
   }
 
   /**
    * get all states
    */
   public getAllStates(): Observable<BaseResponse<States[], string>> {
-    return this._http.get(this.config.apiUrl + COMPANY_API.GET_ALL_STATES).map((res) => {
+    return this._http.get(config.config.ApiUrl + COMPANY_API.GET_ALL_STATES).map((res) => {
       let data: BaseResponse<States[], string> = res.json();
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<States[], string>(e));
@@ -163,8 +163,8 @@ export class CompanyService {
   public getCoupon(couponCode: string): Observable<BaseResponse<GetCouponResp, string>> {
     return this._http.get(this.config.apiUrl + COMPANY_API.GET_COUPON
       .replace(':code', encodeURIComponent(couponCode))).map((res) => {
-      let data: BaseResponse<GetCouponResp, string> = res.json();
-      return data;
-    }).catch((e) => this.errorHandler.HandleCatch<GetCouponResp, string>(e));
+        let data: BaseResponse<GetCouponResp, string> = res.json();
+        return data;
+      }).catch((e) => this.errorHandler.HandleCatch<GetCouponResp, string>(e));
   }
 }
