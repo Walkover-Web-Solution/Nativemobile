@@ -41,6 +41,7 @@
 
               <StackLayout width="50%">
                 <Label color="#59595B" text="Apply Tax From"></Label>
+                <!-- <DatePicker formControlName="date"></DatePicker> -->
                 <DropDown backroundColor="red" marginTop="15" formControlName="date" [hint]="'Select Tax Type'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
               </StackLayout>
             </StackLayout>
@@ -53,7 +54,7 @@
 
                 <StackLayout width="50%">
                   <Label color="#59595B" text="Tax File Date"></Label>
-                  <TextField hint="2" text="" formControlName="taxFileDate"></TextField>
+                  <DropDown backroundColor="red" formControlName="taxFileDate" marginTop="15" [hint]="'Select'" verticalAlignment="bottom" [items]='days'></DropDown>
                 </StackLayout>
               </StackLayout>
 

@@ -8,6 +8,7 @@ import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { TaxResponse } from '~/models/api-models/Company';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Page } from 'tns-core-modules/ui/page/page';
 
 @Component({
   selector: 'ns-taxes',
@@ -22,7 +23,7 @@ export class TaxesComponent {
   public taxList$: Observable<TaxResponse[]>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions) {
+  constructor(private store: Store<AppState>, private routerExtensions: RouterExtensions, private page: Page) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -34,9 +35,10 @@ export class TaxesComponent {
         }
       }
       return p;
-    });
+    }).takeUntil(this.destroyed$);
 
     this.taxList$ = this.store.select(p => p.session.taxes).takeUntil(this.destroyed$);
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {
@@ -49,5 +51,10 @@ export class TaxesComponent {
 
   public createCurrencies() {
     this.routerExtensions.navigate(['/create-taxes']);
+  }
+
+  public ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

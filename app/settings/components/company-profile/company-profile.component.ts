@@ -13,6 +13,7 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValueList } from 'nativescript-drop-down';
 import { NsDropDownOptions } from '~/models/other-models/HelperModels';
 import { IContriesWithCodes } from '~/shared/static-data/countryWithCodes';
+import { Page } from 'tns-core-modules/ui/page/page';
 
 @Component({
   selector: 'ns-company-profile',
@@ -32,7 +33,7 @@ export class CompanyProfileComponent implements OnInit {
   public stateSource: ValueList<string>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  constructor(private store: Store<AppState>, private _fb: FormBuilder) {
+  constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -55,6 +56,7 @@ export class CompanyProfileComponent implements OnInit {
 
       return companies.find(cmp => cmp.uniqueName === uniqueName);
     })).takeUntil(this.destroyed$);
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   public ngOnInit() {
@@ -109,5 +111,10 @@ export class CompanyProfileComponent implements OnInit {
 
   public submit() {
 
+  }
+
+  public ngOnDestroy() {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }
