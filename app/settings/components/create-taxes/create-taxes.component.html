@@ -28,15 +28,25 @@
             <Label color="#59595B" text="Tax Name"></Label>
             <TextField hint="Name" text="" formControlName="name"></TextField>
 
+            <Label color="#59595B" text="Unique No"></Label>
+            <TextField hint="Unique Number" text="" formControlName="taxNumber"></TextField>
+
             <StackLayout marginTop="5">
               <Label text="Tax Type" textWrap="true"></Label>
-              <DropDown backroundColor="red" marginTop="15" formControlName="taxType" [hint]="'Select Tax Type'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown>
+              <DropDown backroundColor="red" marginTop="15" formControlName="taxType" [hint]="'Select Tax Type'"
+              verticalAlignment="bottom" [items]='taxTypeList' (selectedIndexChanged)="taxTypeChenged($event)"></DropDown>
+            </StackLayout>
+
+            <StackLayout marginTop="5" [visibility]="showLinkedAccounts ? 'visible' : 'collapsed'">
+              <Label text="Linked Account" textWrap="true"></Label>
+              <DropDown backroundColor="red" marginTop="15"  formControlName="account" [hint]="'Select Account'"
+              verticalAlignment="bottom" [items]='[1,2,3]'></DropDown>
             </StackLayout>
 
             <StackLayout orientation="horizontal" marginTop="5">
               <StackLayout width="50%">
                 <Label color="#59595B" text="Tax Rate"></Label>
-                <TextField hint="2" text="" formControlName="taxValue"></TextField>
+                <TextField hint="2" text="" keyboardType="number" formControlName="taxValue"></TextField>
               </StackLayout>
 
               <StackLayout width="50%" (tap)="openDatePicker()">

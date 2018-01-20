@@ -7,11 +7,17 @@ import { Store } from '@ngrx/store';
 import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { ValueList } from 'nativescript-drop-down';
+import { ValueList, SelectedIndexChangedEventData } from 'nativescript-drop-down';
 import { NsDropDownOptions } from '~/models/other-models/HelperModels';
 import { Page } from 'tns-core-modules/ui/page/page';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import * as moment from 'moment/moment';
+
+const taxesType: NsDropDownOptions[] = [
+  { display: 'GST', value: 'GST' },
+  { display: 'InputGST', value: 'InputGST' },
+  { display: 'Others', value: 'others' }
+];
 
 const taxDuration: NsDropDownOptions[] = [
   { display: 'Monthly', value: 'MONTHLY' },
@@ -30,8 +36,10 @@ export class CreateTaxesComponent implements OnInit {
 
   public navItemObj$: Observable<MyDrawerItem[]>;
   public taxForm: FormGroup;
+  public taxTypeList: ValueList<String>;
   public taxDurationList: ValueList<string>;
   public days: ValueList<string>;
+  public showLinkedAccounts: boolean = false;
   @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -54,13 +62,15 @@ export class CreateTaxesComponent implements OnInit {
   public ngOnInit() {
     this.taxForm = this._fb.group({
       name: ['', Validators.required],
+      taxNumber: ['', Validators.required],
       taxType: ['', Validators.required],
       taxValue: ['', Validators.required],
       date: [moment().format('DD-MM-YYYY'), Validators.required],
       duration: ['', Validators.required],
-      taxFileDate: ['', Validators.required]
+      taxFileDate: ['', Validators.required],
+      account: ['']
     });
-
+    this.taxTypeList = new ValueList(taxesType);
     this.taxDurationList = new ValueList(taxDuration);
 
     let daysArr: NsDropDownOptions[] = [];
@@ -74,6 +84,11 @@ export class CreateTaxesComponent implements OnInit {
 
   public get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;
+  }
+
+  public taxTypeChenged(args: SelectedIndexChangedEventData) {
+    let getVal = this.taxTypeList.getValue(args.newIndex);
+    this.showLinkedAccounts = getVal === 'others';
   }
 
   public onDrawerButtonTap(): void {
