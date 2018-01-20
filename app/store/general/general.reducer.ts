@@ -4,6 +4,8 @@ import { IContriesWithCodes } from "~/shared/static-data/countryWithCodes";
 import { GeneralConst } from "~/actions/general/general.const";
 import { States } from "~/models/api-models/Company";
 import { BaseResponse } from "~/models/api-models/BaseResponse";
+import { IFlattenAccountsResultItem } from "~/models/interfaces/flattenAccountsResultItem.interface";
+import { FlattenAccountsResponse } from "~/models/api-models/Account";
 
 const initialNavObj: MyDrawerItem[] = [
   {
@@ -67,13 +69,15 @@ const initialNavObj: MyDrawerItem[] = [
 export interface GeneralState {
   navDrawerObj: MyDrawerItem[];
   contriesWithCodes: IContriesWithCodes[];
+  flattenAccounts: IFlattenAccountsResultItem[];
   states: States[];
 }
 
 const initialState: GeneralState = {
   navDrawerObj: initialNavObj,
   contriesWithCodes: [],
-  states: null
+  states: null,
+  flattenAccounts: null
 }
 
 export function GeneralReducer(state: GeneralState = initialState, action: CustomActions): GeneralState {
@@ -90,10 +94,16 @@ export function GeneralReducer(state: GeneralState = initialState, action: Custo
         return Object.assign({}, state, {
           states: result.body
         })
-        // return {
-        //   ...state,
-        //   states: result.body
-        // };
+      }
+      return state;
+    }
+
+    case GeneralConst.GET_FLATTEN_ACCOUNTS_RESPONSE: {
+      let result: BaseResponse<FlattenAccountsResponse, string> = action.payload;
+      if (result.status === 'success') {
+        return Object.assign({}, state, {
+          flattenAccounts: result.body.results
+        });
       }
       return state;
     }

@@ -14,6 +14,8 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import * as moment from 'moment/moment';
 import { SettingsTaxesActions } from '~/actions/settings/taxes/settings.taxes.action';
 import { RouterExtensions } from 'nativescript-angular/router';
+import { IFlattenAccountsResultItem } from '~/models/interfaces/flattenAccountsResultItem.interface';
+import { GeneralActions } from '~/actions/general/general.actions';
 
 const taxesType: NsDropDownOptions[] = [
   { display: 'GST', value: 'GST' },
@@ -45,10 +47,13 @@ export class CreateTaxesComponent implements OnInit {
   @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
   public isCreateTaxInProcess$: Observable<boolean>;
   public isCreateTaxSuccess$: Observable<boolean>;
+  public flattenAccountsStream$: Observable<IFlattenAccountsResultItem[]>;
+  public flatternAccountList: ValueList<string>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page,
-    private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions) {
+    private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions,
+  private _generalActinos: GeneralActions) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -63,10 +68,12 @@ export class CreateTaxesComponent implements OnInit {
     }).takeUntil(this.destroyed$);
     this.isCreateTaxInProcess$ = this.store.select(s => s.company.isCreateTaxInProcess).takeUntil(this.destroyed$);
     this.isCreateTaxSuccess$ = this.store.select(s => s.company.isCreateTaxSuccess).takeUntil(this.destroyed$);
+    this.flattenAccountsStream$ = this.store.select(s => s.general.flattenAccounts).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   public ngOnInit() {
+    this.store.dispatch(this._generalActinos.getFlattenAccount());
     this.taxForm = this._fb.group({
       name: ['', Validators.required],
       taxNumber: ['', Validators.required],
@@ -91,6 +98,16 @@ export class CreateTaxesComponent implements OnInit {
       if (s) {
         this.routerExtensions.navigate(['taxes']);
       }
+    });
+
+    this.flattenAccountsStream$.subscribe(s => {
+      let flattenAccounts: NsDropDownOptions[] = [];
+      if (s) {
+        s.forEach(ss => {
+          flattenAccounts.push({ display: ss.name, value: ss.uniqueName });
+        })
+      }
+      this.flatternAccountList = new ValueList(flattenAccounts);
     });
   }
 
@@ -124,6 +141,7 @@ export class CreateTaxesComponent implements OnInit {
 
   public submit() {
     let dataToSave = this.taxForm.value;
+    dataToSave.accounts = [];
 
     dataToSave.taxDetail = [{
       taxValue: dataToSave.taxValue,
@@ -131,19 +149,16 @@ export class CreateTaxesComponent implements OnInit {
     }];
 
     dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxesType);
-    dataToSave.accounts = [];
-    // if (dataToSave.taxType === 'others') {
-    //   if (!dataToSave.accounts) {
-    //     dataToSave.accounts = [];
-    //   }
-    //   // this.accounts$.forEach((obj) => {
-    //   //   if (obj.value === dataToSave.account) {
-    //   //     let accountObj = obj.label.split(' - ');
-    //   //     dataToSave.accounts.push({ name: accountObj[0], uniqueName: obj.value });
-    //   //   }
-    //   // });
-    // }
+    if (dataToSave.taxType === 'others') {
 
+      let account = this.flatternAccountList.getItem(dataToSave.account);
+      dataToSave.accounts.push({
+        name: account.display,
+        uniqueName: account.value
+      });
+    }
+
+    console.log(JSON.stringify(dataToSave));
     this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
   }
 

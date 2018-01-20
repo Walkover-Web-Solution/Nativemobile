@@ -7,6 +7,8 @@ import { BaseResponse } from "~/models/api-models/BaseResponse";
 import { Effect, Actions } from "@ngrx/effects";
 import { Observable } from "rxjs/Observable";
 import { CompanyService } from "~/services/companyService.service";
+import { FlattenAccountsResponse } from "~/models/api-models/Account";
+import { AccountService } from "~/services/account.service";
 
 @Injectable()
 export class GeneralActions {
@@ -17,7 +19,18 @@ export class GeneralActions {
     .switchMap(() => this._companyService.getAllStates())
     .map(resp => this.setStatesData(resp));
 
-  constructor(private action$: Actions, private _companyService: CompanyService) {
+  @Effect()
+  public getFlattenAccounts$: Observable<CustomActions> = this.action$
+    .ofType(GeneralConst.GET_FLATTEN_ACCOUNTS)
+    .switchMap((action: CustomActions) =>
+      this._accountService.GetFlattenAccounts(action.payload)
+    )
+    .map(response => {
+      return this.getFlattenAccountResponse(response);
+    });
+
+
+  constructor(private action$: Actions, private _companyService: CompanyService, private _accountService: AccountService) {
     //
   }
 
@@ -39,5 +52,19 @@ export class GeneralActions {
       type: GeneralConst.GET_ALL_STATES_RESPONSE,
       payload: value
     }
+  }
+
+  public getFlattenAccount(value?: string): CustomActions {
+    return {
+      type: GeneralConst.GET_FLATTEN_ACCOUNTS,
+      payload: value
+    };
+  }
+
+  public getFlattenAccountResponse(value: BaseResponse<FlattenAccountsResponse, string>): CustomActions {
+    return {
+      type: GeneralConst.GET_FLATTEN_ACCOUNTS_RESPONSE,
+      payload: value
+    };
   }
 }

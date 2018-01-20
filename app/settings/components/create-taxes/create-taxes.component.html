@@ -40,7 +40,7 @@
             <StackLayout marginTop="5" [visibility]="showLinkedAccounts ? 'visible' : 'collapsed'">
               <Label text="Linked Account" textWrap="true"></Label>
               <DropDown backroundColor="red" marginTop="15"  formControlName="account" [hint]="'Select Account'"
-              verticalAlignment="bottom" [items]='[1,2,3]'></DropDown>
+              verticalAlignment="bottom" [items]='flatternAccountList'></DropDown>
             </StackLayout>
 
             <StackLayout orientation="horizontal" marginTop="5">
