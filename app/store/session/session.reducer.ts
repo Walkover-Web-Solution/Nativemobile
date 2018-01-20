@@ -17,7 +17,6 @@ export interface SessionState {
   companyUniqueName: string;                   // current user | null
   companies: CompanyResponse[];
   lastState: string;
-  taxes: TaxResponse[];
   userLoginState: userLoginStateEnum;
 }
 
@@ -26,7 +25,6 @@ const initialState: SessionState = {
   companyUniqueName: '',
   companies: [],
   lastState: '',
-  taxes: null,
   userLoginState: userLoginStateEnum.notLoggedIn
 }
 
@@ -125,14 +123,6 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
         });
       }
       return state;
-    }
-
-    case CompanyConstants.GET_COMPANY_TAX_RESPONSE: {
-      if (action.payload.status === 'success') {
-        return Object.assign({}, state, {
-          taxes: action.payload.body
-        });
-      }
     }
 
     case LoginConstants.LOGOUT: {

@@ -5,6 +5,7 @@ import { LoginActions } from './login/login.action';
 import { CompanyActions } from './company/company.action';
 import { DashboardActions } from '~/actions/dashboard/dashboard.action';
 import { GeneralActions } from '~/actions/general/general.actions';
+import { SettingsTaxesActions } from '~/actions/settings/taxes/settings.taxes.action';
 
 @NgModule({
   imports: [
@@ -12,7 +13,8 @@ import { GeneralActions } from '~/actions/general/general.actions';
       LoginActions,
       CompanyActions,
       DashboardActions,
-      GeneralActions
+      GeneralActions,
+      SettingsTaxesActions
     ])
   ],
   exports: [EffectsModule]

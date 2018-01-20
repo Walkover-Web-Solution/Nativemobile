@@ -12,6 +12,8 @@ import { NsDropDownOptions } from '~/models/other-models/HelperModels';
 import { Page } from 'tns-core-modules/ui/page/page';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import * as moment from 'moment/moment';
+import { SettingsTaxesActions } from '~/actions/settings/taxes/settings.taxes.action';
+import { RouterExtensions } from 'nativescript-angular/router';
 
 const taxesType: NsDropDownOptions[] = [
   { display: 'GST', value: 'GST' },
@@ -41,9 +43,12 @@ export class CreateTaxesComponent implements OnInit {
   public days: ValueList<string>;
   public showLinkedAccounts: boolean = false;
   @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
+  public isCreateTaxInProcess$: Observable<boolean>;
+  public isCreateTaxSuccess$: Observable<boolean>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page) {
+  constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page,
+    private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -56,6 +61,8 @@ export class CreateTaxesComponent implements OnInit {
       }
       return p;
     }).takeUntil(this.destroyed$);
+    this.isCreateTaxInProcess$ = this.store.select(s => s.company.isCreateTaxInProcess).takeUntil(this.destroyed$);
+    this.isCreateTaxSuccess$ = this.store.select(s => s.company.isCreateTaxSuccess).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
@@ -80,6 +87,11 @@ export class CreateTaxesComponent implements OnInit {
 
     this.days = new ValueList(daysArr);
 
+    this.isCreateTaxSuccess$.subscribe(s => {
+      if (s) {
+        this.routerExtensions.navigate(['taxes']);
+      }
+    });
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {
@@ -108,6 +120,31 @@ export class CreateTaxesComponent implements OnInit {
     }).catch((error) => {
       console.log("Error: " + JSON.stringify(error));
     });
+  }
+
+  public submit() {
+    let dataToSave = this.taxForm.value;
+
+    dataToSave.taxDetail = [{
+      taxValue: dataToSave.taxValue,
+      date: dataToSave.date
+    }];
+
+    dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxesType);
+    dataToSave.accounts = [];
+    // if (dataToSave.taxType === 'others') {
+    //   if (!dataToSave.accounts) {
+    //     dataToSave.accounts = [];
+    //   }
+    //   // this.accounts$.forEach((obj) => {
+    //   //   if (obj.value === dataToSave.account) {
+    //   //     let accountObj = obj.label.split(' - ');
+    //   //     dataToSave.accounts.push({ name: accountObj[0], uniqueName: obj.value });
+    //   //   }
+    //   // });
+    // }
+
+    this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
   }
 
   public ngOnDestroy() {

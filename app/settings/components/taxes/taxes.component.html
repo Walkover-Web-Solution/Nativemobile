@@ -32,6 +32,10 @@
             </ng-template>
           </ListView>
 
+          <Label text="No Data Avilable" row="1" [visibility]="(taxList$ | async)?.length === 0 ? 'visible' : 'collapsed'"
+            textWrap="true" verticalAlignment="center" horizontalAlignment="center"></Label>
+
+
           <FAB row="1" icon="~/assets/image/ic_add_white.png" backgroundColor="#514FA1"
             rippleColor="#ff4081" class="fab-button" (tap)="createCurrencies()"></FAB>
 
