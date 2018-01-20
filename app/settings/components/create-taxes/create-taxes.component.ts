@@ -11,6 +11,7 @@ import { ValueList } from 'nativescript-drop-down';
 import { NsDropDownOptions } from '~/models/other-models/HelperModels';
 import { Page } from 'tns-core-modules/ui/page/page';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import * as moment from 'moment/moment';
 
 const taxDuration: NsDropDownOptions[] = [
   { display: 'Monthly', value: 'MONTHLY' },
@@ -55,7 +56,7 @@ export class CreateTaxesComponent implements OnInit {
       name: ['', Validators.required],
       taxType: ['', Validators.required],
       taxValue: ['', Validators.required],
-      date: ['', Validators.required],
+      date: [moment().format('DD-MM-YYYY'), Validators.required],
       duration: ['', Validators.required],
       taxFileDate: ['', Validators.required]
     });

@@ -41,7 +41,8 @@
 
               <StackLayout width="50%" (tap)="openDatePicker()">
                 <Label color="#59595B" text="Apply Tax From"></Label>
-                <Label text="{{ taxForm.get('date').value }}" textWrap="true" verticalAlignment="bottom"></Label>
+                <Label text="{{ taxForm.get('date').value }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
+                <StackLayout class="hr-dark"></StackLayout>
                 <!-- <DatePicker formControlName="date"></DatePicker> -->
                 <!-- <DropDown backroundColor="red" marginTop="15" formControlName="date" [hint]="'Select Tax Type'" verticalAlignment="bottom" [items]='[1,2,3,4]'></DropDown> -->
               </StackLayout>

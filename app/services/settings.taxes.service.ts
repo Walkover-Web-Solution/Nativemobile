@@ -8,6 +8,8 @@ import { COMPANY_API } from './apiurls/comapny.api';
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
 
+let config = require('../config/config');
+
 @Injectable()
 export class SettingsTaxesService {
 
@@ -15,7 +17,7 @@ export class SettingsTaxesService {
   private companyUniqueName: string;
 
   constructor(private errorHandler: ErrorHandler, private _http: HttpWrapperService,
-              private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
+    private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
   }
 
   /**
@@ -24,7 +26,7 @@ export class SettingsTaxesService {
   public CreateTax(model): Observable<BaseResponse<any, any>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.post(this.config.apiUrl + COMPANY_API.TAX.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), model).map((res) => {
+    return this._http.post(config.config.ApiUrl + COMPANY_API.TAX.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), model).map((res) => {
       let data: BaseResponse<any, any> = res.json();
       data.request = model;
       return data;
