@@ -97,6 +97,7 @@ export class CreateTaxesComponent implements OnInit {
     this.isCreateTaxSuccess$.subscribe(s => {
       if (s) {
         this.routerExtensions.navigate(['taxes']);
+        this.store.dispatch(this._settingsTaxesActions.ResetCreateTaxUi());
       }
     });
 
@@ -148,7 +149,7 @@ export class CreateTaxesComponent implements OnInit {
       date: dataToSave.date
     }];
 
-    dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxesType);
+    dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxType);
     if (dataToSave.taxType === 'others') {
 
       let account = this.flatternAccountList.getItem(dataToSave.account);
@@ -158,7 +159,6 @@ export class CreateTaxesComponent implements OnInit {
       });
     }
 
-    console.log(JSON.stringify(dataToSave));
     this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
   }
 

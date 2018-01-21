@@ -118,4 +118,10 @@ export class SettingsTaxesActions {
     };
   }
 
+  public ResetCreateTaxUi(): CustomActions {
+    return {
+      type: SettingsTaxesConstants.RESET_CREATE_TAX_UI_FLAGS
+    }
+  }
+
 }

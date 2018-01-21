@@ -53,9 +53,15 @@ export function CompanyReducer(state: CurrentCompanyState = initialState, action
         let newState = _.cloneDeep(state);
         newState.taxes.push(res.body);
         newState.isCreateTaxInProcess = false;
-        newState.isCreateTaxSuccess = false;
+        newState.isCreateTaxSuccess = true;
         return Object.assign({}, state, newState);
       }
+      return Object.assign({}, state, {
+        isCreateTaxInProcess: false,
+        isCreateTaxSuccess: false
+      });
+    }
+    case SettingsTaxesConstants.RESET_CREATE_TAX_UI_FLAGS: {
       return Object.assign({}, state, {
         isCreateTaxInProcess: false,
         isCreateTaxSuccess: false
