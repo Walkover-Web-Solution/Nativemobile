@@ -13,9 +13,11 @@ import { Page } from 'tns-core-modules/ui/page/page';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import * as moment from 'moment/moment';
 import { SettingsTaxesActions } from '~/actions/settings/taxes/settings.taxes.action';
-import { RouterExtensions } from 'nativescript-angular/router';
+import { RouterExtensions, PageRoute } from 'nativescript-angular/router';
 import { IFlattenAccountsResultItem } from '~/models/interfaces/flattenAccountsResultItem.interface';
 import { GeneralActions } from '~/actions/general/general.actions';
+import { THROW_IF_NOT_FOUND } from '@angular/core/src/di/injector';
+import { TaxResponse } from '~/models/api-models/Company';
 
 const taxesType: NsDropDownOptions[] = [
   { display: 'GST', value: 'GST' },
@@ -49,11 +51,14 @@ export class CreateTaxesComponent implements OnInit {
   public isCreateTaxSuccess$: Observable<boolean>;
   public flattenAccountsStream$: Observable<IFlattenAccountsResultItem[]>;
   public flatternAccountList: ValueList<string>;
+  public selectedTaxObj: TaxResponse;
+  private taxList$: Observable<TaxResponse[]>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page,
     private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions,
-  private _generalActinos: GeneralActions) {
+    private _generalActinos: GeneralActions, private pageRoute: PageRoute) {
+
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -66,14 +71,7 @@ export class CreateTaxesComponent implements OnInit {
       }
       return p;
     }).takeUntil(this.destroyed$);
-    this.isCreateTaxInProcess$ = this.store.select(s => s.company.isCreateTaxInProcess).takeUntil(this.destroyed$);
-    this.isCreateTaxSuccess$ = this.store.select(s => s.company.isCreateTaxSuccess).takeUntil(this.destroyed$);
-    this.flattenAccountsStream$ = this.store.select(s => s.general.flattenAccounts).takeUntil(this.destroyed$);
-    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
-  }
 
-  public ngOnInit() {
-    this.store.dispatch(this._generalActinos.getFlattenAccount());
     this.taxForm = this._fb.group({
       name: ['', Validators.required],
       taxNumber: ['', Validators.required],
@@ -84,6 +82,30 @@ export class CreateTaxesComponent implements OnInit {
       taxFileDate: ['', Validators.required],
       account: ['']
     });
+
+    this.taxList$ = this.store.select(p => p.company.taxes).takeUntil(this.destroyed$);
+    this.isCreateTaxInProcess$ = this.store.select(s => s.company.isCreateTaxInProcess).takeUntil(this.destroyed$);
+    this.isCreateTaxSuccess$ = this.store.select(s => s.company.isCreateTaxSuccess).takeUntil(this.destroyed$);
+    this.flattenAccountsStream$ = this.store.select(s => s.general.flattenAccounts).takeUntil(this.destroyed$);
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
+  }
+
+  public ngOnInit() {
+    this.store.dispatch(this._generalActinos.getFlattenAccount());
+
+    this.pageRoute.activatedRoute
+      .switchMap(activatedRoute => activatedRoute.params)
+      .subscribe(params => {
+        if ('uniqueName' in params) {
+          let selectedTaxUniqueName = params.uniqueName;
+
+          this.taxList$.take(1).subscribe(taxes => {
+            this.selectedTaxObj = taxes.find(tx => tx.uniqueName === selectedTaxUniqueName);
+            this.taxForm.patchValue(this.selectedTaxObj);
+          });
+        }
+      })
+
     this.taxTypeList = new ValueList(taxesType);
     this.taxDurationList = new ValueList(taxDuration);
 
@@ -110,6 +132,10 @@ export class CreateTaxesComponent implements OnInit {
       }
       this.flatternAccountList = new ValueList(flattenAccounts);
     });
+  }
+
+  public fillTaxGroupForm(tax: TaxResponse) {
+
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {

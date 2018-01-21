@@ -33,6 +33,11 @@ export const routes: Routes = [
   {
     path: 'create-taxes',
     component: CreateTaxesComponent
+  },
+  {
+    path: 'create-taxes/:uniqueName',
+    pathMatch: 'full',
+    component: CreateTaxesComponent
   }
 ];
 @NgModule({
