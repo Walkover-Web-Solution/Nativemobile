@@ -105,6 +105,7 @@ export class CompanyService {
   public getComapnyTaxes(): Observable<BaseResponse<TaxResponse[], string>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
+    console.log(config.config.ApiUrl + COMPANY_API.TAX.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)));
     return this._http.get(config.config.ApiUrl + COMPANY_API.TAX.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName))).map((res) => {
       let data: BaseResponse<TaxResponse[], string> = res.json();
       return data;

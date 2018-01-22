@@ -11,6 +11,7 @@ import { PieChartComponent } from "~/shared/pie-chart/pie-chart.component";
 import { DropDownModule } from "nativescript-drop-down/angular";
 import { TNSCheckBoxModule } from 'nativescript-checkbox/angular';
 import { MyChipsComponent } from "~/shared/my-chips/my-chips.component";
+import { TNSFontIconModule } from "nativescript-ngx-fonticon";
 
 @NgModule({
   imports: [
@@ -18,7 +19,10 @@ import { MyChipsComponent } from "~/shared/my-chips/my-chips.component";
     NativeScriptUISideDrawerModule,
     NativeScriptUIGaugesModule,
     DropDownModule,
-    TNSCheckBoxModule
+    TNSCheckBoxModule,
+    TNSFontIconModule.forRoot({
+      'fa': './assets/font-awesome.min.css'
+    })
   ],
   declarations: [
     MyDrawerComponent,
@@ -37,7 +41,8 @@ import { MyChipsComponent } from "~/shared/my-chips/my-chips.component";
     NativeScriptUISideDrawerModule,
     NativeScriptUIGaugesModule,
     TNSCheckBoxModule,
-    DropDownModule
+    DropDownModule,
+    TNSFontIconModule
   ],
   schemas: [
     NO_ERRORS_SCHEMA

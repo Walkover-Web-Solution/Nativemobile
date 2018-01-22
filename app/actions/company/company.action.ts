@@ -14,6 +14,7 @@ import { CompanyService } from "../../services/companyService.service";
 import { CompanyResponse, StateDetailsResponse, TaxResponse } from "../../models/api-models/Company";
 import { AppState } from "~/store";
 import { Store } from "@ngrx/store";
+import { GeneralService } from "~/services/general.service";
 
 @Injectable()
 
@@ -71,6 +72,7 @@ export class CompanyActions {
         dummyResponse.status = 'success';
         return this.changeCompanyResponse(dummyResponse);
       }
+      this._generalServices.companyUniqueName = response.request;
       return this.changeCompanyResponse(response);
     });
 
@@ -88,7 +90,7 @@ export class CompanyActions {
       }
     });
   constructor(private actions$: Actions, private _authService: AuthenticationService, private _companyService: CompanyService,
-    private store: Store<AppState>) {
+    private store: Store<AppState>, private _generalServices: GeneralService) {
 
   }
 

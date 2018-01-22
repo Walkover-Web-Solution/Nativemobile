@@ -9,7 +9,6 @@ import { AuthenticationService } from "../../services/authentication.service";
 import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from "../../models/api-models/Login";
 import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel } from "../../models/api-models/loginModels";
 import * as dialogs from "ui/dialogs";
-import { action } from "ui/dialogs";
 
 @Injectable()
 

@@ -18,6 +18,8 @@ import { IFlattenAccountsResultItem } from '~/models/interfaces/flattenAccountsR
 import { GeneralActions } from '~/actions/general/general.actions';
 import { THROW_IF_NOT_FOUND } from '@angular/core/src/di/injector';
 import { TaxResponse } from '~/models/api-models/Company';
+import * as dialogs from 'ui/dialogs';
+import { TNSFontIconService } from 'nativescript-ngx-fonticon';
 
 const taxesType: NsDropDownOptions[] = [
   { display: 'GST', value: 'GST' },
@@ -57,7 +59,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page,
     private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions,
-    private _generalActinos: GeneralActions, private pageRoute: PageRoute) {
+    private _generalActinos: GeneralActions, private pageRoute: PageRoute, private fonticon: TNSFontIconService) {
 
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
@@ -111,13 +113,13 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
     });
 
     this.flattenAccountsStream$.subscribe(s => {
-      let flattenAccounts: NsDropDownOptions[] = [];
-      if (s) {
-        s.forEach(ss => {
-          flattenAccounts.push({ display: ss.name, value: ss.uniqueName });
-        })
-      }
-      this.flatternAccountList = new ValueList(flattenAccounts);
+      // let flattenAccounts: NsDropDownOptions[] = [];
+      // if (s) {
+      //   s.forEach(ss => {
+      //     flattenAccounts.push({ display: ss.name, value: ss.uniqueName });
+      //   })
+      // }
+      // this.flatternAccountList = new ValueList(flattenAccounts);
     });
   }
 
@@ -137,13 +139,15 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
   }
 
   public fillTaxGroupForm(tax: TaxResponse) {
-    console.log(JSON.stringify(tax));
     let formObj = tax;
 
     if (formObj.taxType) {
       formObj.taxType = this.taxTypeList.getIndex(formObj.taxType).toString();
-      this.taxTypeChenged({ newIndex: Number(formObj.taxType) });
+    } else {
+      formObj.taxType = this.taxTypeList.getIndex('others').toString();
+      // formObj.account = this.flatternAccountList.getIndex(formObj.accounts.uniqueName)
     }
+    this.taxTypeChenged({ newIndex: Number(formObj.taxType) });
 
     if (formObj.duration) {
       formObj.duration = this.taxDurationList.getIndex(formObj.duration).toString();
@@ -190,6 +194,12 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
   }
 
   public submit() {
+
+    if (this.taxForm.invalid) {
+      dialogs.alert({ title: 'Error', message: 'Please Fill All Details', okButtonText: 'Close' });
+      return;
+    }
+
     let dataToSave = this.taxForm.value;
     dataToSave.accounts = [];
 

@@ -46,6 +46,8 @@ elementRegistryModule.registerElement("CardView", () => require("nativescript-ca
 elementRegistryModule.registerElement("Fab", () => Fab);
 elementRegistryModule.registerElement("Carousel", () => require("nativescript-carousel").Carousel);
 elementRegistryModule.registerElement("CarouselItem", () => require("nativescript-carousel").CarouselItem);
+elementRegistryModule.registerElement("FilterSelect", () => require("nativescript-filter-select").FilterSelect);
+
 
 @NgModule({
   bootstrap: [AppComponent],
@@ -61,7 +63,7 @@ elementRegistryModule.registerElement("CarouselItem", () => require("nativescrip
     HomeModule,
     SalesInvoiceModule,
     SettingsModule,
-    ReportsModule
+    ReportsModule,
   ],
   declarations: [AppComponent],
   providers: [
