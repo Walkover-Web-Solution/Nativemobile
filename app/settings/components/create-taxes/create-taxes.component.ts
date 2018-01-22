@@ -6,7 +6,7 @@ import { AppState } from '~/store';
 import { Store } from '@ngrx/store';
 import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
+import { OnInit, AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { ValueList, SelectedIndexChangedEventData } from 'nativescript-drop-down';
 import { NsDropDownOptions } from '~/models/other-models/HelperModels';
 import { Page } from 'tns-core-modules/ui/page/page';
@@ -38,7 +38,7 @@ const taxDuration: NsDropDownOptions[] = [
   templateUrl: './create-taxes.component.html'
 })
 
-export class CreateTaxesComponent implements OnInit {
+export class CreateTaxesComponent implements OnInit, AfterViewInit {
 
   public navItemObj$: Observable<MyDrawerItem[]>;
   public taxForm: FormGroup;
@@ -93,19 +93,6 @@ export class CreateTaxesComponent implements OnInit {
   public ngOnInit() {
     this.store.dispatch(this._generalActinos.getFlattenAccount());
 
-    this.pageRoute.activatedRoute
-      .switchMap(activatedRoute => activatedRoute.params)
-      .subscribe(params => {
-        if ('uniqueName' in params) {
-          let selectedTaxUniqueName = params.uniqueName;
-
-          this.taxList$.take(1).subscribe(taxes => {
-            this.selectedTaxObj = taxes.find(tx => tx.uniqueName === selectedTaxUniqueName);
-            this.taxForm.patchValue(this.selectedTaxObj);
-          });
-        }
-      })
-
     this.taxTypeList = new ValueList(taxesType);
     this.taxDurationList = new ValueList(taxDuration);
 
@@ -134,15 +121,51 @@ export class CreateTaxesComponent implements OnInit {
     });
   }
 
-  public fillTaxGroupForm(tax: TaxResponse) {
+  public ngAfterViewInit() {
+    this.pageRoute.activatedRoute
+      .switchMap(activatedRoute => activatedRoute.params)
+      .subscribe(params => {
+        if ('uniqueName' in params) {
+          let selectedTaxUniqueName = params.uniqueName;
 
+          this.taxList$.take(1).subscribe(taxes => {
+            this.selectedTaxObj = taxes.find(tx => tx.uniqueName === selectedTaxUniqueName);
+            this.fillTaxGroupForm(this.selectedTaxObj);
+          });
+        }
+      })
+  }
+
+  public fillTaxGroupForm(tax: TaxResponse) {
+    console.log(JSON.stringify(tax));
+    let formObj = tax;
+
+    if (formObj.taxType) {
+      formObj.taxType = this.taxTypeList.getIndex(formObj.taxType).toString();
+      this.taxTypeChenged({ newIndex: Number(formObj.taxType) });
+    }
+
+    if (formObj.duration) {
+      formObj.duration = this.taxDurationList.getIndex(formObj.duration).toString();
+    }
+
+    if (formObj.taxFileDate) {
+      formObj.taxFileDate = this.days.getIndex(formObj.taxFileDate.toString());
+    }
+
+    if (formObj.taxDetail && formObj.taxDetail.length > 0) {
+      formObj.taxValue = formObj.taxDetail[0].taxValue;
+      formObj.date = formObj.taxDetail[0].date;
+    }
+
+    this.taxForm.patchValue(formObj);
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;
   }
 
-  public taxTypeChenged(args: SelectedIndexChangedEventData) {
+  public taxTypeChenged(args: Partial<SelectedIndexChangedEventData>) {
     let getVal = this.taxTypeList.getValue(args.newIndex);
     this.showLinkedAccounts = getVal === 'others';
   }
@@ -185,6 +208,7 @@ export class CreateTaxesComponent implements OnInit {
       });
     }
 
+    console.log(JSON.stringify(dataToSave));
     this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
   }
 

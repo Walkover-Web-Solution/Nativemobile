@@ -26,6 +26,7 @@ export class SettingsTaxesActions {
     .ofType(SettingsTaxesConstants.CREATE_TAX_RESPONSE)
     .map((response: CustomActions) => {
       let data: BaseResponse<any, any> = response.payload;
+      console.log('response', JSON.stringify(data));
       if (data.status === 'error') {
         dialogs.alert(data.message);
       }
