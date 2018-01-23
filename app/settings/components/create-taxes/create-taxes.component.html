@@ -37,14 +37,18 @@
               [items]='taxTypeList' (selectedIndexChanged)="taxTypeChanged($event)"></DropDown>
           </StackLayout>
 
-          <StackLayout marginTop="5" [visibility]="showLinkedAccounts ? 'visible' : 'collapsed'">
+          <StackLayout marginTop="5">
             <Label text="Linked Account" textWrap="true"></Label>
 
-            <!-- <DropDown backroundColor="red" marginTop="15"  formControlName="account" [hint]="'Select Account'"
-              verticalAlignment="bottom" [items]='flatternAccountList'></DropDown> -->
+            <DropDown backroundColor="red" marginTop="15"  formControlName="accounts" [hint]="'Select Account'"
+              verticalAlignment="bottom" [items]='flatternAccountList' [isEnabled]="!selectedTaxObj && showLinkedAccounts"></DropDown>
 
-            <FilterSelect height="100%" [items]="flattenAccountsStream$ | async" hint="Select Account" modal_title="Account"
-              search_param="name" (change)="onAccountSelected($event)" primary_key="uniqueName" multiple="true" allowSearch="true"></FilterSelect>
+            <StackLayout *ngFor="let acc of taxForm.get('accounts').value" [visibility]="selectedTaxObj && selectedTaxObj.accounts ? 'visible' : 'collapsed'">
+              <MyChips [text]="acc.name"></MyChips>
+            </StackLayout>
+
+            <!--<FilterSelect height="100%" [items]="flattenAccountsStream$ | async" hint="Select Account" modal_title="Account"-->
+              <!--search_param="name" (change)="onAccountSelected($event)" [selected]="taxForm.get('accounts').value" primary_key="uniqueName" multiple="true" allowSearch="true"></FilterSelect>-->
 
           </StackLayout>
 

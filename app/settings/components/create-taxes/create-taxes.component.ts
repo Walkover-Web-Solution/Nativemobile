@@ -16,7 +16,6 @@ import {SettingsTaxesActions} from '~/actions/settings/taxes/settings.taxes.acti
 import {PageRoute, RouterExtensions} from 'nativescript-angular/router';
 import {IFlattenAccountsResultItem} from '~/models/interfaces/flattenAccountsResultItem.interface';
 import {GeneralActions} from '~/actions/general/general.actions';
-import {THROW_IF_NOT_FOUND} from '@angular/core/src/di/injector';
 import {TaxResponse} from '~/models/api-models/Company';
 import * as dialogs from 'ui/dialogs';
 import {TNSFontIconService} from 'nativescript-ngx-fonticon';
@@ -103,8 +102,17 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
     for (let i = 1; i <= 31; i++) {
       daysArr.push({display: i.toString(), value: i.toString()});
     }
-
     this.days = new ValueList(daysArr);
+
+    this.flattenAccountsStream$.subscribe(s => {
+      let flattenAccounts: NsDropDownOptions[] = [];
+      if (s) {
+        s.forEach(acc => {
+          flattenAccounts.push({display: acc.name, value: acc.uniqueName});
+        });
+      }
+      this.flatternAccountList = new ValueList<string>(flattenAccounts);
+    });
 
     this.isCreateTaxSuccess$.subscribe(s => {
       if (s) {
@@ -163,16 +171,6 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
   public taxTypeChanged(args: Partial<SelectedIndexChangedEventData>) {
     let getVal = this.taxTypeList.getValue(args.newIndex);
     this.showLinkedAccounts = getVal === 'others';
-  }
-
-  public onAccountSelected(args) {
-    let accounts = args.selected.map(arg => {
-      return {
-        name: arg.uniqueName,
-        uniqueName: arg.uniqueName
-      }
-    });
-    this.taxForm.get('accounts').patchValue(accounts);
   }
 
   public onDrawerButtonTap(): void {
