@@ -1,37 +1,37 @@
-import { Component, ViewChild } from '@angular/core';
-import { MyDrawerItem } from '~/shared/my-drawer-item/my-drawer-item';
-import { Observable } from 'rxjs/Observable';
-import { RadSideDrawerComponent } from 'nativescript-pro-ui/sidedrawer/angular';
-import { AppState } from '~/store';
-import { Store } from '@ngrx/store';
-import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OnInit, AfterViewInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { ValueList, SelectedIndexChangedEventData } from 'nativescript-drop-down';
-import { NsDropDownOptions } from '~/models/other-models/HelperModels';
-import { Page } from 'tns-core-modules/ui/page/page';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import {Component, ViewChild} from '@angular/core';
+import {MyDrawerItem} from '~/shared/my-drawer-item/my-drawer-item';
+import {Observable} from 'rxjs/Observable';
+import {RadSideDrawerComponent} from 'nativescript-pro-ui/sidedrawer/angular';
+import {AppState} from '~/store';
+import {Store} from '@ngrx/store';
+import {DrawerTransitionBase} from 'nativescript-pro-ui/sidedrawer';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AfterViewInit, OnInit} from '@angular/core/src/metadata/lifecycle_hooks';
+import {SelectedIndexChangedEventData, ValueList} from 'nativescript-drop-down';
+import {NsDropDownOptions} from '~/models/other-models/HelperModels';
+import {Page} from 'tns-core-modules/ui/page/page';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 import * as moment from 'moment/moment';
-import { SettingsTaxesActions } from '~/actions/settings/taxes/settings.taxes.action';
-import { RouterExtensions, PageRoute } from 'nativescript-angular/router';
-import { IFlattenAccountsResultItem } from '~/models/interfaces/flattenAccountsResultItem.interface';
-import { GeneralActions } from '~/actions/general/general.actions';
-import { THROW_IF_NOT_FOUND } from '@angular/core/src/di/injector';
-import { TaxResponse } from '~/models/api-models/Company';
+import {SettingsTaxesActions} from '~/actions/settings/taxes/settings.taxes.action';
+import {PageRoute, RouterExtensions} from 'nativescript-angular/router';
+import {IFlattenAccountsResultItem} from '~/models/interfaces/flattenAccountsResultItem.interface';
+import {GeneralActions} from '~/actions/general/general.actions';
+import {THROW_IF_NOT_FOUND} from '@angular/core/src/di/injector';
+import {TaxResponse} from '~/models/api-models/Company';
 import * as dialogs from 'ui/dialogs';
-import { TNSFontIconService } from 'nativescript-ngx-fonticon';
+import {TNSFontIconService} from 'nativescript-ngx-fonticon';
 
 const taxesType: NsDropDownOptions[] = [
-  { display: 'GST', value: 'GST' },
-  { display: 'InputGST', value: 'InputGST' },
-  { display: 'Others', value: 'others' }
+  {display: 'GST', value: 'GST'},
+  {display: 'InputGST', value: 'InputGST'},
+  {display: 'Others', value: 'others'}
 ];
 
 const taxDuration: NsDropDownOptions[] = [
-  { display: 'Monthly', value: 'MONTHLY' },
-  { display: 'Quarterly', value: 'QUARTERLY' },
-  { display: 'Half-Yearly', value: 'HALFYEARLY' },
-  { display: 'Yearly', value: 'YEARLY' }
+  {display: 'Monthly', value: 'MONTHLY'},
+  {display: 'Quarterly', value: 'QUARTERLY'},
+  {display: 'Half-Yearly', value: 'HALFYEARLY'},
+  {display: 'Yearly', value: 'YEARLY'}
 ];
 
 @Component({
@@ -57,9 +57,10 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
   private taxList$: Observable<TaxResponse[]>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page,
-    private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions,
-    private _generalActinos: GeneralActions, private pageRoute: PageRoute, private fonticon: TNSFontIconService) {
+              private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions,
+              private _generalActinos: GeneralActions, private pageRoute: PageRoute, private fonticon: TNSFontIconService) {
 
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
@@ -82,7 +83,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       date: [moment().format('DD-MM-YYYY'), Validators.required],
       duration: ['', Validators.required],
       taxFileDate: ['', Validators.required],
-      account: ['']
+      accounts: []
     });
 
     this.taxList$ = this.store.select(p => p.company.taxes).takeUntil(this.destroyed$);
@@ -100,7 +101,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
 
     let daysArr: NsDropDownOptions[] = [];
     for (let i = 1; i <= 31; i++) {
-      daysArr.push({ display: i.toString(), value: i.toString() });
+      daysArr.push({display: i.toString(), value: i.toString()});
     }
 
     this.days = new ValueList(daysArr);
@@ -110,16 +111,6 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
         this.routerExtensions.navigate(['taxes']);
         this.store.dispatch(this._settingsTaxesActions.ResetCreateTaxUi());
       }
-    });
-
-    this.flattenAccountsStream$.subscribe(s => {
-      // let flattenAccounts: NsDropDownOptions[] = [];
-      // if (s) {
-      //   s.forEach(ss => {
-      //     flattenAccounts.push({ display: ss.name, value: ss.uniqueName });
-      //   })
-      // }
-      // this.flatternAccountList = new ValueList(flattenAccounts);
     });
   }
 
@@ -147,7 +138,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       formObj.taxType = this.taxTypeList.getIndex('others').toString();
       // formObj.account = this.flatternAccountList.getIndex(formObj.accounts.uniqueName)
     }
-    this.taxTypeChenged({ newIndex: Number(formObj.taxType) });
+    this.taxTypeChanged({newIndex: Number(formObj.taxType)});
 
     if (formObj.duration) {
       formObj.duration = this.taxDurationList.getIndex(formObj.duration).toString();
@@ -169,9 +160,19 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
     return this._sideDrawerTransition;
   }
 
-  public taxTypeChenged(args: Partial<SelectedIndexChangedEventData>) {
+  public taxTypeChanged(args: Partial<SelectedIndexChangedEventData>) {
     let getVal = this.taxTypeList.getValue(args.newIndex);
     this.showLinkedAccounts = getVal === 'others';
+  }
+
+  public onAccountSelected(args) {
+    let accounts = args.selected.map(arg => {
+      return {
+        name: arg.uniqueName,
+        uniqueName: arg.uniqueName
+      }
+    });
+    this.taxForm.get('accounts').patchValue(accounts);
   }
 
   public onDrawerButtonTap(): void {
@@ -194,14 +195,12 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
   }
 
   public submit() {
-
     if (this.taxForm.invalid) {
-      dialogs.alert({ title: 'Error', message: 'Please Fill All Details', okButtonText: 'Close' });
+      dialogs.alert({title: 'Error', message: 'Please Fill All Details', okButtonText: 'Close'});
       return;
     }
 
     let dataToSave = this.taxForm.value;
-    dataToSave.accounts = [];
 
     dataToSave.taxDetail = [{
       taxValue: dataToSave.taxValue,
@@ -209,16 +208,8 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
     }];
 
     dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxType);
-    if (dataToSave.taxType === 'others') {
+    dataToSave.accounts = dataToSave.taxType === 'others' ? dataToSave.accounts : [];
 
-      let account = this.flatternAccountList.getItem(dataToSave.account);
-      dataToSave.accounts.push({
-        name: account.display,
-        uniqueName: account.value
-      });
-    }
-
-    console.log(JSON.stringify(dataToSave));
     this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
   }
 

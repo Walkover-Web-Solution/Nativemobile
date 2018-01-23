@@ -34,7 +34,7 @@
           <StackLayout marginTop="5">
             <Label text="Tax Type" textWrap="true"></Label>
             <DropDown backroundColor="red" marginTop="15" formControlName="taxType" [hint]="'Select Tax Type'" verticalAlignment="bottom"
-              [items]='taxTypeList' (selectedIndexChanged)="taxTypeChenged($event)"></DropDown>
+              [items]='taxTypeList' (selectedIndexChanged)="taxTypeChanged($event)"></DropDown>
           </StackLayout>
 
           <StackLayout marginTop="5" [visibility]="showLinkedAccounts ? 'visible' : 'collapsed'">
@@ -44,7 +44,7 @@
               verticalAlignment="bottom" [items]='flatternAccountList'></DropDown> -->
 
             <FilterSelect height="100%" [items]="flattenAccountsStream$ | async" hint="Select Account" modal_title="Account"
-              search_param="name" primary_key="uniqueName" multiple="true" allowSearch="true" closeText="{{'fa-list-ul' | fonticon}}"></FilterSelect>
+              search_param="name" (change)="onAccountSelected($event)" primary_key="uniqueName" multiple="true" allowSearch="true"></FilterSelect>
 
           </StackLayout>
 

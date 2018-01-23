@@ -40,7 +40,7 @@ export function logger(reducer: ActionReducer<AppState>): any {
   return storeLogger()(reducer);
 }
 let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logger];
-let config = require('./config/config')
+let config = require('./config/config');
 
 elementRegistryModule.registerElement("CardView", () => require("nativescript-cardview").CardView);
 elementRegistryModule.registerElement("Fab", () => Fab);
@@ -77,5 +77,5 @@ elementRegistryModule.registerElement("FilterSelect", () => require("nativescrip
     NO_ERRORS_SCHEMA
   ]
 })
-export class AppModule { };
+export class AppModule { }
 
