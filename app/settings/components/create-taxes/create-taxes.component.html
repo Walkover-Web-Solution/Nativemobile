@@ -37,7 +37,7 @@
           <StackLayout marginTop="5">
             <Label text="Tax Type" textWrap="true"></Label>
             <DropDown backroundColor="red" marginTop="15" formControlName="taxType" [hint]="'Select Tax Type'"
-                      verticalAlignment="bottom"
+                      verticalAlignment="bottom" [isEnabled]="!selectedTaxObj"
                       [items]='taxTypeList' (selectedIndexChanged)="taxTypeChanged($event)"></DropDown>
           </StackLayout>
 

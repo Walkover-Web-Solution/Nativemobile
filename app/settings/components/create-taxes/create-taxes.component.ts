@@ -206,7 +206,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       title: "Select Your Birthday",
       theme: "dark",
       maxDate: new Date(new Date().getFullYear(), 11, 31),
-      startingDate: this.selectedTaxObj && this.selectedTaxObj.date ? moment(this.selectedTaxObj.date, 'DD-MM-YYYY').toDate() : moment().format('DD-MM-YYYY')
+      startingDate: this.selectedTaxObj && this.selectedTaxObj.date ? moment(this.selectedTaxObj.date, 'DD-MM-YYYY').toDate() : moment().toDate()
     }).then((result) => {
       let date = `${result.day}-${result.month}-${result.year}`
       this.taxForm.get('date').patchValue(date);
@@ -221,33 +221,25 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if (!this.selectedTaxObj) {
-      let dataToSave = this.taxForm.value;
-
-      dataToSave.taxDetail = [{
-        taxValue: dataToSave.taxValue,
-        date: dataToSave.date
-      }];
-
-      dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxType);
-      dataToSave.accounts = dataToSave.taxType === 'others' ? dataToSave.accounts : [];
-
-      this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
-    } else {
-      this.update();
-    }
-  }
-
-  public update() {
     let dataToSave = this.taxForm.value;
-    dataToSave.uniqueName = this.selectedTaxObj.uniqueName;
     dataToSave.taxDetail = [{
       taxValue: dataToSave.taxValue,
       date: dataToSave.date
     }];
 
-    console.log('Update Tax Request: ', JSON.stringify(this.selectedTaxObj));
-    this.store.dispatch(this._settingsTaxesActions.UpdateTax(dataToSave));
+    dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxType);
+    dataToSave.duration = this.taxDurationList.getValue(dataToSave.duration);
+    dataToSave.taxFileDate = this.days.getValue(dataToSave.taxFileDate);
+
+    if (!this.selectedTaxObj) {
+      dataToSave.accounts = dataToSave.taxType === 'others' ? dataToSave.accounts : [];
+
+      this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
+    } else {
+      dataToSave.uniqueName = this.selectedTaxObj.uniqueName;
+
+      this.store.dispatch(this._settingsTaxesActions.UpdateTax(dataToSave));
+    }
   }
 
   public ngOnDestroy() {
