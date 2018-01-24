@@ -18,8 +18,9 @@ import {IFlattenAccountsResultItem} from '~/models/interfaces/flattenAccountsRes
 import {GeneralActions} from '~/actions/general/general.actions';
 import {TaxResponse} from '~/models/api-models/Company';
 import * as dialogs from 'ui/dialogs';
-import {TNSFontIconService} from 'nativescript-ngx-fonticon';
+import {LoadingIndicator} from 'nativescript-loading-indicator';
 import * as _ from 'lodash';
+import {LoaderService} from "~/services/loader.service";
 
 const taxesType: NsDropDownOptions[] = [
   {display: 'GST', value: 'GST'},
@@ -62,7 +63,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
 
   constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page,
               private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterExtensions,
-              private _generalActinos: GeneralActions, private pageRoute: PageRoute, private fonticon: TNSFontIconService) {
+              private _generalActinos: GeneralActions, private pageRoute: PageRoute, private _loaderService: LoaderService) {
 
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
@@ -121,6 +122,22 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       this.flatternAccountList = new ValueList<string>(flattenAccounts);
     });
 
+    this.isCreateTaxInProcess$.subscribe(s => {
+      if (s) {
+        this._loaderService.showLoader('Creating Tax');
+      } else {
+        this._loaderService.hideLoader();
+      }
+    });
+
+    this.isUpdateTaxInProcess$.subscribe(s => {
+      if (s) {
+        this._loaderService.showLoader('Updating Tax');
+      } else {
+        this._loaderService.hideLoader();
+      }
+    });
+
     this.isCreateTaxSuccess$.subscribe(s => {
       if (s) {
         this.routerExtensions.navigate(['taxes']);
@@ -133,7 +150,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
         this.routerExtensions.navigate(['taxes']);
         this.store.dispatch(this._settingsTaxesActions.ResetUpdateTaxUi());
       }
-    })
+    });
   }
 
   public ngAfterViewInit() {
