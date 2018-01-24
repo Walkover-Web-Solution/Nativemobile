@@ -19,6 +19,7 @@ import {GeneralActions} from '~/actions/general/general.actions';
 import {TaxResponse} from '~/models/api-models/Company';
 import * as dialogs from 'ui/dialogs';
 import {TNSFontIconService} from 'nativescript-ngx-fonticon';
+import * as _ from 'lodash';
 
 const taxesType: NsDropDownOptions[] = [
   {display: 'GST', value: 'GST'},
@@ -84,6 +85,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       date: [moment().format('DD-MM-YYYY'), Validators.required],
       duration: ['', Validators.required],
       taxFileDate: ['', Validators.required],
+      account: [],
       accounts: []
     });
 
@@ -142,7 +144,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
           let selectedTaxUniqueName = params.uniqueName;
 
           this.taxList$.take(1).subscribe(taxes => {
-            this.selectedTaxObj = taxes.find(tx => tx.uniqueName === selectedTaxUniqueName);
+            this.selectedTaxObj = _.cloneDeep(taxes.find(tx => tx.uniqueName === selectedTaxUniqueName));
             this.fillTaxGroupForm(this.selectedTaxObj);
           });
         }
@@ -185,6 +187,14 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
     this.showLinkedAccounts = getVal === 'others';
   }
 
+  public accountChanged(args: SelectedIndexChangedEventData) {
+    let getVal = this.flatternAccountList.getItem(args.newIndex);
+    this.taxForm.get('accounts').patchValue([{
+      name: getVal.display,
+      uniqueName: getVal.value
+    }]);
+  }
+
   public onDrawerButtonTap(): void {
     this.drawerComponent.sideDrawer.showDrawer();
   }
@@ -196,7 +206,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       title: "Select Your Birthday",
       theme: "dark",
       maxDate: new Date(new Date().getFullYear(), 11, 31),
-      startingDate: this.selectedTaxObj && this.selectedTaxObj.date ? moment(this.selectedTaxObj.date, 'DD-MM-YYYY').toDate() :  moment().format('DD-MM-YYYY')
+      startingDate: this.selectedTaxObj && this.selectedTaxObj.date ? moment(this.selectedTaxObj.date, 'DD-MM-YYYY').toDate() : moment().format('DD-MM-YYYY')
     }).then((result) => {
       let date = `${result.day}-${result.month}-${result.year}`
       this.taxForm.get('date').patchValue(date);
@@ -236,7 +246,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       date: dataToSave.date
     }];
 
-    console.log('Update Tax Request: ',JSON.stringify(this.selectedTaxObj));
+    console.log('Update Tax Request: ', JSON.stringify(this.selectedTaxObj));
     this.store.dispatch(this._settingsTaxesActions.UpdateTax(dataToSave));
   }
 
