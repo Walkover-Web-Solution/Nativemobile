@@ -1,15 +1,13 @@
-import { Injectable } from '@angular/core';
-import { Actions, Effect } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
-import { AppState } from '~/store';
-import { Observable } from 'rxjs/Observable';
-import { BaseResponse } from '../../../models/api-models/BaseResponse';
-import { Router } from '@angular/router';
-import { SettingsProfileService } from '../../../services/settings.profile.service';
-import { SmsKeyClass } from '../../../models/api-models/SettingsIntegraion';
-import { SettingsTaxesService } from '../../../services/settings.taxes.service';
-import { CustomActions } from '../../../store/customActions';
-import { SettingsTaxesConstants } from '~/actions/settings/taxes/settings.taxes.const';
+import {Injectable} from '@angular/core';
+import {Actions, Effect} from '@ngrx/effects';
+import {Store} from '@ngrx/store';
+import {AppState} from '~/store';
+import {Observable} from 'rxjs/Observable';
+import {BaseResponse} from '../../../models/api-models/BaseResponse';
+import {Router} from '@angular/router';
+import {SettingsTaxesService} from '../../../services/settings.taxes.service';
+import {CustomActions} from '../../../store/customActions';
+import {SettingsTaxesConstants} from '~/actions/settings/taxes/settings.taxes.const';
 import * as dialogs from "ui/dialogs";
 
 @Injectable()
@@ -26,31 +24,28 @@ export class SettingsTaxesActions {
     .ofType(SettingsTaxesConstants.CREATE_TAX_RESPONSE)
     .map((response: CustomActions) => {
       let data: BaseResponse<any, any> = response.payload;
-      console.log('response', JSON.stringify(data));
+      if (data.status === 'error') {
+        dialogs.alert(data.message);
+      }
+      return {type: 'EmptyAction'};
+    });
+
+  @Effect()
+  public UpdateTax$: Observable<CustomActions> = this.action$
+    .ofType(SettingsTaxesConstants.UPDATE_TAX)
+    .switchMap((action: CustomActions) => this.settingsTaxesService.UpdateTax(action.payload, action.payload.uniqueName))
+    .map(response => this.UpdateTaxResponse(response));
+
+  @Effect()
+  public UpdateTaxResponse$: Observable<CustomActions> = this.action$
+    .ofType(SettingsTaxesConstants.UPDATE_TAX_RESPONSE)
+    .map((response: CustomActions) => {
+      let data: BaseResponse<any, any> = response.payload;
       if (data.status === 'error') {
         dialogs.alert(data.message);
       }
       return { type: 'EmptyAction' };
     });
-
-  // @Effect()
-  // public UpdateTax$: Observable<Action> = this.action$
-  //   .ofType(SettingsTaxesConstants.UPDATE_TAX)
-  //   .switchMap((action: CustomActions) => {
-  //     return this.settingsTaxesService.UpdateTax(action.payload, action.payload.uniqueName)
-  //       .map(response => this.UpdateTaxResponse(response));
-  //   });
-
-  // @Effect()
-  // public UpdateTaxResponse$: Observable<Action> = this.action$
-  //   .ofType(SettingsTaxesConstants.UPDATE_TAX_RESPONSE)
-  //   .map((response: CustomActions) => {
-  //     let data: BaseResponse<any, any> = response.payload;
-  //     if (data.status === 'error') {
-  //       console.log(data.message);
-  //     }
-  //     return { type: 'EmptyAction' };
-  //   });
 
   // @Effect()
   // public DeleteTax$: Observable<Action> = this.action$
@@ -72,9 +67,9 @@ export class SettingsTaxesActions {
   //   });
 
   constructor(private action$: Actions,
-    private router: Router,
-    private store: Store<AppState>,
-    private settingsTaxesService: SettingsTaxesService) {
+              private router: Router,
+              private store: Store<AppState>,
+              private settingsTaxesService: SettingsTaxesService) {
   }
 
   public CreateTax(value): CustomActions {
@@ -122,6 +117,12 @@ export class SettingsTaxesActions {
   public ResetCreateTaxUi(): CustomActions {
     return {
       type: SettingsTaxesConstants.RESET_CREATE_TAX_UI_FLAGS
+    }
+  }
+
+  public ResetUpdateTaxUi(): CustomActions {
+    return {
+      type: SettingsTaxesConstants.RESET_UPDATE_TAX_UI_FLAGS
     }
   }
 

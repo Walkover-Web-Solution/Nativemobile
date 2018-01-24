@@ -39,7 +39,7 @@ export class SettingsTaxesService {
   public UpdateTax(model, taxUniqueName: string): Observable<BaseResponse<any, any>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.put(this.config.apiUrl + COMPANY_API.TAX.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)) + '/' + taxUniqueName, model).map((res) => {
+    return this._http.put(config.config.ApiUrl + COMPANY_API.TAX.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)) + '/' + taxUniqueName, model).map((res) => {
       let data: BaseResponse<any, any> = res.json();
       data.request = model;
       return data;

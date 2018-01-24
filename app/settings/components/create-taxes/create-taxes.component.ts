@@ -50,6 +50,8 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
   @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
   public isCreateTaxInProcess$: Observable<boolean>;
   public isCreateTaxSuccess$: Observable<boolean>;
+  public isUpdateTaxInProcess$: Observable<boolean>;
+  public isUpdateTaxSuccess$: Observable<boolean>;
   public flattenAccountsStream$: Observable<IFlattenAccountsResultItem[]>;
   public flatternAccountList: ValueList<string>;
   public selectedTaxObj: TaxResponse;
@@ -88,11 +90,14 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
     this.taxList$ = this.store.select(p => p.company.taxes).takeUntil(this.destroyed$);
     this.isCreateTaxInProcess$ = this.store.select(s => s.company.isCreateTaxInProcess).takeUntil(this.destroyed$);
     this.isCreateTaxSuccess$ = this.store.select(s => s.company.isCreateTaxSuccess).takeUntil(this.destroyed$);
+    this.isUpdateTaxInProcess$ = this.store.select(s => s.company.isUpdateTaxInProcess).takeUntil(this.destroyed$);
+    this.isUpdateTaxSuccess$ = this.store.select(s => s.company.isUpdateTaxSuccess).takeUntil(this.destroyed$);
     this.flattenAccountsStream$ = this.store.select(s => s.general.flattenAccounts).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   public ngOnInit() {
+    this.selectedTaxObj = null;
     this.store.dispatch(this._generalActinos.getFlattenAccount());
 
     this.taxTypeList = new ValueList(taxesType);
@@ -120,6 +125,13 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
         this.store.dispatch(this._settingsTaxesActions.ResetCreateTaxUi());
       }
     });
+    this.isUpdateTaxSuccess$.subscribe(s => {
+      if (s) {
+        this.selectedTaxObj = null;
+        this.routerExtensions.navigate(['taxes']);
+        this.store.dispatch(this._settingsTaxesActions.ResetUpdateTaxUi());
+      }
+    })
   }
 
   public ngAfterViewInit() {
@@ -183,7 +195,8 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
     picker.pickDate({
       title: "Select Your Birthday",
       theme: "dark",
-      maxDate: new Date(new Date().getFullYear(), 11, 31)
+      maxDate: new Date(new Date().getFullYear(), 11, 31),
+      startingDate: this.selectedTaxObj && this.selectedTaxObj.date ? moment(this.selectedTaxObj.date, 'DD-MM-YYYY').toDate() :  moment().format('DD-MM-YYYY')
     }).then((result) => {
       let date = `${result.day}-${result.month}-${result.year}`
       this.taxForm.get('date').patchValue(date);
@@ -198,17 +211,33 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    let dataToSave = this.taxForm.value;
+    if (!this.selectedTaxObj) {
+      let dataToSave = this.taxForm.value;
 
+      dataToSave.taxDetail = [{
+        taxValue: dataToSave.taxValue,
+        date: dataToSave.date
+      }];
+
+      dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxType);
+      dataToSave.accounts = dataToSave.taxType === 'others' ? dataToSave.accounts : [];
+
+      this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
+    } else {
+      this.update();
+    }
+  }
+
+  public update() {
+    let dataToSave = this.taxForm.value;
+    dataToSave.uniqueName = this.selectedTaxObj.uniqueName;
     dataToSave.taxDetail = [{
       taxValue: dataToSave.taxValue,
       date: dataToSave.date
     }];
 
-    dataToSave.taxType = this.taxTypeList.getValue(dataToSave.taxType);
-    dataToSave.accounts = dataToSave.taxType === 'others' ? dataToSave.accounts : [];
-
-    this.store.dispatch(this._settingsTaxesActions.CreateTax(dataToSave));
+    console.log('Update Tax Request: ',JSON.stringify(this.selectedTaxObj));
+    this.store.dispatch(this._settingsTaxesActions.UpdateTax(dataToSave));
   }
 
   public ngOnDestroy() {
