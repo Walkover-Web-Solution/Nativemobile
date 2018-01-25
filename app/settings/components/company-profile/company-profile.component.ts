@@ -14,6 +14,8 @@ import { ValueList } from 'nativescript-drop-down';
 import { NsDropDownOptions } from '~/models/other-models/HelperModels';
 import { IContriesWithCodes } from '~/shared/static-data/countryWithCodes';
 import { Page } from 'tns-core-modules/ui/page/page';
+import {SettingsProfileActions} from "~/actions/settings/profile/settings.profile.action";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'ns-company-profile',
@@ -33,7 +35,7 @@ export class CompanyProfileComponent implements OnInit {
   public stateSource: ValueList<string>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page) {
+  constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page, private _settingsProfileActions: SettingsProfileActions) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -71,12 +73,25 @@ export class CompanyProfileComponent implements OnInit {
       pincode: ['', Validators.required],
       address: [''],
       baseCurrency: [''],
-      isMultipleCurrency: ['']
+      isMultipleCurrency: [false]
+    });
+
+    this.stateStream$.subscribe(states => {
+      let statesArray: NsDropDownOptions[] = [];
+      if (states) {
+        states.forEach(stt => {
+          statesArray.push({ display: `${stt.code} - ${stt.name}`, value: stt.code });
+        });
+      }
+      this.stateSource = new ValueList(statesArray);
     });
 
     this.selectedCompany$.subscribe(s => {
       if (s) {
-        this.companyProfileForm.patchValue(s);
+        let objToFill = _.cloneDeep(s);
+
+        objToFill.state = this.stateSource.getIndex(objToFill.state);
+        this.companyProfileForm.patchValue(objToFill);
       }
     });
 
@@ -89,20 +104,14 @@ export class CompanyProfileComponent implements OnInit {
     //   }
     //   this.countrySource = new ValueList(cntArray);
     // });
-
-    this.stateStream$.subscribe(states => {
-      let statesArray: NsDropDownOptions[] = [];
-      if (states) {
-        states.forEach(stt => {
-          statesArray.push({ display: `${stt.code} - ${stt.name}`, value: stt.code });
-        });
-      }
-      this.stateSource = new ValueList(statesArray);
-    });
   }
 
   public get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;
+  }
+
+  public isMultipleCurrencyStatusChanged(arg) {
+    this.companyProfileForm.get('isMultipleCurrency').patchValue(arg);
   }
 
   public onDrawerButtonTap(): void {
@@ -110,7 +119,9 @@ export class CompanyProfileComponent implements OnInit {
   }
 
   public submit() {
-
+    let dataToSave = _.cloneDeep(this.companyProfileForm.value);
+    dataToSave.state = this.stateSource.getValue(dataToSave.state);
+    this.store.dispatch(this._settingsProfileActions.UpdateProfile(dataToSave));
   }
 
   public ngOnDestroy() {

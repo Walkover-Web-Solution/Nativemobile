@@ -1,10 +1,17 @@
-import { CustomActions } from '../customActions';
-import { VerifyEmailResponseModel, VerifyMobileResponseModel, VerifyMobileModel, VerifyEmailModel } from '../../models/api-models/loginModels';
-import { LoginConstants } from '../../actions/login/login.const';
-import { BaseResponse } from '../../models/api-models/BaseResponse';
-import { LoginWithPassword } from '../../models/api-models/Login';
-import { CompanyResponse, StateDetailsResponse, TaxResponse } from '../../models/api-models/Company';
-import { CompanyConstants } from '~/actions/company/company.const';
+import {CustomActions} from '../customActions';
+import {
+  VerifyEmailModel,
+  VerifyEmailResponseModel,
+  VerifyMobileModel,
+  VerifyMobileResponseModel
+} from '../../models/api-models/loginModels';
+import {LoginConstants} from '../../actions/login/login.const';
+import {BaseResponse} from '../../models/api-models/BaseResponse';
+import {LoginWithPassword} from '../../models/api-models/Login';
+import {CompanyResponse, StateDetailsResponse} from '../../models/api-models/Company';
+import {CompanyConstants} from '~/actions/company/company.const';
+import {SettingsProfileConstants} from "~/actions/settings/profile/settings.profile.const";
+import * as _ from 'lodash';
 
 export enum userLoginStateEnum {
   notLoggedIn,
@@ -18,6 +25,8 @@ export interface SessionState {
   companies: CompanyResponse[];
   lastState: string;
   userLoginState: userLoginStateEnum;
+  isUpdateCompanyProfileInProcess: boolean;
+  isUpdateCompanyProfileSuccess: boolean;
 }
 
 const initialState: SessionState = {
@@ -25,8 +34,10 @@ const initialState: SessionState = {
   companyUniqueName: '',
   companies: [],
   lastState: '',
-  userLoginState: userLoginStateEnum.notLoggedIn
-}
+  userLoginState: userLoginStateEnum.notLoggedIn,
+  isUpdateCompanyProfileInProcess: false,
+  isUpdateCompanyProfileSuccess: false
+};
 
 export function SessionReducer(state: SessionState = initialState, action: CustomActions): SessionState {
   switch (action.type) {
@@ -113,6 +124,36 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
       }
       return state;
     }
+
+    //region Update Company Profile
+    case SettingsProfileConstants.UPDATE_PROFILE: {
+      return Object.assign({}, state, {
+        isUpdateCompanyProfileInProcess: true
+      });
+
+    }
+    case SettingsProfileConstants.UPDATE_PROFILE_RESPONSE: {
+      let company: BaseResponse<CompanyResponse, any> = action.payload;
+      if (company.status === 'success') {
+        let allCompanies = _.cloneDeep(state.companies);
+        allCompanies = allCompanies.map(ac => {
+          if (ac.uniqueName === company.body.uniqueName) {
+            return company;
+          }
+          return ac;
+        });
+        return Object.assign({}, state, {
+          companies: allCompanies,
+          isUpdateCompanyProfileInProcess: false,
+          isUpdateCompanyProfileSuccess: true
+        });
+      }
+      return Object.assign({}, state, {
+        isUpdateCompanyProfileInProcess: false,
+        isUpdateCompanyProfileSuccess: false
+      });
+    }
+    //endregion
 
     case CompanyConstants.CHANGE_COMPANY_RESPONSE: {
       let stateData: BaseResponse<StateDetailsResponse, string> = action.payload;

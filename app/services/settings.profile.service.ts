@@ -8,6 +8,9 @@ import { SmsKeyClass } from '../models/api-models/SettingsIntegraion';
 import { SETTINGS_PROFILE_API } from './apiurls/settings.profile.api';
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
+import {CompanyResponse} from "~/models/api-models/Company";
+
+let config = require('../config/config');
 
 @Injectable()
 export class SettingsProfileService {
@@ -35,13 +38,13 @@ export class SettingsProfileService {
   /**
    * Update company profile
    */
-  public UpdateProfile(model): Observable<BaseResponse<any, any>> {
+  public UpdateProfile(model): Observable<BaseResponse<CompanyResponse, any>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.put(this.config.apiUrl + SETTINGS_PROFILE_API.GET.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), model).map((res) => {
-      let data: BaseResponse<any, any> = res.json();
+    return this._http.put(config.config.ApiUrl + SETTINGS_PROFILE_API.GET.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), model).map((res) => {
+      let data: BaseResponse<CompanyResponse, any> = res.json();
       data.request = model;
       return data;
-    }).catch((e) => this.errorHandler.HandleCatch<any, any>(e, model));
+    }).catch((e) => this.errorHandler.HandleCatch<CompanyResponse, any>(e, model));
   }
 }

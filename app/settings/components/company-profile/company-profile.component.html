@@ -81,12 +81,15 @@
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
               <Label color="#59595B" text="Currency"></Label>
-              <DropDown backroundColor="red" formControlName="baseCurrency" marginTop="15" [hint]="'Select'" verticalAlignment="bottom"
-                [items]='[1,2,3,4]'></DropDown>
+              <TextField hint="currency" formControlName="baseCurrency" [text]=""></TextField>
+
+              <!--<DropDown backroundColor="red" formControlName="baseCurrency" marginTop="15" [hint]="'Select'" verticalAlignment="bottom"-->
+                <!--[items]='[1,2,3,4]'></DropDown>-->
             </StackLayout>
 
             <StackLayout width="50%" verticalAlignment="bottom">
-              <CheckBox #elem text="Multicurrency" formControlName="isMultipleCurrency" [checked]="true"></CheckBox>
+              <CheckBox #elem text="Multicurrency" [checked]="companyProfileForm.get('isMultipleCurrency').value"
+                        (checkedChange)="elem.checked === !elem.checked; isMultipleCurrencyStatusChanged(elem.checked)"></CheckBox>
             </StackLayout>
           </StackLayout>
 
