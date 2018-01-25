@@ -1,7 +1,6 @@
 import { IExpensesChartClosingBalanceResponse, IRevenueChartClosingBalanceResponse, ChartFilterType, ChartType } from "~/models/interfaces/dashboard.interface";
 import { CustomActions } from "~/store/customActions";
 import { DashboardConst } from "~/actions/dashboard/dashboard.const";
-import * as _ from 'lodash';
 
 export interface DashboardState {
   expensesChart: IExpensesChartClosingBalanceResponse;

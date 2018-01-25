@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {RouterExtensions} from "nativescript-angular";
 
 @Component({
   selector: 'ns-reports',
@@ -7,7 +8,11 @@ import { Component } from '@angular/core';
 })
 
 export class ReportsComponent {
-  constructor() {
+  constructor(private _routerExtension: RouterExtensions) {
 
+  }
+
+  goBack() {
+    this._routerExtension.back();
   }
 }

@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import {
   ChartFilterType,
   ChartType,
-  IChildGroups,
+  IChildGroups, IProfitLossChartResponse,
   IRevenueChartClosingBalanceResponse
 } from '~/models/interfaces/dashboard.interface';
 import {AccountChartDataLastCurrentYear} from '~/models/view-models/AccountChartDataLastCurrentYear';
@@ -15,19 +15,21 @@ import {INameUniqueName} from '~/models/interfaces/nameUniqueName.interface';
 import {DashboardActions} from '~/actions/dashboard/dashboard.action';
 import {Page} from 'tns-core-modules/ui/page/page';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {ReportsAction} from "~/actions/reports/reports.action";
 
 @Component({
-  selector: 'ns-revenue-chart,[ns-revenue-chart]',
+  selector: 'ns-pl-chart,[ns-pl-chart]',
   moduleId: module.id,
-  templateUrl: `./revenue.component.html`,
-  styleUrls: ["./revenue.component.scss"]
+  templateUrl: `./pl-chart.component.html`,
+  styleUrls: ["./pl-chart.component.scss"]
 })
-export class RevenueChartComponent implements OnInit, OnDestroy {
+export class PlChartComponent implements OnInit, OnDestroy {
   public chartType: ChartType = ChartType.Revenue;
   public requestInFlight: boolean;
   public activeYearAccounts: IChildGroups[] = [];
   public lastYearAccounts: IChildGroups[] = [];
   public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
+  public profitLossData$: Observable<IProfitLossChartResponse>;
   public accountStrings: AccountChartDataLastCurrentYear[] = [];
   public activeYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
   public lastYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
@@ -41,10 +43,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public activeYearChartFormatedDate: string;
   public lastYearChartFormatedDate: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
-    this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
 
-    this.chartFilterType$ = this.store.select(p => p.dashboard.revenueChartFilter).takeUntil(this.destroyed$);
+  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page, private _reportActions: ReportsAction) {
+    this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
+    this.profitLossData$ = this.store.select(p => p.report.profitLossChart).takeUntil(this.destroyed$);
+
+    this.chartFilterType$ = this.store.select(p => p.report.profitLossChartFilter).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
@@ -110,11 +114,11 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     let lastAccounts = [];
 
     this.accountStrings.forEach(p => {
-      activeAccounts.push({ name: p.name, amount: p.activeYear });
+      activeAccounts.push({name: p.name, amount: p.activeYear});
     });
 
     this.accountStrings.forEach(p => {
-      lastAccounts.push({ name: p.name, amount: p.lastYear });
+      lastAccounts.push({name: p.name, amount: p.lastYear});
     });
 
     while (this.activeYearAccountsRanks.length) {
@@ -135,7 +139,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public generateActiveYearString(): INameUniqueName[] {
     let activeStrings: INameUniqueName[] = [];
     this.activeYearAccounts.map(acc => {
-      activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+      activeStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
     });
     return activeStrings;
   }
@@ -143,15 +147,15 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public generateLastYearString(): INameUniqueName[] {
     let lastStrings: INameUniqueName[] = [];
     this.lastYearAccounts.map(acc => {
-      lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+      lastStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
     });
     return lastStrings;
   }
 
   public fetchChartData() {
     this.requestInFlight = true;
-    this.store.dispatch(this._dashboardActions.getRevenueChartDataActiveYear(false));
-    this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(false));
+    this.store.dispatch(this._reportActions.getProfitLossChartActiveYear(false));
+    this.store.dispatch(this._reportActions.getProfitLossChartLastYear(false));
   }
 
   public calculatePieChartPer(t) {

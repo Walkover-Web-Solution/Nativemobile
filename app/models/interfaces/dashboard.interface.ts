@@ -1,6 +1,6 @@
-import { INameUniqueName } from './nameUniqueName.interface';
-import { IClosingBalance, IForwardBalance } from './ledger.interface';
-import { ClosingBalanceResponse } from '../api-models/Dashboard';
+import {INameUniqueName} from './nameUniqueName.interface';
+import {IClosingBalance, IForwardBalance} from './ledger.interface';
+import {ClosingBalanceResponse} from '../api-models/Dashboard';
 
 export interface IPeriodBalances {
   periodBalances: IPeriodBalancesitem[];
@@ -78,6 +78,13 @@ export interface IRevenueChartClosingBalanceResponse {
   otherincomeLastyear?: ClosingBalanceResponse;
 }
 
+export interface IProfitLossChartResponse {
+  lable?: IChartLabelType;
+  chartTitle?: string;
+  profitLossActiveYear?: any[],
+  profitLossLastYear?: any[]
+}
+
 export class IComparisionChartResponse {
   // Referesh
   public refresh?: boolean;
@@ -129,6 +136,7 @@ export interface IBankAccount {
   linkedAccount: INameUniqueName;
   name: string;
 }
+
 let cost = {
   // revenue
   revenueActiveYear: [],
@@ -187,7 +195,8 @@ export enum ChartFilterType {
 
 export enum ChartType {
   Revenue,
-  Expense
+  Expense,
+  ProfitLoss
 }
 
 export interface IChartLabelType {
