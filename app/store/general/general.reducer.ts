@@ -1,11 +1,11 @@
-import { MyDrawerItem } from "~/shared/my-drawer-item/my-drawer-item";
-import { CustomActions } from "~/store/customActions";
-import { IContriesWithCodes } from "~/shared/static-data/countryWithCodes";
-import { GeneralConst } from "~/actions/general/general.const";
-import { States } from "~/models/api-models/Company";
-import { BaseResponse } from "~/models/api-models/BaseResponse";
-import { IFlattenAccountsResultItem } from "~/models/interfaces/flattenAccountsResultItem.interface";
-import { FlattenAccountsResponse } from "~/models/api-models/Account";
+import {MyDrawerItem} from "~/shared/my-drawer-item/my-drawer-item";
+import {CustomActions} from "~/store/customActions";
+import {IContriesWithCodes} from "~/shared/static-data/countryWithCodes";
+import {GeneralConst} from "~/actions/general/general.const";
+import {States} from "~/models/api-models/Company";
+import {BaseResponse} from "~/models/api-models/BaseResponse";
+import {IFlattenAccountsResultItem} from "~/models/interfaces/flattenAccountsResultItem.interface";
+import {FlattenAccountsResponse} from "~/models/api-models/Account";
 
 const initialNavObj: MyDrawerItem[] = [
   {
@@ -66,19 +66,142 @@ const initialNavObj: MyDrawerItem[] = [
   } as MyDrawerItem,
 ];
 
+const initialCurrenciesData: string[] = [
+  "USD",
+  "CAD",
+  "EUR",
+  "AED",
+  "AFN",
+  "ALL",
+  "AMD",
+  "ARS",
+  "AUD",
+  "AZN",
+  "BAM",
+  "BDT",
+  "BGN",
+  "BHD",
+  "BIF",
+  "BND",
+  "BOB",
+  "BRL",
+  "BWP",
+  "BYR",
+  "BZD",
+  "CDF",
+  "CHF",
+  "CLP",
+  "CNY",
+  "COP",
+  "CRC",
+  "CVE",
+  "CZK",
+  "DJF",
+  "DKK",
+  "DOP",
+  "DZD",
+  "EEK",
+  "EGP",
+  "ERN",
+  "ETB",
+  "GBP",
+  "GEL",
+  "GHS",
+  "GNF",
+  "GTQ",
+  "HKD",
+  "HNL",
+  "HRK",
+  "HUF",
+  "IDR",
+  "ILS",
+  "INR",
+  "IQD",
+  "IRR",
+  "ISK",
+  "JMD",
+  "JOD",
+  "JPY",
+  "KES",
+  "KHR",
+  "KMF",
+  "KRW",
+  "KWD",
+  "KZT",
+  "LBP",
+  "LKR",
+  "LTL",
+  "LVL",
+  "LYD",
+  "MAD",
+  "MDL",
+  "MGA",
+  "MKD",
+  "MMK",
+  "MOP",
+  "MUR",
+  "MXN",
+  "MYR",
+  "MZN",
+  "NAD",
+  "NGN",
+  "NIO",
+  "NOK",
+  "NPR",
+  "NZD",
+  "OMR",
+  "PAB",
+  "PEN",
+  "PHP",
+  "PKR",
+  "PLN",
+  "PYG",
+  "QAR",
+  "RON",
+  "RSD",
+  "RUB",
+  "RWF",
+  "SAR",
+  "SDG",
+  "SEK",
+  "SGD",
+  "SOS",
+  "SYP",
+  "THB",
+  "TND",
+  "TOP",
+  "TRY",
+  "TTD",
+  "TWD",
+  "TZS",
+  "UAH",
+  "UGX",
+  "UYU",
+  "UZS",
+  "VEF",
+  "VND",
+  "XAF",
+  "XOF",
+  "YER",
+  "ZAR",
+  "ZMK"
+];
+
 export interface GeneralState {
   navDrawerObj: MyDrawerItem[];
   contriesWithCodes: IContriesWithCodes[];
   flattenAccounts: IFlattenAccountsResultItem[];
   states: States[];
+  currencies: string[];
 }
 
 const initialState: GeneralState = {
   navDrawerObj: initialNavObj,
   contriesWithCodes: [],
   states: null,
-  flattenAccounts: null
-}
+  flattenAccounts: null,
+  currencies: initialCurrenciesData
+};
 
 export function GeneralReducer(state: GeneralState = initialState, action: CustomActions): GeneralState {
   switch (action.type) {

@@ -5,8 +5,8 @@
     </Button>
     <Label row="0" col="1" class="action-bar-title" text="Currencies" horizontalAlignment="center"></Label>
 
-    <Button class="button" row="0" col="2" textAlignment="center" text="Save">
-    </Button>
+    <!--<Button class="button" row="0" col="2" textAlignment="center" text="Save">-->
+    <!--</Button>-->
   </GridLayout>
 </ActionBar>
 
@@ -24,16 +24,16 @@
     <CardView margin="10" elevation="40" radius="1">
       <GridLayout rows="auto, *">
 
-        <ListView row="1" [items]="items" class="list-group">
+        <ListView row="1" [items]="currenciesStream$ | async" class="list-group">
           <ng-template let-item="item" let-i="index">
             <StackLayout>
-              <Label class="list-group-item" text="{{ item.shortName }} - {{ item.name }}" textWrap="true"></Label>
+              <Label class="list-group-item" text="{{ item }}" textWrap="true"></Label>
             </StackLayout>
           </ng-template>
         </ListView>
 
-        <FAB row="1" icon="~/assets/image/ic_add_white.png" backgroundColor="#514FA1"
-          rippleColor="#ff4081" class="fab-button" (tap)="createCurrencies()"></FAB>
+        <!--<FAB row="1" icon="~/assets/image/ic_add_white.png" backgroundColor="#514FA1"-->
+          <!--rippleColor="#ff4081" class="fab-button" (tap)="createCurrencies()"></FAB>-->
 
       </GridLayout>
     </CardView>

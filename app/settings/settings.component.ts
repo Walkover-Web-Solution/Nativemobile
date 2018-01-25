@@ -29,4 +29,8 @@ export class SettingsComponent {
       this.routerExtensions.navigate([item.path]);
     }
   }
+
+  public goBack() {
+    this.routerExtensions.back();
+  }
 }

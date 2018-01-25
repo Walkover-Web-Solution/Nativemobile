@@ -81,10 +81,10 @@
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
               <Label color="#59595B" text="Currency"></Label>
-              <TextField hint="currency" formControlName="baseCurrency" [text]=""></TextField>
+              <!--<TextField hint="currency" formControlName="baseCurrency" [text]=""></TextField>-->
 
-              <!--<DropDown backroundColor="red" formControlName="baseCurrency" marginTop="15" [hint]="'Select'" verticalAlignment="bottom"-->
-                <!--[items]='[1,2,3,4]'></DropDown>-->
+              <DropDown backroundColor="red" formControlName="baseCurrency" marginTop="15" [hint]="'Select'" verticalAlignment="bottom"
+                [items]='currenciesSource'></DropDown>
             </StackLayout>
 
             <StackLayout width="50%" verticalAlignment="bottom">

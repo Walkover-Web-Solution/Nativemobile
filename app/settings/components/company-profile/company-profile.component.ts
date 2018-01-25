@@ -36,7 +36,9 @@ export class CompanyProfileComponent implements OnInit {
   public isUpdateCompanyProfileSuccess$: Observable<boolean>;
   public countrySource: ValueList<string>;
   public stateStream$: Observable<States[]>;
+  public currenciesStream$: Observable<string[]>;
   public stateSource: ValueList<string>;
+  public currenciesSource: ValueList<string>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page, private _settingsProfileActions: SettingsProfileActions,
@@ -65,6 +67,7 @@ export class CompanyProfileComponent implements OnInit {
     })).takeUntil(this.destroyed$);
     this.isUpdateCompanyProfileInProcess$ = this.store.select(state => state.session.isUpdateCompanyProfileInProcess).takeUntil(this.destroyed$);
     this.isUpdateCompanyProfileSuccess$ = this.store.select(state => state.session.isUpdateCompanyProfileSuccess).takeUntil(this.destroyed$);
+    this.currenciesStream$ = this.store.select(state => state.general.currencies).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
@@ -93,11 +96,22 @@ export class CompanyProfileComponent implements OnInit {
       this.stateSource = new ValueList(statesArray);
     });
 
+    this.currenciesStream$.subscribe(curr => {
+      let currenciesArray: NsDropDownOptions[] = [];
+      if (curr) {
+        curr.forEach(stt => {
+          currenciesArray.push({ display: stt, value: stt });
+        });
+      }
+      this.currenciesSource = new ValueList(currenciesArray);
+    });
+
     this.selectedCompany$.subscribe(s => {
       if (s) {
         let objToFill = _.cloneDeep(s);
 
         objToFill.state = this.stateSource.getIndex(objToFill.state);
+        objToFill.baseCurrency = this.currenciesSource.getIndex(objToFill.baseCurrency);
         this.companyProfileForm.patchValue(objToFill);
       }
     });
@@ -143,6 +157,7 @@ export class CompanyProfileComponent implements OnInit {
   public submit() {
     let dataToSave = _.cloneDeep(this.companyProfileForm.value);
     dataToSave.state = this.stateSource.getValue(dataToSave.state);
+    dataToSave.baseCurrency = this.currenciesSource.getValue(dataToSave.baseCurrency);
     this.store.dispatch(this._settingsProfileActions.UpdateProfile(dataToSave));
   }
 
