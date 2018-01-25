@@ -138,7 +138,7 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
         let allCompanies = _.cloneDeep(state.companies);
         allCompanies = allCompanies.map(ac => {
           if (ac.uniqueName === company.body.uniqueName) {
-            return company;
+            return company.body;
           }
           return ac;
         });
@@ -148,6 +148,13 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
           isUpdateCompanyProfileSuccess: true
         });
       }
+      return Object.assign({}, state, {
+        isUpdateCompanyProfileInProcess: false,
+        isUpdateCompanyProfileSuccess: false
+      });
+    }
+
+    case SettingsProfileConstants.RESET_UPDATE_PROFILE_UI_FLAGS: {
       return Object.assign({}, state, {
         isUpdateCompanyProfileInProcess: false,
         isUpdateCompanyProfileSuccess: false

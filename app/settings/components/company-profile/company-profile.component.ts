@@ -16,6 +16,8 @@ import { IContriesWithCodes } from '~/shared/static-data/countryWithCodes';
 import { Page } from 'tns-core-modules/ui/page/page';
 import {SettingsProfileActions} from "~/actions/settings/profile/settings.profile.action";
 import * as _ from 'lodash';
+import {LoaderService} from "~/services/loader.service";
+import {RouterExtensions} from "nativescript-angular/router";
 
 @Component({
   selector: 'ns-company-profile',
@@ -30,12 +32,15 @@ export class CompanyProfileComponent implements OnInit {
   public selectedCompany$: Observable<CompanyResponse>;
   public companyProfileForm: FormGroup;
   public countrySourceStream$: Observable<IContriesWithCodes[]>;
+  public isUpdateCompanyProfileInProcess$: Observable<boolean>;
+  public isUpdateCompanyProfileSuccess$: Observable<boolean>;
   public countrySource: ValueList<string>;
   public stateStream$: Observable<States[]>;
   public stateSource: ValueList<string>;
   private _sideDrawerTransition: DrawerTransitionBase;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page, private _settingsProfileActions: SettingsProfileActions) {
+  constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page, private _settingsProfileActions: SettingsProfileActions,
+              private _loaderService: LoaderService, private routerExtensions: RouterExtensions) {
     this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
       for (const iterator of p) {
         if (iterator.router) {
@@ -49,8 +54,8 @@ export class CompanyProfileComponent implements OnInit {
       return p;
     });
 
-    this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes);
-    this.stateStream$ = this.store.select(s => s.general.states);
+    this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes).takeUntil(this.destroyed$);
+    this.stateStream$ = this.store.select(s => s.general.states).takeUntil(this.destroyed$);
     this.selectedCompany$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
       if (!companies) {
         return;
@@ -58,6 +63,8 @@ export class CompanyProfileComponent implements OnInit {
 
       return companies.find(cmp => cmp.uniqueName === uniqueName);
     })).takeUntil(this.destroyed$);
+    this.isUpdateCompanyProfileInProcess$ = this.store.select(state => state.session.isUpdateCompanyProfileInProcess).takeUntil(this.destroyed$);
+    this.isUpdateCompanyProfileSuccess$ = this.store.select(state => state.session.isUpdateCompanyProfileSuccess).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
@@ -92,6 +99,21 @@ export class CompanyProfileComponent implements OnInit {
 
         objToFill.state = this.stateSource.getIndex(objToFill.state);
         this.companyProfileForm.patchValue(objToFill);
+      }
+    });
+
+    this.isUpdateCompanyProfileInProcess$.subscribe(ss => {
+      if (ss) {
+        this._loaderService.showLoader('Updating Profile..');
+      } else {
+        this._loaderService.hideLoader();
+      }
+    });
+
+    this.isUpdateCompanyProfileSuccess$.subscribe(ss => {
+      if (ss) {
+        this.store.dispatch(this._settingsProfileActions.ResetUpdateProfileFlag());
+        this.routerExtensions.back();
       }
     });
 

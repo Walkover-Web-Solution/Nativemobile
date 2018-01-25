@@ -51,4 +51,10 @@ export class SettingsProfileActions {
       payload: value
     };
   }
+
+  public ResetUpdateProfileFlag(): CustomActions {
+    return {
+      type: SettingsProfileConstants.RESET_UPDATE_PROFILE_UI_FLAGS
+    };
+  }
 }
