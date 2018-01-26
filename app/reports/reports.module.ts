@@ -1,13 +1,13 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 // nativescript
-import { NativeScriptFormsModule } from 'nativescript-angular/forms';
-import { NativeScriptCommonModule } from "nativescript-angular/common";
+import {NativeScriptFormsModule} from 'nativescript-angular/forms';
+import {NativeScriptCommonModule} from "nativescript-angular/common";
 
-import { SharedModule } from './../shared/shared.module';
-import { ReportsComponent } from '~/reports/reports.component';
-import { ReportsRoutingModule } from '~/reports/reports.routing.module';
+import {SharedModule} from '~/shared/shared.module';
+import {ReportsComponent} from '~/reports/reports.component';
+import {ReportsRoutingModule} from '~/reports/reports.routing.module';
+import {PlChartComponent} from "~/reports/components/pl-chart/pl-chart.component";
 
 
 @NgModule({
@@ -19,9 +19,10 @@ import { ReportsRoutingModule } from '~/reports/reports.routing.module';
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [ReportsComponent],
+  declarations: [ReportsComponent, PlChartComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]
 })
-export class ReportsModule { }
+export class ReportsModule {
+}

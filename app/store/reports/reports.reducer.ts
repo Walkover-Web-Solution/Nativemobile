@@ -13,7 +13,7 @@ const initialState: ReportState = {
     chartTitle: '', lable: {activeYearLabel: '', lastYearLabel: ''},
     profitLossActiveYear: null, profitLossLastYear: null
   },
-  profitLossChartFilter: ChartFilterType.ThisMonthToDate
+  profitLossChartFilter: ChartFilterType.LastMonth
 };
 
 export function ReportReducer(state: ReportState = initialState, action: CustomActions): ReportState {
@@ -24,7 +24,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       let data = action.payload as IProfitLossChartResponse;
       return Object.assign({}, state, {
         profitLossChart: Object.assign({}, state.profitLossChart, {
-          profitLossActiveYear: data.profitLossActiveYear,
+          profitLossActiveYear: processProfitLossData(data.profitLossActiveYear),
           chartTitle: data.chartTitle,
           lable: Object.assign({}, state.profitLossChart.lable, {
             activeYearLabel: data.lable.activeYearLabel
@@ -33,7 +33,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       });
     }
 
-    case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE: {
+    case ReportConst.PROFIT_LOSS_CHART.GET_PROFIT_LOSS_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE: {
       return Object.assign({}, state, {
         profitLossChart: {
           chartTitle: '', lable: {activeYearLabel: '', lastYearLabel: ''}, profitLossActiveYear: null,
@@ -42,11 +42,11 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       })
     }
 
-    case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE: {
+    case ReportConst.PROFIT_LOSS_CHART.GET_PROFIT_LOSS_CHART_DATA_LAST_YEAR_RESPONSE: {
       let data = action.payload as IProfitLossChartResponse;
       return Object.assign({}, state, {
         profitLossChart: Object.assign({}, state.profitLossChart, {
-          profitLossLastYear: data.profitLossLastYear,
+          profitLossLastYear: processProfitLossData(data.profitLossLastYear),
           chartTitle: data.chartTitle,
           lable: Object.assign({}, state.profitLossChart.lable, {
             lastYearLabel: data.lable.lastYearLabel
@@ -67,3 +67,13 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       return state;
   }
 }
+
+const processProfitLossData = (plData) => {
+  let monthlyBalances = [];
+  if (plData && plData.periodBalances) {
+    plData.periodBalances.forEach(pb => {
+      monthlyBalances.push(pb.monthlyBalance);
+    });
+  }
+  return monthlyBalances;
+};

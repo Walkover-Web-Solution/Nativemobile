@@ -25,7 +25,7 @@ export class DashboardService {
   public Dashboard(fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false): Observable<BaseResponse<DashboardResponse, string>> {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.get(this.config.apiUrl + DASHBOARD_API.DASHBOARD.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString())).map((res) => {
+    return this._http.get(config.config.ApiUrl + DASHBOARD_API.DASHBOARD.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString())).map((res) => {
       let data: BaseResponse<DashboardResponse, string> = res.json();
       data.queryString = { fromDate, toDate, interval, refresh };
       data.request = '';

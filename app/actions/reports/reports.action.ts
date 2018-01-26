@@ -72,7 +72,7 @@ export class ReportsAction {
       }
       else {
         let obj: IProfitLossChartResponse = {
-          profitLossActiveYear: [],
+          profitLossActiveYear: null,
           lable: {activeYearLabel: res[1].activeYear.lable},
           chartTitle: res[1].ChartTitle
         };
@@ -137,7 +137,7 @@ export class ReportsAction {
         };
       } else {
         let obj: IProfitLossChartResponse = {
-          profitLossLastYear: [],
+          profitLossLastYear: null,
           lable: {lastYearLabel: res[1].lastYear.lable},
           chartTitle: res[1].ChartTitle
         };

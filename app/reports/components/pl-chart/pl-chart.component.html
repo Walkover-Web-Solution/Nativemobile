@@ -24,33 +24,37 @@
       <Label text="{{ lastYearChartFormatedDate }}"></Label>
     </FlexboxLayout>
 
-    <StackLayout *ngIf="activeYearAccounts.length > 0 || lastYearAccounts.length > 0">
+    <!-- <StackLayout> -->
 
-      <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
-        <RadCartesianChartGrid tkCartesianGrid horizontalLinesVisible="true" horizontalStripLinesVisible="true" horizontalStrokeWidth="0.5"
-          horizontalStripLineColor="#fafafa, #fff"></RadCartesianChartGrid>
-        <CategoricalAxis tkCartesianHorizontalAxis labelFitMode="Rotate"></CategoricalAxis>
-        <LinearAxis tkCartesianVerticalAxis lineHidden="true" labelFormat="%.0f"></LinearAxis>
+    <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
+      <RadCartesianChartGrid tkCartesianGrid horizontalLinesVisible="true" horizontalStripLinesVisible="true" horizontalStrokeWidth="0.5"
+        horizontalStripLineColor="#fafafa, #fff">
+      </RadCartesianChartGrid>
+      <CategoricalAxis tkCartesianHorizontalAxis labelFitMode="Rotate">
+      </CategoricalAxis>
+      <LinearAxis tkCartesianVerticalAxis lineHidden="true" labelFormat="%.0f">
+      </LinearAxis>
 
-        <BarSeries seriesName="activeYearSeries" tkCartesianSeries [items]="activeYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name"
-          valueProperty="amount"></BarSeries>
-        <BarSeries seriesName="lastYearSeries" tkCartesianSeries [items]="lastYearAccountsRanks" selectionMode="DataPoint" categoryProperty="name"
-          valueProperty="amount"></BarSeries>
+      <BarSeries seriesName="activeSeries" tkCartesianSeries [items]="activeYearRanks" selectionMode="DataPoint" categoryProperty="label"
+        valueProperty="value">
+      </BarSeries>
+      <BarSeries seriesName="lastSeries" tkCartesianSeries [items]="lastYearRanks" selectionMode="DataPoint" categoryProperty="label"
+        valueProperty="value"></BarSeries>
 
-        <Palette tkCartesianPalette seriesName="activeYearSeries">
-          <PaletteEntry tkCartesianPaletteEntry fillColor="#4e9895" strokeWidth="0"></PaletteEntry>
-        </Palette>
+      <Palette tkCartesianPalette seriesName="activeSeries">
+        <PaletteEntry tkCartesianPaletteEntry fillColor="#4e9895" strokeWidth="0"></PaletteEntry>
+      </Palette>
 
-        <Palette tkCartesianPalette seriesName="lastYearSeries">
-          <PaletteEntry tkCartesianPaletteEntry fillColor="#3b8d8a" strokeWidth="0"></PaletteEntry>
-        </Palette>
+      <Palette tkCartesianPalette seriesName="lastSeries">
+        <PaletteEntry tkCartesianPaletteEntry fillColor="#3b8d8a" strokeWidth="0"></PaletteEntry>
+      </Palette>
 
-      </RadCartesianChart>
+    </RadCartesianChart>
 
-    </StackLayout>
+    <!-- </StackLayout> -->
 
     <ActivityIndicator *ngIf="requestInFlight" #activityIndicator [busy]="requestInFlight" width="100" height="100" class="activity-indicator"></ActivityIndicator>
-    <Label *ngIf="activeYearAccounts.length === 0 && lastYearAccounts.length === 0" text="No Data"></Label>
+    <Label *ngIf="activeYearData.length === 0 && lastYearData.length === 0" text="No Data"></Label>
   </StackLayout>
 
 </StackLayout>

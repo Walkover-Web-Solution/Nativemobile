@@ -1,21 +1,14 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ObservableArray} from 'tns-core-modules/data/observable-array/observable-array';
-import {AppState} from '~/store';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
+import { AppState } from '~/store';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { ChartFilterType, ChartType, IProfitLossChartResponse } from '~/models/interfaces/dashboard.interface';
+import { DashboardActions } from '~/actions/dashboard/dashboard.action';
+import { Page } from 'tns-core-modules/ui/page/page';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { ReportsAction } from "~/actions/reports/reports.action";
 import * as _ from 'lodash';
-import {
-  ChartFilterType,
-  ChartType,
-  IChildGroups, IProfitLossChartResponse,
-  IRevenueChartClosingBalanceResponse
-} from '~/models/interfaces/dashboard.interface';
-import {AccountChartDataLastCurrentYear} from '~/models/view-models/AccountChartDataLastCurrentYear';
-import {INameUniqueName} from '~/models/interfaces/nameUniqueName.interface';
-import {DashboardActions} from '~/actions/dashboard/dashboard.action';
-import {Page} from 'tns-core-modules/ui/page/page';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
-import {ReportsAction} from "~/actions/reports/reports.action";
 
 @Component({
   selector: 'ns-pl-chart,[ns-pl-chart]',
@@ -24,15 +17,13 @@ import {ReportsAction} from "~/actions/reports/reports.action";
   styleUrls: ["./pl-chart.component.scss"]
 })
 export class PlChartComponent implements OnInit, OnDestroy {
-  public chartType: ChartType = ChartType.Revenue;
+  public chartType: ChartType = ChartType.ProfitLoss;
   public requestInFlight: boolean;
-  public activeYearAccounts: IChildGroups[] = [];
-  public lastYearAccounts: IChildGroups[] = [];
-  public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
+  public activeYearData: number[] = [];
+  public lastYearData: number[] = [];
   public profitLossData$: Observable<IProfitLossChartResponse>;
-  public accountStrings: AccountChartDataLastCurrentYear[] = [];
-  public activeYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
-  public lastYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
+  public activeYearRanks: ObservableArray<{ label: string, value: number }> = new ObservableArray([]);
+  public lastYearRanks: ObservableArray<{ label: string, value: number }> = new ObservableArray([]);
   public activeYearGrandAmount: number = 0;
   public lastYearGrandAmount: number = 0;
   public activePieChartAmount: number = 0;
@@ -42,114 +33,87 @@ export class PlChartComponent implements OnInit, OnDestroy {
   public chartFilterTitle: string = 'Custom';
   public activeYearChartFormatedDate: string;
   public lastYearChartFormatedDate: string;
+  private monthsArray = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page, private _reportActions: ReportsAction) {
-    this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
+  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page, private _reportActions: ReportsAction, private cd: ChangeDetectorRef) {
     this.profitLossData$ = this.store.select(p => p.report.profitLossChart).takeUntil(this.destroyed$);
-
     this.chartFilterType$ = this.store.select(p => p.report.profitLossChartFilter).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   ngOnInit() {
     this.fetchChartData();
-    this.revenueChartData$.subscribe(rvn => {
-      // if (rvn) {
-      if (rvn && rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
-        let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
-        let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
-        let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
-        this.activeYearAccounts = groups;
+
+    this.profitLossData$.subscribe(pld => {
+      if (pld && pld.profitLossActiveYear) {
+        this.activeYearData = pld.profitLossActiveYear
       } else {
         this.resetActiveYearChartData();
       }
 
-      if (rvn && rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
-        let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
-        let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
-        let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
-        this.lastYearAccounts = lastAccounts;
+      if (pld && pld.profitLossLastYear) {
+        this.lastYearData = pld.profitLossLastYear
       } else {
         this.resetLastYearChartData();
       }
 
-      if (rvn && rvn.chartTitle) {
-        this.chartFilterTitle = rvn.chartTitle;
+      if (pld && pld.chartTitle) {
+        this.chartFilterTitle = pld.chartTitle;
       }
 
-      if (rvn && rvn.lable) {
-        this.activeYearChartFormatedDate = rvn.lable.activeYearLabel || '';
-        this.lastYearChartFormatedDate = rvn.lable.lastYearLabel || '';
+      if (pld && pld.lable) {
+        this.activeYearChartFormatedDate = pld.lable.activeYearLabel || '';
+        this.lastYearChartFormatedDate = pld.lable.lastYearLabel || '';
       }
 
       this.generateCharts();
       // }
       this.requestInFlight = false;
+      this.cd.detectChanges();
     });
+
   }
 
   public generateCharts() {
-    this.accountStrings = _.uniqBy(this.generateActiveYearString().concat(this.generateLastYearString()), 'uniqueName');
-    this.accountStrings.forEach((ac) => {
-      ac.activeYear = 0;
-      ac.lastYear = 0;
-      let index = -1;
-      index = _.findIndex(this.activeYearAccounts, (p) => p.uniqueName === ac.uniqueName);
-      if (index !== -1) {
-        ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
-      }
-      index = -1;
-      index = _.findIndex(this.lastYearAccounts, (p) => p.uniqueName === ac.uniqueName);
-      if (index !== -1) {
-        ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
-      }
+    let activeData = [];
+    let lastData = [];
+
+    this.monthsArray.forEach((ad, index) => {
+      activeData.push({ value: this.activeYearData[index] || 0, label: ad });
+      this.activeYearRanks.push({ value: this.activeYearData[index] || 0, label: ad });
+
+      lastData.push({ value: this.lastYearData[index] || 0, label: ad });
+      this.lastYearRanks.push({ value: this.lastYearData[index] || 0, label: ad });
     });
 
-    this.accountStrings = _.filter(this.accountStrings, (a) => {
-      return !(a.activeYear === 0 && a.lastYear === 0);
-    });
 
-    let activeAccounts = [];
-    let lastAccounts = [];
 
-    this.accountStrings.forEach(p => {
-      activeAccounts.push({name: p.name, amount: p.activeYear});
-    });
+    // this.activeYearData.forEach((ad, index) => {
+    //   activeData.push({label: this.monthsArray[index], value: ad});
+    // });
 
-    this.accountStrings.forEach(p => {
-      lastAccounts.push({name: p.name, amount: p.lastYear});
-    });
+    // this.lastYearData.forEach((ad, index) => {
+    //   lastData.push({label: this.monthsArray[index], value: ad});
+    // });
 
-    while (this.activeYearAccountsRanks.length) {
-      this.activeYearAccountsRanks.pop();
-    }
-    this.activeYearAccountsRanks.push(activeAccounts);
-    this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
+
+    // while (this.activeYearRanks.length) {
+    //   this.activeYearRanks.pop();
+    // }
+
+    this.activeYearGrandAmount = _.sumBy(activeData, 'value') || 0;
     this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
 
-    while (this.lastYearAccountsRanks.length) {
-      this.lastYearAccountsRanks.pop();
-    }
-    this.lastYearAccountsRanks.push(lastAccounts);
-    this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
+    // while (this.lastYearRanks.length) {
+    //   this.lastYearRanks.pop();
+    // }
+    // this.lastYearRanks.push(...lastData);
+    this.lastYearGrandAmount = _.sumBy(lastData, 'value') || 0;
     this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
-  }
 
-  public generateActiveYearString(): INameUniqueName[] {
-    let activeStrings: INameUniqueName[] = [];
-    this.activeYearAccounts.map(acc => {
-      activeStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
-    });
-    return activeStrings;
-  }
-
-  public generateLastYearString(): INameUniqueName[] {
-    let lastStrings: INameUniqueName[] = [];
-    this.lastYearAccounts.map(acc => {
-      lastStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
-    });
-    return lastStrings;
+    // console.log('activeData', JSON.stringify(this.activeYearRanks));
+    // console.log('lastData', JSON.stringify(this.lastYearRanks));
   }
 
   public fetchChartData() {
@@ -159,30 +123,29 @@ export class PlChartComponent implements OnInit, OnDestroy {
   }
 
   public calculatePieChartPer(t) {
-    let activeYearIndexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount || 0;
-    let lastYearIndexTotal = this.lastYearAccountsRanks.getItem(t.pointIndex).amount || 0;
+    let activeYearIndexTotal = this.activeYearRanks.getItem(t.pointIndex).value || 0;
+    let lastYearIndexTotal = this.lastYearRanks.getItem(t.pointIndex).value || 0;
 
     this.activePieChartAmount = Math.round((activeYearIndexTotal * 100) / this.activeYearGrandAmount) || 0;
     this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;
   }
 
   public resetActiveYearChartData() {
-    this.activeYearAccounts = [];
-    while (this.activeYearAccountsRanks.length) {
-      this.activeYearAccountsRanks.pop();
-    }
-    // this.activeBarSeries.nativeElement.items.length = 0;
-    // this.activeYearAccountsRanks = new ObservableArray([]);
+    this.activeYearData = [];
+    // while (this.activeYearRanks.length) {
+    //   this.activeYearRanks.pop();
+    // }
+
     this.activeYearGrandAmount = 0;
     this.activePieChartAmount = 0;
   }
 
   public resetLastYearChartData() {
-    this.lastYearAccounts = [];
-    while (this.lastYearAccountsRanks.length) {
-      this.lastYearAccountsRanks.pop();
-    }
-    // this.lastYearAccountsRanks = new ObservableArray([]);
+    this.lastYearData = [];
+    // while (this.lastYearRanks.length) {
+    //   this.lastYearRanks.pop();
+    // }
+
     this.lastYearGrandAmount = 0;
     this.lastPieChartAmount = 0;
   }
