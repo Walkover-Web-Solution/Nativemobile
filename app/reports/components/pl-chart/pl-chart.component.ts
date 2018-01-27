@@ -1,13 +1,13 @@
-import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
-import { AppState } from '~/store';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { ChartFilterType, ChartType, IProfitLossChartResponse } from '~/models/interfaces/dashboard.interface';
-import { DashboardActions } from '~/actions/dashboard/dashboard.action';
-import { Page } from 'tns-core-modules/ui/page/page';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { ReportsAction } from "~/actions/reports/reports.action";
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ObservableArray} from 'tns-core-modules/data/observable-array/observable-array';
+import {AppState} from '~/store';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {ChartFilterType, ChartType, IProfitLossChartResponse} from '~/models/interfaces/dashboard.interface';
+import {DashboardActions} from '~/actions/dashboard/dashboard.action';
+import {Page} from 'tns-core-modules/ui/page/page';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {ReportsAction} from "~/actions/reports/reports.action";
 import * as _ from 'lodash';
 
 @Component({
@@ -79,41 +79,31 @@ export class PlChartComponent implements OnInit, OnDestroy {
     let activeData = [];
     let lastData = [];
 
-    this.monthsArray.forEach((ad, index) => {
-      activeData.push({ value: this.activeYearData[index] || 0, label: ad });
-      this.activeYearRanks.push({ value: this.activeYearData[index] || 0, label: ad });
+    while (this.activeYearRanks.length) {
+      this.activeYearRanks.pop();
+    }
 
-      lastData.push({ value: this.lastYearData[index] || 0, label: ad });
-      this.lastYearRanks.push({ value: this.lastYearData[index] || 0, label: ad });
+    while (this.lastYearRanks.length) {
+      this.lastYearRanks.pop();
+    }
+
+    this.activeYearData.forEach((ad, index) => {
+      activeData.push({label: this.monthsArray[index], value: ad || 0});
+      this.activeYearRanks.push({label: this.monthsArray[index], value: ad || 0});
     });
 
+    this.lastYearData.forEach((ad, index) => {
+      lastData.push({label: this.monthsArray[index], value: ad || 0});
+      this.lastYearRanks.push({label: this.monthsArray[index], value: ad || 0});
+    });
 
-
-    // this.activeYearData.forEach((ad, index) => {
-    //   activeData.push({label: this.monthsArray[index], value: ad});
-    // });
-
-    // this.lastYearData.forEach((ad, index) => {
-    //   lastData.push({label: this.monthsArray[index], value: ad});
-    // });
-
-
-    // while (this.activeYearRanks.length) {
-    //   this.activeYearRanks.pop();
-    // }
-
+    // this.activeYearRanks.push(activeData);
     this.activeYearGrandAmount = _.sumBy(activeData, 'value') || 0;
     this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
 
-    // while (this.lastYearRanks.length) {
-    //   this.lastYearRanks.pop();
-    // }
-    // this.lastYearRanks.push(...lastData);
+    // this.lastYearRanks.push(lastData);
     this.lastYearGrandAmount = _.sumBy(lastData, 'value') || 0;
     this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
-
-    // console.log('activeData', JSON.stringify(this.activeYearRanks));
-    // console.log('lastData', JSON.stringify(this.lastYearRanks));
   }
 
   public fetchChartData() {

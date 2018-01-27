@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActiveFinancialYear, CompanyResponse } from '~/models/api-models/Company';
 import { IChildGroups, IExpensesChartClosingBalanceResponse, ChartFilterType, ChartType } from '~/models/interfaces/dashboard.interface';
 import { Observable } from 'rxjs';
@@ -40,9 +40,8 @@ export class ExpensesChartComponent implements OnInit {
   public lastYearChartFormatedDate: string;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page) {
+  constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page, private cd: ChangeDetectorRef) {
     this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
-
     this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter).takeUntil(this.destroyed$);
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
@@ -79,6 +78,8 @@ export class ExpensesChartComponent implements OnInit {
       // }
       this.generateCharts();
       this.requestInFlight = false;
+      this.cd.detectChanges();
+
     });
   }
 
@@ -129,6 +130,7 @@ export class ExpensesChartComponent implements OnInit {
     this.lastYearAccountsRanks.push(lastAccounts);
     this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
     this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
+
   }
 
   public generateActiveYearString(): INameUniqueName[] {

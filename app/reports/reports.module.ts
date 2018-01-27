@@ -8,6 +8,7 @@ import {SharedModule} from '~/shared/shared.module';
 import {ReportsComponent} from '~/reports/reports.component';
 import {ReportsRoutingModule} from '~/reports/reports.routing.module';
 import {PlChartComponent} from "~/reports/components/pl-chart/pl-chart.component";
+import {NativeScriptUIChartModule} from "nativescript-pro-ui/chart/angular";
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {PlChartComponent} from "~/reports/components/pl-chart/pl-chart.component
     FormsModule,
     ReportsRoutingModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    NativeScriptUIChartModule
   ],
   declarations: [ReportsComponent, PlChartComponent],
   schemas: [
