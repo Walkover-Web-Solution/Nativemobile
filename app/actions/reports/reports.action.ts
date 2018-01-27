@@ -14,6 +14,9 @@ import {createSelector, Store} from "@ngrx/store";
 
 import {of} from "rxjs/observable/of";
 import {ReportConst} from "~/actions/reports/reports.const";
+import {AccountDetails, ProfitLossRequest} from "~/models/api-models/tb-pl-bs";
+import {TlPlService} from "~/services/tl-pl.service";
+import {BaseResponse} from "~/models/api-models/BaseResponse";
 
 @Injectable()
 export class ReportsAction {
@@ -148,7 +151,19 @@ export class ReportsAction {
       }
     });
 
-  constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>) {
+  @Effect() private GetProfitLoss$: Observable<CustomActions> = this.actions$
+    .ofType(ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST)
+    .switchMap((action: CustomActions) => this._tlPlService.GetProfitLoss(action.payload))
+    .map(response => {
+      let data: BaseResponse<AccountDetails, ProfitLossRequest> = response;
+      return {
+        type: ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE,
+        payload: data.status === 'success' ? data : []
+      };
+    });
+
+  constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
+              private _tlPlService: TlPlService) {
 
   }
 
@@ -170,6 +185,13 @@ export class ReportsAction {
     return {
       type: ReportConst.SET_PROFIT_LOSS_CHART_FILTER_TYPE,
       payload: {filterType}
+    };
+  }
+
+  public getProfitLossSheet(request: ProfitLossRequest): CustomActions {
+    return {
+      type: ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST,
+      payload: request
     };
   }
 }

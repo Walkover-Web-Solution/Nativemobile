@@ -9,6 +9,7 @@ import {ReportsComponent} from '~/reports/reports.component';
 import {ReportsRoutingModule} from '~/reports/reports.routing.module';
 import {PlChartComponent} from "~/reports/components/pl-chart/pl-chart.component";
 import {NativeScriptUIChartModule} from "nativescript-pro-ui/chart/angular";
+import {PlDataComponent} from "~/reports/components/pl-data/pl-data.component";
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import {NativeScriptUIChartModule} from "nativescript-pro-ui/chart/angular";
     SharedModule,
     NativeScriptUIChartModule
   ],
-  declarations: [ReportsComponent, PlChartComponent],
+  declarations: [ReportsComponent, PlChartComponent, PlDataComponent],
   schemas: [
     NO_ERRORS_SCHEMA
   ]

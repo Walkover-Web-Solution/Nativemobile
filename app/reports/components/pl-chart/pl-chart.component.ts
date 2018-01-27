@@ -122,9 +122,9 @@ export class PlChartComponent implements OnInit, OnDestroy {
 
   public resetActiveYearChartData() {
     this.activeYearData = [];
-    // while (this.activeYearRanks.length) {
-    //   this.activeYearRanks.pop();
-    // }
+    while (this.activeYearRanks.length) {
+      this.activeYearRanks.pop();
+    }
 
     this.activeYearGrandAmount = 0;
     this.activePieChartAmount = 0;
@@ -132,9 +132,9 @@ export class PlChartComponent implements OnInit, OnDestroy {
 
   public resetLastYearChartData() {
     this.lastYearData = [];
-    // while (this.lastYearRanks.length) {
-    //   this.lastYearRanks.pop();
-    // }
+    while (this.lastYearRanks.length) {
+      this.lastYearRanks.pop();
+    }
 
     this.lastYearGrandAmount = 0;
     this.lastPieChartAmount = 0;
