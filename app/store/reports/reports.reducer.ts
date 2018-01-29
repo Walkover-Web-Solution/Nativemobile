@@ -90,15 +90,14 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       });
     }
     case ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE: {
-      let data: ProfitLossData = prepareProfitLossSheetData(_.cloneDeep(action.payload));
+      let data: ProfitLossData = prepareProfitLossSheetData(_.cloneDeep(action.payload.body));
       data.dates = _.cloneDeep(state.profitLossSheet.data.dates);
       return Object.assign({}, state, {
         profitLossSheet: Object.assign({}, state.profitLossSheet, {
           showLoader: false,
           data
         })
-      })
-        ;
+      });
     }
     // endregion
     default:
