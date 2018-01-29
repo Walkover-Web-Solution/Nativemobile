@@ -7,7 +7,8 @@ import {ReportsAction} from "~/actions/reports/reports.action";
 
 @Component({
   selector: 'ns-pl-data,[ns-pl-data]',
-  templateUrl: 'pl-data.component.html'
+  moduleId: module.id,
+  templateUrl: './pl-data.component.html'
 })
 
 export class PlDataComponent implements OnInit {
