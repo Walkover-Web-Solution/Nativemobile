@@ -9,12 +9,12 @@ import {Page} from "tns-core-modules/ui/page";
 import {ChildGroup} from "~/models/api-models/Search";
 
 @Component({
-  selector: 'ns-pl-data,[ns-pl-data]',
+  selector: 'ns-bs-data,[ns-bs-data]',
   moduleId: module.id,
-  templateUrl: './pl-data.component.html'
+  templateUrl: './bs-data.component.html'
 })
 
-export class PlDataComponent implements OnInit {
+export class BsDataComponent implements OnInit {
   public showLoader: Observable<boolean>;
   public data$: Observable<ProfitLossData>;
   public incArr: ChildGroup[] = [];
@@ -48,7 +48,7 @@ export class PlDataComponent implements OnInit {
   }
 
   public fetchData(refresh: boolean) {
-    this.store.dispatch(this._reportsActions.getProfitLossSheet(refresh));
+    this.store.dispatch(this._reportsActions.getBalanceSheet(refresh));
   }
 
   ngOnDestroy() {

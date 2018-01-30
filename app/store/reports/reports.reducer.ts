@@ -1,7 +1,7 @@
 import {CustomActions} from "~/store/customActions";
 import {ChartFilterType, IProfitLossChartResponse} from "~/models/interfaces/dashboard.interface";
 import {ReportConst} from "~/actions/reports/reports.const";
-import {ProfitLossData} from "~/models/api-models/tb-pl-bs";
+import {BalanceSheetData, ProfitLossData} from "~/models/api-models/tb-pl-bs";
 import * as _ from 'lodash';
 
 interface PlState {
@@ -10,10 +10,17 @@ interface PlState {
   noData: boolean;
 }
 
+interface BsState {
+  data?: BalanceSheetData;
+  showLoader: boolean;
+  noData: boolean;
+}
+
 export interface ReportState {
   profitLossChart: IProfitLossChartResponse;
   profitLossChartFilter: ChartFilterType;
-  profitLossSheet: PlState
+  profitLossSheet: PlState,
+  balanceSheet: BsState
 }
 
 const initialState: ReportState = {
@@ -26,8 +33,12 @@ const initialState: ReportState = {
     data: null,
     noData: true,
     showLoader: false
+  },
+  balanceSheet: {
+    data: null,
+    noData: true,
+    showLoader: false
   }
-
 };
 
 export function ReportReducer(state: ReportState = initialState, action: CustomActions): ReportState {
@@ -94,6 +105,24 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       });
     }
     // endregion
+    //  region Balance Sheet Data
+    case ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST: {
+      return Object.assign({}, state, {
+        balanceSheet: Object.assign({}, state.balanceSheet, {
+          showLoader: true,
+        })
+      });
+    }
+    case ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE: {
+      let data: BalanceSheetData = prepareBalanceSheetData(_.cloneDeep(action.payload));
+      return Object.assign({}, state, {
+        balanceSheet: Object.assign({}, state.balanceSheet, {
+          showLoader: false,
+          data
+        })
+      });
+    }
+    // endregion
     default:
       return state;
   }
@@ -109,6 +138,8 @@ const processProfitLossChartData = (plData) => {
   return monthlyBalances;
 };
 
+
+//region Prepare Profit Loss
 const prepareProfitLossSheetData = (data) => {
   let plData: ProfitLossData = filterProfitLossSheetData(data.groupDetails);
   plData.expenseTotal = calculateTotalExpense(plData.expArr);
@@ -162,7 +193,6 @@ const calculateTotalIncomeEnd = data => {
   });
   return Number(eTtl.toFixed(2));
 };
-
 const calculateTotalExpense = data => {
   let eTtl;
   eTtl = 0;
@@ -175,7 +205,6 @@ const calculateTotalExpense = data => {
   });
   return Number(eTtl.toFixed(2));
 };
-
 const calculateTotalExpenseEnd = data => {
   let eTtl;
   eTtl = 0;
@@ -188,7 +217,6 @@ const calculateTotalExpenseEnd = data => {
   });
   return Number(eTtl.toFixed(2));
 };
-
 const filterProfitLossSheetData = data => {
   let filterPlData: ProfitLossData = {};
   filterPlData.incArr = [];
@@ -207,3 +235,81 @@ const filterProfitLossSheetData = data => {
   });
   return filterPlData;
 };
+//endregion
+
+//region Prepare Balance Sheet
+const prepareBalanceSheetData = (data) => {
+  let bsData: BalanceSheetData = filterBalanceSheetData(data.groupDetails);
+  bsData.assetTotal = calCulateTotalAssets(bsData.assets);
+  bsData.assetTotalEnd = calCulateTotalAssetsEnd(bsData.assets);
+  bsData.liabTotal = calCulateTotalLiab(bsData.liabilities);
+  bsData.liabTotalEnd = calCulateTotalLiabEnd(bsData.liabilities);
+  return bsData;
+};
+const filterBalanceSheetData = data => {
+  let filterPlData: BalanceSheetData = {};
+  filterPlData.assets = [];
+  filterPlData.liabilities = [];
+  filterPlData.othArr = [];
+  _.each(data, (grp: any) => {
+    grp.isVisible = false;
+    switch (grp.category) {
+      case 'assets':
+        return filterPlData.assets.push(grp);
+      case 'liabilities':
+        return filterPlData.liabilities.push(grp);
+      default:
+        return filterPlData.othArr.push(grp);
+    }
+  });
+  return filterPlData;
+};
+const calCulateTotalAssets = data => {
+  let total;
+  total = 0;
+  _.each(data, (obj: any) => {
+    if (obj.closingBalance.type === 'CREDIT') {
+      return total -= obj.closingBalance.amount;
+    } else {
+      return total += obj.closingBalance.amount;
+    }
+  });
+  return total;
+};
+const calCulateTotalAssetsEnd = data => {
+  let total;
+  total = 0;
+  _.each(data, (obj: any) => {
+    if (obj.forwardedBalance.type === 'CREDIT') {
+      return total -= obj.forwardedBalance.amount;
+    } else {
+      return total += obj.forwardedBalance.amount;
+    }
+  });
+  return total;
+};
+const calCulateTotalLiab = data => {
+  let total;
+  total = 0;
+  _.each(data, (obj: any) => {
+    if (obj.closingBalance.type === 'DEBIT') {
+      return total -= obj.closingBalance.amount;
+    } else {
+      return total += obj.closingBalance.amount;
+    }
+  });
+  return total;
+};
+const calCulateTotalLiabEnd = data => {
+  let total;
+  total = 0;
+  _.each(data, (obj: any) => {
+    if (obj.forwardedBalance.type === 'DEBIT') {
+      return total -= obj.forwardedBalance.amount;
+    } else {
+      return total += obj.forwardedBalance.amount;
+    }
+  });
+  return total;
+};
+//endregion
