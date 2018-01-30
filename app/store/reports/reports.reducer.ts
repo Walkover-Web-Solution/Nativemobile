@@ -78,20 +78,14 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
     //endregion
     // region ProfitLoss Sheet Data
     case ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST: {
-      let from = action.payload.from;
-      let to = action.payload.to;
       return Object.assign({}, state, {
         profitLossSheet: Object.assign({}, state.profitLossSheet, {
           showLoader: true,
-          data: Object.assign({}, state, state.profitLossSheet.data, {
-            dates: {from, to}
-          })
         })
       });
     }
     case ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE: {
       let data: ProfitLossData = prepareProfitLossSheetData(_.cloneDeep(action.payload.body));
-      data.dates = _.cloneDeep(state.profitLossSheet.data.dates);
       return Object.assign({}, state, {
         profitLossSheet: Object.assign({}, state.profitLossSheet, {
           showLoader: false,

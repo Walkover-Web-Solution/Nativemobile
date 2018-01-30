@@ -1,37 +1,44 @@
 <StackLayout>
 
+  <GridLayout height="50" rows="*" columns="*">
+    <Label text="Profit of Last Quater {{ totalIncome - totalExpense }}" verticalAlignment="center"
+           horizontalAlignment="center"></Label>
+  </GridLayout>
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#deb887">
     <Label marginLeft="5" text="Account"></Label>
     <Label marginRight="5" text="Total"></Label>
   </FlexboxLayout>
 
-  <ListView [items]="(data$ | async)?.incArr" margin="15">
-    <ng-template let-item="itemInc">
-      <FlexboxLayout justifyContent="space-between">
-        <Label text="{{itemInc?.groupName}}"></Label>
-        <Label text="{{itemInc?.closingBalance.amount}}"></Label>
-      </FlexboxLayout>
-    </ng-template>
-  </ListView>
+  <StackLayout *ngIf="incArr.length > 0">
+    <FlexboxLayout margin="5" justifyContent="space-between" *ngFor="let itemInc of incArr">
+      <Label marginLeft="10" text="{{ itemInc.groupName }}"></Label>
+      <Label marginRight="10" text="{{ itemInc.closingBalance.amount }}"></Label>
+    </FlexboxLayout>
+  </StackLayout>
+
+  <StackLayout *ngIf="incArr.length === 0">
+    <Label verticalAlignment="center" horizontalAlignment="center" text="No Data"></Label>
+  </StackLayout>
 
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#deb887">
-    <Label marginLeft="5" text="Account"></Label>
-    <Label marginRight="5" text="Total"></Label>
+    <Label marginLeft="5" text="Total Income"></Label>
+    <Label marginRight="5" [text]="totalIncome"></Label>
   </FlexboxLayout>
 
-  <ListView [items]="(data$ | async)?.expArr" margin="15">
-    <ng-template let-item="itemExp">
-      <FlexboxLayout justifyContent="space-between">
+  <StackLayout *ngIf="expArr.length > 0">
+    <FlexboxLayout margin="5" justifyContent="space-between" *ngFor="let itemExp of expArr">
+      <Label marginLeft="10" text="{{ itemExp.groupName }}"></Label>
+      <Label marginRight="10" text="{{ itemExp.closingBalance.amount }}"></Label>
+    </FlexboxLayout>
+  </StackLayout>
 
-        <Label text="{{ itemExp?.groupName }}"></Label>
-        <Label text="{{ itemExp?.closingBalance.amount }}"></Label>
-      </FlexboxLayout>
-    </ng-template>
-  </ListView>
+  <StackLayout *ngIf="expArr.length === 0">
+    <Label verticalAlignment="center" horizontalAlignment="center" text="No Data"></Label>
+  </StackLayout>
 
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#deb887">
-    <Label marginLeft="5" text="Account"></Label>
-    <Label marginRight="5" text="Total"></Label>
+    <Label marginLeft="5" text="Total Expenses"></Label>
+    <Label marginRight="5" [text]="totalExpense"></Label>
   </FlexboxLayout>
 
 </StackLayout>
