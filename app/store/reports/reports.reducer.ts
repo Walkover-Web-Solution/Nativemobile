@@ -26,7 +26,7 @@ export interface ReportState {
 const initialState: ReportState = {
   profitLossChart: {
     chartTitle: '', lable: {activeYearLabel: '', lastYearLabel: ''},
-    profitLossActiveYear: null, profitLossLastYear: null
+    profitLossActiveYear: null, profitLossLastYear: null, legend: []
   },
   profitLossChartFilter: ChartFilterType.LastMonth,
   profitLossSheet: {
@@ -51,6 +51,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
         profitLossChart: Object.assign({}, state.profitLossChart, {
           profitLossActiveYear: processProfitLossChartData(data.profitLossActiveYear),
           chartTitle: data.chartTitle,
+          legend: data.legend,
           lable: Object.assign({}, state.profitLossChart.lable, {
             activeYearLabel: data.lable.activeYearLabel
           })
@@ -62,7 +63,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       return Object.assign({}, state, {
         profitLossChart: {
           chartTitle: '', lable: {activeYearLabel: '', lastYearLabel: ''}, profitLossActiveYear: null,
-          profitLossLastYear: null
+          profitLossLastYear: null, legend: []
         },
       })
     }
@@ -83,7 +84,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
     //region Set Filter Type
     case ReportConst.SET_PROFIT_LOSS_CHART_FILTER_TYPE: {
       return Object.assign({}, state, {
-        profitLossChartFilter: action.payload
+        profitLossChartFilter: action.payload.filterType
       });
     }
     //endregion

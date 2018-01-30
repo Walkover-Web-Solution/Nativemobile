@@ -7,6 +7,7 @@ import {ReportsAction} from "~/actions/reports/reports.action";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Page} from "tns-core-modules/ui/page";
 import {ChildGroup} from "~/models/api-models/Search";
+import {ChartFilterType} from "~/models/interfaces/dashboard.interface";
 
 @Component({
   selector: 'ns-bs-data,[ns-bs-data]',
@@ -21,11 +22,13 @@ export class BsDataComponent implements OnInit {
   public assetsArr: ChildGroup[] = [];
   public liabTotal: number = 0;
   public assetTotal: number = 0;
+  public chartFilterType$: Observable<ChartFilterType>;
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private store: Store<AppState>, private _reportsActions: ReportsAction, private page: Page) {
     this.data$ = this.store.select(s => s.report.balanceSheet.data).takeUntil(this.destroyed$);
+    this.chartFilterType$ = this.store.select(p => p.report.profitLossChartFilter).takeUntil(this.destroyed$);
 
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
@@ -44,6 +47,10 @@ export class BsDataComponent implements OnInit {
           this.assetTotal = da.assetTotal;
         }
       }
+    });
+
+    this.chartFilterType$.distinctUntilChanged().subscribe(s => {
+      this.fetchData(true);
     });
   }
 

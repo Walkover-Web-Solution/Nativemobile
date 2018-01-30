@@ -82,7 +82,8 @@ export interface IProfitLossChartResponse {
   lable?: IChartLabelType;
   chartTitle?: string;
   profitLossActiveYear?: any[],
-  profitLossLastYear?: any[]
+  profitLossLastYear?: any[],
+  legend?: string[]
 }
 
 export class IComparisionChartResponse {

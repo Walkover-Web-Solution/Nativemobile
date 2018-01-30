@@ -33,7 +33,7 @@ export class PlChartComponent implements OnInit, OnDestroy {
   public chartFilterTitle: string = 'Custom';
   public activeYearChartFormatedDate: string;
   public lastYearChartFormatedDate: string;
-  private monthsArray = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+  private monthsArray: string[] = [];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page, private _reportActions: ReportsAction, private cd: ChangeDetectorRef) {
@@ -65,6 +65,10 @@ export class PlChartComponent implements OnInit, OnDestroy {
       if (pld && pld.lable) {
         this.activeYearChartFormatedDate = pld.lable.activeYearLabel || '';
         this.lastYearChartFormatedDate = pld.lable.lastYearLabel || '';
+      }
+
+      if (pld && pld.legend) {
+        this.monthsArray = pld.legend;
       }
 
       this.generateCharts();

@@ -1,8 +1,8 @@
 <StackLayout>
 
   <GridLayout height="50" rows="*" columns="*">
-    <Label text="Profit of Last Quater {{ totalIncome - totalExpense }}" verticalAlignment="center"
-           horizontalAlignment="center"></Label>
+    <Label text="Profit of {{ chartFilterTitle }} {{ totalIncome - totalExpense }}" verticalAlignment="center"
+           horizontalAlignment="center" textWrap="true"></Label>
   </GridLayout>
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#deb887">
     <Label marginLeft="5" text="Account"></Label>
