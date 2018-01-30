@@ -172,7 +172,6 @@ export class ReportsAction {
         }
       });
       let op = parseDates(filterType, activeFinancialYear, null);
-      console.log('PL Request', JSON.stringify(op));
       let request: ProfitLossRequest = {
         refresh: action.payload,
         from: op.activeYear.startDate,

@@ -1,7 +1,7 @@
 <StackLayout rows="10,*" columns="*">
 
   <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
-    <Label text="Revenue ({{ chartFilterTitle }})"></Label>
+    <Label text="Revenue ({{ chartFilterTitle }})" textWrap="true"></Label>
     <Label text="&#xf1de;" [nsRouterLink]="['/dashboard','filter', chartType]" class="filterButton" fontFamily="FontAwesome"></Label>
   </FlexboxLayout>
 

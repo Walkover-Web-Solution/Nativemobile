@@ -1,13 +1,13 @@
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {ObservableArray} from 'tns-core-modules/data/observable-array/observable-array';
-import {AppState} from '~/store';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {ChartFilterType, ChartType, IProfitLossChartResponse} from '~/models/interfaces/dashboard.interface';
-import {DashboardActions} from '~/actions/dashboard/dashboard.action';
-import {Page} from 'tns-core-modules/ui/page/page';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
-import {ReportsAction} from "~/actions/reports/reports.action";
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
+import { AppState } from '~/store';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
+import { ChartFilterType, ChartType, IProfitLossChartResponse } from '~/models/interfaces/dashboard.interface';
+import { DashboardActions } from '~/actions/dashboard/dashboard.action';
+import { Page } from 'tns-core-modules/ui/page/page';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { ReportsAction } from "~/actions/reports/reports.action";
 import * as _ from 'lodash';
 
 @Component({
@@ -91,15 +91,23 @@ export class PlChartComponent implements OnInit, OnDestroy {
       this.lastYearRanks.pop();
     }
 
-    this.activeYearData.forEach((ad, index) => {
-      activeData.push({label: this.monthsArray[index], value: ad || 0});
-      this.activeYearRanks.push({label: this.monthsArray[index], value: ad || 0});
+    this.monthsArray.forEach((mn, index) => {
+      activeData.push({ label: mn, value: this.activeYearData[index] || 0 });
+      this.activeYearRanks.push({ label: mn, value: this.activeYearData[index] || 0 });
+
+      lastData.push({ label: mn, value: this.lastYearData[index] || 0 });
+      this.lastYearRanks.push({ label: mn, value: this.lastYearData[index] || 0 });
     });
 
-    this.lastYearData.forEach((ad, index) => {
-      lastData.push({label: this.monthsArray[index], value: ad || 0});
-      this.lastYearRanks.push({label: this.monthsArray[index], value: ad || 0});
-    });
+    // this.activeYearData.forEach((ad, index) => {
+    //   activeData.push({label: this.monthsArray[index], value: ad || 0});
+    //   this.activeYearRanks.push({label: this.monthsArray[index], value: ad || 0});
+    // });
+
+    // this.lastYearData.forEach((ad, index) => {
+    //   lastData.push({label: this.monthsArray[index], value: ad || 0});
+    //   this.lastYearRanks.push({label: this.monthsArray[index], value: ad || 0});
+    // });
 
     // this.activeYearRanks.push(activeData);
     this.activeYearGrandAmount = _.sumBy(activeData, 'value') || 0;
