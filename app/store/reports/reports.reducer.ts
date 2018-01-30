@@ -114,7 +114,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
       });
     }
     case ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE: {
-      let data: BalanceSheetData = prepareBalanceSheetData(_.cloneDeep(action.payload));
+      let data: BalanceSheetData = prepareBalanceSheetData(_.cloneDeep(action.payload.body));
       return Object.assign({}, state, {
         balanceSheet: Object.assign({}, state.balanceSheet, {
           showLoader: false,

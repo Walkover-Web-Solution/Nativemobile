@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from "rxjs/Observable";
-import {ProfitLossData} from "~/models/api-models/tb-pl-bs";
+import {BalanceSheetData} from "~/models/api-models/tb-pl-bs";
 import {AppState} from "~/store";
 import {Store} from "@ngrx/store";
 import {ReportsAction} from "~/actions/reports/reports.action";
@@ -16,16 +16,16 @@ import {ChildGroup} from "~/models/api-models/Search";
 
 export class BsDataComponent implements OnInit {
   public showLoader: Observable<boolean>;
-  public data$: Observable<ProfitLossData>;
-  public incArr: ChildGroup[] = [];
-  public expArr: ChildGroup[] = [];
-  public totalIncome: number = 0;
-  public totalExpense: number = 0;
+  public data$: Observable<BalanceSheetData>;
+  public liabilitiesArr: ChildGroup[] = [];
+  public assetsArr: ChildGroup[] = [];
+  public liabTotal: number = 0;
+  public assetTotal: number = 0;
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private store: Store<AppState>, private _reportsActions: ReportsAction, private page: Page) {
-    this.data$ = this.store.select(s => s.report.profitLossSheet.data).takeUntil(this.destroyed$);
+    this.data$ = this.store.select(s => s.report.balanceSheet.data).takeUntil(this.destroyed$);
 
     this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
@@ -35,13 +35,13 @@ export class BsDataComponent implements OnInit {
 
     this.data$.subscribe(da => {
       if (da) {
-        if (da.incArr) {
-          this.incArr = da.incArr;
-          this.totalIncome = da.incomeTotal;
+        if (da.liabilities) {
+          this.liabilitiesArr = da.liabilities;
+          this.liabTotal = da.liabTotal;
         }
-        if (da.expArr) {
-          this.expArr = da.expArr;
-          this.totalExpense = da.expenseTotal;
+        if (da.assets) {
+          this.assetsArr = da.assets;
+          this.assetTotal = da.assetTotal;
         }
       }
     });

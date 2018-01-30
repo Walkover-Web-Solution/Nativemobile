@@ -3,7 +3,7 @@
     <Button row="0" col="0" class="button" height="50" width="50" (tap)="goBack()" textAlignment="center"
             text="&#xf060;" fontFamily="FontAwesome">
     </Button>
-    <Label row="0" col="1" class="action-bar-title" text="Profit and Loss" horizontalAlignment="center"></Label>
+    <Label row="0" col="1" class="action-bar-title" [text]="pageTitle" horizontalAlignment="center"></Label>
 
     <Button class="button" row="0" col="2" textAlignment="center" text="&#xf019;" fontFamily="FontAwesome">
     </Button>
@@ -12,7 +12,7 @@
 
 <ScrollView>
   <GridLayout rows="700" columns="*">
-    <Carousel indicatorColor="#2C2866" row="0" col="0" showIndicator="true">
+    <Carousel indicatorColor="#2C2866" row="0" col="0" showIndicator="true" (pageChanged)="pageChanged($event)">
 
       <CarouselItem id="slide1" verticalAlignment="center">
         <StackLayout>
@@ -24,8 +24,11 @@
         </StackLayout>
       </CarouselItem>
 
-      <CarouselItem id="slide2" verticalAlignment="center" backgroundColor="#6497b1">
-        <Label text="Balance Sheet" verticalAlignment="center" horizontalAlignment="center"></Label>
+      <CarouselItem id="slide2" verticalAlignment="center">
+        <StackLayout>
+          <CardView margin="10" elevation="40" radius="1" ns-bs-data>
+          </CardView>
+        </StackLayout>
       </CarouselItem>
 
     </Carousel>

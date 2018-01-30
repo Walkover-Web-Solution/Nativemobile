@@ -8,11 +8,16 @@ import {RouterExtensions} from "nativescript-angular";
 })
 
 export class ReportsComponent {
+  public pageTitle: string = 'Profit And Loss';
   constructor(private _routerExtension: RouterExtensions) {
 
   }
 
   goBack() {
     this._routerExtension.back();
+  }
+
+  pageChanged(args) {
+    this.pageTitle = args.index === 0 ? 'Profit And Loss' : 'Balance Sheet';
   }
 }
