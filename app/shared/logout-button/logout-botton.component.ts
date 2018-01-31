@@ -3,6 +3,7 @@ import { AppState } from "../../store";
 import { Store } from "@ngrx/store";
 import { RouterExtensions } from "nativescript-angular/router";
 import { LoginActions } from "../../actions/login/login.action";
+import * as dialogs from 'ui/dialogs';
 
 /* ***********************************************************
 * Keep data that is displayed in your app drawer in the MyDrawer component class.
@@ -36,8 +37,16 @@ export class MyLogoutComponent implements OnInit, OnChanges {
   }
 
   public logout() {
-    this.store.dispatch(this._loginActions.logout());
-    //
 
+    dialogs.confirm({
+      title: 'Logout',
+      message: 'Are you sure you want to logout?',
+      okButtonText: 'Yes',
+      cancelButtonText: 'No'
+    }).then(r => {
+      if (r) {
+        this.store.dispatch(this._loginActions.logout());
+      }
+    });
   }
 }

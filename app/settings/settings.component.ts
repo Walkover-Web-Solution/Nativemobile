@@ -3,6 +3,7 @@ import { RouterExtensions } from 'nativescript-angular/router';
 import { AppState } from '~/store';
 import { Store } from '@ngrx/store';
 import { LoginActions } from '~/actions/login/login.action';
+import * as dialogs from 'ui/dialogs';
 
 @Component({
   selector: 'ns-settings',
@@ -24,7 +25,16 @@ export class SettingsComponent {
 
   public doAction(item) {
     if (item.text === 'Logout') {
-      this.store.dispatch(this._loginActions.logout());
+      dialogs.confirm({
+        title: 'Logout',
+        message: 'Are you sure you want to logout?',
+        okButtonText: 'Yes',
+        cancelButtonText: 'No'
+      }).then(r => {
+        if (r) {
+          this.store.dispatch(this._loginActions.logout());
+        }
+      });
     } else {
       this.routerExtensions.navigate([item.path]);
     }
