@@ -1,7 +1,6 @@
 <ActionBar class="action-bar" width="100%">
   <GridLayout columns="auto,*,auto" rows="*" width="100%">
-    <Button row="0" col="0" class="button" height="50" width="50" (tap)="goBack()" textAlignment="center"
-            text="&#xf060;" fontFamily="FontAwesome">
+    <Button row="0" col="0" class="button" height="50" width="50" (tap)="goBack()" textAlignment="center" text="&#xf060;" fontFamily="FontAwesome">
     </Button>
     <Label row="0" col="1" class="action-bar-title" [text]="pageTitle" horizontalAlignment="center"></Label>
 
@@ -10,11 +9,11 @@
   </GridLayout>
 </ActionBar>
 
-<ScrollView>
-  <GridLayout rows="700" columns="*">
-    <Carousel indicatorColor="#2C2866" row="0" col="0" showIndicator="true" (pageChanged)="pageChanged($event)">
+<GridLayout rows="*" columns="*">
+  <Carousel indicatorColor="#2C2866" indicatorColorUnselected="#B9B6DA" row="0" col="0" showIndicator="true" (pageChanged)="pageChanged($event)">
 
-      <CarouselItem id="slide1" verticalAlignment="center">
+    <CarouselItem id="slide1" verticalAlignment="center">
+      <ScrollView>
         <StackLayout>
           <CardView margin="10" elevation="40" radius="1" ns-pl-chart>
           </CardView>
@@ -22,15 +21,17 @@
           <CardView margin="10" elevation="40" radius="1" ns-pl-data>
           </CardView>
         </StackLayout>
-      </CarouselItem>
+      </ScrollView>
+    </CarouselItem>
 
-      <CarouselItem id="slide2" verticalAlignment="center">
+    <CarouselItem id="slide2" verticalAlignment="center">
+      <ScrollView>
         <StackLayout>
           <CardView margin="10" elevation="40" radius="1" ns-bs-data>
           </CardView>
         </StackLayout>
-      </CarouselItem>
+      </ScrollView>
+    </CarouselItem>
 
-    </Carousel>
-  </GridLayout>
-</ScrollView>
+  </Carousel>
+</GridLayout>
