@@ -13,7 +13,7 @@ import { RouterExtensions } from 'nativescript-angular/router/router-extensions'
 export class CreateStockComponent {
   public myItems: SegmentedBarItem[];
   public selectedIndex: number = 0;
-  constructor(private _routerExtension: RouterExtensions) {
+  constructor(public _routerExtension: RouterExtensions) {
     this.myItems = [];
     let productItem = new SegmentedBarItem();
     let serviceItem = new SegmentedBarItem();

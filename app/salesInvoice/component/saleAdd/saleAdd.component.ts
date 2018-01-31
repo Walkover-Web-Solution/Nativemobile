@@ -16,7 +16,7 @@ import { RouterExtensions } from 'nativescript-angular/router/router-extensions'
 })
 export class SaleAddComponent implements OnInit {
 
-  constructor(private store: Store<AppState>, private _routerExtension: RouterExtensions) {
+  constructor(private store: Store<AppState>, public _routerExtension: RouterExtensions) {
 
   }
 
