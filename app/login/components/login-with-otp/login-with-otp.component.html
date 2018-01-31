@@ -18,7 +18,7 @@
         <StackLayout *ngIf="(isLoginWithMobileSubmited$ | async)">
           <TextField hint="Otp" class="input" formControlName="otp"></TextField>
           <!-- <Button text="Login" [disabled]="mobileVerifyForm.invalid" (tap)="verifyCode()" class="btn btn-primary"></Button> -->
-          <MyButton [text]="'Get Verification Code'" [isEnabled]="mobileVerifyForm.valid" [lodder]='isVerifyMobileInProcess$ | async'
+          <MyButton [text]="'Submit'" [isEnabled]="mobileVerifyForm.valid" [lodder]='isVerifyMobileInProcess$ | async'
             (tap)="verifyCode()" [class]="'btn btn-primary'">
           </MyButton>
         </StackLayout>

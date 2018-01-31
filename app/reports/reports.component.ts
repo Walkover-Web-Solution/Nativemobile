@@ -14,7 +14,7 @@ export class ReportsComponent {
   }
 
   goBack() {
-    this._routerExtension.back();
+    this._routerExtension.navigate(['/home']);
   }
 
   pageChanged(args) {

@@ -210,6 +210,15 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
       })
     }
 
+    case LoginConstants.RESET_LOGIN_OTP_FLAGS: {
+      return Object.assign({}, state, {
+        isLoginWithMobileSubmited: false,
+        isVerifyMobileSuccess: false,
+        isLoginWithMobileInProcess: false,
+        isVerifyMobileInProcess: false
+      })
+    }
+
     case LoginConstants.SIGNUP_WITH_EMAIL_REQUEST:
       return Object.assign({}, state, {
         isLoginWithEmailInProcess: true

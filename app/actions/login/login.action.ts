@@ -194,6 +194,13 @@ export class LoginActions {
       payload: value
     };
   }
+
+  public resetLoginOtpFlags(): CustomActions {
+    return {
+      type: LoginConstants.RESET_LOGIN_OTP_FLAGS
+    }
+  }
+
   public verifyMobileRequest(value: VerifyMobileModel): CustomActions {
     return {
       type: LoginConstants.VERIFY_MOBILE_REQUEST,

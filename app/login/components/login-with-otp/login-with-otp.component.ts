@@ -12,6 +12,7 @@ import { LoginActions } from '../../../actions/login/login.action';
 import * as application from "application";
 import * as utils from "utils/utils";
 import { AnimationCurve } from 'ui/enums';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 // import { Color } from 'tns-core-modules/ui/page/page';
 @Component({
   selector: 'ns-login-with-otp',
@@ -25,12 +26,15 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
   public isVerifyMobileSuccess$: Observable<boolean>;
   public isLoginWithMobileInProcess$: Observable<boolean>;
   public isVerifyMobileInProcess$: Observable<boolean>;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private routerExtensions: RouterExtensions, private page: Page, private store: Store<AppState>,
     private _fb: FormBuilder, private _loginActions: LoginActions) {
     this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
     this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
     this.isLoginWithMobileInProcess$ = this.store.select(s => s.login.isLoginWithMobileInProcess);
     this.isVerifyMobileInProcess$ = this.store.select(s => s.login.isVerifyMobileInProcess);
+
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   ngOnInit(): void {
@@ -54,11 +58,9 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
   ngOnDestroy(): void {
-    this.mobileVerifyForm = this._fb.group({
-      country: ['91', [Validators.required]],
-      mobileNumber: ['', [Validators.required]],
-      otp: ['', [Validators.required]],
-    });
+    this.store.dispatch(this._loginActions.resetLoginOtpFlags());
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
   backToLogin() {
     this.routerExtensions.navigate(['/login'], {
