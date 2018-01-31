@@ -1,11 +1,10 @@
 <StackLayout>
 
-  <!-- <GridLayout height="50" rows="*" columns="*"> -->
-    <StackLayout orientation="horizontal" height="50">
-      <Label text="Profit of {{ chartFilterTitle }}" horizontalAlignment="left" textWrap="true"></Label>
-      <Label color="#448C27" text="{{ totalIncome - totalExpense | number:'1.2-2'}}" horizontalAlignment="right" textWrap="true"></Label>
-    </StackLayout>
-  <!-- </GridLayout> -->
+  <GridLayout height="50" rows="*" columns="*,auto" horizontalAlignment="center">
+    <Label text="Profit of {{ chartFilterTitle }}" verticalAlignment="center" row="0" col="0" textWrap="true"></Label>
+    <Label color="#448C27" marginLeft="5" text="{{ totalIncome - totalExpense | number:'1.2-2'}}" verticalAlignment="center" row="0" col="1"
+      textWrap="true" fontSize="16"></Label>
+  </GridLayout>
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#E6E6E8">
     <Label marginLeft="5" text="Account"></Label>
     <Label marginRight="5" text="Total"></Label>
