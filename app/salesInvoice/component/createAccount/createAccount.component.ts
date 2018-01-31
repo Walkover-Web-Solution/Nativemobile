@@ -13,6 +13,7 @@ import { Page } from 'tns-core-modules/ui/page/page';
 import { NsDropDownOptions } from '~/models/other-models/HelperModels';
 import { CompanyResponse } from '~/models/api-models/Company';
 import { createSelector } from 'reselect';
+import { RouterExtensions } from 'nativescript-angular';
 
 @Component({
   selector: 'ns-create-account',
@@ -27,7 +28,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
   public countrySourceStream$: Observable<IContriesWithCodes[]>;
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private _fb: FormBuilder, private store: Store<AppState>, private groupService: GroupService,
-    private page: Page) {
+    private page: Page, private _routerExtension: RouterExtensions) {
     this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes);
 
     this.selectedCompany$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {

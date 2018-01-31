@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SegmentedBar, SegmentedBarItem } from "ui/segmented-bar";
+import { RouterExtensions } from 'nativescript-angular/router/router-extensions';
 
 @Component({
   selector: 'ns-stock-create',
@@ -12,7 +13,7 @@ import { SegmentedBar, SegmentedBarItem } from "ui/segmented-bar";
 export class CreateStockComponent {
   public myItems: SegmentedBarItem[];
   public selectedIndex: number = 0;
-  constructor() {
+  constructor(private _routerExtension: RouterExtensions) {
     this.myItems = [];
     let productItem = new SegmentedBarItem();
     let serviceItem = new SegmentedBarItem();

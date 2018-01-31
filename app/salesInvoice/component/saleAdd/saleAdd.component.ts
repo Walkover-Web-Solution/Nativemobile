@@ -6,6 +6,7 @@ import { AppState } from '~/store';
 import { Store } from '@ngrx/store';
 import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
 import { createSelector } from 'reselect';
+import { RouterExtensions } from 'nativescript-angular/router/router-extensions';
 
 @Component({
   selector: 'ns-sale-add',
@@ -15,7 +16,7 @@ import { createSelector } from 'reselect';
 })
 export class SaleAddComponent implements OnInit {
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private _routerExtension: RouterExtensions) {
 
   }
 
