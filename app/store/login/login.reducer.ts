@@ -182,6 +182,12 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
       })
     }
 
+    case LoginConstants.RESET_FORGOT_PASSWORD_FLAGS: {
+      return Object.assign({}, state, {
+        isForgotPasswordInProcess: false, isForgotPasswordSuccess: false
+      })
+    }
+
     case LoginConstants.RESET_PASSWORD_V2_REQUEST: {
       return Object.assign({}, state, {
         isResetPasswordInProcess: true
@@ -193,6 +199,12 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
           isResetPasswordInProcess: false, isResetPasswordSuccess: true
         })
       }
+      return Object.assign({}, state, {
+        isResetPasswordInProcess: false, isResetPasswordSuccess: false
+      })
+    }
+
+    case LoginConstants.RESET_RESET_PASSWORD_FLAGS: {
       return Object.assign({}, state, {
         isResetPasswordInProcess: false, isResetPasswordSuccess: false
       })

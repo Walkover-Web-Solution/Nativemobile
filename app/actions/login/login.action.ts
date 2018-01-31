@@ -279,6 +279,12 @@ export class LoginActions {
     }
   }
 
+  public resetForgotPasswordFlags(): CustomActions {
+    return {
+      type: LoginConstants.RESET_FORGOT_PASSWORD_FLAGS
+    }
+  }
+
   public restPasswordV2Request(requestModel: ResetPasswordV2): CustomActions {
     return {
       type: LoginConstants.RESET_PASSWORD_V2_REQUEST,
@@ -290,6 +296,12 @@ export class LoginActions {
     return {
       type: LoginConstants.RESET_PASSWORD_V2_RESPONSE,
       payload: res
+    }
+  }
+
+  public resetResetPasswordV2Flags(): CustomActions {
+    return {
+      type: LoginConstants.RESET_RESET_PASSWORD_FLAGS
     }
   }
 
