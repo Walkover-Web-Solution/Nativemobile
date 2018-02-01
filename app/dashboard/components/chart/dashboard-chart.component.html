@@ -8,7 +8,7 @@
     -->
   <ActionItem icon="res://navigation/menu" android:visibility="collapsed" (tap)="onDrawerButtonTap()" ios.position="left">
   </ActionItem>
-  <Label class="action-bar-title" [text]="'Dashboard'"></Label>
+  <Label class="action-bar-title" fontWeight="400" [text]="'Dashboard'"></Label>
 </ActionBar>
 
 
@@ -20,11 +20,11 @@
     <MyDrawer [pages]="navItemObj$ | async"></MyDrawer>
   </StackLayout>
   <ScrollView tkMainContent>
-    <StackLayout>
-      <CardView margin="10" elevation="40" radius="1" ns-revenue-chart>
+    <StackLayout margin="5">
+      <CardView class="gen-card-style" elevation="3" radius="1" ns-revenue-chart>
       </CardView>
 
-      <CardView margin="10" elevation="40" radius="1" ns-expenses-chart>
+      <CardView class="gen-card-style" elevation="3" radius="1" ns-expenses-chart>
       </CardView>
 
     </StackLayout>
