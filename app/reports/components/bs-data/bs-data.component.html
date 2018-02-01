@@ -1,7 +1,7 @@
-<StackLayout>
+<StackLayout padding="0 10" class="gen-font-style">
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#E6E6E8">
-    <Label marginLeft="5" text="Account"></Label>
-    <Label marginRight="5" text="Total"></Label>
+    <Label padding="5" text="Account"></Label>
+    <Label padding="5" text="Total"></Label>
   </FlexboxLayout>
 
   <StackLayout *ngIf="liabilitiesArr.length > 0">
@@ -16,8 +16,8 @@
   </StackLayout>
 
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#E6E6E8">
-    <Label marginLeft="5" text="Total Liabilities"></Label>
-    <Label marginRight="5" text="{{ liabTotal | number:'1.2-2' }}"></Label>
+    <Label padding="5" text="Total Liabilities"></Label>
+    <Label padding="5" text="{{ liabTotal | number:'1.2-2' }}"></Label>
   </FlexboxLayout>
 
   <StackLayout *ngIf="assetsArr.length > 0">
@@ -32,8 +32,8 @@
   </StackLayout>
 
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#E6E6E8">
-    <Label marginLeft="5" text="Total Expenses"></Label>
-    <Label marginRight="5" text="{{ assetTotal | number:'1.2-2'}}"></Label>
+    <Label padding="5" text="Total Expenses"></Label>
+    <Label padding="5" text="{{ assetTotal | number:'1.2-2'}}"></Label>
   </FlexboxLayout>
 
 </StackLayout>

@@ -1,13 +1,13 @@
-<StackLayout>
+<StackLayout padding="0 10" class="gen-font-style">
 
-  <GridLayout height="50" rows="*" columns="*,auto" horizontalAlignment="center">
-    <Label text="Profit of {{ chartFilterTitle }}" verticalAlignment="center" row="0" col="0" textWrap="true"></Label>
-    <Label color="#448C27" marginLeft="5" text="{{ totalIncome - totalExpense | number:'1.2-2'}}" verticalAlignment="center" row="0" col="1"
-      textWrap="true" fontSize="16"></Label>
+  <GridLayout height="50" rows="*" columns="*,auto" horizontalAlignment="center" marginTop="20">
+    <Label text="Profit of {{ chartFilterTitle }}" verticalAlignment="center" row="0" col="0" textWrap="true" fontSize="15"></Label>
+    <Label color="#76c548" marginLeft="5" text="{{ totalIncome - totalExpense | number:'1.2-2'}}" verticalAlignment="center" row="0" col="1"
+      textWrap="true" fontSize="20"></Label>
   </GridLayout>
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#E6E6E8">
-    <Label marginLeft="5" text="Account"></Label>
-    <Label marginRight="5" text="Total"></Label>
+    <Label padding="5" text="Account"></Label>
+    <Label padding="5" text="Total"></Label>
   </FlexboxLayout>
 
   <StackLayout *ngIf="incArr.length > 0">
@@ -22,8 +22,8 @@
   </StackLayout>
 
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#E6E6E8">
-    <Label marginLeft="5" text="Total Income"></Label>
-    <Label marginRight="5" text="{{totalIncome | number:'1.2-2'}}"></Label>
+    <Label padding="5" text="Total Income"></Label>
+    <Label padding="5" text="{{totalIncome | number:'1.2-2'}}"></Label>
   </FlexboxLayout>
 
   <StackLayout *ngIf="expArr.length > 0">
@@ -38,8 +38,8 @@
   </StackLayout>
 
   <FlexboxLayout margin="5" justifyContent="space-between" backgroundColor="#E6E6E8">
-    <Label marginLeft="5" text="Total Expenses"></Label>
-    <Label marginRight="5" text="{{totalExpense | number:'1.2-2'}}"></Label>
+    <Label padding="5" text="Total Expenses"></Label>
+    <Label padding="5" text="{{totalExpense | number:'1.2-2'}}"></Label>
   </FlexboxLayout>
 
 </StackLayout>
