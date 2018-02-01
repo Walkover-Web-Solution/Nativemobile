@@ -1,8 +1,8 @@
-<StackLayout rows="10,*" columns="*">
+<StackLayout rows="10,*" columns="*" padding="0 10">
 
   <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
     <Label text="Revenue ({{ chartFilterTitle }})" class="gen-font-color"></Label>
-    <Label text="&#xf1de;" [nsRouterLink]="['/dashboard','filter', chartType]" class="" fontFamily="FontAwesome"></Label>
+    <Label text="&#xf1de;" fontSize="20" [nsRouterLink]="['/dashboard','filter', chartType]" class="" fontFamily="FontAwesome"></Label>
   </FlexboxLayout>
 
   <StackLayout class="hr-light"></StackLayout>
@@ -24,7 +24,7 @@
       <Label text="{{ lastYearChartFormatedDate }}"></Label>
     </FlexboxLayout>
 
-    <StackLayout *ngIf="activeYearAccounts.length > 0 || lastYearAccounts.length > 0">
+    <StackLayout *ngIf="activeYearAccounts.length > 0 || lastYearAccounts.length > 0" marginTop="20">
 
       <RadCartesianChart height="200" tkExampleTitle tkToggleNavButton (pointSelected)="calculatePieChartPer($event)">
         <RadCartesianChartGrid tkCartesianGrid horizontalLinesVisible="true" horizontalStripLinesVisible="true" horizontalStrokeWidth="0.5"
