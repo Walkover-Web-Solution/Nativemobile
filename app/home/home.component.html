@@ -21,41 +21,44 @@
   -->
   <GridLayout columns="*,*" rows="*,*,*" class="page page-content" tkMainContent>
     <!-- <Border borderRadius="0" borderWidth="1" borderColor="#FF0000"> -->
-    <Button class="b-button" [nsRouterLink]="['/dashboard']" row="0" col="0" textWrap="true" textAlignment="center">
+    <!-- <CardView margin="10" elevation="3" radius="1"> -->
+    <Button class="b-button" textWrap="true" textAlignment="center" [nsRouterLink]="['/dashboard']" row="0" col="0" textWrap="true"
+      textAlignment="center">
       <FormattedString>
-        <Span text="&#x64;&#x000a;" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
-        <Span text="Dashboard" verticalAlignment="bottom" fontSize="20"></Span>
+        <Span text="&#x64;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
+        <Span text="Dashboard" verticalAlignment="bottom" fontSize="12"></Span>
       </FormattedString>
     </Button>
+    <!-- </CardView> -->
     <!-- </Border> -->
     <Button class="b-button" row="0" col="1" textWrap="true" textAlignment="center">
       <FormattedString>
-        <Span text="&#x63;&#x000a;" fontFamily="1515160234" verticalAlignment="top"  fontSize="35"></Span>
-        <Span text="Trial Balance" verticalAlignment="bottom" fontSize="20"></Span>
+        <Span text="&#x63;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
+        <Span text="Trial Balance" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
     </Button>
-    <Button class="b-button"  [nsRouterLink]="['/sale']" row="1" col="0" textWrap="true" textAlignment="center">
+    <Button class="b-button" [nsRouterLink]="['/sale']" row="1" col="0" textWrap="true" textAlignment="center">
       <FormattedString>
-        <Span text="&#x6a;&#x000a;" fontFamily="1515160234" verticalAlignment="top"  fontSize="35"></Span>
-        <Span text="Sales Invoice" verticalAlignment="bottom" fontSize="20"></Span>
+        <Span text="&#x6a;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
+        <Span text="Sales Invoice" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
     </Button>
     <Button class="b-button" row="1" col="1" textWrap="true" textAlignment="center">
       <FormattedString>
-        <Span text="&#x6b;&#x000a;" fontFamily="1515160234" verticalAlignment="top"  fontSize="35"></Span>
-        <Span text="Purchase Invoice" verticalAlignment="bottom" fontSize="20"></Span>
+        <Span text="&#x6b;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
+        <Span text="Purchase Invoice" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
     </Button>
     <Button class="b-button" row="2" [nsRouterLink]="['/reports']" col="0" textWrap="true" textAlignment="center">
       <FormattedString>
-        <Span text="&#x69;&#x000a;" fontFamily="1515160234" verticalAlignment="top"  fontSize="35"></Span>
-        <Span text="Reports" verticalAlignment="bottom" fontSize="20"></Span>
+        <Span text="&#x69;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
+        <Span text="Reports" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
     </Button>
     <Button class="b-button" row="2" [nsRouterLink]="['/settings']" col="1" textWrap="true" textAlignment="center">
       <FormattedString>
-        <Span text="&#x6c;&#x000a;" fontFamily="1515160234" verticalAlignment="top"  fontSize="35"></Span>
-        <Span text="Setting" verticalAlignment="bottom" fontSize="20"></Span>
+        <Span text="&#x6c;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
+        <Span text="Setting" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
     </Button>
   </GridLayout>

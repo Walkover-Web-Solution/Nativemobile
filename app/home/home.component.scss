@@ -30,11 +30,23 @@ ActionBar {
 
 .b-button {
   color: $ab-background;
-  border-color: rgb(250, 190, 190);
-  border-style: solid;
-  border-width: 2pt;
+  background-color: rgba(250, 190, 190, 0.007);
+  // border-style: solid;
+  // border-width: 2pt;
   margin: 5pt;
-  background-color: #fff;
+  // background-color: #fff;
+  background-color: #f2f2f8;
+}
+.mar-top-20{
+
+  line-height: 3;
+}
+
+.icon-color{
+  color: #4cb4a8;
+}
+.bg-off-wight{
+  background-color: #f2f2f8;
 }
 
 .hidden {
