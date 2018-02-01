@@ -4,7 +4,7 @@
             fontFamily="FontAwesome"
             (tap)="onDrawerButtonTap()">
     </Button>
-    <Label row="0" col="1" class="action-bar-title" text="Create Taxes" horizontalAlignment="center"></Label>
+    <Label row="0" col="1" class="action-bar-title" fontWeight="400" text="Create Taxes" horizontalAlignment="left"></Label>
 
     <Button class="button" row="0" col="2" textAlignment="center" (tap)="submit()" text="Save">
     </Button>
@@ -21,16 +21,16 @@
   </StackLayout>
 
   <ScrollView tkMainContent>
-    <StackLayout margin="10" [formGroup]="taxForm">
+    <StackLayout margin="5" [formGroup]="taxForm">
 
-      <CardView margin="5" elevation="10" radius="1">
-        <StackLayout margin="5">
+      <CardView class="gen-card-style" elevation="3" radius="1">
+        <StackLayout margin="7" padding="7">
 
-          <Label color="#59595B" text="Tax Name"></Label>
+          <Label class="gen-font-style" text="Tax Name"></Label>
           <TextField hint="Name" text="" formControlName="name"></TextField>
 
           <StackLayout [visibility]="!selectedTaxObj ? 'visible' : 'collapsed'">
-            <Label color="#59595B" text="Unique No"></Label>
+            <Label class="gen-font-style" text="Unique No"></Label>
             <TextField hint="Unique Number" text="" formControlName="taxNumber"></TextField>
           </StackLayout>
 
@@ -60,12 +60,12 @@
 
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
-              <Label color="#59595B" text="Tax Rate"></Label>
+              <Label class="gen-font-style" text="Tax Rate"></Label>
               <TextField hint="2" text="" keyboardType="number" formControlName="taxValue"></TextField>
             </StackLayout>
 
             <StackLayout width="50%" (tap)="openDatePicker()">
-              <Label color="#59595B" text="Apply Tax From"></Label>
+              <Label class="gen-font-style" text="Apply Tax From"></Label>
               <Label text="{{ taxForm.get('date').value }}" textWrap="true" marginTop="15"
                      verticalAlignment="bottom"></Label>
               <StackLayout class="hr-dark"></StackLayout>
@@ -76,13 +76,13 @@
 
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
-              <Label color="#59595B" text="Tax Duration"></Label>
+              <Label class="gen-font-style" text="Tax Duration"></Label>
               <DropDown backroundColor="red" formControlName="duration" marginTop="15" [hint]="'Select'"
                         verticalAlignment="bottom" [items]='taxDurationList'></DropDown>
             </StackLayout>
 
             <StackLayout width="50%">
-              <Label color="#59595B" text="Tax File Date"></Label>
+              <Label class="gen-font-style" text="Tax File Date"></Label>
               <DropDown backroundColor="red" formControlName="taxFileDate" marginTop="15" [hint]="'Select'"
                         verticalAlignment="bottom"
                         [items]='days'></DropDown>
