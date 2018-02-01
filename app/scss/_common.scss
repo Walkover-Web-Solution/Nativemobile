@@ -209,10 +209,19 @@ FilterSelect.disabled{
 
 
 .gen-font-style{
-  font-size: 11;
+  font-size: 13;
   color: #4e4f53;
 }
 
 .gen-card-style {
   margin:5 4;
+  background-color: white;
+}
+
+.gen-label-style {
+  padding: 20 0 3 0;
+}
+
+.action-bar-title {
+  font-weight: 350 !important;
 }
