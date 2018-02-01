@@ -1,9 +1,9 @@
 <ActionBar class="action-bar" width="100%">
   <GridLayout columns="auto,*,auto" rows="*" width="100%">
-    <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf060;"
-    fontFamily="FontAwesome" (tap)="_routerExtension.back()">
+    <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf060;" fontFamily="FontAwesome"
+      (tap)="_routerExtension.back()">
     </Button>
-    <Label row="0" col="1" class="action-bar-title" [text]="'Sales Invoice'" horizontalAlignment="left"></Label>
+    <Label row="0" col="1" class="action-bar-title" [text]="'Sales Invoice'" fontWeight="400" horizontalAlignment="left"></Label>
 
     <Button row="0" col="2" class="button" textAlignment="center" text="Save">
     </Button>
@@ -11,11 +11,11 @@
 </ActionBar>
 
 <ScrollView>
-  <StackLayout margin="10">
+  <StackLayout margin="5">
 
-    <CardView margin="5" elevation="10" radius="1">
-      <StackLayout margin="5">
-        <Label color="#59595B" text="Customer Name"></Label>
+    <CardView class="gen-card-style gen-font-style" elevation="3" radius="1" padding="0 10">
+      <StackLayout margin="10">
+        <Label class="gen-font-style" text="Customer Name"></Label>
 
         <StackLayout orientation="horizontal">
           <DropDown #dd backroundColor="red" width="95%" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
@@ -26,13 +26,13 @@
 
         <Button backgroundColor="white" color="#478ECB" text="Add Entry Against Cash/Bank" width="100%"></Button>
 
-        <StackLayout>
-          <Label color="#59595B" text="Add Entry Against"></Label>
+        <StackLayout marginTop="10">
+          <Label class="gen-font-style" text="Add Entry Against"></Label>
           <DropDown backroundColor="red" [hint]="'Select Cash/Bank'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
         </StackLayout>
 
-        <StackLayout>
-          <Label text="Attention to" textWrap="true"></Label>
+        <StackLayout marginTop="10">
+          <Label class="gen-font-style" text="Attention to" textWrap="true"></Label>
           <TextField hint="will be used in invoice" text=""></TextField>
         </StackLayout>
 
@@ -40,61 +40,61 @@
       </StackLayout>
     </CardView>
 
-    <CardView margin="5" elevation="10" radius="1">
-      <StackLayout margin="5">
+    <CardView class="gen-card-style gen-font-style" elevation="3" radius="1" padding="0 10">
+      <StackLayout margin="10">
         <StackLayout orientation="horizontal" margin="5">
 
           <StackLayout width="50%">
-            <Label color="#59595B" text="Country"></Label>
+            <Label text="Country"></Label>
             <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
 
           <StackLayout width="50%">
-            <Label color="#59595B" text="Invoice Number"></Label>
+            <Label text="Invoice Number"></Label>
             <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
         </StackLayout>
 
-        <StackLayout orientation="horizontal" margin="5">
+        <StackLayout orientation="horizontal" margin="10 5 5 5">
           <StackLayout width="50%">
-            <Label color="#59595B" text="Date"></Label>
+            <Label text="Date"></Label>
             <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
 
           <StackLayout width="50%">
-            <Label color="#59595B" text="Due"></Label>
+            <Label text="Due"></Label>
             <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
         </StackLayout>
       </StackLayout>
     </CardView>
 
-    <CardView margin="5" elevation="10" radius="1">
-      <StackLayout margin="5">
-        <StackLayout>
+    <CardView class="gen-card-style gen-font-style" elevation="3" radius="1" padding="0 10">
+      <StackLayout margin="10">
+        <StackLayout margin="5">
           <Label text="Billing Address" textWrap="true"></Label>
           <TextField hint="Text" text=""></TextField>
         </StackLayout>
 
 
-        <StackLayout orientation="horizontal">
+        <StackLayout orientation="horizontal" margin="5">
           <StackLayout width="50%">
-            <Label color="#59595B" text="Date"></Label>
+            <Label text="Date"></Label>
             <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
 
           <StackLayout width="50%">
-            <Label color="#59595B" text="Due"></Label>
+            <Label text="Due"></Label>
             <DropDown backroundColor="red" [hint]="'Select'" [items]='[1,2,3,4]' verticalAlignment="center"></DropDown>
           </StackLayout>
         </StackLayout>
       </StackLayout>
     </CardView>
 
-    <CardView margin="5" elevation="10" radius="1">
-      <StackLayout margin="5">
+    <CardView class="gen-card-style gen-font-style" elevation="3" radius="1" padding="0 10">
+      <StackLayout margin="10">
 
-        <GridLayout rows="auto" columns="auto,*" class="list-group" *ngFor="let item of [1,2,3]">
+        <GridLayout rows="auto" columns="auto,*" class="list-group" *ngFor="let item of [1,2]">
           <Label text="&#xf147;" row="0" col="0" color="#CDCED0" fontFamily="FontAwesome" verticalAlignment="center" class="list-group-item"></Label>
 
           <FlexboxLayout row="0" col="1" borderBottomWidth="0.5">
@@ -131,10 +131,10 @@
       </StackLayout>
     </CardView>
 
-    <CardView margin="5" elevation="10" radius="1">
+    <CardView class="gen-card-style gen-font-style" elevation="3" radius="1" padding="0 10">
       <StackLayout margin="5">
         <StackLayout>
-          <Label text="Footer Note" color="#59595B" textWrap="true"></Label>
+          <Label text="Footer Note" textWrap="true"></Label>
           <TextField hint="Thanks for your business" text=""></TextField>
         </StackLayout>
 
