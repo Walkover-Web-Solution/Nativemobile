@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AnimationCurve } from 'ui/enums';
 import * as dialogs from "ui/dialogs";
+import { NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'ns-forgot-password',
@@ -35,7 +36,13 @@ export class ForgotComponent implements OnInit, OnDestroy {
     this.isResetPasswordSuccess$ = this.store.select(s => s.login.isResetPasswordSuccess).takeUntil(this.destroyed$);
     this.isForgotPasswordInProcess$ = this.store.select(s => s.login.isForgotPasswordInProcess).takeUntil(this.destroyed$);
     this.isResetPasswordInProcess$ = this.store.select(s => s.login.isResetPasswordInProcess).takeUntil(this.destroyed$);
-    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
+    // this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
+
+    this.routerExtensions.router.events.subscribe(ev => {
+      if (ev instanceof NavigationStart) {
+        this.ngOnDestroy();
+      }
+    });
   }
 
   ngOnInit(): void {

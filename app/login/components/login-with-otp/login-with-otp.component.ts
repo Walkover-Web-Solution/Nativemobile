@@ -13,6 +13,7 @@ import * as application from "application";
 import * as utils from "utils/utils";
 import { AnimationCurve } from 'ui/enums';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { NavigationStart } from '@angular/router';
 // import { Color } from 'tns-core-modules/ui/page/page';
 @Component({
   selector: 'ns-login-with-otp',
@@ -34,7 +35,13 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     this.isLoginWithMobileInProcess$ = this.store.select(s => s.login.isLoginWithMobileInProcess);
     this.isVerifyMobileInProcess$ = this.store.select(s => s.login.isVerifyMobileInProcess);
 
-    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
+    this.routerExtensions.router.events.subscribe(ev => {
+      if (ev instanceof NavigationStart) {
+        this.ngOnDestroy();
+      }
+    });
+
+    // this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   ngOnInit(): void {

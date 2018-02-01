@@ -11,6 +11,8 @@ import { VerifyEmailModel } from '../../../models/api-models/loginModels';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { AnimationCurve } from 'ui/enums';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { on as applicationOn, launchEvent, suspendEvent, resumeEvent, ApplicationEventData, start as applicationStart } from 'application';
+import { NavigationStart } from '@angular/router';
 
 @Component({
   selector: 'ns-login-with-email',
@@ -31,11 +33,26 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
     this.isVerifyEmailInProcess$ = this.store.select(s => s.login.isVerifyEmailInProcess).takeUntil(this.destroyed$);
     this.isVerifyEmailSuccess$ = this.store.select(s => s.login.isVerifyEmailSuccess).takeUntil(this.destroyed$);
     this.isLoginWithEmailSubmited$ = this.store.select(s => s.login.isLoginWithEmailSubmited).takeUntil(this.destroyed$);
-    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
+
+    // applicationOn(resumeEvent, (args: ApplicationEventData) => {
+    //   if (args.android) {
+    //     // this.store.dispatch(this._loginActions.resetLoginWithEmailFlags());
+    //   } else if (args.ios) {
+    //     // this.store.dispatch(this._loginActions.resetLoginWithEmailFlags());
+    //   }
+    // });
+
+    this.routerExtensions.router.events.subscribe(ev => {
+      if (ev instanceof NavigationStart) {
+        this.ngOnDestroy();
+      }
+    });
+
+    // this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   public ngOnInit(): void {
-
+    this.store.dispatch(this._loginActions.resetLoginWithEmailFlags());
     this.emailVerifyForm = this._fb.group({
       email: ['', [Validators.required, Validators.email]],
       token: ['', Validators.required]
