@@ -237,6 +237,7 @@ export class LoginActions {
     };
   }
 
+
   public verifyEmailRequest(value: VerifyEmailModel): CustomActions {
     return {
       type: LoginConstants.VERIFY_EMAIL_REQUEST,
@@ -249,6 +250,12 @@ export class LoginActions {
       type: LoginConstants.VERIFY_EMAIL_RESPONCE,
       payload: value
     };
+  }
+
+  public resetLoginWithEmailFlags(): CustomActions {
+    return {
+      type: LoginConstants.RESET_LOGIN_WITH_EMAIL_FLAGS
+    }
   }
 
   public verifyTwoWayAuthRequest(value: VerifyMobileModel): CustomActions {

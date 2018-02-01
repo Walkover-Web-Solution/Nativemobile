@@ -10,6 +10,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VerifyEmailModel } from '../../../models/api-models/loginModels';
 import { RouterExtensions } from 'nativescript-angular/router';
 import { AnimationCurve } from 'ui/enums';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Component({
   selector: 'ns-login-with-email',
@@ -23,11 +24,14 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
   public isVerifyEmailSuccess$: Observable<boolean>;
   public isLoginWithEmailSubmited$: Observable<boolean>;
   public emailVerifyForm: FormGroup;
+
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterExtensions, private page: Page) {
-    this.isLoginWithEmailInProcess$ = this.store.select(s => s.login.isLoginWithEmailInProcess);
-    this.isVerifyEmailInProcess$ = this.store.select(s => s.login.isVerifyEmailInProcess);
-    this.isVerifyEmailSuccess$ = this.store.select(s => s.login.isVerifyEmailSuccess);
-    this.isLoginWithEmailSubmited$ = this.store.select(s => s.login.isLoginWithEmailSubmited);
+    this.isLoginWithEmailInProcess$ = this.store.select(s => s.login.isLoginWithEmailInProcess).takeUntil(this.destroyed$);
+    this.isVerifyEmailInProcess$ = this.store.select(s => s.login.isVerifyEmailInProcess).takeUntil(this.destroyed$);
+    this.isVerifyEmailSuccess$ = this.store.select(s => s.login.isVerifyEmailSuccess).takeUntil(this.destroyed$);
+    this.isLoginWithEmailSubmited$ = this.store.select(s => s.login.isLoginWithEmailSubmited).takeUntil(this.destroyed$);
+    this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
   }
 
   public ngOnInit(): void {
@@ -48,7 +52,9 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
     })
   }
   public ngOnDestroy(): void {
-    // this.lo
+    this.store.dispatch(this._loginActions.resetLoginWithEmailFlags());
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   public loginWithEmail() {

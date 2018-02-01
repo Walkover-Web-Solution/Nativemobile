@@ -253,6 +253,14 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
           isVerifyMobileSuccess: false
         });
       }
+
+    case LoginConstants.RESET_LOGIN_WITH_EMAIL_FLAGS:
+      return Object.assign({}, state, {
+        isLoginWithEmailSubmited: false,
+        isLoginWithEmailInProcess: false,
+        isVerifyEmailInProcess: false,
+        isVerifyMobileSuccess: false
+      });
     case LoginConstants.RESET_LOGIN_STATE:
       return initialState;
 
