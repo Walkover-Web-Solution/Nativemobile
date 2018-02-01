@@ -10,7 +10,7 @@
         <MyButton [text]="'Sign Up'" [isEnabled]="signupWithPasswordForm.valid" [lodder]='signUpProcess$ | async' (tap)="signUp()"
           [class]="'btn btn-primary'">
         </MyButton>
-        <StackLayout horizontalAlignment="center" orientation="horizontal">
+        <StackLayout horizontalAlignment="center" orientation="horizontal" marginTop="5">
           <Label text="Back To Login" class="font" (tap)="backToLogin()" pageTransition="flip"></Label>
         </StackLayout>
       </StackLayout>
