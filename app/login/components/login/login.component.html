@@ -10,7 +10,7 @@
         <MyButton [text]="'Login'" [isEnabled]="loginWithPasswordForm.valid" [lodder]='loginProcess$ | async' (tap)="login()" [class]="'btn btn-primary'">
         </MyButton>
 
-        <StackLayout horizontalAlignment="center" orientation="horizontal">
+        <StackLayout horizontalAlignment="center" orientation="horizontal" marginTop="5">
           <Label text="Forgot Password?" (tap)="gotoUrl(['login', 'forgot-password'],'slide')" class="font"></Label>
           <Label text=" |"></Label>
           <Label text="  Login with OTP" (tap)="gotoUrl(['login', 'login-with-otp'],'slide')" class="font"></Label>
