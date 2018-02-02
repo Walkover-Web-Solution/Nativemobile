@@ -9,7 +9,7 @@ import { Observable } from 'rxjs/Observable';
 import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RouterExtensions } from 'nativescript-angular/router';
-import * as SocialLogin from "nativescript-social-login";
+import * as SocialLogin from "nativescript-social-login-linkedin";
 import * as application from "application";
 import * as dialogs from "ui/dialogs";
 import { AuthenticationService } from '~/services/authentication.service';
@@ -71,6 +71,13 @@ export class LoginComponent implements OnInit, OnDestroy {
         facebook: {
           initialize: false
         },
+        linkedin: {
+          clientId: '75urm0g3386r26',
+          clientSecret: '3AJTvaKNOEG4ISJ0',
+          permissions: ["r_basicprofile", "r_emailaddress"],
+          state: '',
+          redirectUri: "https://giddh.com/login"
+        },
         onActivityResult: (requestCode: number, resultCode: number, data: any) => {
         }
       });
@@ -103,6 +110,25 @@ export class LoginComponent implements OnInit, OnDestroy {
           .mergeMap(token => this.authservice.LoginWithGoogle(token.access_token))
           .subscribe(LoginResult => {
             this.store.dispatch(this._loginActions.signupWithGoogleResponse(LoginResult));
+          }, err => {
+            if (err) {
+              dialogs.alert('Something Went Wrong! Please Try Again');
+            }
+          })
+      }
+    });
+  }
+
+  public linkedinLogin() {
+    SocialLogin.loginWithLinkedIn((result) => {
+      if (result.error || !result.authCode) {
+        dialogs.alert('Something Went Wrong! Please Try Again');
+      } else {
+        this.authservice.GetAtuhToken(result)
+          .mergeMap(token => this.authservice.LoginWithLinkedin(token.access_token))
+          .subscribe(LoginResult => {
+            console.log(JSON.stringify(LoginResult));
+            // this.store.dispatch(this._loginActions.sin(LoginResult));
           }, err => {
             if (err) {
               dialogs.alert('Something Went Wrong! Please Try Again');

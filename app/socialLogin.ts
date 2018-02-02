@@ -10,7 +10,7 @@ declare class GIDSignIn {
 import * as application from "application";
 import * as platform from "platform";
 import * as utils from "utils/utils";
-import * as SocialLogin from "nativescript-social-login";
+import * as SocialLogin from "nativescript-social-login-linkedin";
 
 
 
@@ -30,6 +30,14 @@ if (application.android) {
       facebook: {
         initialize: false
       },
+      linkedin: {
+        clientId: '75urm0g3386r26',
+        clientSecret: '3AJTvaKNOEG4ISJ0',
+        permissions: ["r_basicprofile", "r_emailaddress"],
+        state: '',
+        redirectUri: "https://giddh.com/login"
+      },
+
       onActivityResult: (requestCode: number, resultCode: number, data: any) => {
       }
     });
