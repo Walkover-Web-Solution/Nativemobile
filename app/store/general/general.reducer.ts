@@ -55,7 +55,7 @@ const initialNavObj: MyDrawerItem[] = [
     icon: String.fromCharCode(0x69),
     needTopHr: true,
     fontFamily: '1515160234',
-    router: '/report'
+    router: '/reports'
   } as MyDrawerItem,
   {
     title: 'Settings',
