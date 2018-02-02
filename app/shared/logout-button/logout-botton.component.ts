@@ -46,6 +46,7 @@ export class MyLogoutComponent implements OnInit, OnChanges {
     }).then(r => {
       if (r) {
         this.store.dispatch(this._loginActions.logout());
+        this.routerExtensions.navigateByUrl('/login', { clearHistory: true });
       }
     });
   }

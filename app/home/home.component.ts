@@ -101,6 +101,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     }).then(r => {
       if (r) {
         this.store.dispatch(this._loginActions.logout());
+        this.routerExtensions.navigateByUrl('/login', { clearHistory: true });
       }
     });
   }
