@@ -9,6 +9,7 @@ import {SettingsProfileService} from '~/services/settings.profile.service';
 import {CustomActions} from '~/store/customActions';
 import {SettingsProfileConstants} from "~/actions/settings/profile/settings.profile.const";
 import * as dialogs from "ui/dialogs";
+import * as Toast from 'nativescript-toast';
 
 @Injectable()
 export class SettingsProfileActions {
@@ -29,6 +30,8 @@ export class SettingsProfileActions {
       if (data.status === 'error') {
         dialogs.alert(data.message);
       }
+      let toast = Toast.makeText('Profile Updated Successfully');
+      toast.show();
       return {type: 'EmptyAction'};
     });
 

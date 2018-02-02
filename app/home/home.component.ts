@@ -14,7 +14,6 @@ import { MyDrawerItem } from '~/shared/my-drawer-item/my-drawer-item';
 import { createSelector } from 'reselect';
 import { TNSFontIconService } from 'nativescript-ngx-fonticon';
 
-
 @Component({
   selector: 'ns-home',
   moduleId: module.id,

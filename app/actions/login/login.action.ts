@@ -9,6 +9,7 @@ import { AuthenticationService } from "../../services/authentication.service";
 import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from "../../models/api-models/Login";
 import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel } from "../../models/api-models/loginModels";
 import * as dialogs from "ui/dialogs";
+import * as Toast from 'nativescript-toast';
 
 @Injectable()
 
@@ -23,6 +24,9 @@ export class LoginActions {
       let res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = response;
       if (res.status !== 'success') {
         dialogs.alert(res.message);
+      } else {
+        let toast = Toast.makeText("Login Success");
+        toast.show();
       }
       return this.signUpResponse(res);
     });
@@ -36,6 +40,9 @@ export class LoginActions {
       let res: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = response;
       if (res.status !== 'success') {
         dialogs.alert(res.message);
+      } else {
+        let toast = Toast.makeText("Login Success");
+        toast.show();
       }
       return this.loginWithPasswordResponse(res);
     });

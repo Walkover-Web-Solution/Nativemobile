@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseResponse } from '../../models/api-models/BaseResponse';
 import { Observable } from 'rxjs/Observable';
+import * as Toast from 'nativescript-toast';
 // import { LoginActions } from '../actions/login.action';
 
 @Injectable()
@@ -11,6 +12,10 @@ export class ErrorHandler {
 
   public HandleCatch<TResponce, TRequest>(r: any, request?: any, queryString?: any): Observable<BaseResponse<TResponce, TRequest>> {
     let data: BaseResponse<TResponce, TRequest> = new BaseResponse<TResponce, TRequest>();
+
+    let toast = Toast.makeText('Something went wrong');
+    toast.show();
+
     // logout if invalid session detacted
     if (r.status === 0) {
       data = {
