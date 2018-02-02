@@ -42,12 +42,11 @@
           </StackLayout>
 
           <StackLayout marginTop="5">
-            <Label text="Linked Account" textWrap="true"></Label>
+            <Label text="Linked Account" textWrap="true" [visibility]="!selectedTaxObj && showLinkedAccounts ? 'visible' : 'collapsed'"></Label>
 
             <DropDown backroundColor="red" marginTop="15" formControlName="account" [hint]="'Select Account'"
                       verticalAlignment="bottom" [items]='flatternAccountList'
-                      [isEnabled]="!selectedTaxObj && showLinkedAccounts"
-                      [visibility]="!selectedTaxObj ? 'visible' : 'collapsed'" (selectedIndexChanged)="accountChanged($event)"></DropDown>
+                      [visibility]="!selectedTaxObj && showLinkedAccounts ? 'visible' : 'collapsed'" (selectedIndexChanged)="accountChanged($event)"></DropDown>
             <StackLayout [visibility]="selectedTaxObj && selectedTaxObj.accounts ? 'visible' : 'collapsed'">
               <MyChips *ngFor="let acc of taxForm.get('accounts').value" [text]="acc.name"
                        [isClosable]="false"></MyChips>
