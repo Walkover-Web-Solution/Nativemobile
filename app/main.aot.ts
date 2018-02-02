@@ -6,6 +6,11 @@ import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator//distinctUntilChanged';
+
+
 import './socialLogin';
 // "./app.module.ngfactory" is a dynamically generated module when compiled with AoT.
 import { AppModuleNgFactory } from "./app.module.ngfactory";
