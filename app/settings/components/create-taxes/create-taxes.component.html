@@ -4,7 +4,7 @@
             fontFamily="FontAwesome"
             (tap)="onDrawerButtonTap()">
     </Button>
-    <Label row="0" col="1" class="action-bar-title" fontWeight="400" text="Create Taxes" horizontalAlignment="left"></Label>
+    <Label row="0" col="1" class="action-bar-title" fontWeight="400" text="Create Tax" horizontalAlignment="left"></Label>
 
     <Button class="button" row="0" col="2" textAlignment="center" (tap)="submit()" text="Save">
     </Button>
@@ -61,7 +61,7 @@
           <StackLayout orientation="horizontal" marginTop="5">
             <StackLayout width="50%">
               <Label class="gen-font-style" text="Tax Rate"></Label>
-              <TextField hint="2" text="" keyboardType="number" formControlName="taxValue"></TextField>
+              <TextField hint="in percentage" text="" keyboardType="number" formControlName="taxValue"></TextField>
             </StackLayout>
 
             <StackLayout width="50%" (tap)="openDatePicker()">

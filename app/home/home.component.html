@@ -3,9 +3,12 @@
     <Button row="0" col="0" class="button" height="50" width="50" textAlignment="center" text="&#xf0c9;" fontFamily="FontAwesome"
       (tap)="onDrawerButtonTap()">
     </Button>
-    <Label row="0" col="1" class="action-bar-title" [text]="activeCompany?.name" horizontalAlignment="center"></Label>
+    <Label row="0" col="1" class="action-bar-title" [text]="activeCompany?.name" horizontalAlignment="left"></Label>
 
-    <LogoutButton row="0" col="2"></LogoutButton>
+    <Button row="0" col="2" class="button" height="50" width="50" textAlignment="center" [text]="userName"
+      (tap)="logout()">
+    </Button>
+    <!-- <LogoutButton row="0" col="2"></LogoutButton> -->
   </GridLayout>
 </ActionBar>
 <RadSideDrawer #drawer showOverNavigation="true" [drawerTransition]="sideDrawerTransition">
@@ -19,7 +22,7 @@
   <!--
   Use the tkMainContent directive to display the content of the page when you have an app drawer.
   -->
-  <GridLayout columns="*,*" rows="*,*,*" class="page page-content" tkMainContent>
+  <GridLayout columns="*,*" rows="*,*" class="page page-content" tkMainContent>
     <!-- <Border borderRadius="0" borderWidth="1" borderColor="#FF0000"> -->
     <!-- <CardView margin="10" elevation="3" radius="1"> -->
     <Button class="b-button" textWrap="true" textAlignment="center" [nsRouterLink]="['/dashboard']" row="0" col="0" textWrap="true"
@@ -31,31 +34,31 @@
     </Button>
     <!-- </CardView> -->
     <!-- </Border> -->
-    <Button class="b-button" row="0" col="1" textWrap="true" textAlignment="center">
+    <!-- <Button class="b-button" row="0" col="1" textWrap="true" textAlignment="center">
       <FormattedString>
         <Span text="&#x63;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
         <Span text="Trial Balance" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
-    </Button>
-    <Button class="b-button" [nsRouterLink]="['/sale']" row="1" col="0" textWrap="true" textAlignment="center">
+    </Button> -->
+    <Button class="b-button" [nsRouterLink]="['/sale']" row="0" col="1" textWrap="true" textAlignment="center">
       <FormattedString>
         <Span text="&#x6a;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
         <Span text="Sales Invoice" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
     </Button>
-    <Button class="b-button" row="1" col="1" textWrap="true" textAlignment="center">
+    <!-- <Button class="b-button" row="1" col="1" textWrap="true" textAlignment="center">
       <FormattedString>
         <Span text="&#x6b;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
         <Span text="Purchase Invoice" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
-    </Button>
-    <Button class="b-button" row="2" [nsRouterLink]="['/reports']" col="0" textWrap="true" textAlignment="center">
+    </Button> -->
+    <Button class="b-button" row="1" [nsRouterLink]="['/reports']" col="0" textWrap="true" textAlignment="center">
       <FormattedString>
         <Span text="&#x69;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
         <Span text="Reports" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>
       </FormattedString>
     </Button>
-    <Button class="b-button" row="2" [nsRouterLink]="['/settings']" col="1" textWrap="true" textAlignment="center">
+    <Button class="b-button" row="1" [nsRouterLink]="['/settings']" col="1" textWrap="true" textAlignment="center">
       <FormattedString>
         <Span text="&#x6c;&#x000a;" class="icon-color" fontFamily="1515160234" verticalAlignment="top" fontSize="35"></Span>
         <Span text="Setting" verticalAlignment="bottom" fontSize="12" marginTop="20"></Span>

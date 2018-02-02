@@ -27,9 +27,10 @@ export class SettingsTaxesActions {
       let data: BaseResponse<any, any> = response.payload;
       if (data.status === 'error') {
         dialogs.alert(data.message);
+      } else {
+        let toast = Toast.makeText('Tax Created Successfully');
+        toast.show();
       }
-      let toast = Toast.makeText('Tax Created Successfully');
-      toast.show();
       return { type: 'EmptyAction' };
     });
 
@@ -46,9 +47,10 @@ export class SettingsTaxesActions {
       let data: BaseResponse<any, any> = response.payload;
       if (data.status === 'error') {
         dialogs.alert(data.message);
+      } else {
+        let toast = Toast.makeText('Tax Updated Successfully');
+        toast.show();
       }
-      let toast = Toast.makeText('Tax Updated Successfully');
-      toast.show();
       return { type: 'EmptyAction' };
     });
 

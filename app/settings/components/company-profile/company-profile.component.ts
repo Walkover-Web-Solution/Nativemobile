@@ -156,6 +156,9 @@ export class CompanyProfileComponent implements OnInit {
 
   public submit() {
     let dataToSave = _.cloneDeep(this.companyProfileForm.value);
+    if (dataToSave.email) {
+      dataToSave.email = dataToSave.email.toLowerCase();
+    }
     dataToSave.state = this.stateSource.getValue(dataToSave.state);
     dataToSave.baseCurrency = this.currenciesSource.getValue(dataToSave.baseCurrency);
     this.store.dispatch(this._settingsProfileActions.UpdateProfile(dataToSave));
