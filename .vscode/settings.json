@@ -8,7 +8,7 @@
     "out": true,
     "node_modules": true,
     "platforms": true,
-    "app/**/*.js": true,
+    "app/**/*.js": false,
     "app/**/*.css": true
   }
 }

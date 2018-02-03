@@ -100,7 +100,7 @@
   },
   "scripts": {
     "u": "update-ns-webpack",
-    "start": "cross-env BUILD_PROFILE=test tns debug android --chrome ",
+    "start": "cross-env BUILD_PROFILE=prod tns debug android --chrome ",
     "start:android": "cross-env BUILD_PROFILE=dev tns run android --chrome",
     "start:ios": "cross-env BUILD_PROFILE=test tns run ios",
     "debug:android": "cross-env BUILD_PROFILE=test tns debug android --chrome",

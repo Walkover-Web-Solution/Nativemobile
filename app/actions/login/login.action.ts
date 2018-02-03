@@ -9,8 +9,10 @@ import { AuthenticationService } from "../../services/authentication.service";
 import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from "../../models/api-models/Login";
 import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel } from "../../models/api-models/loginModels";
 import * as dialogs from "ui/dialogs";
+import { Headers, Http, RequestOptions, RequestOptionsArgs } from '@angular/http';
 import * as Toast from 'nativescript-toast';
 
+let config = require('./../../config/config');
 @Injectable()
 
 export class LoginActions {
@@ -156,7 +158,35 @@ export class LoginActions {
       return this.resetPasswordV2Response(res);
 
     });
-  constructor(private actions$: Actions, private _authService: AuthenticationService) {
+
+  @Effect()
+  public LinkedInElectronLogin$: Observable<CustomActions> = this.actions$
+    .ofType(LoginConstants.LinkedInLoginElectron)
+    .switchMap((action: CustomActions) => {
+
+      let options: RequestOptionsArgs = {};
+      options.headers = new Headers();
+      options.headers.append('cache-control', 'no-cache');
+      options.headers.append('Content-Type', 'application/json');
+      options.headers.append('Accept', 'application/json');
+      options.headers.append('Access-Token', action.payload);
+      return this.http.get(config.config.ApiUrl + 'v2/login-with-linkedIn', options).map(p => {
+        console.log(p.json())
+        return p.json()
+      }).catch((a, b) => {
+        return a;
+      });
+    })
+    .map(data => {
+      console.log(JSON.stringify(data));
+      if (data.status === 'error') {
+        return { type: 'EmptyAction' };
+      }
+      // return this.LoginSuccess();
+      return this.signupWithGoogleResponse(data);
+    });
+
+  constructor(private actions$: Actions, private _authService: AuthenticationService, public http: Http) {
 
   }
 
@@ -330,6 +360,12 @@ export class LoginActions {
     return {
       type: LoginConstants.LOGOUT
     }
+  }
+  public LinkedInElectronLogin(value: any): CustomActions {
+    return {
+      type: LoginConstants.LinkedInLoginElectron,
+      payload: value
+    };
   }
   private validateResponse<TResponse, TRequest>(response: BaseResponse<TResponse, TRequest>, successAction: CustomActions, showToast: boolean = false, errorAction: CustomActions = { type: 'EmptyAction' }): CustomActions {
     if (response.status === 'error') {
