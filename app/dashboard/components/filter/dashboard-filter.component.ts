@@ -75,12 +75,24 @@ export class DashboardFilterComponent implements OnInit {
   saveAndClose() {
     let item = this.items.find(f => f.selected);
     let url: string;
+    let customFilterObj: any = this.customFilterObj;
+
+    if (item.val === ChartFilterType.Custom) {
+      customFilterObj.activeYear.startDate = moment(customFilterObj.activeYear.startDate).format('DD-MM-YYYY');
+      customFilterObj.activeYear.endDate = moment(customFilterObj.activeYear.endDate).format('DD-MM-YYYY');
+
+      customFilterObj.lastYear.startDate = moment(customFilterObj.lastYear.startDate).format('DD-MM-YYYY');
+      customFilterObj.lastYear.endDate = moment(customFilterObj.lastYear.endDate).format('DD-MM-YYYY');
+    } else {
+      customFilterObj = null;
+    }
+
     if (this.chartType === ChartType.ProfitLoss) {
       url = '/reports';
-      this.store.dispatch(this._reportsActions.setProfitLossChartFilter(item.val, this.customFilterObj));
+      this.store.dispatch(this._reportsActions.setProfitLossChartFilter(item.val, customFilterObj));
     } else {
       url = '/dashboard';
-      this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val, this.customFilterObj));
+      this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val, customFilterObj));
     }
     this.customFilterObj = new ChartCustomFilter();
     this.routerExtensions.navigateByUrl(url, { clearHistory: true });

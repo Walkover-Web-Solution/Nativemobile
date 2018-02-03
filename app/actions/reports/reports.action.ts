@@ -26,6 +26,8 @@ export class ReportsAction {
       let filterType: ChartFilterType;
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
+      this.store.select(p => p.report.profitLossCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(s => s.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
@@ -55,7 +57,7 @@ export class ReportsAction {
           }
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear);
+      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
       return zip(
         this._dashboardService.Dashboard(op.activeYear.startDate, op.activeYear.endDate, 'monthly', action.payload.refresh),
         of(op)
@@ -160,6 +162,8 @@ export class ReportsAction {
       let filterType: ChartFilterType;
       let fyIndex: number;
       let activeFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
+      this.store.select(p => p.report.profitLossCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
@@ -173,7 +177,7 @@ export class ReportsAction {
           fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, null);
+      let op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
       let request: ProfitLossRequest = {
         refresh: action.payload,
         from: op.activeYear.startDate,
@@ -200,6 +204,8 @@ export class ReportsAction {
       let filterType: ChartFilterType;
       let fyIndex: number;
       let activeFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
+      this.store.select(p => p.report.profitLossCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
@@ -213,7 +219,7 @@ export class ReportsAction {
           fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, null);
+      let op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
       let request: BalanceSheetRequest = {
         refresh: action.payload,
         from: op.activeYear.startDate,

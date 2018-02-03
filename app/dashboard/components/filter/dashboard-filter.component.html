@@ -34,12 +34,12 @@
 
           <StackLayout width="50%" (tap)="openFromDatePicker('activeYear')">
             <Label class="gen-font-style" text="From Date"></Label>
-            <Label text="{{ customFilterObj.fromDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
+            <Label text="{{ customFilterObj.activeYear.startDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
           </StackLayout>
 
           <StackLayout width="50%" (tap)="openToDatePicker('activeYear')">
             <Label class="gen-font-style" text="To Date"></Label>
-            <Label text="{{ customFilterObj.toDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
+            <Label text="{{ customFilterObj.activeYear.endDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
           </StackLayout>
 
         </StackLayout>
@@ -58,12 +58,12 @@
 
           <StackLayout width="50%" (tap)="openFromDatePicker('lastYear')">
             <Label class="gen-font-style" text="From Date"></Label>
-            <Label text="{{ customFilterObj.fromDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
+            <Label text="{{ customFilterObj.lastYear.startDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
           </StackLayout>
 
           <StackLayout width="50%" (tap)="openToDatePicker('lastYear')">
             <Label class="gen-font-style" text="To Date"></Label>
-            <Label text="{{ customFilterObj.toDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
+            <Label text="{{ customFilterObj.lastYear.endDate | date:'dd-MM-yyyy' }}" textWrap="true" marginTop="15" verticalAlignment="bottom"></Label>
           </StackLayout>
 
         </StackLayout>

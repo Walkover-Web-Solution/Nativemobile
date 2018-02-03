@@ -7,6 +7,7 @@ import {
   IPeriodBalances
 } from '../interfaces/dashboard.interface';
 import { IClosingBalance, IForwardBalance } from '../interfaces/ledger.interface';
+import * as moment from 'moment/moment';
 
 /**
  * Model for Audit Dashboard api request
@@ -98,9 +99,9 @@ export class ChartCustomFilter {
   public activeYear: {
     startDate: string,
     endDate: string
-  };
+  } = { startDate: moment().format('DD-MM-YYYY'), endDate: moment().format('DD-MM-YYYY') };
   public lastYear: {
     startDate: string,
     endDate: string,
-  }
+  } = { startDate: moment().format('DD-MM-YYYY'), endDate: moment().format('DD-MM-YYYY') };
 }

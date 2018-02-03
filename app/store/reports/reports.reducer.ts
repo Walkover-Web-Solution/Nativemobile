@@ -94,9 +94,24 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
     //endregion
     //region Set Filter Type
     case ReportConst.SET_PROFIT_LOSS_CHART_FILTER_TYPE: {
-      return Object.assign({}, state, {
-        profitLossChartFilter: action.payload.filterType
-      });
+      if (action.payload.filterType === ChartFilterType.Custom) {
+        return Object.assign({}, state, {
+          profitLossChartFilter: action.payload.filterType,
+          profitLossCustomFilter: action.payload.customFilterObj
+        });
+      } else {
+        return Object.assign({}, state, {
+          profitLossChartFilter: action.payload.filterType,
+          profitLossCustomFilter: {
+            activeYear: {
+              startDate: '', endDate: ''
+            },
+            lastYear: {
+              startDate: '', endDate: ''
+            }
+          }
+        });
+      }
     }
 
     //endregion
