@@ -99,6 +99,7 @@ export class DashboardFilterComponent implements OnInit {
   }
 
   setSelectedItem(selVal) {
+    this.showCustomFilterInputs = selVal === ChartFilterType.Custom;
     this.items.forEach(p => {
       if (p.val === selVal) {
         p.selected = true;

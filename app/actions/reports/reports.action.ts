@@ -442,9 +442,11 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
 
       config.activeYear.startDate = customFilterObj.activeYear.startDate;
       config.activeYear.endDate = customFilterObj.activeYear.endDate;
+      config.activeYear.lable = `${customFilterObj.activeYear.startDate.slice(0,5)} / ${customFilterObj.activeYear.endDate.slice(0,5)}`;
 
       config.lastYear.startDate = customFilterObj.lastYear.startDate;
       config.lastYear.endDate = customFilterObj.lastYear.startDate;
+      config.lastYear.lable = `${customFilterObj.lastYear.startDate.slice(0,5)} / ${customFilterObj.lastYear.endDate.slice(0,5)}`;
 
       config.legend = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       return config;
