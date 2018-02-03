@@ -1,21 +1,21 @@
-import {Actions, Effect} from "@ngrx/effects";
-import {DashboardService} from "~/services/dashboard.service";
-import {CustomActions} from "~/store/customActions";
-import {Observable} from "rxjs/Observable";
-import {ChartFilterType, IProfitLossChartResponse} from "~/models/interfaces/dashboard.interface";
-import {Injectable} from "@angular/core";
-import {zip} from "rxjs/observable/zip";
+import { Actions, Effect } from "@ngrx/effects";
+import { DashboardService } from "~/services/dashboard.service";
+import { CustomActions } from "~/store/customActions";
+import { Observable } from "rxjs/Observable";
+import { ChartFilterType, IProfitLossChartResponse } from "~/models/interfaces/dashboard.interface";
+import { Injectable } from "@angular/core";
+import { zip } from "rxjs/observable/zip";
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
-import {ChartFilterConfigs} from "~/models/api-models/Dashboard";
-import {ActiveFinancialYear} from "~/models/api-models/Company";
-import {AppState} from "~/store";
-import {createSelector, Store} from "@ngrx/store";
+import { ChartFilterConfigs, ChartCustomFilter } from "~/models/api-models/Dashboard";
+import { ActiveFinancialYear } from "~/models/api-models/Company";
+import { AppState } from "~/store";
+import { createSelector, Store } from "@ngrx/store";
 
-import {of} from "rxjs/observable/of";
-import {ReportConst} from "~/actions/reports/reports.const";
-import {TlPlService} from "~/services/tl-pl.service";
-import {BalanceSheetRequest, ProfitLossRequest} from "~/models/api-models/tb-pl-bs";
+import { of } from "rxjs/observable/of";
+import { ReportConst } from "~/actions/reports/reports.const";
+import { TlPlService } from "~/services/tl-pl.service";
+import { BalanceSheetRequest, ProfitLossRequest } from "~/models/api-models/tb-pl-bs";
 
 @Injectable()
 export class ReportsAction {
@@ -28,7 +28,7 @@ export class ReportsAction {
       let lastFinancialYear: ActiveFinancialYear;
       this.store.select(s => s.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-        return {companies, uniqueName};
+        return { companies, uniqueName };
       })).take(1).subscribe(res => {
         if (!res.companies) {
           return;
@@ -64,7 +64,7 @@ export class ReportsAction {
       if (res[0].status === 'success') {
         let obj: IProfitLossChartResponse = {
           profitLossActiveYear: res[0].body.profitLoss,
-          lable: {activeYearLabel: res[1].activeYear.lable},
+          lable: { activeYearLabel: res[1].activeYear.lable },
           chartTitle: res[1].ChartTitle,
           legend: res[1].legend
         };
@@ -76,7 +76,7 @@ export class ReportsAction {
       else {
         let obj: IProfitLossChartResponse = {
           profitLossActiveYear: null,
-          lable: {activeYearLabel: res[1].activeYear.lable},
+          lable: { activeYearLabel: res[1].activeYear.lable },
           chartTitle: res[1].ChartTitle,
           legend: res[1].legend
         };
@@ -94,9 +94,11 @@ export class ReportsAction {
       let filterType: ChartFilterType;
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
       this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
+      this.store.select(p => p.report.profitLossCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-        return {companies, uniqueName};
+        return { companies, uniqueName };
       })).take(1).subscribe(res => {
         if (!res.companies) {
           return;
@@ -123,7 +125,7 @@ export class ReportsAction {
           }
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear);
+      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
       return zip(
         this._dashboardService.Dashboard(op.lastYear.startDate, op.lastYear.endDate, 'monthly', action.payload.refresh),
         of(op)
@@ -132,7 +134,7 @@ export class ReportsAction {
       if (res[0].status === 'success') {
         let obj: IProfitLossChartResponse = {
           profitLossLastYear: res[0].body.profitLoss,
-          lable: {lastYearLabel: res[1].lastYear.lable},
+          lable: { lastYearLabel: res[1].lastYear.lable },
           chartTitle: res[1].ChartTitle,
         };
         return {
@@ -142,7 +144,7 @@ export class ReportsAction {
       } else {
         let obj: IProfitLossChartResponse = {
           profitLossLastYear: null,
-          lable: {lastYearLabel: res[1].lastYear.lable},
+          lable: { lastYearLabel: res[1].lastYear.lable },
           chartTitle: res[1].ChartTitle,
         };
         return {
@@ -160,7 +162,7 @@ export class ReportsAction {
       let activeFinancialYear: ActiveFinancialYear;
       this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-        return {companies, uniqueName};
+        return { companies, uniqueName };
       })).take(1).subscribe(res => {
         if (!res.companies) {
           return;
@@ -200,7 +202,7 @@ export class ReportsAction {
       let activeFinancialYear: ActiveFinancialYear;
       this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-        return {companies, uniqueName};
+        return { companies, uniqueName };
       })).take(1).subscribe(res => {
         if (!res.companies) {
           return;
@@ -233,28 +235,28 @@ export class ReportsAction {
     });
 
   constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
-              private _tlPlService: TlPlService) {
+    private _tlPlService: TlPlService) {
 
   }
 
   public getProfitLossChartActiveYear(refresh: boolean = false): CustomActions {
     return {
       type: ReportConst.PROFIT_LOSS_CHART.GET_PROFIT_LOSS_CHART_DATA_ACTIVE_YEAR,
-      payload: {refresh}
+      payload: { refresh }
     };
   }
 
   public getProfitLossChartLastYear(refresh: boolean = false): CustomActions {
     return {
       type: ReportConst.PROFIT_LOSS_CHART.GET_PROFIT_LOSS_CHART_DATA_LAST_YEAR,
-      payload: {refresh}
+      payload: { refresh }
     };
   }
 
-  public setProfitLossChartFilter(filterType: ChartFilterType): CustomActions {
+  public setProfitLossChartFilter(filterType: ChartFilterType, customFilterObj: ChartCustomFilter): CustomActions {
     return {
       type: ReportConst.SET_PROFIT_LOSS_CHART_FILTER_TYPE,
-      payload: {filterType}
+      payload: { filterType, customFilterObj }
     };
   }
 
@@ -273,7 +275,7 @@ export class ReportsAction {
   }
 }
 
-const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear): ChartFilterConfigs => {
+const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear, customFilterObj?: ChartCustomFilter): ChartFilterConfigs => {
   let config = new ChartFilterConfigs();
   switch (filterType) {
     case ChartFilterType.ThisMonthToDate: // This Month to Date
@@ -431,6 +433,12 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
       return config;
     case ChartFilterType.Custom:
       config.ChartTitle = 'Custom';
+
+      config.activeYear.startDate = customFilterObj.activeYear.startDate;
+      config.activeYear.endDate = customFilterObj.activeYear.endDate;
+
+      config.lastYear.startDate = customFilterObj.lastYear.startDate;
+      config.lastYear.endDate = customFilterObj.lastYear.startDate;
 
       config.legend = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       return config;

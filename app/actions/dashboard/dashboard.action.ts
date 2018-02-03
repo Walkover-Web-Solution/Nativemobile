@@ -9,7 +9,7 @@ import { zip } from "rxjs/observable/zip";
 import * as dialogs from "ui/dialogs";
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
-import { ChartFilterConfigs } from "~/models/api-models/Dashboard";
+import { ChartFilterConfigs, ChartCustomFilter } from "~/models/api-models/Dashboard";
 import { ActiveFinancialYear } from "~/models/api-models/Company";
 import { AppState } from "~/store";
 import { Store, createSelector } from "@ngrx/store";
@@ -371,10 +371,10 @@ export class DashboardActions {
     };
   }
 
-  public setChartFilter(chartType: ChartType, filterType: ChartFilterType): CustomActions {
+  public setChartFilter(chartType: ChartType, filterType: ChartFilterType, customFilterObj: ChartCustomFilter): CustomActions {
     return {
       type: DashboardConst.SET_CHART_FILTER_TYPE,
-      payload: { chartType, filterType }
+      payload: { chartType, filterType, customFilterObj }
     };
   }
 }

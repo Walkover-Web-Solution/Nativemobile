@@ -1,8 +1,9 @@
-import {CustomActions} from "~/store/customActions";
-import {ChartFilterType, IProfitLossChartResponse} from "~/models/interfaces/dashboard.interface";
-import {ReportConst} from "~/actions/reports/reports.const";
-import {BalanceSheetData, ProfitLossData} from "~/models/api-models/tb-pl-bs";
+import { CustomActions } from "~/store/customActions";
+import { ChartFilterType, IProfitLossChartResponse } from "~/models/interfaces/dashboard.interface";
+import { ReportConst } from "~/actions/reports/reports.const";
+import { BalanceSheetData, ProfitLossData } from "~/models/api-models/tb-pl-bs";
 import * as _ from 'lodash';
+import { ChartCustomFilter } from "~/models/api-models/Dashboard";
 
 interface PlState {
   data?: ProfitLossData;
@@ -19,13 +20,15 @@ interface BsState {
 export interface ReportState {
   profitLossChart: IProfitLossChartResponse;
   profitLossChartFilter: ChartFilterType;
+  profitLossCustomFilter: ChartCustomFilter;
+
   profitLossSheet: PlState,
   balanceSheet: BsState
 }
 
 const initialState: ReportState = {
   profitLossChart: {
-    chartTitle: '', lable: {activeYearLabel: '', lastYearLabel: ''},
+    chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' },
     profitLossActiveYear: null, profitLossLastYear: null, legend: []
   },
   profitLossChartFilter: ChartFilterType.LastMonth,
@@ -38,6 +41,14 @@ const initialState: ReportState = {
     data: null,
     noData: true,
     showLoader: false
+  },
+  profitLossCustomFilter: {
+    activeYear: {
+      startDate: '', endDate: ''
+    },
+    lastYear: {
+      startDate: '', endDate: ''
+    }
   }
 };
 
@@ -62,7 +73,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
     case ReportConst.PROFIT_LOSS_CHART.GET_PROFIT_LOSS_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE: {
       return Object.assign({}, state, {
         profitLossChart: {
-          chartTitle: '', lable: {activeYearLabel: '', lastYearLabel: ''}, profitLossActiveYear: null,
+          chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, profitLossActiveYear: null,
           profitLossLastYear: null, legend: []
         },
       })
@@ -87,6 +98,7 @@ export function ReportReducer(state: ReportState = initialState, action: CustomA
         profitLossChartFilter: action.payload.filterType
       });
     }
+
     //endregion
     // region ProfitLoss Sheet Data
     case ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST: {

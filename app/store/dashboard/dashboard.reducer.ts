@@ -1,6 +1,7 @@
 import { IExpensesChartClosingBalanceResponse, IRevenueChartClosingBalanceResponse, ChartFilterType, ChartType } from "~/models/interfaces/dashboard.interface";
 import { CustomActions } from "~/store/customActions";
 import { DashboardConst } from "~/actions/dashboard/dashboard.const";
+import { ChartCustomFilter } from "~/models/api-models/Dashboard";
 
 export interface DashboardState {
   expensesChart: IExpensesChartClosingBalanceResponse;
@@ -10,6 +11,9 @@ export interface DashboardState {
 
   revenueChartFilter: ChartFilterType;
   expensesChartFilter: ChartFilterType;
+
+  revenueChartCustomFilter: ChartCustomFilter;
+  expensesChartCustomFilter: ChartCustomFilter;
 }
 
 const initialState: DashboardState = {
@@ -24,7 +28,23 @@ const initialState: DashboardState = {
   expensesChartError: '',
   revenueChartError: '',
   revenueChartFilter: ChartFilterType.ThisMonthToDate,
-  expensesChartFilter: ChartFilterType.ThisMonthToDate
+  expensesChartFilter: ChartFilterType.ThisMonthToDate,
+  revenueChartCustomFilter: {
+    activeYear: {
+      startDate: '', endDate: ''
+    },
+    lastYear: {
+      startDate: '', endDate: ''
+    },
+  },
+  expensesChartCustomFilter: {
+    activeYear: {
+      startDate: '', endDate: ''
+    },
+    lastYear: {
+      startDate: '', endDate: ''
+    },
+  }
 }
 
 export function DashboardReducer(state: DashboardState = initialState, action: CustomActions): DashboardState {

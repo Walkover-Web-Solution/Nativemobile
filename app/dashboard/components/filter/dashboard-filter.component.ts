@@ -1,11 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {PageRoute, RouterExtensions} from 'nativescript-angular/router';
-import {Store} from '@ngrx/store';
-import {AppState} from '~/store';
-import {DashboardActions} from '~/actions/dashboard/dashboard.action';
-import {ChartFilterType, ChartType} from '~/models/interfaces/dashboard.interface';
-import {ReportsAction} from "~/actions/reports/reports.action";
+import { Component, OnInit } from '@angular/core';
+import { PageRoute, RouterExtensions } from 'nativescript-angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '~/store';
+import { DashboardActions } from '~/actions/dashboard/dashboard.action';
+import { ChartFilterType, ChartType } from '~/models/interfaces/dashboard.interface';
+import { ReportsAction } from "~/actions/reports/reports.action";
+import * as moment from 'moment/moment';
+import { ChartCustomFilter } from '~/models/api-models/Dashboard';
 
+const ModalPicker = require("nativescript-modal-datetimepicker").ModalDatetimepicker;
 @Component({
   selector: 'ns-dashboard-filter',
   moduleId: module.id,
@@ -15,21 +18,25 @@ import {ReportsAction} from "~/actions/reports/reports.action";
 export class DashboardFilterComponent implements OnInit {
   public chartType: ChartType;
   public items: Array<{ text: string, selected: boolean, val: ChartFilterType }>;
+  public showCustomFilterInputs: boolean = false;
+  public customFilterObj: ChartCustomFilter;
 
   constructor(private routerExtensions: RouterExtensions, private pageRoute: PageRoute, private store: Store<AppState>,
-              private _dashboardActions: DashboardActions, private _reportsActions: ReportsAction) {
+    private _dashboardActions: DashboardActions, private _reportsActions: ReportsAction) {
 
     this.items = [
-      {val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date', selected: false},
-      {val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date', selected: false},
-      {val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date', selected: false},
-      {val: ChartFilterType.ThisYearToDate, text: 'This Year to Date', selected: false},
-      {val: ChartFilterType.LastMonth, text: 'Last Month', selected: false},
-      {val: ChartFilterType.LastQuater, text: 'Last Quater', selected: false},
-      {val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year', selected: false},
-      {val: ChartFilterType.LastYear, text: 'Last Year', selected: false},
-      {val: ChartFilterType.Custom, text: 'Custom', selected: false},
+      { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date', selected: false },
+      { val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date', selected: false },
+      { val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date', selected: false },
+      { val: ChartFilterType.ThisYearToDate, text: 'This Year to Date', selected: false },
+      { val: ChartFilterType.LastMonth, text: 'Last Month', selected: false },
+      { val: ChartFilterType.LastQuater, text: 'Last Quater', selected: false },
+      { val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year', selected: false },
+      { val: ChartFilterType.LastYear, text: 'Last Year', selected: false },
+      { val: ChartFilterType.Custom, text: 'Custom', selected: false },
     ];
+
+    this.customFilterObj = new ChartCustomFilter();
   }
 
   ngOnInit() {
@@ -59,6 +66,7 @@ export class DashboardFilterComponent implements OnInit {
   }
 
   changeCheckedRadio(item: { val: ChartFilterType, text: string, selected: boolean }) {
+    this.showCustomFilterInputs = item.val === ChartFilterType.Custom;
     this.items.forEach(option => {
       option.selected = option.val === item.val;
     });
@@ -69,12 +77,13 @@ export class DashboardFilterComponent implements OnInit {
     let url: string;
     if (this.chartType === ChartType.ProfitLoss) {
       url = '/reports';
-      this.store.dispatch(this._reportsActions.setProfitLossChartFilter(item.val));
+      this.store.dispatch(this._reportsActions.setProfitLossChartFilter(item.val, this.customFilterObj));
     } else {
       url = '/dashboard';
-      this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val));
+      this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val, this.customFilterObj));
     }
-    this.routerExtensions.navigateByUrl(url, {clearHistory: true});
+    this.customFilterObj = new ChartCustomFilter();
+    this.routerExtensions.navigateByUrl(url, { clearHistory: true });
   }
 
   setSelectedItem(selVal) {
@@ -82,6 +91,36 @@ export class DashboardFilterComponent implements OnInit {
       if (p.val === selVal) {
         p.selected = true;
       }
+    });
+  }
+
+  public openFromDatePicker(year: string = 'activeYear') {
+    const picker = new ModalPicker();
+    picker.pickDate({
+      title: "Select From Date",
+      theme: "dark",
+      maxDate: new Date(new Date().getFullYear(), 11, 31),
+      startingDate: moment(this.customFilterObj[year].startDate, 'DD-MM-YYYY').toDate()
+    }).then((result) => {
+      let date = `${result.day}-${result.month}-${result.year}`
+      this.customFilterObj[year].startDate = moment(date, 'DD-MM-YYYY').toDate();
+    }).catch((error) => {
+      console.log("Error: " + JSON.stringify(error));
+    });
+  }
+
+  public openToDatePicker(year: string = 'activeYear') {
+    const picker = new ModalPicker();
+    picker.pickDate({
+      title: "Select To Date",
+      theme: "dark",
+      maxDate: new Date(new Date().getFullYear(), 11, 31),
+      startingDate: moment(this.customFilterObj[year].endDate, 'DD-MM-YYYY').toDate()
+    }).then((result) => {
+      let date = `${result.day}-${result.month}-${result.year}`
+      this.customFilterObj[year].endDate = moment(date, 'DD-MM-YYYY').toDate();
+    }).catch((error) => {
+      console.log("Error: " + JSON.stringify(error));
     });
   }
 }
