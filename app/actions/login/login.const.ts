@@ -32,5 +32,7 @@ export const LoginConstants = {
 
   SET_INITIAL_SESSION_STATE: 'SET_INITIAL_SESSION_STATE',
   LOGOUT: 'LOGOUT',
-  RESET_LOGIN_STATE: 'RESET_LOGIN_STATE'
+  RESET_LOGIN_STATE: 'RESET_LOGIN_STATE',
+
+  LinkedInLoginElectron: 'LinkedInLoginElectron'
 }

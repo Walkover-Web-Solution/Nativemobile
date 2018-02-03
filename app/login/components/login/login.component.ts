@@ -113,6 +113,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           }, err => {
             if (err) {
               dialogs.alert('Something Went Wrong! Please Try Again');
+
             }
           })
       }
@@ -121,19 +122,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   public linkedinLogin() {
     SocialLogin.loginWithLinkedIn((result) => {
+      console.log(JSON.stringify(result));
+
       if (result.error || !result.authCode) {
         dialogs.alert('Something Went Wrong! Please Try Again');
       } else {
-        this.authservice.GetAtuhToken(result)
-          .mergeMap(token => this.authservice.LoginWithLinkedin(token.access_token))
-          .subscribe(LoginResult => {
-            console.log(JSON.stringify(LoginResult));
-            // this.store.dispatch(this._loginActions.sin(LoginResult));
-          }, err => {
-            if (err) {
-              dialogs.alert('Something Went Wrong! Please Try Again');
-            }
-          })
+        result.authCode = JSON.parse(result.authCode).accessTokenValue;
+        this.store.dispatch(this._loginActions.LinkedInElectronLogin(result.authCode));
       }
     });
   }
