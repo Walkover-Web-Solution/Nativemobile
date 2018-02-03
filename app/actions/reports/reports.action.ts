@@ -281,7 +281,7 @@ export class ReportsAction {
   }
 }
 
-const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear, customFilterObj?: ChartCustomFilter): ChartFilterConfigs => {
+const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear, customFilterObj: ChartCustomFilter): ChartFilterConfigs => {
   let config = new ChartFilterConfigs();
   switch (filterType) {
     case ChartFilterType.ThisMonthToDate: // This Month to Date

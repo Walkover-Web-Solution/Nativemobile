@@ -129,14 +129,44 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
 
     case DashboardConst.SET_CHART_FILTER_TYPE: {
       if (action.payload.chartType === ChartType.Revenue) {
-        return Object.assign({}, state, {
-          revenueChartFilter: action.payload.filterType
-        });
+        if (action.payload.filterType === ChartFilterType.Custom) {
+          return Object.assign({}, state, {
+            revenueChartFilter: action.payload.filterType,
+            revenueChartCustomFilter: action.payload.customFilterObj
+          });
+        } else {
+          return Object.assign({}, state, {
+            revenueChartFilter: action.payload.filterType,
+            revenueChartCustomFilter: {
+              activeYear: {
+                startDate: '', endDate: ''
+              },
+              lastYear: {
+                startDate: '', endDate: ''
+              },
+            }
+          });
+        }
+      } else {
+        if (action.payload.filterType === ChartFilterType.Custom) {
+          return Object.assign({}, state, {
+            expensesChartFilter: action.payload.filterType,
+            expensesChartCustomFilter: action.payload.customFilterObj
+          })
+        } else {
+          return Object.assign({}, state, {
+            expensesChartFilter: action.payload.filterType,
+            expensesChartCustomFilter: {
+              activeYear: {
+                startDate: '', endDate: ''
+              },
+              lastYear: {
+                startDate: '', endDate: ''
+              },
+            }
+          })
+        }
       }
-
-      return Object.assign({}, state, {
-        expensesChartFilter: action.payload.filterType
-      })
     }
 
     default:

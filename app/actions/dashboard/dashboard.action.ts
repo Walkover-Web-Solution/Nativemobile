@@ -25,6 +25,8 @@ export class DashboardActions {
       let filterType: ChartFilterType;
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
+      this.store.select(p => p.dashboard.expensesChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(s => s.dashboard.expensesChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
@@ -54,7 +56,7 @@ export class DashboardActions {
           }
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear)
+      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
       return zip(
         this._dashboardService.GetClosingBalance('operatingcost', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
         this._dashboardService.GetClosingBalance('indirectexpenses', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
@@ -126,6 +128,8 @@ export class DashboardActions {
       let filterType: ChartFilterType;
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
+      this.store.select(p => p.dashboard.expensesChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(p => p.dashboard.expensesChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
@@ -155,7 +159,7 @@ export class DashboardActions {
           }
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear)
+      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
       return zip(
         this._dashboardService.GetClosingBalance('operatingcost', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
         this._dashboardService.GetClosingBalance('indirectexpenses', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
@@ -226,6 +230,8 @@ export class DashboardActions {
       let filterType: ChartFilterType;
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
+      this.store.select(p => p.dashboard.revenueChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
@@ -255,7 +261,7 @@ export class DashboardActions {
           }
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear)
+      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
       return zip(
         this._dashboardService.GetClosingBalance('revenuefromoperations', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
         this._dashboardService.GetClosingBalance('otherincome', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
@@ -286,6 +292,8 @@ export class DashboardActions {
       let filterType: ChartFilterType;
       let activeFinancialYear: ActiveFinancialYear;
       let lastFinancialYear: ActiveFinancialYear;
+      let customFilterObj: ChartCustomFilter;
+      this.store.select(p => p.dashboard.revenueChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
       this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(p => filterType = p);
       this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
         return { companies, uniqueName };
@@ -315,7 +323,7 @@ export class DashboardActions {
           }
         }
       });
-      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear)
+      let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
       return zip(
         this._dashboardService.GetClosingBalance('revenuefromoperations', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
         this._dashboardService.GetClosingBalance('otherincome', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
@@ -379,7 +387,7 @@ export class DashboardActions {
   }
 }
 
-const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear): ChartFilterConfigs => {
+const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear, customFilterObj: ChartCustomFilter): ChartFilterConfigs => {
   let config = new ChartFilterConfigs();
   switch (filterType) {
     case ChartFilterType.ThisMonthToDate: // This Month to Date
@@ -488,6 +496,12 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
       return config;
     case ChartFilterType.Custom:
       config.ChartTitle = 'Custom';
+
+      config.activeYear.startDate = customFilterObj.activeYear.startDate;
+      config.activeYear.endDate = customFilterObj.activeYear.endDate;
+
+      config.lastYear.startDate = customFilterObj.lastYear.startDate;
+      config.lastYear.endDate = customFilterObj.lastYear.startDate;
       return config;
     default:
       return config;
