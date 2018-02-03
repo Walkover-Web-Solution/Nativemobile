@@ -1,14 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
-import {Store} from '@ngrx/store';
-import {AppState} from '~/store';
-import {Observable} from 'rxjs/Observable';
-import {BaseResponse} from '../../../models/api-models/BaseResponse';
-import {Router} from '@angular/router';
-import {SettingsTaxesService} from '../../../services/settings.taxes.service';
-import {CustomActions} from '../../../store/customActions';
-import {SettingsTaxesConstants} from '~/actions/settings/taxes/settings.taxes.const';
+import { Injectable } from '@angular/core';
+import { Actions, Effect } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { AppState } from '~/store';
+import { Observable } from 'rxjs/Observable';
+import { BaseResponse } from '../../../models/api-models/BaseResponse';
+import { Router } from '@angular/router';
+import { SettingsTaxesService } from '../../../services/settings.taxes.service';
+import { CustomActions } from '../../../store/customActions';
+import { SettingsTaxesConstants } from '~/actions/settings/taxes/settings.taxes.const';
 import * as dialogs from "ui/dialogs";
+import * as Toast from 'nativescript-toast';
 
 @Injectable()
 export class SettingsTaxesActions {
@@ -26,8 +27,11 @@ export class SettingsTaxesActions {
       let data: BaseResponse<any, any> = response.payload;
       if (data.status === 'error') {
         dialogs.alert(data.message);
+      } else {
+        let toast = Toast.makeText('Tax Created Successfully');
+        toast.show();
       }
-      return {type: 'EmptyAction'};
+      return { type: 'EmptyAction' };
     });
 
   @Effect()
@@ -43,6 +47,9 @@ export class SettingsTaxesActions {
       let data: BaseResponse<any, any> = response.payload;
       if (data.status === 'error') {
         dialogs.alert(data.message);
+      } else {
+        let toast = Toast.makeText('Tax Updated Successfully');
+        toast.show();
       }
       return { type: 'EmptyAction' };
     });
@@ -67,9 +74,9 @@ export class SettingsTaxesActions {
   //   });
 
   constructor(private action$: Actions,
-              private router: Router,
-              private store: Store<AppState>,
-              private settingsTaxesService: SettingsTaxesService) {
+    private router: Router,
+    private store: Store<AppState>,
+    private settingsTaxesService: SettingsTaxesService) {
   }
 
   public CreateTax(value): CustomActions {

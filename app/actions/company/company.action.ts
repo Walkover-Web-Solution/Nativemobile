@@ -15,6 +15,7 @@ import { CompanyResponse, StateDetailsResponse, TaxResponse } from "../../models
 import { AppState } from "~/store";
 import { Store } from "@ngrx/store";
 import { GeneralService } from "~/services/general.service";
+import * as Toast from 'nativescript-toast';
 
 @Injectable()
 
@@ -73,6 +74,8 @@ export class CompanyActions {
         return this.changeCompanyResponse(dummyResponse);
       }
       this._generalServices.companyUniqueName = response.request;
+      let toast = Toast.makeText('Company Switched Successfully');
+      toast.show();
       return this.changeCompanyResponse(response);
     });
 

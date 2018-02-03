@@ -13,7 +13,7 @@ import { CompanyResponse } from '~/models/api-models/Company';
 import { MyDrawerItem } from '~/shared/my-drawer-item/my-drawer-item';
 import { createSelector } from 'reselect';
 import { TNSFontIconService } from 'nativescript-ngx-fonticon';
-
+import * as dialogs from 'ui/dialogs';
 
 @Component({
   selector: 'ns-home',
@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild("drawer") drawerComponent: RadSideDrawerComponent;
   private _sideDrawerTransition: DrawerTransitionBase;
   public userStream$: Observable<VerifyEmailResponseModel>;
+  public userName: string;
   public activeCompany: CompanyResponse;
   public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
   public companies: MyDrawerItem[] = [];
@@ -65,6 +66,19 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
 
     });
+
+    this.userStream$.subscribe(u => {
+      if (u && u.user) {
+        let userEmail = u.user.email;
+        if (u.user.name.match(/\s/g)) {
+          let name = u.user.name;
+          let tmpName = name.split(' ');
+          this.userName = tmpName[0][0] + tmpName[1][0];
+        } else {
+          this.userName = u.user.name[0] + u.user.name[1];
+        }
+      }
+    })
   }
   public get sideDrawerTransition(): DrawerTransitionBase {
     return this._sideDrawerTransition;
@@ -75,6 +89,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
   public onDrawerButtonTap(): void {
     this.drawerComponent.sideDrawer.showDrawer();
+  }
+
+  public logout() {
+
+    dialogs.confirm({
+      title: 'Logout',
+      message: 'Are you sure you want to logout?',
+      okButtonText: 'Yes',
+      cancelButtonText: 'No'
+    }).then(r => {
+      if (r) {
+        this.store.dispatch(this._loginActions.logout());
+        this.routerExtensions.navigateByUrl('/login', { clearHistory: true });
+      }
+    });
   }
 
   public changeCompany(item: MyDrawerItem) {

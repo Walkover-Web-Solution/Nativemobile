@@ -1,14 +1,15 @@
-import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
-import {Action, Store} from '@ngrx/store';
-import {AppState} from '~/store';
-import {Observable} from 'rxjs/Observable';
-import {BaseResponse} from '~/models/api-models/BaseResponse';
-import {Router} from '@angular/router';
-import {SettingsProfileService} from '~/services/settings.profile.service';
-import {CustomActions} from '~/store/customActions';
-import {SettingsProfileConstants} from "~/actions/settings/profile/settings.profile.const";
+import { Injectable } from '@angular/core';
+import { Actions, Effect } from '@ngrx/effects';
+import { Action, Store } from '@ngrx/store';
+import { AppState } from '~/store';
+import { Observable } from 'rxjs/Observable';
+import { BaseResponse } from '~/models/api-models/BaseResponse';
+import { Router } from '@angular/router';
+import { SettingsProfileService } from '~/services/settings.profile.service';
+import { CustomActions } from '~/store/customActions';
+import { SettingsProfileConstants } from "~/actions/settings/profile/settings.profile.const";
 import * as dialogs from "ui/dialogs";
+import * as Toast from 'nativescript-toast';
 
 @Injectable()
 export class SettingsProfileActions {
@@ -28,14 +29,17 @@ export class SettingsProfileActions {
       let data: BaseResponse<any, any> = response.payload;
       if (data.status === 'error') {
         dialogs.alert(data.message);
+      } else {
+        let toast = Toast.makeText('Profile Updated Successfully');
+        toast.show();
       }
-      return {type: 'EmptyAction'};
+      return { type: 'EmptyAction' };
     });
 
   constructor(private action$: Actions,
-              private router: Router,
-              private store: Store<AppState>,
-              private settingsProfileService: SettingsProfileService) {
+    private router: Router,
+    private store: Store<AppState>,
+    private settingsProfileService: SettingsProfileService) {
   }
 
   public UpdateProfile(value): CustomActions {

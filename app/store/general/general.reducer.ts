@@ -30,7 +30,7 @@ const initialNavObj: MyDrawerItem[] = [
     router: '/dashboard'
   } as MyDrawerItem,
   {
-    title: 'Trail Balance',
+    title: 'Trial Balance',
     icon: String.fromCharCode(0x63),
     needTopHr: true,
     fontFamily: '1515160234',
