@@ -47,7 +47,9 @@ export class TlPlService {
     let filteredRequest = (Object.keys(request)
       .filter(p => request[p] != null)
       .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
-
+    console.log(JSON.stringify(config.config.ApiUrl + TB_PL_BS_API.GET_PROFIT_LOSS
+      .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName))));
+    console.log(JSON.stringify(filteredRequest));
     return this._http.get(config.config.ApiUrl + TB_PL_BS_API.GET_PROFIT_LOSS
       .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
       .map((res) => {

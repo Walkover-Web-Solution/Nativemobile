@@ -37,7 +37,6 @@ export class PlDataComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fetchData(true);
 
     this.data$.subscribe(da => {
       if (da) {
