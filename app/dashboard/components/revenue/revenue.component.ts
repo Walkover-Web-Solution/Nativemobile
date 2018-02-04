@@ -1,8 +1,8 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ObservableArray} from 'tns-core-modules/data/observable-array/observable-array';
-import {AppState} from '~/store';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
+import { AppState } from '~/store';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import {
   ChartFilterType,
@@ -10,11 +10,11 @@ import {
   IChildGroups,
   IRevenueChartClosingBalanceResponse
 } from '~/models/interfaces/dashboard.interface';
-import {AccountChartDataLastCurrentYear} from '~/models/view-models/AccountChartDataLastCurrentYear';
-import {INameUniqueName} from '~/models/interfaces/nameUniqueName.interface';
-import {DashboardActions} from '~/actions/dashboard/dashboard.action';
-import {Page} from 'tns-core-modules/ui/page/page';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
+import { AccountChartDataLastCurrentYear } from '~/models/view-models/AccountChartDataLastCurrentYear';
+import { INameUniqueName } from '~/models/interfaces/nameUniqueName.interface';
+import { DashboardActions } from '~/actions/dashboard/dashboard.action';
+import { Page } from 'tns-core-modules/ui/page/page';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Component({
   selector: 'ns-revenue-chart,[ns-revenue-chart]',
@@ -35,7 +35,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public lastYearGrandAmount: number = 0;
   public activePieChartAmount: number = 0;
   public lastPieChartAmount: number = 0;
-
+  public selectedSeriesLabel: string = '';
   public chartFilterType$: Observable<ChartFilterType>;
   public chartFilterTitle: string = 'Custom';
   public activeYearChartFormatedDate: string;
@@ -157,6 +157,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
   public calculatePieChartPer(t) {
     let activeYearIndexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount || 0;
     let lastYearIndexTotal = this.lastYearAccountsRanks.getItem(t.pointIndex).amount || 0;
+
+    this.selectedSeriesLabel = this.activeYearAccountsRanks.getItem(t.pointIndex).name;
 
     this.activePieChartAmount = Math.round((activeYearIndexTotal * 100) / this.activeYearGrandAmount) || 0;
     this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;

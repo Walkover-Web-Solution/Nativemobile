@@ -1,10 +1,14 @@
-<StackLayout rows="10,*" columns="*"  padding="0 10">
+<StackLayout rows="10,*" columns="*" padding="0 10">
   <FlexboxLayout row="0" col="0" justifyContent="space-between" margin="10">
     <Label text="Expenses ({{ chartFilterTitle }})" verticalAlignment="center"></Label>
     <Label text="&#xf1de;" fontSize="20" [nsRouterLink]="['/dashboard','filter', chartType]" class="" fontFamily="FontAwesome"></Label>
   </FlexboxLayout>
   <StackLayout class="hr-light"></StackLayout>
   <StackLayout>
+
+    <FlexboxLayout justifyContent="flex-end" margin="5 0">
+      <Label [text]="selectedSeriesLabel" color="#418dcb" textWrap="true"></Label>
+    </FlexboxLayout>
 
     <FlexboxLayout justifyContent="space-around">
       <ns-pie-chart [maxPoint]="activePieChartAmount" [chartColor]="'#c1c1c1'" [indicatorColor]="'#f39660'"></ns-pie-chart>

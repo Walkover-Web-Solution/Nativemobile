@@ -33,6 +33,7 @@ export class PlChartComponent implements OnInit, OnDestroy {
   public chartFilterTitle: string = 'Custom';
   public activeYearChartFormatedDate: string;
   public lastYearChartFormatedDate: string;
+  public selectedSeriesLabel: string = '';
   private monthsArray: string[] = [];
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -127,6 +128,8 @@ export class PlChartComponent implements OnInit, OnDestroy {
   public calculatePieChartPer(t) {
     let activeYearIndexTotal = this.activeYearRanks.getItem(t.pointIndex).value || 0;
     let lastYearIndexTotal = this.lastYearRanks.getItem(t.pointIndex).value || 0;
+
+    this.selectedSeriesLabel = this.activeYearRanks.getItem(t.pointIndex).label;
 
     this.activePieChartAmount = Math.round((activeYearIndexTotal * 100) / this.activeYearGrandAmount) || 0;
     this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;

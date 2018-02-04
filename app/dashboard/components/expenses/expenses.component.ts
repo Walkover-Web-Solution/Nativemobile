@@ -38,6 +38,7 @@ export class ExpensesChartComponent implements OnInit {
   public chartFilterTitle: string = 'Custom';
   public activeYearChartFormatedDate: string;
   public lastYearChartFormatedDate: string;
+  public selectedSeriesLabel: string = '';
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page, private cd: ChangeDetectorRef) {
@@ -159,6 +160,8 @@ export class ExpensesChartComponent implements OnInit {
   public calculatePieChartPer(t) {
     let activeYearIndexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount || 0;
     let lastYearIndexTotal = this.lastYearAccountsRanks.getItem(t.pointIndex).amount || 0;
+
+    this.selectedSeriesLabel = this.activeYearAccountsRanks.getItem(t.pointIndex).name;
 
     this.activePieChartAmount = Math.round((activeYearIndexTotal * 100) / this.activeYearGrandAmount) || 0;
     this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;
