@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     this.signupWithGoogleSuccess$ = this.store.select(s => s.login.isSignupWithGoogleSuccess);
   }
 
+
   public ngOnInit(): void {
 
     this.loginWithPasswordForm = this._fb.group({
