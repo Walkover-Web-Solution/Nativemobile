@@ -11,6 +11,7 @@ describe("sample scenario", () => {
 
     after(async () => {
         await driver.quit();
+        console.log("Quit driver!");
     });
 
     afterEach(async function () {
