@@ -1,6 +1,6 @@
 
 const queryString = require('query-string');
-
+import { AnimationCurve } from 'ui/enums';
 import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
 const nodeUrl = require('url-parse');
 const generateRandomString = function (length) {
@@ -14,7 +14,7 @@ const generateRandomString = function (length) {
   return text;
 };
 
-export default (config, webview: WebView) => {
+export default (config, webview: WebView, routerExtension) => {
   let getAuthorizationCode = (opts) => {
     opts = opts || {};
 
@@ -55,8 +55,22 @@ export default (config, webview: WebView) => {
 
         if (error !== undefined) {
           reject(error);
+          routerExtension.navigate(['/login'], {
+            clearHistory: true, animated: true,
+            transition: {
+              name: 'slideRight',
+              curve: AnimationCurve.ease
+            }
+          });
         } else if (code) {
           resolve(code);
+          routerExtension.navigate(['/login'], {
+            clearHistory: true, animated: true,
+            transition: {
+              name: 'slideRight',
+              curve: AnimationCurve.ease
+            }
+          });
         }
       }
 

@@ -65,18 +65,10 @@ export class LinkedInLoginComponent implements OnInit, OnDestroy, AfterViewInit 
     };
 
     let webView: WebView = this.webViewRef.nativeElement;
-    const myApiOauth = token.default(config, webView);
+    const myApiOauth = token.default(config, webView, this.routerExtensions);
     let accessToken = myApiOauth.getAccessToken(bodyParams) as Promise<any>;
     accessToken.then((str) => {
-
       this.store.dispatch(this._loginActions.LinkedInElectronLogin(str.access_token));
-      this.routerExtensions.navigate(['/login'], {
-        clearHistory: true, animated: true,
-        transition: {
-          name: 'slideRight',
-          curve: AnimationCurve.ease
-        }
-      });
     }, (err) => console.error(err));
 
 
