@@ -92,12 +92,12 @@ export class DashboardService {
   public GetCategoryHistory(model: GroupHistoryRequest, fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false) {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.post(this.config.apiUrl + DASHBOARD_API.CATEGORY_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval), model).map((res) => {
-      let data: BaseResponse<CategoryHistoryResponse, GroupHistoryRequest> = res.json();
+    return this._http.post(config.config.ApiUrl + DASHBOARD_API.CATEGORY_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval), model).map((res) => {
+      let data: BaseResponse<CategoryHistoryResponse[], GroupHistoryRequest> = res.json();
       data.request = model;
       data.queryString = { fromDate, toDate, interval, refresh };
       return data;
-    }).catch((e) => this.errorHandler.HandleCatch<CategoryHistoryResponse, GroupHistoryRequest>(e, model, {
+    }).catch((e) => this.errorHandler.HandleCatch<CategoryHistoryResponse[], GroupHistoryRequest>(e, model, {
       fromDate,
       toDate,
       interval,
@@ -107,7 +107,7 @@ export class DashboardService {
   public GetHistory(model: GroupHistoryRequest, fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false) {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.post(this.config.apiUrl + DASHBOARD_API.HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval), model).map((res) => {
+    return this._http.post(config.config.ApiUrl + DASHBOARD_API.HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval), model).map((res) => {
       let data: BaseResponse<GroupHistoryResponse, GroupHistoryRequest> = res.json();
       data.request = model;
       data.queryString = { fromDate, toDate, interval, refresh };
