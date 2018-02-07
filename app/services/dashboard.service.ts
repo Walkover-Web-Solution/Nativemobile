@@ -7,7 +7,7 @@ import { BaseResponse } from '../models/api-models/BaseResponse';
 import { UserDetails } from '../models/api-models/loginModels';
 import { ErrorHandler } from './catchManager/catchmanger';
 import { DASHBOARD_API } from './apiurls/dashboard.api';
-import { BankAccountsResponse, ClosingBalanceResponse, DashboardResponse, GroupHistoryRequest, GroupHistoryResponse, RefreshBankAccountResponse } from '../models/api-models/Dashboard';
+import { BankAccountsResponse, ClosingBalanceResponse, DashboardResponse, GroupHistoryRequest, GroupHistoryResponse, RefreshBankAccountResponse, CategoryHistoryResponse } from '../models/api-models/Dashboard';
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
 
@@ -92,12 +92,12 @@ export class DashboardService {
   public GetCategoryHistory(model: GroupHistoryRequest, fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false) {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.post(this.config.apiUrl + DASHBOARD_API.CATEGORY_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString()), model).map((res) => {
-      let data: BaseResponse<GroupHistoryResponse, GroupHistoryRequest> = res.json();
+    return this._http.post(this.config.apiUrl + DASHBOARD_API.CATEGORY_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval), model).map((res) => {
+      let data: BaseResponse<CategoryHistoryResponse, GroupHistoryRequest> = res.json();
       data.request = model;
       data.queryString = { fromDate, toDate, interval, refresh };
       return data;
-    }).catch((e) => this.errorHandler.HandleCatch<GroupHistoryResponse, GroupHistoryRequest>(e, model, {
+    }).catch((e) => this.errorHandler.HandleCatch<CategoryHistoryResponse, GroupHistoryRequest>(e, model, {
       fromDate,
       toDate,
       interval,
@@ -107,7 +107,7 @@ export class DashboardService {
   public GetHistory(model: GroupHistoryRequest, fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false) {
     this.user = this._generalService.user;
     this.companyUniqueName = this._generalService.companyUniqueName;
-    return this._http.post(this.config.apiUrl + DASHBOARD_API.CATEGORY_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString()), model).map((res) => {
+    return this._http.post(this.config.apiUrl + DASHBOARD_API.HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval), model).map((res) => {
       let data: BaseResponse<GroupHistoryResponse, GroupHistoryRequest> = res.json();
       data.request = model;
       data.queryString = { fromDate, toDate, interval, refresh };

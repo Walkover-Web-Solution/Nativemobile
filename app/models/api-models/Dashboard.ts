@@ -4,7 +4,8 @@ import {
   IChildGroups,
   IDashboardCbMainItem,
   IGroupHistoryGroups,
-  IPeriodBalances
+  IPeriodBalances,
+  IIntervalBalancesItem
 } from '../interfaces/dashboard.interface';
 import { IClosingBalance, IForwardBalance } from '../interfaces/ledger.interface';
 import * as moment from 'moment/moment';
@@ -47,6 +48,11 @@ export class GroupHistoryRequest {
 export class GroupHistoryResponse {
   public accounts?: any;
   public groups: IGroupHistoryGroups[];
+}
+
+export class CategoryHistoryResponse {
+  name: string;
+  intervalBalances: IIntervalBalancesItem[];
 }
 
 /*

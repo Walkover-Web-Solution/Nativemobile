@@ -1,6 +1,6 @@
-import {INameUniqueName} from './nameUniqueName.interface';
-import {IClosingBalance, IForwardBalance} from './ledger.interface';
-import {ClosingBalanceResponse} from '../api-models/Dashboard';
+import { INameUniqueName } from './nameUniqueName.interface';
+import { IClosingBalance, IForwardBalance } from './ledger.interface';
+import { ClosingBalanceResponse } from '../api-models/Dashboard';
 
 export interface IPeriodBalances {
   periodBalances: IPeriodBalancesitem[];
@@ -203,4 +203,10 @@ export enum ChartType {
 export interface IChartLabelType {
   activeYearLabel?: string;
   lastYearLabel?: string;
+}
+
+export class IHistoryChartData {
+  name: string;
+  uniqueName?: string;
+  intervalBalances: IIntervalBalancesItem[];
 }

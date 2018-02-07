@@ -42,7 +42,13 @@ export const routes: Routes = [
     path: 'reports',
     loadChildren: './reports/reports.module#ReportsModule',
     canActivate: [NeedsAuthentication]
-  }
+  },
+  {
+    path: 'new-reports',
+    loadChildren: './new-reports/new-reports.module#NewReportsModule',
+    canActivate: [NeedsAuthentication]
+  },
+
 ];
 
 @NgModule({
