@@ -89,4 +89,34 @@ export class DashboardService {
       return data;
     }).catch((e) => this.errorHandler.HandleCatch<RefreshBankAccountResponse, string>(e, ''));
   }
+  public GetCategoryHistory(model: GroupHistoryRequest, fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false) {
+    this.user = this._generalService.user;
+    this.companyUniqueName = this._generalService.companyUniqueName;
+    return this._http.post(this.config.apiUrl + DASHBOARD_API.CATEGORY_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString()), model).map((res) => {
+      let data: BaseResponse<GroupHistoryResponse, GroupHistoryRequest> = res.json();
+      data.request = model;
+      data.queryString = { fromDate, toDate, interval, refresh };
+      return data;
+    }).catch((e) => this.errorHandler.HandleCatch<GroupHistoryResponse, GroupHistoryRequest>(e, model, {
+      fromDate,
+      toDate,
+      interval,
+      refresh
+    }));
+  }
+  public GetHistory(model: GroupHistoryRequest, fromDate: string = '', toDate: string = '', interval: string = 'monthly', refresh: boolean = false) {
+    this.user = this._generalService.user;
+    this.companyUniqueName = this._generalService.companyUniqueName;
+    return this._http.post(this.config.apiUrl + DASHBOARD_API.CATEGORY_HISTORY.replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':from', encodeURIComponent(fromDate)).replace(':to', encodeURIComponent(toDate)).replace(':interval', interval).replace(':refresh', refresh.toString()), model).map((res) => {
+      let data: BaseResponse<GroupHistoryResponse, GroupHistoryRequest> = res.json();
+      data.request = model;
+      data.queryString = { fromDate, toDate, interval, refresh };
+      return data;
+    }).catch((e) => this.errorHandler.HandleCatch<GroupHistoryResponse, GroupHistoryRequest>(e, model, {
+      fromDate,
+      toDate,
+      interval,
+      refresh
+    }));
+  }
 }
