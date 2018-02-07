@@ -1,13 +1,14 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
-import {EffectsModule} from '@ngrx/effects';
+import { ModuleWithProviders, NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
 
-import {LoginActions} from './login/login.action';
-import {CompanyActions} from './company/company.action';
-import {DashboardActions} from '~/actions/dashboard/dashboard.action';
-import {GeneralActions} from '~/actions/general/general.actions';
-import {SettingsTaxesActions} from '~/actions/settings/taxes/settings.taxes.action';
-import {SettingsProfileActions} from "~/actions/settings/profile/settings.profile.action";
-import {ReportsAction} from "~/actions/reports/reports.action";
+import { LoginActions } from './login/login.action';
+import { CompanyActions } from './company/company.action';
+import { DashboardActions } from '~/actions/dashboard/dashboard.action';
+import { GeneralActions } from '~/actions/general/general.actions';
+import { SettingsTaxesActions } from '~/actions/settings/taxes/settings.taxes.action';
+import { SettingsProfileActions } from "~/actions/settings/profile/settings.profile.action";
+import { ReportsAction } from "~/actions/reports/reports.action";
+import { NewReportsActions } from './new-reports/new-reports.actions';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import {ReportsAction} from "~/actions/reports/reports.action";
       GeneralActions,
       SettingsTaxesActions,
       SettingsProfileActions,
-      ReportsAction
+      ReportsAction,
+      NewReportsActions
     ])
   ],
   exports: [EffectsModule]
