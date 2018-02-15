@@ -44,12 +44,22 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                 })
             })
 
-            // if (currentIncomeData.intervalBalances.length !== payload.config.legend.length) {
-            //     let key = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'weekly' : 'monthly';
-            //     let ranges = getDate(moment(payload.config.activeYear.startDate, 'DD-MM-YYYY'),
-            //         moment(payload.config.activeYear.endDate, 'DD-MM-YYYY'), key);
-            //     debugger
-            // }
+            if (currentIncomeData.intervalBalances.length !== payload.config.legend.length) {
+                let key = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'weekly' : 'monthly';
+                debugger
+                let ranges = getDateRange(moment(payload.config.activeYear.startDate, 'DD-MM-YYYY'),
+                    moment(payload.config.activeYear.endDate, 'DD-MM-YYYY'), key);
+                let weeks = []
+                debugger
+                ranges.forEach(r => {
+                    currentIncomeData.intervalBalances.forEach(ib => {
+                        debugger
+                        if (moment(ib.from, 'YYYY-MM-DD').isBetween(r.rangeStart, r.rangeEnd)) {
+
+                        }
+                    });
+                });
+            }
 
             previousIncomeData = Object.assign({}, payload.data, {
                 intervalBalances: payload.data.intervalBalances.filter(ip => {
@@ -166,7 +176,7 @@ const getDate = (start, end, key, arr = [start.startOf(key)]) => {
     return getDate(next, end, key, arr.concat(next));
 }
 
-const getDateRange = ((start, end, key, arr = [{ rangeStart: start, rangeEnd: start.add(1, key) }]) => {
+const getDateRange = (start, end, key, arr = [{ rangeStart: start.startOf(key), rangeEnd: moment(start).endOf(key) }]) => {
     if (start.isAfter(end)) throw new Error('start must precede end')
 
     // const next = moment(start).add(1, key).startOf(key);
@@ -177,4 +187,4 @@ const getDateRange = ((start, end, key, arr = [{ rangeStart: start, rangeEnd: st
     if (rangeEnd.isAfter(end)) return arr;
 
     return getDateRange(rangeEnd, end, key, arr.concat(range));
-})
+}

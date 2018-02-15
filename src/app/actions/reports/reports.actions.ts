@@ -59,7 +59,7 @@ export class ReportsActions {
             let model: GroupHistoryRequest = {
                 category: ['income']
             };
-            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'weekly' : 'monthly';
+            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
             return zip(
                 this._dashboardService.GetCategoryHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
                 of(op)
@@ -123,7 +123,7 @@ export class ReportsActions {
                 groups: ['indirectexpenses', 'operatingcost']
             };
 
-            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'weekly' : 'monthly';
+            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
             return zip(
                 this._dashboardService.GetHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
                 of(op)
