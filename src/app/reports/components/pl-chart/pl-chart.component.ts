@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild } from '@angular/core';
 import { ReportsActions } from '../../../actions/reports/reports.actions';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
@@ -8,12 +8,14 @@ import { ReplaySubject } from 'rxjs';
 import { CategoryHistoryResponse, GroupHistoryResponse } from '../../../models/api-models/Dashboard';
 import { zip } from 'rxjs/observable/zip';
 import { Options } from 'highcharts';
+import { ChartComponent } from 'angular2-highcharts';
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
     moduleId: module.id,
     templateUrl: `./pl-chart.component.html`,
-    styleUrls: ["./pl-chart.component.scss"]
+    styleUrls: ["./pl-chart.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public currentData$: Observable<IReportChartData>;
@@ -23,11 +25,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public series: Array<{ name: string, data: number[], stack: string }>;
 
     public options: Options;
+    @ViewChild('chart') public chartComponent: ChartComponent;
     public previousSeries: Array<{ name: string, data: number[], stack: string }>;
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-    constructor(private store: Store<AppState>, private _reportsActions: ReportsActions) {
+    constructor(private store: Store<AppState>, private _reportsActions: ReportsActions, private cd: ChangeDetectorRef) {
         this.currentData$ = this.store.select(st => st.report.currentData).takeUntil(this.destroyed$);
         this.previousData$ = this.store.select(st => st.report.previousData).takeUntil(this.destroyed$);
         this.options = {
@@ -59,23 +62,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     stacking: 'normal'
                 }
             },
-            series: [{
-                name: 'John',
-                data: [5, 3, 4, 7, 2],
-                stack: 'male'
-            }, {
-                name: 'Joe',
-                data: [3, 4, 4, 2, 5],
-                stack: 'male'
-            }, {
-                name: 'Jane',
-                data: [2, 5, 6, 2, 1],
-                stack: 'female'
-            }, {
-                name: 'Janet',
-                data: [3, 0, 4, 4, 3],
-                stack: 'female'
-            }]
+            series: []
         };
     }
 
@@ -165,8 +152,13 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
         this.categories = legendData;
 
-        this.options.series = this.series;
-        (this.options.xAxis as any).categories = this.categories;
+        this.options = Object.assign({}, this.options, {
+            series: this.previousSeries,
+            xAxis: Object.assign({}, this.options.xAxis, {
+                categories: this.categories
+            })
+        });
+        this.cd.detectChanges();
     }
 
     public ngOnDestroy() {
