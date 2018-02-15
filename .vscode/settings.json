@@ -1,14 +1,30 @@
 {
-  "files.exclude": {
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/CVS": true,
-    "**/.DS_Store": true,
-    "out": true,
-    "node_modules": true,
-    "platforms": true,
-    "app/**/*.js": false,
-    "app/**/*.css": true
-  }
+    "files.exclude": {
+        // "nativescript/app": true,
+        "nativescript/hooks": true,
+        "nativescript/src/app/**/*.html": {
+            "when": "$(basename).tns.html"
+        },
+        "nativescript/src/app/**/*.scss": {
+            "when": "$(basename).tns.scss"
+        },
+        "nativescript/src/app/**/*.ts": {
+            "when": "$(basename).tns.ts"
+        },
+        "nativescript/src/app/**/*.sass": {
+            "when": "$(basename).tns.sass"
+        },
+        "nativescript/src/app/**/*.spec.ts": true
+    },
+    "files.watcherExclude": {
+        "nativescript/app/**": true,
+        "node_modules/**": true,
+        "nativescript/node_modules/**": true
+    },
+    "search.exclude": {
+        "nativescript/platforms": true,
+        "nativescript/src/app": true,
+        "nativescript/node_modules": true,
+        "nativescript/hooks": true
+    }
 }

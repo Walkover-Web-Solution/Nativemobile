@@ -1,0 +1,28 @@
+<MyDrawer #drawer [pages]="companies" (itemSelected)="changeCompany($event)">
+    <ng-template #optionTemplate>
+
+        <my-header [title]="activeCompany?.name"
+        [leftSideItem]="{ icon:'menu', action: toggleWebDrawer.bind(this) }"
+        [rightSideItem]="{ title: userName, action: logout.bind(this) }"></my-header>
+        <mat-list role="list">
+            <mat-list-item role="listitem">
+                <a matLine [routerLink]="['/dashboard']">Dashboard </a>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item role="listitem">
+                <a matLine [routerLink]="['/sale']">Sales Invoice </a>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item role="listitem">
+                <a matLine [routerLink]="['/reports']">Reports </a>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item role="listitem">
+                <a matLine [routerLink]="['/settings']">Settings </a>
+            </mat-list-item>
+            <mat-divider></mat-divider>
+        </mat-list>
+
+        <button mat-raised-button color="warn" (click)="logout()">Logout</button>
+    </ng-template>
+</MyDrawer>
