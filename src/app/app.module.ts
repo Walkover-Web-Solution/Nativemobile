@@ -17,6 +17,7 @@ import { storeLogger } from './store/middleware/storeLogger';
 import { NeedsAuthentication } from './decorators/needsAuthentication';
 import { ToastrModule } from 'ngx-toastr';
 import { localStorageSync } from 'ngrx-store-localstorage';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
 
 Config.PLATFORM_TARGET = Config.PLATFORMS.WEB;
@@ -43,6 +44,10 @@ let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logge
         BrowserAnimationsModule,
         HttpClientModule,
         StoreModule.forRoot(reducers, { metaReducers }),
+        StoreDevtoolsModule.instrument({
+            maxAge: 25, // Retains last 25 states
+            logOnly: true // Restrict extension to log-only mode
+        }),
         ServiceModule.forRoot(),
         ActionModule.forRoot(),
         ToastrModule.forRoot({ preventDuplicates: true, maxOpened: 3 }),
@@ -59,7 +64,7 @@ let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logge
         NeedsAuthentication,
         {
             provide: ServiceConfig,
-            useValue: { apiUrl: 'http://apidev.giddh.com/', appUrl: 'http://api.giddh.com/' }
+            useValue: { apiUrl: 'http://api.giddh.com/', appUrl: 'http://api.giddh.com/' }
         },
     ],
     bootstrap: [AppComponent]

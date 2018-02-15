@@ -40,9 +40,10 @@
     "devDependencies": {
         "@angular/cli": "^1.6.7",
         "@angular/compiler-cli": "~5.2.0",
+        "@ngrx/store-devtools": "^5.1.0",
+        "@types/highcharts": "5.0.4",
         "@types/jasmine": "2.5.38",
         "@types/node": "~6.0.60",
-        "@types/highcharts": "5.0.4",
         "angular2-highcharts": "git+https://github.com/mtflynn/angular2-highcharts.git",
         "angular2-ladda": "^1.2.3",
         "codelyzer": "~2.0.0",

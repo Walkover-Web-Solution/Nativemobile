@@ -97,6 +97,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.categories = [];
         this.series = [];
         this.previousSeries = [];
+        this.renderOptions(this.series);
     }
     public genSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
         let incomeSeries = [];
@@ -105,16 +106,16 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (incomeData && incomeData.intervalBalances) {
             incomeData.intervalBalances.forEach(int => {
-                incomeSeries.push(int.closingBalance.amount);
+                incomeSeries.push(int.creditTotal - int.debitTotal);
             });
         }
 
         if (expensesData && expensesData.groups) {
             expensesData.groups.forEach(exp => {
                 if (exp.uniqueName === 'indirectexpenses') {
-                    exp.intervalBalances.forEach(fa => indirectexpensesSeries.push(fa.closingBalance.amount));
+                    exp.intervalBalances.forEach(fa => indirectexpensesSeries.push(fa.debitTotal - fa.creditTotal));
                 } else {
-                    exp.intervalBalances.forEach(fa => operatingcostSeries.push(fa.closingBalance.amount));
+                    exp.intervalBalances.forEach(fa => operatingcostSeries.push(fa.debitTotal - fa.creditTotal));
                 }
             });
         }
@@ -123,8 +124,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
         this.categories = legendData;
 
-
-        // this.oLangWebViewInterface.emit('seriesUpdated', { series: this.series, categories: this.categories });
+        this.renderOptions(this.series);
     }
 
     public genPreviousSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
@@ -134,16 +134,16 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (incomeData && incomeData.intervalBalances) {
             incomeData.intervalBalances.forEach(int => {
-                incomeSeries.push(int.closingBalance.amount);
+                incomeSeries.push(int.creditTotal - int.debitTotal);
             });
         }
 
         if (expensesData && expensesData.groups) {
             expensesData.groups.forEach(exp => {
                 if (exp.uniqueName === 'indirectexpenses') {
-                    exp.intervalBalances.forEach(fa => indirectexpensesSeries.push(fa.closingBalance.amount));
+                    exp.intervalBalances.forEach(fa => indirectexpensesSeries.push(fa.debitTotal - fa.creditTotal));
                 } else {
-                    exp.intervalBalances.forEach(fa => operatingcostSeries.push(fa.closingBalance.amount));
+                    exp.intervalBalances.forEach(fa => operatingcostSeries.push(fa.debitTotal - fa.creditTotal));
                 }
             });
         }
@@ -151,9 +151,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.previousSeries = [{ name: 'income', data: incomeSeries, stack: 'income' }, { name: 'indirectexpenses', data: indirectexpensesSeries, stack: 'expenses' },
         { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
         this.categories = legendData;
+    }
 
+    public renderOptions(series: Array<{ name: string, data: number[], stack: string }>) {
         this.options = Object.assign({}, this.options, {
-            series: this.previousSeries,
+            series,
             xAxis: Object.assign({}, this.options.xAxis, {
                 categories: this.categories
             })
