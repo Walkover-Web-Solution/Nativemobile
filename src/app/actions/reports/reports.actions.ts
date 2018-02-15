@@ -59,8 +59,9 @@ export class ReportsActions {
             let model: GroupHistoryRequest = {
                 category: ['income']
             };
+            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'weekly' : 'monthly';
             return zip(
-                this._dashboardService.GetCategoryHistory(model, op.lastYear.startDate, op.activeYear.endDate, 'monthly'),
+                this._dashboardService.GetCategoryHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
                 of(op)
             );
         }).map((res) => {
@@ -121,8 +122,10 @@ export class ReportsActions {
             let model: GroupHistoryRequest = {
                 groups: ['indirectexpenses', 'operatingcost']
             };
+
+            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'weekly' : 'monthly';
             return zip(
-                this._dashboardService.GetHistory(model, op.lastYear.startDate, op.activeYear.endDate, 'monthly'),
+                this._dashboardService.GetHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
                 of(op)
             );
         }).map((res) => {
@@ -185,7 +188,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
             config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
             config.lastYear.lable = moment(config.activeYear.startDate, 'DD-MM-YYYY').subtract(1, 'month').format('MMMM');
 
-            config.legend = ['Month 1'];
+            config.legend = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
             return config;
         case ChartFilterType.ThisQuarterToDate: // This Quarter to Date
             config.ChartTitle = 'This Quarter to Date';
@@ -261,7 +264,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
             config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
             config.lastYear.lable = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('MMMM');
 
-            config.legend = ['Month 1'];
+            config.legend = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
             return config;
         case ChartFilterType.LastQuater: // Last Quater
             config.ChartTitle = 'Last Quater';
