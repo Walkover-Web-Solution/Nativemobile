@@ -33,7 +33,7 @@ const initialState: ReportsState = {
         from: '',
         to: ''
     },
-    profitLossChartFilter: ChartFilterType.LastMonth
+    profitLossChartFilter: ChartFilterType.ThisYearToDate
 };
 
 export function ReportsReducer(state: ReportsState = initialState, action: CustomActions): ReportsState {
@@ -49,8 +49,8 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             let keyType = isWeekly ? 'week' : 'month';
             let currentRange = getDateRange(moment(config.activeYear.startDate, 'DD-MM-YYYY'), moment(config.activeYear.endDate, 'DD-MM-YYYY'), keyType);
             let previousRange = getDateRange(moment(config.lastYear.startDate, 'DD-MM-YYYY'), moment(config.lastYear.endDate, 'DD-MM-YYYY'), keyType);
-            let currentIncomeData = Object.assign({}, payload.data);
-            let previousIncomeData = Object.assign({}, payload.data);
+            let currentIncomeData = _.cloneDeep(payload.data);
+            let previousIncomeData = _.cloneDeep(payload.data);
             let currentLegend = config.legend;
             let previousLegend = config.legend;
 
@@ -65,7 +65,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     currentObj.push(currentIncomeData.intervalBalances.filter(ic => {
                         return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
                     }));
-                    currentLegend.push(`Week ${ind}`);
+                    currentLegend.push(`Week ${ind + 1}`);
                 });
                 currentIncomeData.intervalBalances = [];
                 currentObj.forEach(co => {
@@ -96,7 +96,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                         closingBalance: po[po.length - 1].closingBalance
                     };
                     previousIncomeData.intervalBalances.push(newCObj);
-                    previousLegend.push(`Week ${ind}`);
+                    previousLegend.push(`Week ${ind + 1}`);
                 });
             } else {
                 currentRange.forEach((cr, ind) => {
@@ -182,30 +182,154 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         //#region Expenses Data
         case ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_RESPONSE: {
             let payload: { data: GroupHistoryResponse, config: ChartFilterConfigs } = action.payload;
-            let currentExpenseData;
-            let previousExpenseData;
+            let config: ChartFilterConfigs = _.cloneDeep(payload.config);
+            let filterType = _.cloneDeep(state.profitLossChartFilter);
 
-            currentExpenseData = Object.assign({}, payload.data, {
-                groups: payload.data.groups.map(fa => {
-                    let intervalBalances = fa.intervalBalances.filter(fil => {
-                        return moment(fil.from, 'YYYY-MM-DD').isAfter(moment(payload.config.lastYear.endDate, 'DD-MM-YYYY'))
-                    });
-                    return Object.assign({}, fa, {
-                        intervalBalances
-                    });
-                })
-            });
+            let isWeekly = filterType === ChartFilterType.LastMonth || filterType === ChartFilterType.ThisMonthToDate;
 
-            previousExpenseData = Object.assign({}, payload.data, {
-                groups: payload.data.groups.map(fa => {
-                    let intervalBalances = fa.intervalBalances.filter(fil => {
-                        return moment(fil.from, 'YYYY-MM-DD').isBefore(moment(payload.config.activeYear.startDate, 'DD-MM-YYYY'))
+            let keyType = isWeekly ? 'week' : 'month';
+            let currentRange = getDateRange(moment(config.activeYear.startDate, 'DD-MM-YYYY'), moment(config.activeYear.endDate, 'DD-MM-YYYY'), keyType);
+            let previousRange = getDateRange(moment(config.lastYear.startDate, 'DD-MM-YYYY'), moment(config.lastYear.endDate, 'DD-MM-YYYY'), keyType);
+            let currentExpenseData = _.cloneDeep(payload.data);
+            let previousExpenseData = _.cloneDeep(payload.data);
+            let currentLegend = config.legend;
+            let previousLegend = config.legend;
+
+            let currentObj = [];
+            let previousObj = [];
+
+            if (isWeekly) {
+                currentLegend = [];
+                previousLegend = [];
+
+                currentExpenseData.groups.forEach(grp => {
+                    currentRange.forEach((cr, ind) => {
+                        let data = grp.intervalBalances.filter(ic => {
+                            return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
+                        });
+                        currentObj.push({ intervalBalances: data, grp: grp.uniqueName });
                     });
-                    return Object.assign({}, fa, {
-                        intervalBalances
+                    grp.intervalBalances = [];
+                });
+
+                previousExpenseData.groups.forEach(grp => {
+                    previousRange.forEach((cr, ind) => {
+                        let data = grp.intervalBalances.filter(ic => {
+                            return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
+                        });
+                        previousObj.push({ intervalBalances: data, grp: grp.uniqueName });
                     });
-                })
-            });
+                    grp.intervalBalances = [];
+                });
+
+                currentObj.forEach(co => {
+                    let newCObj: IIntervalBalancesItem = {
+                        creditTotal: _.sumBy(co.intervalBalances, 'creditTotal'),
+                        debitTotal: _.sumBy(co.intervalBalances, 'debitTotal'),
+                        from: co.intervalBalances[0].from,
+                        to: co.intervalBalances[co.intervalBalances.length - 1].to,
+                        openingBalance: co.intervalBalances[0].openingBalance,
+                        closingBalance: co.intervalBalances[co.intervalBalances.length - 1].closingBalance
+                    };
+
+                    currentExpenseData.groups.map(grps => {
+                        if (grps.uniqueName === co.grp) {
+                            grps.intervalBalances.push(newCObj);
+                        }
+                        return grps;
+                    });
+                });
+
+                previousObj.forEach(co => {
+                    let newCObj: IIntervalBalancesItem = {
+                        creditTotal: _.sumBy(co.intervalBalances, 'creditTotal'),
+                        debitTotal: _.sumBy(co.intervalBalances, 'debitTotal'),
+                        from: co.intervalBalances[0].from,
+                        to: co.intervalBalances[co.intervalBalances.length - 1].to,
+                        openingBalance: co.intervalBalances[0].openingBalance,
+                        closingBalance: co.intervalBalances[co.intervalBalances.length - 1].closingBalance
+                    };
+
+                    previousExpenseData.groups.map(grps => {
+                        if (grps.uniqueName === co.grp) {
+                            grps.intervalBalances.push(newCObj);
+                        }
+                        return grps;
+                    });
+                });
+            } else {
+                currentExpenseData.groups.forEach(grp => {
+                    currentRange.forEach((cr, ind) => {
+                        let data = grp.intervalBalances.find(ic => {
+                            return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
+                        });
+                        currentObj.push({ intervalBalances: data, grp: grp.uniqueName });
+                    });
+                    grp.intervalBalances = [];
+                });
+
+                previousExpenseData.groups.forEach(grp => {
+                    previousRange.forEach((cr, ind) => {
+                        let data = grp.intervalBalances.find(ic => {
+                            return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
+                        });
+                        previousObj.push({ intervalBalances: data, grp: grp.uniqueName });
+                    });
+                    grp.intervalBalances = [];
+                });
+
+                currentObj.forEach((co, ind) => {
+                    if (!co.intervalBalances) {
+                        let newCObj: IIntervalBalancesItem = {
+                            creditTotal: 0,
+                            debitTotal: 0,
+                            from: currentRange[ind].rangeStart.format('DD-MM-YYYY'),
+                            to: currentRange[ind].rangeEnd.format('DD-MM-YYYY'),
+                            openingBalance: { amount: 0, description: '', type: '' },
+                            closingBalance: { amount: 0, type: '' },
+                        };
+                        currentExpenseData.groups.map(grps => {
+                            if (grps.uniqueName === co.grp) {
+                                grps.intervalBalances.push(newCObj);
+                            }
+                            return grps;
+                        });
+                    } else {
+                        currentExpenseData.groups.map(grps => {
+                            if (grps.uniqueName === co.grp) {
+                                grps.intervalBalances.push(co.intervalBalances);
+                            }
+                            return grps;
+                        });
+                    }
+                });
+
+                previousObj.forEach((co, ind) => {
+                    if (!co.intervalBalances) {
+                        let newCObj: IIntervalBalancesItem = {
+                            creditTotal: 0,
+                            debitTotal: 0,
+                            from: previousRange[ind].rangeStart.format('DD-MM-YYYY'),
+                            to: previousRange[ind].rangeEnd.format('DD-MM-YYYY'),
+                            openingBalance: { amount: 0, description: '', type: '' },
+                            closingBalance: { amount: 0, type: '' },
+                        };
+                        previousExpenseData.groups.map(grps => {
+                            if (grps.uniqueName === co.grp) {
+                                grps.intervalBalances.push(newCObj);
+                            }
+                            return grps;
+                        });
+                    } else {
+                        previousExpenseData.groups.map(grps => {
+                            if (grps.uniqueName === co.grp) {
+                                grps.intervalBalances.push(co.intervalBalances);
+                            }
+                            return grps;
+                        });
+                    }
+                });
+            }
 
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {

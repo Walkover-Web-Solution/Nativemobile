@@ -1,4 +1,5 @@
+<button mat-raised-button color="primary" (click)="renderOptions(previousSeries)">Previous</button>
+<button mat-raised-button color="warn" (click)="renderOptions(series)">Current</button>
 <div style="display: flex;flex-direction: column">
-
     <chart style="flex:1 0 auto" #chart [options]="options"></chart>
 </div>
