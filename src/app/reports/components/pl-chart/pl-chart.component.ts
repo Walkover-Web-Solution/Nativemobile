@@ -124,7 +124,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
         this.categories = legendData;
 
-        this.renderOptions(this.series);
+        // this.renderOptions(this.series);
     }
 
     public genPreviousSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
@@ -151,6 +151,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.previousSeries = [{ name: 'income', data: incomeSeries, stack: 'income' }, { name: 'indirectexpenses', data: indirectexpensesSeries, stack: 'expenses' },
         { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
         this.categories = legendData;
+
+        this.renderOptions(this.previousSeries);
     }
 
     public renderOptions(series: Array<{ name: string, data: number[], stack: string }>) {
