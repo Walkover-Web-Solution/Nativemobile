@@ -1,8 +1,19 @@
-<button mat-raised-button color="primary" (click)="renderOptions(previousSeries)">Previous</button>
-<button mat-raised-button color="warn" (click)="renderOptions(series)">Current</button>
 <div style="display: flex;flex-direction: column">
-
-    <div>
+    <div style="display: flex">
+        <div class="div-cover">
+            <span class="colorDiv" style="background-color: #BAE3E7"></span>
+            <span>Expenses</span>
+        </div>
+        <div class="div-cover">
+            <span class="colorDiv" style="background-color: #58C5C4"></span>
+            <span>Revenue</span>
+        </div>
+        <div class="div-cover">
+            <span class="colorDiv" style="background-color: #17989C"></span>
+            <span>Operating Cost</span>
+        </div>
+    </div>
+    <div style="display: flex">
         <chart [options]="pieChartOptions" (click)="onChartSelection($event, 'current')"></chart>
         <chart [options]="previousPieChartOptions" (click)="onChartSelection($event, 'previous')"></chart>
     </div>

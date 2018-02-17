@@ -273,8 +273,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.pieSeries = [{ name: 'revenue', y: incomeTotal, color: 'red' }, { name: 'operatingcost', y: operatingcost, color: 'green' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'blue' }];
+            this.pieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
+            { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
 
             this.renderPieOptions('current');
         } else {
@@ -291,8 +291,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.previousPieSeries = [{ name: 'revenue', y: incomeTotal, color: 'red' }, { name: 'operatingcost', y: operatingcost, color: 'green' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'blue' }];
+            this.previousPieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
+            { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
             this.renderPieOptions('previous');
         }
     }
