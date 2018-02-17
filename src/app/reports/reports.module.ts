@@ -19,7 +19,7 @@ declare let require: any;
         FormsModule,
         RouterModule.forChild(ReportsRoutes),
         ReactiveFormsModule,
-        ChartModule.forRoot(require('highcharts')),
+        ChartModule.forRoot(require('highcharts'), require('highcharts/highcharts-more'), require('highcharts/modules/solid-gauge')),
         SharedModule,
     ],
     declarations: [ReportsComponent, PlChartComponent],

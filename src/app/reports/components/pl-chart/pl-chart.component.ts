@@ -9,6 +9,7 @@ import { CategoryHistoryResponse, GroupHistoryResponse } from '../../../models/a
 import { zip } from 'rxjs/observable/zip';
 import { Options } from 'highcharts';
 import { ChartComponent } from 'angular2-highcharts';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
@@ -18,15 +19,32 @@ import { ChartComponent } from 'angular2-highcharts';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
+    public pichartclass: boolean = false;
     public currentData$: Observable<IReportChartData>;
     public previousData$: Observable<IReportChartData>;
     public profitLossChartFilter$: Observable<ChartFilterType>;
     public categories: string[] = [];
     public series: Array<{ name: string, data: number[], stack: string }>;
-
     public options: Options;
+    public pieChartOptions: Options;
+    public previousPieChartOptions: Options;
     @ViewChild('chart') public chartComponent: ChartComponent;
     public previousSeries: Array<{ name: string, data: number[], stack: string }>;
+
+    public pieSeries: Array<{ name: string, y: number, color: string }>;
+    public previousPieSeries: Array<{ name: string, y: number, color: string }>;
+
+    public currentPieTotal = {
+        revenueAmountTotal: 0,
+        indirectexpensesTotal: 0,
+        operatingcost: 0
+    };
+
+    public previousPieTotal = {
+        revenueAmountTotal: 0,
+        indirectexpensesTotal: 0,
+        operatingcost: 0
+    };
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -64,6 +82,100 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             series: []
         };
+        this.pieChartOptions = {
+            chart: {
+                type: 'solidgauge'
+            },
+            title: null,
+            pane: {
+                center: ['50%', '50%'],
+                size: '100%',
+                startAngle: 0,
+                endAngle: 360,
+                background: {
+                    backgroundColor: '#EEE',
+                    innerRadius: '60%',
+                    outerRadius: '100%',
+                    shape: 'arc'
+                }
+            },
+            tooltip: {
+                enabled: false
+            },
+            yAxis: {
+                lineWidth: 0,
+                minorTickInterval: null,
+                tickAmount: 2,
+                min: 0,
+                max: 200,
+                title: {
+                    text: 'Speed'
+                },
+                labels: {
+                    y: 50
+                }
+            },
+            plotOptions: {
+                solidgauge: {
+                    dataLabels: {
+                        y: 5,
+                        borderWidth: 0,
+                        useHTML: true
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{ name: 'revenue', data: [] }]
+        };
+        this.previousPieChartOptions = {
+            chart: {
+                type: 'solidgauge'
+            },
+            title: null,
+            pane: {
+                center: ['50%', '50%'],
+                size: '100%',
+                startAngle: 0,
+                endAngle: 360,
+                background: {
+                    backgroundColor: '#EEE',
+                    innerRadius: '60%',
+                    outerRadius: '100%',
+                    shape: 'arc'
+                }
+            },
+            tooltip: {
+                enabled: false
+            },
+            yAxis: {
+                lineWidth: 0,
+                minorTickInterval: null,
+                tickAmount: 2,
+                min: 0,
+                max: 200,
+                title: {
+                    text: 'Speed'
+                },
+                labels: {
+                    y: 50
+                }
+            },
+            plotOptions: {
+                solidgauge: {
+                    dataLabels: {
+                        y: 5,
+                        borderWidth: 0,
+                        useHTML: true
+                    }
+                }
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{ name: 'revenue', data: [] }]
+        };
     }
 
     public ngOnInit() {
@@ -97,6 +209,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.categories = [];
         this.series = [];
         this.previousSeries = [];
+        this.pieSeries = [];
+        this.previousPieSeries = [];
         this.renderOptions(this.series);
     }
     public genSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
@@ -125,6 +239,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.categories = legendData;
 
         this.renderOptions(this.series);
+        this.calculateTotals('current');
     }
 
     public genPreviousSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
@@ -153,6 +268,56 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.categories = legendData;
 
         // this.renderOptions(this.previousSeries);
+        this.calculateTotals('previous');
+    }
+
+    public calculateTotals(type: string = 'current') {
+        let incomeTotal = 0;
+        let indirectexpensesTotal = 0;
+        let operatingcost = 0;
+        if (type === 'current') {
+            this.series.forEach(s => {
+                if (s.name === 'income') {
+                    incomeTotal = Number(_.sum(s.data).toFixed(2));
+                } else if (s.name === 'indirectexpenses') {
+                    indirectexpensesTotal = Number(_.sum(s.data).toFixed(2));
+                } else {
+                    operatingcost = Number(_.sum(s.data).toFixed(2));
+                }
+            });
+
+            this.currentPieTotal.revenueAmountTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
+            this.currentPieTotal.indirectexpensesTotal = indirectexpensesTotal;
+            this.currentPieTotal.operatingcost = operatingcost;
+
+            this.pieSeries = [{ name: 'revenue', y: this.currentPieTotal.revenueAmountTotal, color: 'red' },
+            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'green' },
+            { name: 'operatingcost', y: operatingcost, color: 'blue' }];
+
+            this.renderPieOptions('current', this.currentPieTotal.revenueAmountTotal);
+        } else {
+            incomeTotal = 0;
+            indirectexpensesTotal = 0;
+            operatingcost = 0;
+            this.previousSeries.forEach(s => {
+                if (s.name === 'income') {
+                    incomeTotal = Number(_.sum(s.data).toFixed(2));
+                } else if (s.name === 'indirectexpenses') {
+                    indirectexpensesTotal = Number(_.sum(s.data).toFixed(2));
+                } else {
+                    operatingcost = Number(_.sum(s.data).toFixed(2));
+                }
+            });
+
+            this.previousPieTotal.revenueAmountTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
+            this.previousPieTotal.indirectexpensesTotal = indirectexpensesTotal;
+            this.previousPieTotal.operatingcost = operatingcost;
+
+            this.previousPieSeries = [{ name: 'revenue', y: this.previousPieTotal.revenueAmountTotal, color: 'red' },
+            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'green' },
+            { name: 'operatingcost', y: operatingcost, color: 'blue' }];
+            this.renderPieOptions('previous', this.previousPieTotal.revenueAmountTotal);
+        }
     }
 
     public renderOptions(series: Array<{ name: string, data: number[], stack: string }>) {
@@ -163,6 +328,34 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             })
         });
         this.cd.detectChanges();
+    }
+
+    public renderPieOptions(type: string = 'current', total) {
+        if (type === 'current') {
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                series: this.pieChartOptions.series.map(s => {
+                    s.data = this.pieSeries;
+                    return s;
+                }),
+                yAxis: Object.assign({}, this.pieChartOptions.yAxis, {
+                    max: total
+                })
+            });
+        } else {
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                series: this.previousPieChartOptions.series.map(s => {
+                    s.data = this.previousPieSeries
+                    return s;
+                }),
+                yAxis: Object.assign({}, this.pieChartOptions.yAxis, {
+                    max: total
+                })
+            });
+        }
+        this.cd.detectChanges();
+        setTimeout(() => {
+            this.pichartclass = true;
+        }, 1000);
     }
 
     public ngOnDestroy() {
