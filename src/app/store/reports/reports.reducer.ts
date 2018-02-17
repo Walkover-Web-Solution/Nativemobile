@@ -33,7 +33,7 @@ const initialState: ReportsState = {
         from: '',
         to: ''
     },
-    profitLossChartFilter: ChartFilterType.ThisYearToDate
+    profitLossChartFilter: ChartFilterType.LastQuater
 };
 
 export function ReportsReducer(state: ReportsState = initialState, action: CustomActions): ReportsState {

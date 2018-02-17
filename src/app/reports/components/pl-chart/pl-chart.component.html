@@ -1,11 +1,11 @@
 <button mat-raised-button color="primary" (click)="renderOptions(previousSeries)">Previous</button>
 <button mat-raised-button color="warn" (click)="renderOptions(series)">Current</button>
 <div style="display: flex;flex-direction: column">
-    <div [ngClass]="{'pieChartContainer': pichartclass}">
-        <chart [options]="pieChartOptions"></chart>
-        <chart [options]="previousPieChartOptions"></chart>
 
-        <pre>{{ previousPieChartOptions.series | json }}</pre>
+    <div>
+        <chart [options]="pieChartOptions" (click)="onChartSelection($event, 'current')"></chart>
+        <chart [options]="previousPieChartOptions" (click)="onChartSelection($event, 'previous')"></chart>
     </div>
+
     <chart style="flex:1 0 auto" #chart [options]="options"></chart>
 </div>

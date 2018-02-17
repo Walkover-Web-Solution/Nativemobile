@@ -26,25 +26,15 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public categories: string[] = [];
     public series: Array<{ name: string, data: number[], stack: string }>;
     public options: Options;
-    public pieChartOptions: Options;
-    public previousPieChartOptions: Options;
-    @ViewChild('chart') public chartComponent: ChartComponent;
+    public pieChartOptions: any;
+    public previousPieChartOptions: any;
     public previousSeries: Array<{ name: string, data: number[], stack: string }>;
 
     public pieSeries: Array<{ name: string, y: number, color: string }>;
     public previousPieSeries: Array<{ name: string, y: number, color: string }>;
+    public per: number = 50;
 
-    public currentPieTotal = {
-        revenueAmountTotal: 0,
-        indirectexpensesTotal: 0,
-        operatingcost: 0
-    };
-
-    public previousPieTotal = {
-        revenueAmountTotal: 0,
-        indirectexpensesTotal: 0,
-        operatingcost: 0
-    };
+    public activeChart: string = 'current';
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -84,97 +74,83 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         };
         this.pieChartOptions = {
             chart: {
-                type: 'solidgauge'
-            },
-            title: null,
-            pane: {
-                center: ['50%', '50%'],
-                size: '100%',
-                startAngle: 0,
-                endAngle: 360,
-                background: {
-                    backgroundColor: '#EEE',
-                    innerRadius: '60%',
-                    outerRadius: '100%',
-                    shape: 'arc'
-                }
-            },
-            tooltip: {
-                enabled: false
-            },
-            yAxis: {
-                lineWidth: 0,
-                minorTickInterval: null,
-                tickAmount: 2,
-                min: 0,
-                max: 200,
-                title: {
-                    text: 'Speed'
-                },
-                labels: {
-                    y: 50
-                }
-            },
-            plotOptions: {
-                solidgauge: {
-                    dataLabels: {
-                        y: 5,
-                        borderWidth: 0,
-                        useHTML: true
-                    }
-                }
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                height: 200
             },
             credits: {
                 enabled: false
             },
-            series: [{ name: 'revenue', data: [] }]
+            title: {
+                text: '100%',
+                verticalAlign: 'middle',
+                y: 40
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: false,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: 0,
+                    endAngle: 360,
+                    center: ['50%', '50%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                innerSize: '90%',
+                data: []
+            }]
         };
         this.previousPieChartOptions = {
             chart: {
-                type: 'solidgauge'
-            },
-            title: null,
-            pane: {
-                center: ['50%', '50%'],
-                size: '100%',
-                startAngle: 0,
-                endAngle: 360,
-                background: {
-                    backgroundColor: '#EEE',
-                    innerRadius: '60%',
-                    outerRadius: '100%',
-                    shape: 'arc'
-                }
-            },
-            tooltip: {
-                enabled: false
-            },
-            yAxis: {
-                lineWidth: 0,
-                minorTickInterval: null,
-                tickAmount: 2,
-                min: 0,
-                max: 200,
-                title: {
-                    text: 'Speed'
-                },
-                labels: {
-                    y: 50
-                }
-            },
-            plotOptions: {
-                solidgauge: {
-                    dataLabels: {
-                        y: 5,
-                        borderWidth: 0,
-                        useHTML: true
-                    }
-                }
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                height: 200
             },
             credits: {
                 enabled: false
             },
-            series: [{ name: 'revenue', data: [] }]
+            title: {
+                text: '100%',
+                verticalAlign: 'middle',
+                y: 40
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: false,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: 0,
+                    endAngle: 360,
+                    center: ['50%', '50%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                innerSize: '90%',
+                data: []
+            }]
         };
     }
 
@@ -242,6 +218,17 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.calculateTotals('current');
     }
 
+    public onChartSelection(e, type) {
+        if (e && e.point) {
+            this.renderPiePer(type, Number((e.point.percentage).toFixed(2)));
+        }
+
+        if (this.activeChart !== type) {
+            this.activeChart = type;
+            this.renderOptions(type === 'current' ? this.series : this.previousSeries);
+        }
+    }
+
     public genPreviousSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
         let incomeSeries = [];
         let indirectexpensesSeries = [];
@@ -286,15 +273,10 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.currentPieTotal.revenueAmountTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
-            this.currentPieTotal.indirectexpensesTotal = indirectexpensesTotal;
-            this.currentPieTotal.operatingcost = operatingcost;
+            this.pieSeries = [{ name: 'revenue', y: incomeTotal, color: 'red' }, { name: 'operatingcost', y: operatingcost, color: 'green' },
+            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'blue' }];
 
-            this.pieSeries = [{ name: 'revenue', y: this.currentPieTotal.revenueAmountTotal, color: 'red' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'green' },
-            { name: 'operatingcost', y: operatingcost, color: 'blue' }];
-
-            this.renderPieOptions('current', this.currentPieTotal.revenueAmountTotal);
+            this.renderPieOptions('current');
         } else {
             incomeTotal = 0;
             indirectexpensesTotal = 0;
@@ -309,14 +291,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.previousPieTotal.revenueAmountTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
-            this.previousPieTotal.indirectexpensesTotal = indirectexpensesTotal;
-            this.previousPieTotal.operatingcost = operatingcost;
-
-            this.previousPieSeries = [{ name: 'revenue', y: this.previousPieTotal.revenueAmountTotal, color: 'red' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'green' },
-            { name: 'operatingcost', y: operatingcost, color: 'blue' }];
-            this.renderPieOptions('previous', this.previousPieTotal.revenueAmountTotal);
+            this.previousPieSeries = [{ name: 'revenue', y: incomeTotal, color: 'red' }, { name: 'operatingcost', y: operatingcost, color: 'green' },
+            { name: 'indirectexpenses', y: indirectexpensesTotal, color: 'blue' }];
+            this.renderPieOptions('previous');
         }
     }
 
@@ -330,15 +307,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cd.detectChanges();
     }
 
-    public renderPieOptions(type: string = 'current', total) {
+    public renderPieOptions(type: string = 'current') {
         if (type === 'current') {
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 series: this.pieChartOptions.series.map(s => {
                     s.data = this.pieSeries;
                     return s;
-                }),
-                yAxis: Object.assign({}, this.pieChartOptions.yAxis, {
-                    max: total
                 })
             });
         } else {
@@ -346,9 +320,6 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 series: this.previousPieChartOptions.series.map(s => {
                     s.data = this.previousPieSeries
                     return s;
-                }),
-                yAxis: Object.assign({}, this.pieChartOptions.yAxis, {
-                    max: total
                 })
             });
         }
@@ -356,6 +327,23 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
             this.pichartclass = true;
         }, 1000);
+    }
+
+    public renderPiePer(type: string = 'current', per: number) {
+        if (type === 'current') {
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                title: Object.assign({}, this.pieChartOptions.title, {
+                    text: `${per}%`
+                })
+            });
+        } else {
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                title: Object.assign({}, this.previousPieChartOptions.title, {
+                    text: `${per}%`
+                })
+            });
+        }
+        this.cd.detectChanges();
     }
 
     public ngOnDestroy() {
