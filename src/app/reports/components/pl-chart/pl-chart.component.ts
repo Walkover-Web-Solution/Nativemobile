@@ -33,9 +33,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public pieSeries: Array<{ name: string, y: number, color: string }>;
     public previousPieSeries: Array<{ name: string, y: number, color: string }>;
     public per: number = 50;
-
     public activeChart: string = 'current';
-
+    public pieTotal: number = 0;
+    public previousPieTotal: number = 0;
+    public pieLable: string = '';
+    public previousPieLable: string = '';
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _reportsActions: ReportsActions, private cd: ChangeDetectorRef) {
@@ -166,10 +168,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.resetSeriesData();
                 incomeData = chartData[0].incomeData;
                 expensesData = chartData[0].expensesData;
+                this.pieLable = chartData[0].lable;
 
                 previousIncomeData = chartData[1].incomeData;
                 previousExpensesData = chartData[1].expensesData;
-
+                this.previousPieLable = chartData[1].lable;
             }
             this.genSeries(incomeData, expensesData, legendData);
             this.genPreviousSeries(previousIncomeData, previousExpensesData, legendData);
@@ -275,7 +278,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.pieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
             { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
-
+            this.pieTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
             this.renderPieOptions('current');
         } else {
             incomeTotal = 0;
@@ -293,6 +296,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
             this.previousPieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
             { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
+            this.previousPieTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
             this.renderPieOptions('previous');
         }
     }

@@ -24,14 +24,16 @@ const initialState: ReportsState = {
         expensesData: null,
         legend: [],
         from: '',
-        to: ''
+        to: '',
+        lable: ''
     },
     previousData: {
         incomeData: null,
         expensesData: null,
         legend: [],
         from: '',
-        to: ''
+        to: '',
+        lable: ''
     },
     profitLossChartFilter: ChartFilterType.LastQuater
 };
@@ -150,14 +152,16 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                 currentData: Object.assign({}, state.currentData, {
                     incomeData: currentIncomeData,
                     legend: currentLegend,
-                    from: payload.config.activeYear.startDate,
-                    to: payload.config.activeYear.endDate
+                    from: config.activeYear.startDate,
+                    to: config.activeYear.endDate,
+                    lable: config.activeYear.lable
                 }),
                 previousData: Object.assign({}, state.previousData, {
                     incomeData: previousIncomeData,
                     legend: previousLegend,
-                    from: payload.config.lastYear.startDate,
-                    to: payload.config.lastYear.endDate
+                    from: config.lastYear.startDate,
+                    to: config.lastYear.endDate,
+                    lable: config.lastYear.lable
                 })
             });
         }
@@ -167,13 +171,15 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     incomeData: null,
                     legend: [],
                     from: '',
-                    to: ''
+                    to: '',
+                    lable: ''
                 }),
                 previousData: Object.assign({}, state.currentData, {
                     incomeData: null,
                     legend: [],
                     from: '',
-                    to: ''
+                    to: '',
+                    lable: ''
                 })
             });
         }
@@ -336,13 +342,15 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     expensesData: currentExpenseData,
                     legend: payload.config.legend,
                     from: payload.config.activeYear.startDate,
-                    to: payload.config.activeYear.endDate
+                    to: payload.config.activeYear.endDate,
+                    lable: config.activeYear.lable
                 }),
                 previousData: Object.assign({}, state.previousData, {
                     expensesData: previousExpenseData,
                     legend: payload.config.legend,
                     from: payload.config.lastYear.startDate,
-                    to: payload.config.lastYear.endDate
+                    to: payload.config.lastYear.endDate,
+                    lable: config.lastYear.lable
                 })
             });
         }
@@ -353,13 +361,15 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     expensesData: null,
                     legend: [],
                     from: '',
-                    to: ''
+                    to: '',
+                    lable: ''
                 }),
                 previousData: Object.assign({}, state.currentData, {
                     expensesData: null,
                     legend: [],
                     from: '',
-                    to: ''
+                    to: '',
+                    lable: ''
                 })
             });
         }
