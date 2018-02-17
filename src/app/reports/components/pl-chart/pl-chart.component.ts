@@ -46,7 +46,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 type: 'column'
             },
             title: {
-                text: 'Total fruit consumtion, grouped by gender'
+                text: ''
             },
             xAxis: {
                 categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
@@ -85,7 +85,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             title: {
                 text: '100%',
                 verticalAlign: 'middle',
-                y: 40
+                horizontalAlign: 'middle'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -125,7 +125,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             title: {
                 text: '100%',
                 verticalAlign: 'middle',
-                y: 40
+                horizontalAlign: 'middle'
             },
             tooltip: {
                 pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
