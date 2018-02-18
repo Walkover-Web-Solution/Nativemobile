@@ -1,0 +1,10 @@
+<my-header
+    [title]="'Select Time'"
+    [leftSideItem]="{ icon:'arrow_back' }"
+    [rightSideItem]="{ title: 'Save', action: log.bind(this)}"
+></my-header>
+<mat-selection-list (selectionChange)="log($event)">
+    <mat-list-option *ngFor="let item of items">
+        {{ item.text }}
+    </mat-list-option>
+</mat-selection-list>

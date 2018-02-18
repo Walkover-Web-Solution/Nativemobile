@@ -18,4 +18,17 @@ export class MyHeaderComponent implements OnInit {
     constructor() { }
 
     ngOnInit() { }
+
+    public fireAction(type: string = 'left') {
+        if (type === 'left') {
+            if (this.leftSideItem.action) {
+                this.leftSideItem.action();
+            }
+            return;
+        } else {
+            if (this.rightSideItem.action) {
+                this.rightSideItem.action();
+            }
+        }
+    }
 }

@@ -11,7 +11,7 @@ import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
     MatButtonModule, MatCardModule, MatListModule, MatGridListModule, MatChipsModule, MatDatepickerModule,
-    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatNativeDateModule
+    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatNativeDateModule, MatDialogModule
 } from '@angular/material';
 import { MyHeaderComponent } from "./my-header/my-header.component";
 import { LaddaModule } from 'angular2-ladda';
@@ -30,7 +30,9 @@ const matModules = [MatButtonModule,
     MatCheckboxModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule];
+    MatNativeDateModule,
+    MatDialogModule
+];
 
 @NgModule({
     imports: [

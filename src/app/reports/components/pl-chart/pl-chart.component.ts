@@ -10,6 +10,8 @@ import { zip } from 'rxjs/observable/zip';
 import { Options } from 'highcharts';
 import { ChartComponent } from 'angular2-highcharts';
 import * as _ from 'lodash';
+import { MatDialog } from '@angular/material';
+import { ReportsFilterComponent } from '../reports-filter/reports-filter.component';
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
@@ -40,7 +42,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public previousPieLable: string = '';
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-    constructor(private store: Store<AppState>, private _reportsActions: ReportsActions, private cd: ChangeDetectorRef) {
+    constructor(private store: Store<AppState>, private _reportsActions: ReportsActions, private cd: ChangeDetectorRef,
+        public dialog: MatDialog) {
         this.currentData$ = this.store.select(st => st.report.currentData).takeUntil(this.destroyed$);
         this.previousData$ = this.store.select(st => st.report.previousData).takeUntil(this.destroyed$);
         this.options = {
@@ -348,6 +351,13 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         this.cd.detectChanges();
+    }
+
+    public openFilter() {
+        let dialog = this.dialog.open(ReportsFilterComponent, {
+            // disableClose: true,
+            width: '100%'
+        });
     }
 
     public ngOnDestroy() {

@@ -1,11 +1,11 @@
 <mat-toolbar [color]="'primary'">
     <mat-toolbar-row>
         <div *ngIf="leftSideItem">
-            <button mat-icon-button *ngIf="leftSideItem.icon" (click)="leftSideItem.action()">
+            <button mat-icon-button *ngIf="leftSideItem.icon" (click)="fireAction('left')">
                 <mat-icon>{{ leftSideItem.icon }}</mat-icon>
             </button>
 
-            <button mat-button *ngIf="leftSideItem.title" (click)="leftSideItem.action()">
+            <button mat-button *ngIf="leftSideItem.title" (click)="fireAction('left')">
                 {{ leftSideItem.title }}
             </button>
         </div>
@@ -13,11 +13,11 @@
         <span class="headerTitle">{{ title }}</span>
 
         <div *ngIf="rightSideItem">
-            <button mat-icon-button *ngIf="rightSideItem.icon" (click)="rightSideItem.action()">
+            <button mat-icon-button *ngIf="rightSideItem.icon" (click)="fireAction('right')">
                 <mat-icon>{{ rightSideItem.icon }}</mat-icon>
             </button>
 
-            <button mat-button *ngIf="rightSideItem.title" (click)="rightSideItem.action()">
+            <button mat-button *ngIf="rightSideItem.title" (click)="fireAction('right')">
                 {{ rightSideItem.title }}
             </button>
         </div>

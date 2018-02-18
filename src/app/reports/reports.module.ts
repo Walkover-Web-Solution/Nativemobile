@@ -10,6 +10,7 @@ import { PlChartComponent } from '../reports/components/pl-chart/pl-chart.compon
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '../common';
 import { ReportsRoutes } from './reports.routes';
+import { ReportsFilterComponent } from './components/reports-filter/reports-filter.component';
 
 declare let require: any;
 
@@ -22,9 +23,12 @@ declare let require: any;
         ChartModule.forRoot(require('highcharts')),
         SharedModule,
     ],
-    declarations: [ReportsComponent, PlChartComponent],
+    declarations: [ReportsComponent, PlChartComponent, ReportsFilterComponent],
     schemas: [
         NO_ERRORS_SCHEMA
+    ],
+    entryComponents: [
+        ReportsFilterComponent
     ]
 })
 export class ReportsModule {
