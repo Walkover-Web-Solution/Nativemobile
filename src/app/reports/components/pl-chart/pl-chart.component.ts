@@ -61,7 +61,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 allowDecimals: false,
                 min: 0,
                 title: {
-                    text: 'Number of fruits'
+                    text: ''
                 }
             },
             tooltip: {
@@ -189,8 +189,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        this.store.dispatch(this._reportsActions.getIncomeData());
-        this.store.dispatch(this._reportsActions.getExpensesData());
+        // this.store.dispatch(this._reportsActions.getIncomeData());
+        // this.store.dispatch(this._reportsActions.getExpensesData());
     }
 
     public resetSeriesData() {
