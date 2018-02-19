@@ -14,6 +14,7 @@ import { zip } from "rxjs/observable/zip";
 import { of } from "rxjs/observable/of";
 import { Observable } from "rxjs/Observable";
 import { Injectable } from "@angular/core";
+import { ToasterService } from "../../services/toaster.service";
 @Injectable()
 export class ReportsActions {
 
@@ -24,8 +25,8 @@ export class ReportsActions {
             let filterType: ChartFilterType;
             let activeFinancialYear: ActiveFinancialYear;
             let lastFinancialYear: ActiveFinancialYear;
-            // let customFilterObj: ChartCustomFilter;
-            // this.store.select(p => p.newReport.).take(1).subscribe(p => customFilterObj = p);
+            let customFilterObj: ChartCustomFilter;
+            this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
             this.store.select(s => s.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
             this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
                 return { companies, uniqueName };
@@ -55,7 +56,7 @@ export class ReportsActions {
                     }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, null);
+            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
             let model: GroupHistoryRequest = {
                 category: ['income']
             };
@@ -74,6 +75,7 @@ export class ReportsActions {
                 };
             }
             else {
+                this._toasterService.errorToast(res[0].message);
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR,
                 };
@@ -87,8 +89,8 @@ export class ReportsActions {
             let filterType: ChartFilterType;
             let activeFinancialYear: ActiveFinancialYear;
             let lastFinancialYear: ActiveFinancialYear;
-            // let customFilterObj: ChartCustomFilter;
-            // this.store.select(p => p.newReport.).take(1).subscribe(p => customFilterObj = p);
+            let customFilterObj: ChartCustomFilter;
+            this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
             this.store.select(s => s.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
             this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
                 return { companies, uniqueName };
@@ -118,7 +120,7 @@ export class ReportsActions {
                     }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, null);
+            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
             let model: GroupHistoryRequest = {
                 groups: ['indirectexpenses', 'operatingcost']
             };
@@ -144,13 +146,15 @@ export class ReportsActions {
                 //     { name: 'Operating Cost', uniqueName: 'operatingcost', intervalBalances: [] } as IGroupHistoryGroups
                 //   ]
                 // };
+                this._toasterService.errorToast(res[0].message);
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR,
                 };
             }
         });
 
-    constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>) {
+    constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
+    private _toasterService: ToasterService) {
 
     }
 

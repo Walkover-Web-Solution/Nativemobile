@@ -1,7 +1,7 @@
 import { CustomActions } from "../../store/customActions";
 import { ChartFilterType, IReportChartData, IIntervalBalancesItem } from "../../models/interfaces/dashboard.interface";
 import { ReportConst } from "../../actions/reports/reports.const";
-import { GroupHistoryResponse, CategoryHistoryResponse, ChartFilterConfigs } from "../../models/api-models/Dashboard";
+import { GroupHistoryResponse, CategoryHistoryResponse, ChartFilterConfigs, ChartCustomFilter } from "../../models/api-models/Dashboard";
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
 
@@ -16,6 +16,7 @@ export interface ReportsState {
     currentData: IReportChartData,
     previousData: IReportChartData,
     profitLossChartFilter: ChartFilterType,
+    profitLossChartCustomFilter: ChartCustomFilter;
 }
 
 const initialState: ReportsState = {
@@ -35,7 +36,15 @@ const initialState: ReportsState = {
         to: '',
         lable: ''
     },
-    profitLossChartFilter: ChartFilterType.LastQuater
+    profitLossChartFilter: ChartFilterType.LastQuater,
+    profitLossChartCustomFilter: {
+        activeYear: {
+            startDate: '', endDate: ''
+        },
+        lastYear: {
+            startDate: '', endDate: ''
+        },
+    }
 };
 
 export function ReportsReducer(state: ReportsState = initialState, action: CustomActions): ReportsState {
@@ -376,9 +385,24 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         //#endregion
 
         case ReportConst.SET_REPORT_FILTER_TYPE: {
-            return Object.assign({}, state, {
-                profitLossChartFilter: action.payload.filterType
-            });
+            if (action.payload.filterType === ChartFilterType.Custom) {
+                return Object.assign({}, state, {
+                    profitLossChartFilter: action.payload.filterType,
+                    profitLossChartCustomFilter: action.payload.customFilterObj
+                });
+            } else {
+                return Object.assign({}, state, {
+                    profitLossChartFilter: action.payload.filterType,
+                    profitLossChartCustomFilter: {
+                        activeYear: {
+                            startDate: '', endDate: ''
+                        },
+                        lastYear: {
+                            startDate: '', endDate: ''
+                        },
+                    }
+                });
+            }
         }
         default:
             break;

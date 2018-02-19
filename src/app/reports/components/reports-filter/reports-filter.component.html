@@ -42,7 +42,7 @@
             <div style="flex: 1 0 auto">
                 <h2 matLine>From</h2>
                 <mat-form-field>
-                    <input matInput [matDatepicker]="previousFromDP" [(ngModel)]="customFilterObj.activeYear.startDate" placeholder="Choose a date">
+                    <input matInput [matDatepicker]="previousFromDP" [(ngModel)]="customFilterObj.lastYear.startDate" placeholder="Choose a date">
                     <mat-datepicker-toggle [for]="previousFromDP"></mat-datepicker-toggle>
                     <mat-datepicker #previousFromDP></mat-datepicker>
                 </mat-form-field>
@@ -51,7 +51,7 @@
             <div>
                 <h4 matLine>To</h4>
                 <mat-form-field>
-                    <input matInput [matDatepicker]="previousToDP" [(ngModel)]="customFilterObj.activeYear.endDate" placeholder="Choose a date">
+                    <input matInput [matDatepicker]="previousToDP" [(ngModel)]="customFilterObj.lastYear.endDate" placeholder="Choose a date">
                     <mat-datepicker-toggle [for]="previousToDP"></mat-datepicker-toggle>
                     <mat-datepicker #previousToDP></mat-datepicker>
                 </mat-form-field>

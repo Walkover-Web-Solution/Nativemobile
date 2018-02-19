@@ -9,9 +9,10 @@ import { MyChipsComponent } from "./my-chips/my-chips.component";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {
     MatButtonModule, MatCardModule, MatListModule, MatGridListModule, MatChipsModule, MatDatepickerModule,
-    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatNativeDateModule, MatDialogModule, MatRadioButton, MatRadioModule
+    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatDialogModule, MatRadioButton, MatRadioModule
 } from '@angular/material';
 import { MyHeaderComponent } from "./my-header/my-header.component";
 import { LaddaModule } from 'angular2-ladda';
@@ -30,7 +31,7 @@ const matModules = [MatButtonModule,
     MatCheckboxModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatNativeDateModule,
+    MatMomentDateModule,
     MatDialogModule,
     MatRadioModule
 ];

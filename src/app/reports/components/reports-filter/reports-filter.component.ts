@@ -5,11 +5,31 @@ import { AppState } from "../../../store";
 import { Store } from "@ngrx/store";
 import { ReportsActions } from "../../../actions/reports/reports.actions";
 import { ChartCustomFilter } from "../../../models/api-models/Dashboard";
-import { ReplaySubject } from "rxjs";
+import { ReplaySubject } from "rxjs/ReplaySubject";
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import * as moment from 'moment';
+
+const MY_FORMATS = {
+    parse: {
+        dateInput: 'DD-MM-YYYY',
+    },
+    display: {
+        dateInput: 'DD-MM-YYYY',
+        monthYearLabel: 'MMM YYYY',
+        dateA11yLabel: 'LL',
+        monthYearA11yLabel: 'MMMM YYYY',
+    },
+};
+
 
 @Component({
     selector: 'ns-reports-filter',
-    templateUrl: './reports-filter.component.html'
+    templateUrl: './reports-filter.component.html',
+    providers: [
+        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+        { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+    ]
 })
 export class ReportsFilterComponent implements OnDestroy {
     public items: Array<{ text: string, val: ChartFilterType, isSelected: boolean }>;
@@ -30,8 +50,16 @@ export class ReportsFilterComponent implements OnDestroy {
             { val: ChartFilterType.LastYear, text: 'Last Year', isSelected: false },
             { val: ChartFilterType.Custom, text: 'Custom', isSelected: false },
         ];
-        this.store.select(s => s.report.profitLossChartFilter).takeUntil(this.destroyed$).subscribe(fl => {
-            this.selectedFilter = fl;
+        this.store.select(s => s.report).distinctUntilKeyChanged('profitLossChartFilter').takeUntil(this.destroyed$).subscribe(fl => {
+            this.selectedFilter = fl.profitLossChartFilter;
+            this.showCustomFilterInputs = fl.profitLossChartFilter === ChartFilterType.Custom;
+            // if (this.showCustomFilterInputs) {
+            //     this.customFilterObj.activeYear.startDate = moment(fl.profitLossChartCustomFilter.activeYear.startDate, 'DD-MM-YYYY');
+            //     this.customFilterObj.activeYear.endDate = moment(fl.profitLossChartCustomFilter.activeYear.endDate, 'DD-MM-YYYY');
+
+            //     this.customFilterObj.lastYear.startDate = moment(fl.profitLossChartCustomFilter.lastYear.startDate, 'DD-MM-YYYY');
+            //     this.customFilterObj.lastYear.endDate = moment(fl.profitLossChartCustomFilter.lastYear.endDate, 'DD-MM-YYYY');
+            // }
         });
         this.customFilterObj = new ChartCustomFilter();
     }
@@ -42,11 +70,21 @@ export class ReportsFilterComponent implements OnDestroy {
 
     public close() {
         this.dialogRef.close();
+        this.ngOnDestroy();
     }
 
     public submit() {
+        if (this.selectedFilter === ChartFilterType.Custom) {
+            this.customFilterObj.activeYear.startDate = moment(this.customFilterObj.activeYear.startDate).format('DD-MM-YYYY');
+            this.customFilterObj.activeYear.endDate = moment(this.customFilterObj.activeYear.endDate).format('DD-MM-YYYY');
+
+            this.customFilterObj.lastYear.startDate = moment(this.customFilterObj.lastYear.startDate).format('DD-MM-YYYY');
+            this.customFilterObj.lastYear.endDate = moment(this.customFilterObj.lastYear.endDate).format('DD-MM-YYYY');
+        } else {
+            this.customFilterObj = new ChartCustomFilter();
+        }
         this.store.dispatch(this._reportsAction.setFilterType(this.selectedFilter, this.customFilterObj));
-        this.dialogRef.close();
+        this.close();
     }
 
     public ngOnDestroy() {
