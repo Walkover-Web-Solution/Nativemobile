@@ -1,7 +1,7 @@
 <my-header [title]="'Select Time'" [leftSideItem]="{ icon:'arrow_back', action: close.bind(this) }" [rightSideItem]="{ title: 'Save', action: submit.bind(this)}"></my-header>
 
 <mat-radio-group [(ngModel)]="selectedFilter" style="display: flex;flex-direction: column" (change)="selectionChange()">
-    <mat-radio-button *ngFor="let item of items" [value]="item.val">
+    <mat-radio-button *ngFor="let item of items" [value]="item.val" style="padding:10px;">
         {{ item.text }}
     </mat-radio-button>
 </mat-radio-group>
