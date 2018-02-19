@@ -1,10 +1,61 @@
-<my-header
-    [title]="'Select Time'"
-    [leftSideItem]="{ icon:'arrow_back' }"
-    [rightSideItem]="{ title: 'Save', action: log.bind(this)}"
-></my-header>
-<mat-selection-list (selectionChange)="log($event)">
-    <mat-list-option *ngFor="let item of items">
+<my-header [title]="'Select Time'" [leftSideItem]="{ icon:'arrow_back' }" [rightSideItem]="{ title: 'Save', action: submit.bind(this)}"></my-header>
+
+<mat-radio-group [(ngModel)]="selectedFilter" style="display: flex;flex-direction: column" (change)="selectionChange()">
+    <mat-radio-button *ngFor="let item of items" [value]="item.val">
         {{ item.text }}
-    </mat-list-option>
-</mat-selection-list>
+    </mat-radio-button>
+</mat-radio-group>
+
+<mat-card *ngIf="showCustomFilterInputs">
+    <mat-card-header>
+        <mat-card-title>Current</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div style="display: flex;justify-content: space-around">
+            <div style="flex: 1 0 auto">
+                <h2 matLine>From</h2>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="currentFromDP" [(ngModel)]="customFilterObj.activeYear.startDate" placeholder="Choose a date">
+                    <mat-datepicker-toggle [for]="currentFromDP"></mat-datepicker-toggle>
+                    <mat-datepicker #currentFromDP></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <h4 matLine>To</h4>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="currentToDP" [(ngModel)]="customFilterObj.activeYear.endDate" placeholder="Choose a date">
+                    <mat-datepicker-toggle [for]="currentToDP"></mat-datepicker-toggle>
+                    <mat-datepicker #currentToDP></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="showCustomFilterInputs">
+    <mat-card-header>
+        <mat-card-title>Previous</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+        <div style="display: flex;justify-content: space-around">
+            <div style="flex: 1 0 auto">
+                <h2 matLine>From</h2>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="previousFromDP" [(ngModel)]="customFilterObj.activeYear.startDate" placeholder="Choose a date">
+                    <mat-datepicker-toggle [for]="previousFromDP"></mat-datepicker-toggle>
+                    <mat-datepicker #previousFromDP></mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <h4 matLine>To</h4>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="previousToDP" [(ngModel)]="customFilterObj.activeYear.endDate" placeholder="Choose a date">
+                    <mat-datepicker-toggle [for]="previousToDP"></mat-datepicker-toggle>
+                    <mat-datepicker #previousToDP></mat-datepicker>
+                </mat-form-field>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
