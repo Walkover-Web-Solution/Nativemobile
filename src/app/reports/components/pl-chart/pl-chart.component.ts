@@ -40,6 +40,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public previousPieTotal: number = 0;
     public pieLable: string = '';
     public previousPieLable: string = '';
+    public selectedFilter$: Observable<ChartFilterType>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _reportsActions: ReportsActions, private cd: ChangeDetectorRef,
@@ -157,6 +158,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 data: []
             }]
         };
+        this.selectedFilter$ = this.store.select(s => s.report.profitLossChartFilter).takeUntil(this.destroyed$);
     }
 
     public ngOnInit() {
@@ -179,6 +181,10 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             this.genSeries(incomeData, expensesData, legendData);
             this.genPreviousSeries(previousIncomeData, previousExpensesData, legendData);
+        });
+        this.selectedFilter$.distinctUntilChanged().subscribe(s => {
+            this.store.dispatch(this._reportsActions.getIncomeData());
+            this.store.dispatch(this._reportsActions.getExpensesData());
         });
     }
 

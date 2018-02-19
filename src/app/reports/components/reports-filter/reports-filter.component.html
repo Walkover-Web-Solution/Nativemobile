@@ -1,4 +1,4 @@
-<my-header [title]="'Select Time'" [leftSideItem]="{ icon:'arrow_back' }" [rightSideItem]="{ title: 'Save', action: submit.bind(this)}"></my-header>
+<my-header [title]="'Select Time'" [leftSideItem]="{ icon:'arrow_back', action: close.bind(this) }" [rightSideItem]="{ title: 'Save', action: submit.bind(this)}"></my-header>
 
 <mat-radio-group [(ngModel)]="selectedFilter" style="display: flex;flex-direction: column" (change)="selectionChange()">
     <mat-radio-button *ngFor="let item of items" [value]="item.val">

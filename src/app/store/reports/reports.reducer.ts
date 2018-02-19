@@ -374,6 +374,12 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             });
         }
         //#endregion
+
+        case ReportConst.SET_REPORT_FILTER_TYPE: {
+            return Object.assign({}, state, {
+                profitLossChartFilter: action.payload.filterType
+            });
+        }
         default:
             break;
     }
