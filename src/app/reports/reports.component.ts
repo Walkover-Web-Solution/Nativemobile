@@ -6,6 +6,7 @@ import { Options } from 'highcharts';
     selector: 'ns-reports',
     moduleId: module.id,
     templateUrl: './reports.component.html',
+    styleUrls: ['./reports.component.scss']
 })
 
 export class ReportsComponent {

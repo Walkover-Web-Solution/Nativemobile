@@ -12,7 +12,7 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {
     MatButtonModule, MatCardModule, MatListModule, MatGridListModule, MatChipsModule, MatDatepickerModule,
-    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatDialogModule, MatRadioButton, MatRadioModule
+    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatDialogModule, MatRadioButton, MatRadioModule, MatTabsModule
 } from '@angular/material';
 import { MyHeaderComponent } from "./my-header/my-header.component";
 import { LaddaModule } from 'angular2-ladda';
@@ -33,7 +33,8 @@ const matModules = [MatButtonModule,
     MatDatepickerModule,
     MatMomentDateModule,
     MatDialogModule,
-    MatRadioModule
+    MatRadioModule,
+    MatTabsModule
 ];
 
 @NgModule({
