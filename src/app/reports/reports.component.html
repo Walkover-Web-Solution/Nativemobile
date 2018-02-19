@@ -1,14 +1,10 @@
 <my-header [title]="'Profit and Loss'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }" [rightSideItem]="{ icon:'file_download' }">
 </my-header>
 
-<mat-tab-group>
+<!-- <mat-tab-group> -->
 
-    <mat-tab label="Profit Loss">
+    <!-- <mat-tab label="Profit Loss"> -->
         <mat-card class="mat-elevation-z2">
-            <mat-card-header style="display:flex;align-items: center">
-                <h4 style="flex: 1 0 auto">P & L</h4>
-                <mat-icon>home</mat-icon>
-            </mat-card-header>
             <mat-divider></mat-divider>
 
             <mat-card-content>
@@ -16,26 +12,20 @@
             </mat-card-content>
         </mat-card>
 
-        <mat-divider></mat-divider>
-
         <mat-card class="mat-elevation-z2">
-                <mat-card-header style="display:flex;align-items: center">
-                    <h4 style="flex: 1 0 auto">P & L</h4>
-                    <mat-icon>home</mat-icon>
-                </mat-card-header>
-                <mat-divider></mat-divider>
+            <mat-divider></mat-divider>
 
-                <mat-card-content>
-                    <ns-pl-sheet></ns-pl-sheet>
-                </mat-card-content>
-            </mat-card>
-    </mat-tab>
+            <mat-card-content>
+                <ns-pl-sheet></ns-pl-sheet>
+            </mat-card-content>
+        </mat-card>
+    <!-- </mat-tab> -->
 
-    <mat-tab label="Balance Sheet">
+    <!-- <mat-tab label="Balance Sheet"> -->
         <mat-card>
             <mat-card-content>
                 <ns-bs-sheet></ns-bs-sheet>
             </mat-card-content>
         </mat-card>
-    </mat-tab>
-</mat-tab-group>
+    <!-- </mat-tab> -->
+<!-- </mat-tab-group> -->
