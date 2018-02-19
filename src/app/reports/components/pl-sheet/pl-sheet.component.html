@@ -11,10 +11,10 @@
 
         <div>
             <mat-list>
-                <mat-list-item *ngFor="let item of [1,2,3]">
+                <mat-list-item *ngIf="(data$ | async)?.revenue; else noData">
                     <div class="sheetListItemContainer">
                         <span matLine>Revenue</span>
-                        <span matLine>176,069</span>
+                        <span matLine>{{ (data$ | async)?.revenue?.amount }}</span>
                     </div>
                 </mat-list-item>
             </mat-list>
@@ -22,15 +22,22 @@
 
         <div class="sheetHeader">
             <span style="flex: 1 0 auto;">Total Income</span>
-            <span>176,069</span>
+            <span>{{ totalIncome }}</span>
         </div>
 
         <div>
             <mat-list>
-                <mat-list-item *ngFor="let item of [1,2,3]">
+                <mat-list-item *ngIf="(data$ | async)?.operatingExpenses; else noData">
                     <div class="sheetListItemContainer">
-                        <span matLine>Revenue</span>
-                        <span matLine>176,069</span>
+                        <span matLine>Operating Cost</span>
+                        <span matLine>{{ (data$ | async)?.operatingExpenses?.amount }}</span>
+                    </div>
+                </mat-list-item>
+
+                <mat-list-item *ngIf="(data$ | async)?.otherExpenses; else noData">
+                    <div class="sheetListItemContainer">
+                        <span matLine>Indirect Expenses</span>
+                        <span matLine>{{ (data$ | async)?.otherExpenses?.amount }}</span>
                     </div>
                 </mat-list-item>
             </mat-list>
@@ -38,8 +45,15 @@
 
         <div class="sheetHeader">
             <span style="flex: 1 0 auto;">Total Expenses</span>
-            <span>50,390</span>
+            <span>{{ totalExpense }}</span>
         </div>
+
+        <ng-template #noData>
+            <mat-list-item style="display:flex;height:30px;justify-content: center;align-items: center;">
+                <span matLine>No Data</span>
+            </mat-list-item>
+        </ng-template>
+
 
     </div>
 

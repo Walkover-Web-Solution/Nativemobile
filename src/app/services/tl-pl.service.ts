@@ -7,7 +7,7 @@ import { BaseResponse } from '../models/api-models/BaseResponse';
 import { UserDetails } from '../models/api-models/loginModels';
 import { ErrorHandler } from './catchManager/catchmanger';
 import { TB_PL_BS_API } from './apiurls/tl-pl.api';
-import { AccountDetails, BalanceSheetRequest, ProfitLossRequest, TrialBalanceExportExcelRequest, TrialBalanceRequest } from '../models/api-models/tb-pl-bs';
+import { AccountDetails, BalanceSheetRequest, ProfitLossRequest, TrialBalanceExportExcelRequest, TrialBalanceRequest, ProfitLossDataV3 } from '../models/api-models/tb-pl-bs';
 // import { saveAs } from 'file-saver';
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
@@ -40,7 +40,7 @@ export class TlPlService {
     /**
      * get Profit/Loss
      */
-    public GetProfitLoss(request: ProfitLossRequest): Observable<BaseResponse<AccountDetails, ProfitLossRequest>> {
+    public GetProfitLoss(request: ProfitLossRequest): Observable<BaseResponse<ProfitLossDataV3, ProfitLossRequest>> {
         this.user = this._generalService.user;
         this.companyUniqueName = this._generalService.companyUniqueName;
         let filteredRequest = (Object.keys(request)
@@ -50,11 +50,11 @@ export class TlPlService {
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_PROFIT_LOSS
             .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
             .map((res) => {
-                let data: BaseResponse<AccountDetails, ProfitLossRequest> = res;
+                let data: BaseResponse<ProfitLossDataV3, ProfitLossRequest> = res;
                 data.request = request;
                 return data;
             })
-            .catch((e) => this.errorHandler.HandleCatch<AccountDetails, ProfitLossRequest>(e, request));
+            .catch((e) => this.errorHandler.HandleCatch<ProfitLossDataV3, ProfitLossRequest>(e, request));
     }
 
     /**

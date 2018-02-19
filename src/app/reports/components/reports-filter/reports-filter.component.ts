@@ -32,7 +32,7 @@ const MY_FORMATS = {
     ]
 })
 export class ReportsFilterComponent implements OnDestroy {
-    public items: Array<{ text: string, val: ChartFilterType, isSelected: boolean }>;
+    public items: Array<{ text: string, val: ChartFilterType }>;
     public selectedFilter: ChartFilterType = ChartFilterType.Custom;
     public showCustomFilterInputs: boolean = false;
     public customFilterObj: ChartCustomFilter;
@@ -40,15 +40,15 @@ export class ReportsFilterComponent implements OnDestroy {
     constructor(public dialogRef: MatDialogRef<ReportsFilterComponent>, public store: Store<AppState>,
         public _reportsAction: ReportsActions) {
         this.items = [
-            { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date', isSelected: false },
-            { val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date', isSelected: false },
-            { val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date', isSelected: false },
-            { val: ChartFilterType.ThisYearToDate, text: 'This Year to Date', isSelected: false },
-            { val: ChartFilterType.LastMonth, text: 'Last Month', isSelected: false },
-            { val: ChartFilterType.LastQuater, text: 'Last Quater', isSelected: false },
-            { val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year', isSelected: false },
-            { val: ChartFilterType.LastYear, text: 'Last Year', isSelected: false },
-            { val: ChartFilterType.Custom, text: 'Custom', isSelected: false },
+            { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date' },
+            { val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date' },
+            { val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date' },
+            { val: ChartFilterType.ThisYearToDate, text: 'This Year to Date' },
+            { val: ChartFilterType.LastMonth, text: 'Last Month' },
+            { val: ChartFilterType.LastQuater, text: 'Last Quater' },
+            { val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year' },
+            { val: ChartFilterType.LastYear, text: 'Last Year' },
+            { val: ChartFilterType.Custom, text: 'Custom' },
         ];
         this.store.select(s => s.report).distinctUntilKeyChanged('profitLossChartFilter').takeUntil(this.destroyed$).subscribe(fl => {
             this.selectedFilter = fl.profitLossChartFilter;
@@ -83,7 +83,8 @@ export class ReportsFilterComponent implements OnDestroy {
         } else {
             this.customFilterObj = new ChartCustomFilter();
         }
-        this.store.dispatch(this._reportsAction.setFilterType(this.selectedFilter, this.customFilterObj));
+        let item = this.items.find(a => a.val === this.selectedFilter);
+        this.store.dispatch(this._reportsAction.setFilterType({ filterTitle: item.text, filterType: item.val }, this.customFilterObj));
         this.close();
     }
 

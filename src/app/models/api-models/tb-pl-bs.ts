@@ -68,3 +68,24 @@ export interface BalanceSheetData {
     closingBalance?: number;
     dates?: BalanceSheetRequest;
 }
+
+export interface ProfitLossDataV3 {
+    costOfGoodsSold: number;
+    grossProfit: number;
+    operatingProfit: number;
+    incomeBeforeTaxes: number;
+    appliedTax: number;
+    netIncome: number;
+    revenue: {
+        amount: number,
+        type: string
+    },
+    operatingExpenses: {
+        amount: number,
+        type: string
+    },
+    otherExpenses: {
+        amount: number,
+        type: string
+    }
+}

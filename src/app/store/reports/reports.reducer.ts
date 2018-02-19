@@ -4,6 +4,7 @@ import { ReportConst } from "../../actions/reports/reports.const";
 import { GroupHistoryResponse, CategoryHistoryResponse, ChartFilterConfigs, ChartCustomFilter } from "../../models/api-models/Dashboard";
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
+import { ProfitLossDataV3 } from "../../models/api-models/tb-pl-bs";
 
 moment.updateLocale('en', {
     'week': {
@@ -12,11 +13,19 @@ moment.updateLocale('en', {
     }
 });
 
+interface PlState {
+    data?: ProfitLossDataV3;
+    showLoader: boolean;
+    noData: boolean;
+}
+
 export interface ReportsState {
     currentData: IReportChartData,
     previousData: IReportChartData,
     profitLossChartFilter: ChartFilterType,
+    profirLossChartFilterTitle: string;
     profitLossChartCustomFilter: ChartCustomFilter;
+    profitLossSheet: PlState
 }
 
 const initialState: ReportsState = {
@@ -37,6 +46,7 @@ const initialState: ReportsState = {
         lable: ''
     },
     profitLossChartFilter: ChartFilterType.LastQuater,
+    profirLossChartFilterTitle: '',
     profitLossChartCustomFilter: {
         activeYear: {
             startDate: '', endDate: ''
@@ -44,7 +54,12 @@ const initialState: ReportsState = {
         lastYear: {
             startDate: '', endDate: ''
         },
-    }
+    },
+    profitLossSheet: {
+        data: null,
+        noData: true,
+        showLoader: false
+    },
 };
 
 export function ReportsReducer(state: ReportsState = initialState, action: CustomActions): ReportsState {
@@ -387,12 +402,14 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         case ReportConst.SET_REPORT_FILTER_TYPE: {
             if (action.payload.filterType === ChartFilterType.Custom) {
                 return Object.assign({}, state, {
-                    profitLossChartFilter: action.payload.filterType,
+                    profitLossChartFilter: action.payload.filterObj.filterType,
+                    profirLossChartFilterTitle: action.payload.filterObj.filterTitle,
                     profitLossChartCustomFilter: action.payload.customFilterObj
                 });
             } else {
                 return Object.assign({}, state, {
                     profitLossChartFilter: action.payload.filterType,
+                    profirLossChartFilterTitle: action.payload.filterObj.filterTitle,
                     profitLossChartCustomFilter: {
                         activeYear: {
                             startDate: '', endDate: ''
@@ -403,6 +420,24 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     }
                 });
             }
+        }
+
+        // region ProfitLoss Sheet Data
+        case ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST: {
+            return Object.assign({}, state, {
+                profitLossSheet: Object.assign({}, state.profitLossSheet, {
+                    showLoader: true,
+                })
+            });
+        }
+
+        case ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE: {
+            return Object.assign({}, state, {
+                profitLossSheet: Object.assign({}, state.profitLossSheet, {
+                    showLoader: false,
+                    data: action.payload.body
+                })
+            });
         }
         default:
             break;
