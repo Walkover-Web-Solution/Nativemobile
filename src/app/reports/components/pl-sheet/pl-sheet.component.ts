@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppState } from '../../../store';
 import { ReportsActions } from '../../../actions/reports/reports.actions';
 import { Store } from '@ngrx/store';
@@ -11,7 +11,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
     templateUrl: './pl-sheet.component.html'
 })
 
-export class PlSheetComponent implements OnInit {
+export class PlSheetComponent implements OnInit, OnDestroy {
     public data$: Observable<ProfitLossDataV3>;
     public chartFilterTitle$: Observable<string>;
     public totalIncome: number = 0;
@@ -51,5 +51,10 @@ export class PlSheetComponent implements OnInit {
 
     public fetchData(refresh: boolean) {
         this.store.dispatch(this._reportsActions.getProfitLossSheet(refresh));
+    }
+
+    ngOnDestroy() {
+        this.destroyed$.next(true);
+        this.destroyed$.complete();
     }
 }

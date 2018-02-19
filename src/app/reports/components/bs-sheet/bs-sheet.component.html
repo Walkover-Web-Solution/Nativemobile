@@ -8,34 +8,42 @@
 
         <div>
             <mat-list>
-                <mat-list-item *ngFor="let item of [1,2,3]">
+                <mat-list-item *ngFor="let itemLiab of liabilitiesArr">
                     <div class="sheetListItemContainer">
-                        <span matLine>Revenue</span>
-                        <span matLine>176,069</span>
+                        <span matLine>{{ itemLiab.groupName }}</span>
+                        <span matLine>{{ itemLiab.closingBalance.amount | number:'1.2-2'}}</span>
                     </div>
+                </mat-list-item>
+
+                <mat-list-item style="display:flex;height:30px;justify-content: center;align-items: center;" *ngIf="liabilitiesArr.length === 0">
+                    <span matLine>No Data</span>
                 </mat-list-item>
             </mat-list>
         </div>
 
         <div class="sheetHeader">
-            <span style="flex: 1 0 auto;">Total Income</span>
-            <span>176,069</span>
+            <span style="flex: 1 0 auto;">Total Liabilities</span>
+            <span>{{ liabTotal | number:'1.2-2' }}</span>
         </div>
 
         <div>
             <mat-list>
-                <mat-list-item *ngFor="let item of [1,2,3]">
+                <mat-list-item *ngFor="let itemAssets of assetsArr">
                     <div class="sheetListItemContainer">
-                        <span matLine>Revenue</span>
-                        <span matLine>176,069</span>
+                        <span matLine>{{ itemAssets.groupName }}</span>
+                        <span matLine>{{ itemAssets.closingBalance.amount | number:'1.2-2' }}</span>
                     </div>
+                </mat-list-item>
+
+                <mat-list-item style="display:flex;height:30px;justify-content: center;align-items: center;" *ngIf="assetsArr.length === 0">
+                    <span matLine>No Data</span>
                 </mat-list-item>
             </mat-list>
         </div>
 
         <div class="sheetHeader">
             <span style="flex: 1 0 auto;">Total Expenses</span>
-            <span>50,390</span>
+            <span>{{ assetTotal | number:'1.2-2'}}</span>
         </div>
 
     </div>

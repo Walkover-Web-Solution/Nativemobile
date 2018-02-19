@@ -4,7 +4,7 @@ import { ReportConst } from "../../actions/reports/reports.const";
 import { GroupHistoryResponse, CategoryHistoryResponse, ChartFilterConfigs, ChartCustomFilter } from "../../models/api-models/Dashboard";
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
-import { ProfitLossDataV3 } from "../../models/api-models/tb-pl-bs";
+import { ProfitLossDataV3, BalanceSheetData } from "../../models/api-models/tb-pl-bs";
 
 moment.updateLocale('en', {
     'week': {
@@ -19,13 +19,20 @@ interface PlState {
     noData: boolean;
 }
 
+interface BsState {
+    data?: BalanceSheetData;
+    showLoader: boolean;
+    noData: boolean;
+}
+
 export interface ReportsState {
     currentData: IReportChartData,
     previousData: IReportChartData,
     profitLossChartFilter: ChartFilterType,
     profirLossChartFilterTitle: string;
     profitLossChartCustomFilter: ChartCustomFilter;
-    profitLossSheet: PlState
+    profitLossSheet: PlState;
+    balanceSheet: BsState
 }
 
 const initialState: ReportsState = {
@@ -56,6 +63,11 @@ const initialState: ReportsState = {
         },
     },
     profitLossSheet: {
+        data: null,
+        noData: true,
+        showLoader: false
+    },
+    balanceSheet: {
         data: null,
         noData: true,
         showLoader: false
@@ -439,6 +451,26 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                 })
             });
         }
+        // endregion
+
+        //  region Balance Sheet Data
+        case ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST: {
+            return Object.assign({}, state, {
+                balanceSheet: Object.assign({}, state.balanceSheet, {
+                    showLoader: true,
+                })
+            });
+        }
+        case ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE: {
+            let data: BalanceSheetData = prepareBalanceSheetData(_.cloneDeep(action.payload.body));
+            return Object.assign({}, state, {
+                balanceSheet: Object.assign({}, state.balanceSheet, {
+                    showLoader: false,
+                    data
+                })
+            });
+        }
+        // endregion
         default:
             break;
     }
@@ -471,3 +503,80 @@ const getDateRange = (start, end, key, arr = [{ rangeStart: moment(start), range
 
     return getDateRange(rangeEnd, end, key, arr.concat(range));
 }
+
+//region Prepare Balance Sheet
+const prepareBalanceSheetData = (data) => {
+    let bsData: BalanceSheetData = filterBalanceSheetData(data.groupDetails);
+    bsData.assetTotal = calCulateTotalAssets(bsData.assets);
+    bsData.assetTotalEnd = calCulateTotalAssetsEnd(bsData.assets);
+    bsData.liabTotal = calCulateTotalLiab(bsData.liabilities);
+    bsData.liabTotalEnd = calCulateTotalLiabEnd(bsData.liabilities);
+    return bsData;
+};
+const filterBalanceSheetData = data => {
+    let filterPlData: BalanceSheetData = {};
+    filterPlData.assets = [];
+    filterPlData.liabilities = [];
+    filterPlData.othArr = [];
+    _.each(data, (grp: any) => {
+        grp.isVisible = false;
+        switch (grp.category) {
+            case 'assets':
+                return filterPlData.assets.push(grp);
+            case 'liabilities':
+                return filterPlData.liabilities.push(grp);
+            default:
+                return filterPlData.othArr.push(grp);
+        }
+    });
+    return filterPlData;
+};
+const calCulateTotalAssets = data => {
+    let total;
+    total = 0;
+    _.each(data, (obj: any) => {
+        if (obj.closingBalance.type === 'CREDIT') {
+            return total -= obj.closingBalance.amount;
+        } else {
+            return total += obj.closingBalance.amount;
+        }
+    });
+    return total;
+};
+const calCulateTotalAssetsEnd = data => {
+    let total;
+    total = 0;
+    _.each(data, (obj: any) => {
+        if (obj.forwardedBalance.type === 'CREDIT') {
+            return total -= obj.forwardedBalance.amount;
+        } else {
+            return total += obj.forwardedBalance.amount;
+        }
+    });
+    return total;
+};
+const calCulateTotalLiab = data => {
+    let total;
+    total = 0;
+    _.each(data, (obj: any) => {
+        if (obj.closingBalance.type === 'DEBIT') {
+            return total -= obj.closingBalance.amount;
+        } else {
+            return total += obj.closingBalance.amount;
+        }
+    });
+    return total;
+};
+const calCulateTotalLiabEnd = data => {
+    let total;
+    total = 0;
+    _.each(data, (obj: any) => {
+        if (obj.forwardedBalance.type === 'DEBIT') {
+            return total -= obj.forwardedBalance.amount;
+        } else {
+            return total += obj.forwardedBalance.amount;
+        }
+    });
+    return total;
+};
+// endregion

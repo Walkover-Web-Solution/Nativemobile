@@ -15,7 +15,7 @@ import { of } from "rxjs/observable/of";
 import { Observable } from "rxjs/Observable";
 import { Injectable } from "@angular/core";
 import { ToasterService } from "../../services/toaster.service";
-import { ProfitLossRequest } from "../../models/api-models/tb-pl-bs";
+import { ProfitLossRequest, BalanceSheetRequest } from "../../models/api-models/tb-pl-bs";
 import { TlPlService } from "../../services/tl-pl.service";
 @Injectable()
 export class ReportsActions {
@@ -200,6 +200,50 @@ export class ReportsActions {
             }
         });
 
+    @Effect() private GetBalanceSheet$: Observable<CustomActions> = this.actions$
+        .ofType(ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST)
+        .switchMap((action: CustomActions) => {
+            let filterType: ChartFilterType;
+            let fyIndex: number;
+            let activeFinancialYear: ActiveFinancialYear;
+            let customFilterObj: ChartCustomFilter;
+            this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
+            this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
+            this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+                return { companies, uniqueName };
+            })).take(1).subscribe(res => {
+                if (!res.companies) {
+                    return;
+                }
+                let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                if (activeCmp) {
+                    activeFinancialYear = activeCmp.activeFinancialYear;
+                    fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
+                }
+            });
+            let op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
+            let request: BalanceSheetRequest = {
+                refresh: action.payload,
+                from: op.activeYear.startDate,
+                to: op.activeYear.endDate,
+                fy: fyIndex === 0 ? 0 : fyIndex * -1
+            };
+            return zip(this._tlPlService.GetBalanceSheet(request), of(op));
+        })
+        .map(response => {
+            if (response[0].status === 'success') {
+                return {
+                    type: ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE,
+                    payload: response[0]
+                };
+            } else {
+                this._toasterService.errorToast(response[0].message);
+                return {
+                    type: 'EmptyActions'
+                }
+            }
+        });
+
     constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
         private _toasterService: ToasterService, private _tlPlService: TlPlService) {
 
@@ -227,6 +271,13 @@ export class ReportsActions {
     public getProfitLossSheet(refresh: boolean): CustomActions {
         return {
             type: ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST,
+            payload: refresh
+        };
+    }
+
+    public getBalanceSheet(refresh: boolean): CustomActions {
+        return {
+            type: ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST,
             payload: refresh
         };
     }
