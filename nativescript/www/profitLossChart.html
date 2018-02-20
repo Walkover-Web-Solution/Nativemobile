@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        .colorDiv {
+            height: 15px;
+            width: 15px;
+            display: inline-block;
+        }
+
+        .div-cover {
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+    </style>
+
+    <script src="./lib/es6-promise.js"></script>
+    <script src="./lib/nativescript-webview-interface.js"></script>
+    <script src='./lib/highcharts.js'></script>
+    <script src='./lib/exporting.js'></script>
+
+</head>
+
+<body>
+    <div style="display: flex;flex-direction: column;height:500px;">
+        <div style="display: flex">
+            <div class="div-cover">
+                <span class="colorDiv" style="background-color: #BAE3E7"></span>
+                <span>Expenses</span>
+            </div>
+            <div class="div-cover">
+                <span class="colorDiv" style="background-color: #58C5C4"></span>
+                <span>Revenue</span>
+            </div>
+            <div class="div-cover">
+                <span class="colorDiv" style="background-color: #17989C"></span>
+                <span>Operating Cost</span>
+            </div>
+        </div>
+
+        <div style="display: flex">
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
+                <div style="flex:1 0 auto" id="currentPieSeries"></div>
+                <span>Rs, {{ pieTotal }}</span>
+                <span>{{ pieLable }}</span>
+            </div>
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
+                <div style="flex:1 0 auto" id="previousPieSeries"></div>
+                <span>Rs, {{ previousPieTotal }}</span>
+                <span>{{ previousPieLable }}</span>
+                <span>huiyiuyiuhuiy</span>
+            </div>
+        </div>
+
+        <div style="flex:1 0 auto" id="mainSeries"></div>
+    </div>
+
+
+    <script type='text/javascript'>
+        (function () {
+            var oWebViewInterface = window.nsWebViewInterface;
+
+            oWebViewInterface.on('mainSeriesUpdated', function (options) {
+                Highcharts.chart('mainSeries', options);
+            });
+        })();
+
+    </script>
+</body>
+
+</html>

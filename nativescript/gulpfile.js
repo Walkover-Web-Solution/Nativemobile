@@ -33,6 +33,12 @@ gulp.task('resources.App_Resources', () => {
         .pipe(gulp.dest(`${DEST}App_Resources`));
 });
 
+gulp.task('copy_www', () => {
+    return gulp.src(['www/**/*'], { follow: true })
+        .pipe(debug({ title: 'copy_www' }))
+        .pipe(gulp.dest(`${DEST}www`));
+})
+
 // gulp.task('resources.SCSS', () => {
 //     return gulp.src(['scss/**/*'], { follow: true })
 //         .pipe(gulp.dest(`${DEST}scss`));
@@ -105,6 +111,7 @@ gulp.task(
     gulp.series(
         'clean.Dist',
         'resources.App_Resources',
+        'copy_www',
         // 'resources.SCSS',
         'resources.Assets',
         'project.Typescript',
@@ -155,14 +162,20 @@ gulp.task(
 gulp.task('tns.Livesync', () => {
     return gulp.watch([`../${SRC}**/*.common.ts`, `../${SRC}**/*.tns.ts`, `../${SRC}**/*.tns.html`, `../${SRC}**/*.service.ts`,
     `../${SRC}**/*.tns.scss`, `../${SRC}**/*.scss`, `../${SRC}**/*.component.ts`, `../${SRC}**/*.routes.ts`,
-    `../${SRC}**/*.index.ts`])
+    `../${SRC}**/*.index.ts`, `./www/**/*`])
         .on('change', (file) => {
-            var outputDest = file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), DEST).replace('..\\', '');
+            console.log('original File :- ' + file);
+            // var outputDest = file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), DEST).replace('..\\', '');
+            var outputDest = 'app\\';
+            // if (outputDest === 'www\\') {
+            //     outputDest = 'app\\';
+            // }
+            console.log('output :-' + outputDest);
             gulp.src([file])
                 .pipe(rename(removeTns))
                 .pipe(replace('.scss\'', '.css\'', { logs: { enabled: true } }))
-                .pipe(debug({ title: 'tns.Livesync' }))
-                .pipe(debug({ title: 'out ' + outputDest }))
+                // .pipe(debug({ title: 'tns.Livesync' }))
+                // .pipe(debug({ title: 'out ' + outputDest }))
                 .pipe(gulp.dest(outputDest, { overwrite: true }));
         });
 });
