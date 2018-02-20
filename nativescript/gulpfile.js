@@ -3,7 +3,7 @@ const rename = require('gulp-rename');
 const replace = require('gulp-string-replace')
 const debug = require('gulp-debug');
 const del = require('del');
-
+const flatten = require('gulp-flatten');
 const SRC = 'src/';
 const DEST = 'app/';
 
@@ -164,18 +164,23 @@ gulp.task('tns.Livesync', () => {
     `../${SRC}**/*.tns.scss`, `../${SRC}**/*.scss`, `../${SRC}**/*.component.ts`, `../${SRC}**/*.routes.ts`,
     `../${SRC}**/*.index.ts`, `./www/**/*`])
         .on('change', (file) => {
-            console.log('original File :- ' + file);
-            // var outputDest = file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), DEST).replace('..\\', '');
-            var outputDest = 'app\\';
-            // if (outputDest === 'www\\') {
-            //     outputDest = 'app\\';
-            // }
-            console.log('output :-' + outputDest);
+            // console.log('original File :- ' + file);
+            // console.log('step 1 :-  ' + file.substring(0, file.lastIndexOf('\\') + 1));
+            // console.log('step 2 :-  ' + file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), 'app\\'));
+            // console.log('step 3 :-  ' + file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), 'app\\').replace('..\\', ''));
+            var outputDest = file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), 'app\\').replace('..\\', '');
+            // var outputDest = 'app\\';
+            console.log('isWWW :- ', outputDest === 'www\\');
+            if (outputDest === 'www\\') {
+                outputDest = 'app\\';
+            }
+            // console.log('final output :-   ' + outputDest);
             gulp.src([file])
                 .pipe(rename(removeTns))
                 .pipe(replace('.scss\'', '.css\'', { logs: { enabled: true } }))
-                // .pipe(debug({ title: 'tns.Livesync' }))
-                // .pipe(debug({ title: 'out ' + outputDest }))
+                .pipe(flatten())
+                .pipe(debug({ title: 'tns.Livesync' }))
+                .pipe(debug({ title: 'out ' + outputDest }))
                 .pipe(gulp.dest(outputDest, { overwrite: true }));
         });
 });

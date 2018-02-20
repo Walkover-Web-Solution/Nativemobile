@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <style>
         .colorDiv {
@@ -24,8 +24,8 @@
 
 </head>
 
-<body>
-    <div style="display: flex;flex-direction: column;height:500px;">
+<body id="body">
+    <div style="display: flex;flex-direction: column;" id="container">
         <div style="display: flex">
             <div class="div-cover">
                 <span class="colorDiv" style="background-color: #BAE3E7"></span>
@@ -45,14 +45,13 @@
             <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
                 <div style="flex:1 0 auto" id="currentPieSeries"></div>
                 <span>Rs, {{ pieTotal }}</span>
-                <span>{{ pieLable }}</span>
+                <span>{{ pieLable}}</span>
             </div>
-            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
+            <!-- <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
                 <div style="flex:1 0 auto" id="previousPieSeries"></div>
                 <span>Rs, {{ previousPieTotal }}</span>
                 <span>{{ previousPieLable }}</span>
-                <span>huiyiuyiuhuiy</span>
-            </div>
+            </div> -->
         </div>
 
         <div style="flex:1 0 auto" id="mainSeries"></div>
@@ -63,8 +62,19 @@
         (function () {
             var oWebViewInterface = window.nsWebViewInterface;
 
+            oWebViewInterface.on('dimensions', function (dim) {
+                // document.getElementById("body").style.width = dim.width + 'px';
+                // alert(document.getElementById("container").style.width);
+                // document.getElementById("container").style.height = dim.height + 'px';
+            });
             oWebViewInterface.on('mainSeriesUpdated', function (options) {
                 Highcharts.chart('mainSeries', options);
+            });
+            oWebViewInterface.on('currentPieSeriesUpdated', function (options) {
+                Highcharts.chart('currentPieSeries', options);
+            });
+            oWebViewInterface.on('previousPieSeriesUpdated', function (options) {
+                Highcharts.chart('previousPieSeries', options);
             });
         })();
 

@@ -78,6 +78,7 @@
     "gulp": "gulpjs/gulp#4.0",
     "gulp-debug": "^3.1.0",
     "gulp-rename": "^1.2.2",
+    "gulp-flatten": "^0.4.0",
     "gulp-string-replace": "^0.4.0",
     "lazy": "~1.0.11",
     "nativescript-css-loader": "~0.26.1",

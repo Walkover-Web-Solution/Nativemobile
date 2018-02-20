@@ -10,6 +10,7 @@ import * as _ from 'lodash';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import { GroupHistoryResponse, CategoryHistoryResponse } from '../../../models/api-models/Dashboard';
 import { zip } from 'rxjs/observable/zip';
+import * as platformModule from "tns-core-modules/platform";
 
 import { EventData } from 'tns-core-modules/data/observable';
 import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
@@ -189,6 +190,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         // loading languages in dropdown, on load of webView.
         webView.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
             if (!args.error) {
+                this.oLangWebViewInterface.emit('dimensions',
+                    {
+                        width: platformModule.screen.mainScreen.widthPixels,
+                        height: platformModule.screen.mainScreen.heightPixels
+                    });
                 zip(this.currentData$, this.previousData$).subscribe(chartData => {
                     let incomeData = null;
                     let expensesData = null;
@@ -250,6 +256,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.categories = legendData;
 
         this.renderOptions(this.series);
+        this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
         this.calculateTotals('current');
     }
 
@@ -292,6 +299,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         // this.renderOptions(this.previousSeries);
         this.calculateTotals('previous');
     }
+
 
     public calculateTotals(type: string = 'current') {
         let incomeTotal = 0;
@@ -340,8 +348,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 categories: this.categories
             })
         });
-        this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
+
         this.cd.detectChanges();
+
     }
 
     public renderPieOptions(type: string = 'current') {
@@ -352,6 +361,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     return s;
                 })
             });
+            this.oLangWebViewInterface.emit('currentPieSeriesUpdated', this.pieChartOptions);
         } else {
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 series: this.previousPieChartOptions.series.map(s => {
@@ -359,6 +369,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     return s;
                 })
             });
+            this.oLangWebViewInterface.emit('previousPieSeriesUpdated', this.previousPieChartOptions);
         }
         this.cd.detectChanges();
     }
@@ -384,4 +395,6 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
+
+
 }
