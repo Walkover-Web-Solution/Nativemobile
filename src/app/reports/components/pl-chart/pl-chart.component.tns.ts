@@ -57,7 +57,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.previousData$ = this.store.select(st => st.report.previousData).takeUntil(this.destroyed$);
         this.options = {
             chart: {
-                type: 'column'
+                type: 'column',
             },
             title: {
                 text: ''
@@ -91,7 +91,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200
+                height: 200,
+                width: 300
             },
             credits: {
                 enabled: false
@@ -131,7 +132,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200
+                height: 200,
+                width: 300
             },
             credits: {
                 enabled: false
@@ -190,10 +192,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         // loading languages in dropdown, on load of webView.
         webView.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
             if (!args.error) {
+                console.log(JSON.stringify(platformModule.screen.mainScreen));
                 this.oLangWebViewInterface.emit('dimensions',
                     {
-                        width: platformModule.screen.mainScreen.widthPixels,
-                        height: platformModule.screen.mainScreen.heightPixels
+                        width: platformModule.screen.mainScreen.widthDIPs,
+                        height: platformModule.screen.mainScreen.heightDIPs
                     });
                 zip(this.currentData$, this.previousData$).subscribe(chartData => {
                     let incomeData = null;
@@ -369,6 +372,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     return s;
                 })
             });
+            console.log('renderd previous pieChart', JSON.stringify(this.previousPieChartOptions.series));
             this.oLangWebViewInterface.emit('previousPieSeriesUpdated', this.previousPieChartOptions);
         }
         this.cd.detectChanges();

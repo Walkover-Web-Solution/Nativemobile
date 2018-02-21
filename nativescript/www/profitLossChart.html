@@ -25,6 +25,7 @@
 </head>
 
 <body id="body">
+    <span id="width" style="color:red;font-size: 20px;"></span>
     <div style="display: flex;flex-direction: column;" id="container">
         <div style="display: flex">
             <div class="div-cover">
@@ -41,17 +42,17 @@
             </div>
         </div>
 
-        <div style="display: flex">
+        <div id="pieChart" style="display: flex;">
             <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
                 <div style="flex:1 0 auto" id="currentPieSeries"></div>
                 <span>Rs, {{ pieTotal }}</span>
                 <span>{{ pieLable}}</span>
             </div>
-            <!-- <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
                 <div style="flex:1 0 auto" id="previousPieSeries"></div>
                 <span>Rs, {{ previousPieTotal }}</span>
                 <span>{{ previousPieLable }}</span>
-            </div> -->
+            </div>
         </div>
 
         <div style="flex:1 0 auto" id="mainSeries"></div>
@@ -63,7 +64,15 @@
             var oWebViewInterface = window.nsWebViewInterface;
 
             oWebViewInterface.on('dimensions', function (dim) {
-                // document.getElementById("body").style.width = dim.width + 'px';
+                document.getElementById("body").style.width = window.innerWidth + 'px';
+                document.getElementById('container').style.width = window.innerWidth + 'px';
+                var pieChart = document.getElementById('pieChart');
+                pieChart.style.width = window.innerWidth + 'px';
+                pieChart.firstElementChild.style.width = ((window.innerWidth / 2) - 20) + 'px';
+                pieChart.lastElementChild.style.width = ((window.innerWidth / 2) - 20) + 'px';
+
+
+                // document.getElementById('width').innerHTML = window.innerWidth;
                 // alert(document.getElementById("container").style.width);
                 // document.getElementById("container").style.height = dim.height + 'px';
             });
@@ -71,9 +80,11 @@
                 Highcharts.chart('mainSeries', options);
             });
             oWebViewInterface.on('currentPieSeriesUpdated', function (options) {
+                options.chart.width =  ((window.innerWidth / 2) - 50);
                 Highcharts.chart('currentPieSeries', options);
             });
             oWebViewInterface.on('previousPieSeriesUpdated', function (options) {
+                options.chart.width =  ((window.innerWidth / 2) - 50);
                 Highcharts.chart('previousPieSeries', options);
             });
         })();

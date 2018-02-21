@@ -161,7 +161,7 @@ gulp.task(
 
 gulp.task('tns.Livesync', () => {
     return gulp.watch([`../${SRC}**/*.common.ts`, `../${SRC}**/*.tns.ts`, `../${SRC}**/*.tns.html`, `../${SRC}**/*.service.ts`,
-    `../${SRC}**/*.tns.scss`, `../${SRC}**/*.scss`, `../${SRC}**/*.component.ts`, `../${SRC}**/*.routes.ts`,
+    `../${SRC}**/*.tns.scss`, `../${SRC}**/*.scss`, `../${SRC}**/*.component.ts`, `../${SRC}**/*.routes.ts`,`../${SRC}**/*.reducer.ts`,
     `../${SRC}**/*.index.ts`, `./www/**/*`])
         .on('change', (file) => {
             // console.log('original File :- ' + file);

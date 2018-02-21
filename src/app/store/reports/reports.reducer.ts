@@ -52,7 +52,7 @@ const initialState: ReportsState = {
         to: '',
         lable: ''
     },
-    profitLossChartFilter: ChartFilterType.LastQuater,
+    profitLossChartFilter: ChartFilterType.LastMonth,
     profirLossChartFilterTitle: '',
     profitLossChartCustomFilter: {
         activeYear: {
