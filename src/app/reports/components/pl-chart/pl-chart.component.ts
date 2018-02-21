@@ -83,7 +83,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     stacking: 'normal'
                 }
             },
-            series: []
+            series: [],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.pieChartOptions = {
             chart: {
@@ -123,7 +128,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: 'Browser share',
                 innerSize: '90%',
                 data: []
-            }]
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.previousPieChartOptions = {
             chart: {
@@ -163,7 +173,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: 'Browser share',
                 innerSize: '90%',
                 data: []
-            }]
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.selectedFilter$ = this.store.select(s => s.report.profitLossChartFilter).takeUntil(this.destroyed$);
 

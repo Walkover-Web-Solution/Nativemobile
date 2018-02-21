@@ -84,7 +84,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     stacking: 'normal'
                 }
             },
-            series: []
+            series: [],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.pieChartOptions = {
             chart: {
@@ -125,7 +130,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: 'Browser share',
                 innerSize: '90%',
                 data: []
-            }]
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.previousPieChartOptions = {
             chart: {
@@ -166,7 +176,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: 'Browser share',
                 innerSize: '90%',
                 data: []
-            }]
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.selectedFilter$ = this.store.select(s => s.report.profitLossChartFilter).takeUntil(this.destroyed$);
 
@@ -364,7 +379,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     return s;
                 })
             });
-            this.oLangWebViewInterface.emit('currentPieSeriesUpdated', this.pieChartOptions);
+            this.oLangWebViewInterface.emit('currentPieSeriesUpdated', {
+                options: this.pieChartOptions,
+                total: this.pieTotal,
+                lable: this.pieLable
+            });
         } else {
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 series: this.previousPieChartOptions.series.map(s => {
@@ -372,8 +391,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     return s;
                 })
             });
-            console.log('renderd previous pieChart', JSON.stringify(this.previousPieChartOptions.series));
-            this.oLangWebViewInterface.emit('previousPieSeriesUpdated', this.previousPieChartOptions);
+            this.oLangWebViewInterface.emit('previousPieSeriesUpdated', {
+                options: this.previousPieChartOptions,
+                total: this.previousPieTotal,
+                lable: this.previousPieLable
+            });
         }
         this.cd.detectChanges();
     }

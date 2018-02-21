@@ -45,13 +45,13 @@
         <div id="pieChart" style="display: flex;">
             <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
                 <div style="flex:1 0 auto" id="currentPieSeries"></div>
-                <span>Rs, {{ pieTotal }}</span>
-                <span>{{ pieLable}}</span>
+                <span id="pieTotal"></span>
+                <span id="pieLable"></span>
             </div>
             <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
                 <div style="flex:1 0 auto" id="previousPieSeries"></div>
-                <span>Rs, {{ previousPieTotal }}</span>
-                <span>{{ previousPieLable }}</span>
+                <span id="previousPieTotal"></span>
+                <span id="previousPieLable"></span>
             </div>
         </div>
 
@@ -70,22 +70,23 @@
                 pieChart.style.width = window.innerWidth + 'px';
                 pieChart.firstElementChild.style.width = ((window.innerWidth / 2) - 20) + 'px';
                 pieChart.lastElementChild.style.width = ((window.innerWidth / 2) - 20) + 'px';
-
-
-                // document.getElementById('width').innerHTML = window.innerWidth;
-                // alert(document.getElementById("container").style.width);
-                // document.getElementById("container").style.height = dim.height + 'px';
             });
             oWebViewInterface.on('mainSeriesUpdated', function (options) {
                 Highcharts.chart('mainSeries', options);
             });
             oWebViewInterface.on('currentPieSeriesUpdated', function (options) {
-                options.chart.width =  ((window.innerWidth / 2) - 50);
-                Highcharts.chart('currentPieSeries', options);
+                options.options.chart.width =  ((window.innerWidth / 2) - 50);
+                Highcharts.chart('currentPieSeries', options.options);
+
+                document.getElementById('pieTotal').innerHTML = 'Rs, ' + options.total;
+                document.getElementById('pieLable').innerHTML = options.lable;
             });
             oWebViewInterface.on('previousPieSeriesUpdated', function (options) {
-                options.chart.width =  ((window.innerWidth / 2) - 50);
-                Highcharts.chart('previousPieSeries', options);
+                options.options.chart.width =  ((window.innerWidth / 2) - 50);
+                Highcharts.chart('previousPieSeries', options.options);
+
+                document.getElementById('previousPieTotal').innerHTML = 'Rs, ' + options.total;
+                document.getElementById('previousPieLable').innerHTML = options.lable;
             });
         })();
 
