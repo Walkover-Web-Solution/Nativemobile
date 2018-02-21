@@ -10,6 +10,7 @@ import { ReportsComponent } from '../reports/reports.component';
 import { PlChartComponent } from '../reports/components/pl-chart/pl-chart.component';
 import { ReportsRoutes } from './reports.routes';
 import { RouterModule } from '../common';
+import { PlSheetComponent } from './components/pl-sheet/pl-sheet.component';
 
 
 @NgModule({
@@ -22,7 +23,7 @@ import { RouterModule } from '../common';
         SharedModule,
         NativeScriptUIChartModule
     ],
-    declarations: [ReportsComponent, PlChartComponent],
+    declarations: [ReportsComponent, PlChartComponent, PlSheetComponent],
     schemas: [
         NO_ERRORS_SCHEMA
     ]

@@ -58,6 +58,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.options = {
             chart: {
                 type: 'column',
+                height: 100
             },
             title: {
                 text: ''
@@ -203,7 +204,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         let webView: WebView = this.webViewRef.nativeElement;
 
         this.oLangWebViewInterface = new webViewInterfaceModule.WebViewInterface(webView, this.secondWebViewSRC);
-
+        this.oLangWebViewInterface.on('onChartSelection', this.onChartSelection.bind(this));
         // loading languages in dropdown, on load of webView.
         webView.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
             if (!args.error) {
@@ -278,14 +279,14 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.calculateTotals('current');
     }
 
-    public onChartSelection(e, type) {
-        if (e && e.point) {
-            this.renderPiePer(type, Number((e.point.percentage).toFixed(2)));
-        }
+    public onChartSelection(obj) {
+        this.renderPiePer(obj.type, Number((obj.percentage).toFixed(2)));
 
-        if (this.activeChart !== type) {
-            this.activeChart = type;
-            this.renderOptions(type === 'current' ? this.series : this.previousSeries);
+
+        if (this.activeChart !== obj.type) {
+            this.activeChart = obj.type;
+            this.renderOptions(obj.type === 'current' ? this.series : this.previousSeries);
+            this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
         }
     }
 
@@ -407,11 +408,21 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     text: `${per}%`
                 })
             });
+            this.oLangWebViewInterface.emit('currentPieSeriesUpdated', {
+                options: this.pieChartOptions,
+                total: this.pieTotal,
+                lable: this.pieLable
+            });
         } else {
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 title: Object.assign({}, this.previousPieChartOptions.title, {
                     text: `${per}%`
                 })
+            });
+            this.oLangWebViewInterface.emit('previousPieSeriesUpdated', {
+                options: this.previousPieChartOptions,
+                total: this.previousPieTotal,
+                lable: this.previousPieLable
             });
         }
         this.cd.detectChanges();

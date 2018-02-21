@@ -25,7 +25,7 @@
 </head>
 
 <body id="body">
-    <span id="width" style="color:red;font-size: 20px;"></span>
+    <span id="debug" style="color:red;font-size: 20px;"></span>
     <div style="display: flex;flex-direction: column;" id="container">
         <div style="display: flex">
             <div class="div-cover">
@@ -44,7 +44,7 @@
 
         <div id="pieChart" style="display: flex;">
             <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
-                <div style="flex:1 0 auto" id="currentPieSeries"></div>
+                <div style="flex:1 0 auto;" id="currentPieSeries"></div>
                 <span id="pieTotal"></span>
                 <span id="pieLable"></span>
             </div>
@@ -72,10 +72,19 @@
                 pieChart.lastElementChild.style.width = ((window.innerWidth / 2) - 20) + 'px';
             });
             oWebViewInterface.on('mainSeriesUpdated', function (options) {
+                options.chart.height = 250;
                 Highcharts.chart('mainSeries', options);
             });
             oWebViewInterface.on('currentPieSeriesUpdated', function (options) {
                 options.options.chart.width =  ((window.innerWidth / 2) - 50);
+                options.options.plotOptions.series = {
+                    "events": {
+                        click: function (event) {
+                            oWebViewInterface.emit('onChartSelection', {percentage: event.point.percentage, type: 'current'});
+                        }
+                    }
+                }
+
                 Highcharts.chart('currentPieSeries', options.options);
 
                 document.getElementById('pieTotal').innerHTML = 'Rs, ' + options.total;
@@ -83,6 +92,14 @@
             });
             oWebViewInterface.on('previousPieSeriesUpdated', function (options) {
                 options.options.chart.width =  ((window.innerWidth / 2) - 50);
+                options.options.plotOptions.series = {
+                    "events": {
+                        click: function (event) {
+                            oWebViewInterface.emit('onChartSelection', {percentage: event.point.percentage, type: 'previous'});
+                        }
+                    }
+                }
+
                 Highcharts.chart('previousPieSeries', options.options);
 
                 document.getElementById('previousPieTotal').innerHTML = 'Rs, ' + options.total;

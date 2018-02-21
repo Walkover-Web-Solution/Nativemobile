@@ -8,6 +8,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Component({
     selector: 'ns-pl-sheet,[ns-pl-sheet]',
+    moduleId: module.id,
     templateUrl: './pl-sheet.component.html'
 })
 
@@ -20,7 +21,6 @@ export class PlSheetComponent implements OnInit, OnDestroy {
     constructor(private store: Store<AppState>, private _reportsActions: ReportsActions) {
         this.data$ = this.store.select(s => s.report.profitLossSheet.data).takeUntil(this.destroyed$);
         this.chartFilterTitle$ = this.store.select(s => s.report.profirLossChartFilterTitle).takeUntil(this.destroyed$);
-
     }
 
     ngOnInit() {
