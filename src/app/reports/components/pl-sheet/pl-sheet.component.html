@@ -1,6 +1,6 @@
 <div style="display:flex;flex-direction:column">
     <div style="display:flex;height:100px;justify-content: center;align-items: center;">
-        <span matLine>Profit of Last Quater</span>
+        <span style="font-size:18px">Profit of Last Quater</span>
     </div>
 
     <div style="flex:1 0 auto">
@@ -11,41 +11,74 @@
 
         <div>
             <mat-list>
-                <mat-list-item *ngIf="(data$ | async)?.revenue; else noData">
+                <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Revenue</span>
-                        <span matLine>{{ (data$ | async)?.revenue?.amount }}</span>
+                        <span matLine>Total Revenue</span>
+                        <span matLine>{{ (data$ | async)?.revenue?.amount || 0 | number:'1.2-2'}}</span>
+                    </div>
+                </mat-list-item>
+
+                <mat-list-item>
+                    <div class="sheetListItemContainer">
+                        <span matLine>Cost Of Goods Sold</span>
+                        <span matLine>{{ (data$ | async)?.costOfGoodsSold || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
             </mat-list>
         </div>
 
         <div class="sheetHeader">
-            <span style="flex: 1 0 auto;">Total Income</span>
-            <span>{{ totalIncome }}</span>
+            <span style="flex: 1 0 auto;">Gross Profit</span>
+            <span>{{ (data$ | async)?.grossProfit || 0 | number:'1.2-2'}}</span>
         </div>
 
         <div>
             <mat-list>
-                <mat-list-item *ngIf="(data$ | async)?.operatingExpenses; else noData">
+                <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Operating Cost</span>
-                        <span matLine>{{ (data$ | async)?.operatingExpenses?.amount }}</span>
+                        <span matLine>Less: Operating Expenses</span>
+                        <span matLine>{{ (data$ | async)?.operatingExpenses?.amount || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
 
-                <mat-list-item *ngIf="(data$ | async)?.otherExpenses; else noData">
+            </mat-list>
+        </div>
+
+        <div class="sheetHeader">
+            <span style="flex: 1 0 auto;">Operating Profit(EBIT)</span>
+            <span>{{ (data$ | async)?.operatingProfit || 0 | number:'1.2-2'}}</span>
+        </div>
+
+        <div>
+            <mat-list>
+                <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Indirect Expenses</span>
-                        <span matLine>{{ (data$ | async)?.otherExpenses?.amount }}</span>
+                        <span matLine>Less: Other Expenses</span>
+                        <span matLine>{{ (data$ | async)?.otherExpenses?.amount || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
             </mat-list>
         </div>
 
         <div class="sheetHeader">
-            <span style="flex: 1 0 auto;">Total Expenses</span>
-            <span>{{ totalExpense }}</span>
+            <span style="flex: 1 0 auto;">Income Before Taxes(EBIT)</span>
+            <span>{{ (data$ | async)?.incomeBeforeTaxes || 0 | number:'1.2-2'}}</span>
+        </div>
+
+        <div>
+            <mat-list>
+                <mat-list-item>
+                    <div class="sheetListItemContainer">
+                        <span matLine>Less: Taxes</span>
+                        <span matLine>{{ (data$ | async)?.appliedTax || 0 | number:'1.2-2'}}</span>
+                    </div>
+                </mat-list-item>
+            </mat-list>
+        </div>
+
+        <div class="sheetHeader">
+            <span style="flex: 1 0 auto;">Net Income</span>
+            <span>{{ (data$ | async)?.netIncome || 0 | number:'1.2-2'}}</span>
         </div>
 
         <ng-template #noData>

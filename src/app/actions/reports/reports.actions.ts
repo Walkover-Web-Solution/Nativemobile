@@ -187,6 +187,7 @@ export class ReportsActions {
             return zip(this._tlPlService.GetProfitLoss(request), of(op));
         })
         .map(response => {
+            console.log(JSON.stringify(response[0]));
             if (response[0].status === 'success') {
                 return {
                     type: ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE,
