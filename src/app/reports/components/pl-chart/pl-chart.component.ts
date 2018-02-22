@@ -27,7 +27,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public profitLossChartFilter$: Observable<ChartFilterType>;
     public categories: string[] = [];
     public series: Array<{ name: string, data: number[], stack: string }>;
-    public options: Options;
+    public options: any;
     public pieChartOptions: any;
     public previousPieChartOptions: any;
     public previousSeries: Array<{ name: string, data: number[], stack: string }>;
@@ -55,7 +55,25 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 text: ''
             },
             xAxis: {
-                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
+                labels: {
+                    formatter: function () {
+                        let obj = this.chart.userOptions.series;
+                        let totalArr = [];
+                        obj[0].data.forEach((d, i) => {
+                            totalArr.push(obj[0].data[i] + obj[1].data[i] + obj[2].data[i]);
+                        });
+                        let total = 0;
+                        total = totalArr.reduce((t, n) => t + n, 0);
+
+                        return `<span>${this.value}<br />
+                        <p style="color:#63B351;">${totalArr[this.pos] ? totalArr[this.pos].toFixed(0) : 0}/-</p><br />
+                        <p style="color:#63B351;">(${((totalArr[this.pos] * 100) / total).toFixed(2)}%)</p></span>`;
+                    },
+                    style: {
+                        "fontSize": 16
+                    }
+                },
             },
             yAxis: {
                 allowDecimals: false,
