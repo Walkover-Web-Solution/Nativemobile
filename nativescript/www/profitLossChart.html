@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <style>
         .colorDiv {
@@ -73,14 +73,27 @@
             });
             oWebViewInterface.on('mainSeriesUpdated', function (options) {
                 options.chart.height = 250;
+                options.xAxis.labels.formatter = function () {
+                    let obj = this.chart.userOptions.series;
+                    let totalArr = [];
+                    obj[0].data.forEach((d, i) => {
+                        totalArr.push(obj[0].data[i] + obj[1].data[i] + obj[2].data[i]);
+                    });
+                    let total = 0;
+                    total = totalArr.reduce((t, n) => t + n, 0);
+
+                    return `<span>${this.value}<br />
+                        <p style="color:#63B351;">${totalArr[this.pos] ? totalArr[this.pos].toFixed(0) : 0}/-</p><br />
+                        <p style="color:#63B351;">(${((totalArr[this.pos] ? totalArr[this.pos].toFixed(0) : 0 * 100) / total).toFixed(2)}%)</p></span>`;
+                };
                 Highcharts.chart('mainSeries', options);
             });
             oWebViewInterface.on('currentPieSeriesUpdated', function (options) {
-                options.options.chart.width =  ((window.innerWidth / 2) - 50);
+                options.options.chart.width = ((window.innerWidth / 2) - 50);
                 options.options.plotOptions.series = {
                     "events": {
                         click: function (event) {
-                            oWebViewInterface.emit('onChartSelection', {percentage: event.point.percentage, type: 'current'});
+                            oWebViewInterface.emit('onChartSelection', { percentage: event.point.percentage, type: 'current' });
                         }
                     }
                 }
@@ -91,11 +104,11 @@
                 document.getElementById('pieLable').innerHTML = options.lable;
             });
             oWebViewInterface.on('previousPieSeriesUpdated', function (options) {
-                options.options.chart.width =  ((window.innerWidth / 2) - 50);
+                options.options.chart.width = ((window.innerWidth / 2) - 50);
                 options.options.plotOptions.series = {
                     "events": {
                         click: function (event) {
-                            oWebViewInterface.emit('onChartSelection', {percentage: event.point.percentage, type: 'previous'});
+                            oWebViewInterface.emit('onChartSelection', { percentage: event.point.percentage, type: 'previous' });
                         }
                     }
                 }

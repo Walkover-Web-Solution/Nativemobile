@@ -68,7 +68,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
                         return `<span>${this.value}<br />
                         <p style="color:#63B351;">${totalArr[this.pos] ? totalArr[this.pos].toFixed(0) : 0}/-</p><br />
-                        <p style="color:#63B351;">(${((totalArr[this.pos] * 100) / total).toFixed(2)}%)</p></span>`;
+                        <p style="color:#63B351;">(${((totalArr[this.pos] ? totalArr[this.pos].toFixed(0) : 0 * 100) / total).toFixed(2)}%)</p></span>`;
                     },
                     style: {
                         "fontSize": 16

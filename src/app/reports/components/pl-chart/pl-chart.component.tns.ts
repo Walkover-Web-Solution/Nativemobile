@@ -64,7 +64,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 text: ''
             },
             xAxis: {
-                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+                categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
+                labels: {
+                    style: {
+                        "fontSize": 16
+                    }
+                },
             },
             yAxis: {
                 allowDecimals: false,
