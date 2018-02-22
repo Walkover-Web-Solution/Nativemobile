@@ -10,6 +10,7 @@ import { ReportsActions } from '../../../actions/reports/reports.actions';
 
 @Component({
     selector: 'ns-bs-sheet,[ns-bs-sheet]',
+    moduleId: module.id,
     templateUrl: './bs-sheet.component.html',
 })
 export class BsSheetComponent implements OnInit, OnDestroy {

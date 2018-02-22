@@ -1,0 +1,40 @@
+<FlexboxLayout flexDirection="column" padding="0 10">
+
+    <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
+        <Label style="flex: 1 0 auto;" text="Account"></Label>
+        <Label text="Total"></Label>
+    </FlexboxLayout>
+
+    <StackLayout>
+        <FlexboxLayout margin="5" justifyContent="space-between" *ngFor="let itemLiab of liabilitiesArr">
+            <Label text="{{ itemLiab.groupName }}"></Label>
+            <Label text="{{ itemLiab.closingBalance.amount | number:'1.2-2'}}"></Label>
+        </FlexboxLayout>
+
+        <FlexboxLayout margin="5" justifyContent="center" alignItems="center" *ngIf="liabilitiesArr.length === 0">
+            <Label text="No Data"></Label>
+        </FlexboxLayout>
+    </StackLayout>
+
+    <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
+        <Label style="flex: 1 0 auto;" text="Total Liabilities"></Label>
+        <Label text="{{ liabTotal | number:'1.2-2' }}"></Label>
+    </FlexboxLayout>
+
+    <StackLayout>
+        <FlexboxLayout margin="5" justifyContent="space-between" *ngFor="let itemAssets of assetsArr">
+            <Label text="{{ itemAssets.groupName }}"></Label>
+            <Label text="{{ itemAssets.closingBalance.amount | number:'1.2-2' }}"></Label>
+        </FlexboxLayout>
+
+        <FlexboxLayout margin="5" justifyContent="center" alignItems="center" *ngIf="liabilitiesArr.length === 0">
+            <Label text="No Data"></Label>
+        </FlexboxLayout>
+    </StackLayout>
+
+    <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
+        <Label style="flex: 1 0 auto;" text="Total Expenses"></Label>
+        <Label text="{{ assetTotal | number:'1.2-2' }}"></Label>
+    </FlexboxLayout>
+
+</FlexboxLayout>

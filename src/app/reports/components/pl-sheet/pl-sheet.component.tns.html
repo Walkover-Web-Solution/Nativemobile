@@ -1,7 +1,7 @@
-<FlexboxLayout flexDirection="column">
+<FlexboxLayout flexDirection="column" padding="0 10">
 
     <FlexboxLayout justifyContent="center" alignItems="center">
-        <Label text="Profit of Last Quater" textWrap="true"></Label>
+        <Label text="Profit of Last Quater" fontSize="18" textWrap="true"></Label>
     </FlexboxLayout>
 
     <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
@@ -9,33 +9,58 @@
         <Label text="Total"></Label>
     </FlexboxLayout>
 
-    <StackLayout *ngIf="(data$ | async)?.revenue;">
+    <StackLayout>
         <FlexboxLayout margin="5" justifyContent="space-between">
-            <Label text="Revenue"></Label>
-            <Label text="{{ (data$ | async)?.revenue?.amount}}"></Label>
+            <Label text="Total Revenue"></Label>
+            <Label text="{{ (data$ | async)?.revenue?.amount || 0 | number:'1.2-2'}}"></Label>
         </FlexboxLayout>
+
+        <FlexboxLayout margin="5" justifyContent="space-between">
+            <Label text="Cost Of Goods Sold"></Label>
+            <Label text="{{ (data$ | async)?.costOfGoodsSold || 0 | number:'1.2-2'}}"></Label>
+        </FlexboxLayout>
+
     </StackLayout>
 
     <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
-        <Label style="flex: 1 0 auto;" text="Total Income"></Label>
-        <Label [text]="totalIncome"></Label>
+        <Label style="flex: 1 0 auto;" text="Gross Profit"></Label>
+        <Label text="{{ (data$ | async)?.grossProfit || 0 | number:'1.2-2'}}"></Label>
     </FlexboxLayout>
 
     <StackLayout>
-        <FlexboxLayout margin="5" justifyContent="space-between" *ngIf="(data$ | async)?.operatingExpenses;">
-            <Label text="Operating Cost"></Label>
-            <Label text="{{ (data$ | async)?.operatingExpenses?.amount }}"></Label>
-        </FlexboxLayout>
-
-        <FlexboxLayout margin="5" justifyContent="space-between" *ngIf="(data$ | async)?.otherExpenses;">
-            <Label text="Indirect Expenses"></Label>
-            <Label text="{{ (data$ | async)?.otherExpenses?.amount }}"></Label>
+        <FlexboxLayout margin="5" justifyContent="space-between">
+            <Label text="Less: Operating Expenses"></Label>
+            <Label text="{{ (data$ | async)?.operatingExpenses?.amount || 0 | number:'1.2-2'}}"></Label>
         </FlexboxLayout>
     </StackLayout>
 
     <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
-        <Label style="flex: 1 0 auto;" text="Total Expenses"></Label>
-        <Label [text]="totalExpense"></Label>
+        <Label style="flex: 1 0 auto;" text="Operating Profit(EBIT)"></Label>
+        <Label text="{{ (data$ | async)?.operatingProfit || 0 | number:'1.2-2'}}"></Label>
+    </FlexboxLayout>
+
+    <StackLayout>
+        <FlexboxLayout margin="5" justifyContent="space-between">
+            <Label text="Less: Other Expenses"></Label>
+            <Label text="{{ (data$ | async)?.otherExpenses?.amount || 0 | number:'1.2-2'}}"></Label>
+        </FlexboxLayout>
+    </StackLayout>
+
+    <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
+        <Label style="flex: 1 0 auto;" text="Income Before Taxes(EBT)"></Label>
+        <Label text="{{ (data$ | async)?.incomeBeforeTaxes || 0 | number:'1.2-2'}}"></Label>
+    </FlexboxLayout>
+
+    <StackLayout>
+        <FlexboxLayout margin="5" justifyContent="space-between">
+            <Label text="Less: Taxes"></Label>
+            <Label text="{{ (data$ | async)?.appliedTax || 0 | number:'1.2-2'}}"></Label>
+        </FlexboxLayout>
+    </StackLayout>
+
+    <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">
+        <Label style="flex: 1 0 auto;" text="Net Income"></Label>
+        <Label text="{{ (data$ | async)?.netIncome || 0 | number:'1.2-2'}}"></Label>
     </FlexboxLayout>
 
 
