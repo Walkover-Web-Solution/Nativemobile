@@ -24,12 +24,12 @@
     <div style="display: flex">
         <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
             <chart [options]="pieChartOptions" (click)="onChartSelection($event, 'current')"></chart>
-            <span>Rs, {{ pieTotal }}</span>
+            <span>Rs, {{ pieTotal | number: '1.2-2' }}</span>
             <span>{{ pieLable }}</span>
         </div>
         <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
             <chart [options]="previousPieChartOptions" (click)="onChartSelection($event, 'previous')"></chart>
-            <span>Rs, {{ previousPieTotal }}</span>
+            <span>Rs, {{ previousPieTotal | number: '1.2-2' }}</span>
             <span>{{ previousPieLable }}</span>
         </div>
     </div>
