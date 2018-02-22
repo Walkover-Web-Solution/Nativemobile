@@ -3,9 +3,9 @@
     <Button row="0" col="0" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="goBack()" textAlignment="center" text="&#xf060;" fontFamily="FontAwesome">
     </Button>
     <Label row="0" col="1" class="action-bar-title" fontWeight="400" [text]="pageTitle" horizontalAlignment="left"></Label>
-
-    <!-- <Button class="button" row="0" col="2" textAlignment="center" text="&#xf019;" fontFamily="FontAwesome">
-    </Button> -->
+    <!-- <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> -->
+    <Button class="button" row="0" col="2" textAlignment="center" [nsRouterLink]="['/dashboard','filter', chartType]" text="&#xf1de;" fontFamily="FontAwesome">
+    </Button>
   </GridLayout>
 </ActionBar>
 
