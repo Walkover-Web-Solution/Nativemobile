@@ -61,7 +61,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                         let obj = this.chart.userOptions.series;
                         let totalArr = [];
                         obj[0].data.forEach((d, i) => {
-                            totalArr.push(obj[0].data[i] + obj[1].data[i] + obj[2].data[i]);
+                            totalArr.push(obj[0].data[i] || 0 + obj[1].data[i] || 0 + obj[2].data[i] || 0);
                         });
                         let total = 0;
                         total = totalArr.reduce((t, n) => t + n, 0);

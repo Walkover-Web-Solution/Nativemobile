@@ -420,7 +420,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                 });
             } else {
                 return Object.assign({}, state, {
-                    profitLossChartFilter: action.payload.filterType,
+                    profitLossChartFilter: action.payload.filterObj.filterType,
                     profirLossChartFilterTitle: action.payload.filterObj.filterTitle,
                     profitLossChartCustomFilter: {
                         activeYear: {

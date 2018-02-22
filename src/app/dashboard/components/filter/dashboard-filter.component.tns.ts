@@ -88,7 +88,8 @@ export class DashboardFilterComponent implements OnInit {
         }
 
         if (this.chartType === ChartType.ProfitLoss) {
-            url = '/new-reports';
+            url = '/reports';
+            this.store.dispatch(this._reportsActions.setFilterType({ filterTitle: item.text, filterType: item.val }, this.customFilterObj));
             // this.store.dispatch(this._reportsActions.setProfitLossChartFilter(item.val, customFilterObj));
         } else {
             url = '/dashboard';
