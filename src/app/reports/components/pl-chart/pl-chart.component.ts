@@ -187,8 +187,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             let previousExpensesData = null;
             let legendData = chartData[0].legend;
 
+            this.resetSeriesData();
             if (chartData[0] && chartData[1]) {
-                this.resetSeriesData();
                 incomeData = chartData[0].incomeData;
                 expensesData = chartData[0].expensesData;
                 this.pieLable = chartData[0].lable;
