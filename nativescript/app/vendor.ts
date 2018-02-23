@@ -1,6 +1,7 @@
 // Snapshot the ~/app.css and the theme
 const application = require("application");
 require("ui/styling/style-scope");
+// require('require-context/register');
 const appCssContext = require.context("~/", false, /^\.\/app\.(css|scss|less|sass)$/);
 global.registerWebpackModules(appCssContext);
 application.loadAppCss();

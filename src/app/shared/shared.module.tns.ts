@@ -13,6 +13,7 @@ import { TNSCheckBoxModule } from 'nativescript-checkbox/angular';
 import { MyChipsComponent } from "../shared/my-chips/my-chips.component";
 import { TNSFontIconModule } from "nativescript-ngx-fonticon";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
+import { MyHeaderComponent } from "./my-header/my-header.component";
 
 @NgModule({
     imports: [
@@ -32,7 +33,8 @@ import { NativeScriptRouterModule } from "nativescript-angular/router";
         MyButonComponent,
         MyLogoutComponent,
         PieChartComponent,
-        MyChipsComponent
+        MyChipsComponent,
+        MyHeaderComponent
     ],
     exports: [
         NativeScriptRouterModule,

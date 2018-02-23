@@ -57,6 +57,7 @@
     "ngrx-store-logger": "0.2.0",
     "query-string": "^5.1.0",
     "reflect-metadata": "~0.1.8",
+    "require-context": "^1.0.4",
     "reselect": "^3.0.1",
     "rxjs": "^5.5.0",
     "tns-core-modules": "^3.4.0",
@@ -112,7 +113,7 @@
     "phone-android-bundle": "npm run prepPhone && tns prepare android && tns run android --bundle --env.aot --env.uglify",
     "tablet-android-bundle": "npm run prepTablet && tns prepare android && tns run android --bundle --env.aot --env.uglify",
     "build.phone-android-bundle": "npm run prepPhone && tns prepare android && tns build android --bundle --env.aot --env.uglify",
-    "build.tablet-android-bundle": "npm run prepTablet && tns prepare android && tns build android --bundle --env.aot --env.uglify",
+    "build.tablet-android-bundle": "npm run prepTablet && tns prepare android && tns build android --bundle --env.aot",
     "livesync": "gulp tns.Livesync",
     "livesync.phone": "gulp tns.Livesync.Phone",
     "publish-ios-bundle": "tns publish ios --bundle --env.aot --env.uglify"
