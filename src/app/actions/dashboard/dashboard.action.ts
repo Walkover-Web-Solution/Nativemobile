@@ -447,9 +447,16 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
                     dateStart.add(1, 'month');
                 }
             } else {
-                config.lastYear.startDate = '00-00-0000';
-                config.lastYear.endDate = '00-00-0000';
-                config.lastYear.lable = '-None-';
+                config.lastYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+                config.lastYear.endDate = moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+                config.lastYear.lable = 'FY-' + moment(config.lastYear.startDate, 'DD-MM-YYYY').startOf('day').format('YY') + ' - FY-' + moment(config.lastYear.endDate, 'DD-MM-YYYY').endOf('day').format('YY');
+
+                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
+                    lastLegend.push(dateStart.format('MMM'));
+                    dateStart.add(1, 'month');
+                }
             }
 
             config.legend = _.uniq(activeLegend.concat(lastLegend));
@@ -524,9 +531,16 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
                     dateStart.add(1, 'month');
                 }
             } else {
-                config.lastYear.startDate = '00-00-0000';
-                config.lastYear.endDate = '00-00-0000';
-                config.lastYear.lable = '-None-';
+                config.lastYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('year').subtract(2, 'year').format('DD-MM-YYYY');
+                config.lastYear.endDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('year').subtract(2, 'year').format('DD-MM-YYYY');
+                config.lastYear.lable = 'FY-' + moment(config.lastYear.startDate, 'DD-MM-YYYY').startOf('year').subtract(2, 'year').format('YY') + ' - FY-' + moment(config.lastYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(2, 'year').format('YY');
+
+                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
+                    lastLegend.push(dateStart.format('MMM'));
+                    dateStart.add(1, 'month');
+                }
             }
             config.legend = _.uniq(activeLegend.concat(lastLegend));
             return config;
@@ -559,4 +573,4 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
         default:
             return config;
     }
-}
+};

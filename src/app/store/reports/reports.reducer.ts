@@ -325,8 +325,8 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                         let newCObj: IIntervalBalancesItem = {
                             creditTotal: 0,
                             debitTotal: 0,
-                            from: currentRange[ind].rangeStart.format('DD-MM-YYYY'),
-                            to: currentRange[ind].rangeEnd.format('DD-MM-YYYY'),
+                            from: currentRange[ind] ? currentRange[ind].rangeStart.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
+                            to: currentRange[ind] ? currentRange[ind].rangeEnd.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
                             openingBalance: { amount: 0, description: '', type: '' },
                             closingBalance: { amount: 0, type: '' },
                         };
@@ -351,8 +351,8 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                         let newCObj: IIntervalBalancesItem = {
                             creditTotal: 0,
                             debitTotal: 0,
-                            from: previousRange[ind].rangeStart.format('DD-MM-YYYY'),
-                            to: previousRange[ind].rangeEnd.format('DD-MM-YYYY'),
+                            from: previousRange[ind] ? previousRange[ind].rangeStart.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
+                            to: previousRange[ind] ? previousRange[ind].rangeEnd.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
                             openingBalance: { amount: 0, description: '', type: '' },
                             closingBalance: { amount: 0, type: '' },
                         };
@@ -486,7 +486,7 @@ const getDate = (start, end, key, arr = [start.startOf(key)]) => {
 }
 
 const getDateRange = (start, end, key, arr = [{ rangeStart: moment(start), rangeEnd: moment(start).endOf(key) }]): Array<{ rangeStart: moment.Moment, rangeEnd: moment.Moment }> => {
-    if (start.isAfter(end)) throw new Error('start must precede end')
+    if (start.isAfter(end)) { console.log('start must precede end'); }
 
     let rangeStart = moment(moment(start).add(1, key).startOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');
     let rangeEnd = moment(moment(rangeStart).endOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');
