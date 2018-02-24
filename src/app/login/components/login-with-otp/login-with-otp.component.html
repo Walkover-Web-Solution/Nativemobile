@@ -1,52 +1,52 @@
-<div class="center">
-    <img class="logo" src="assets/image/logo.png">
+<div class="main">
+    <div class="center">
+        <div class="flex-center">
+            <img class="logo" src="assets/image/logo.png">
+        </div>
 
-    <div class="form">
+        <div class="form">
 
-        <form name="login" action="#" [formGroup]="mobileVerifyForm">
-            <div *ngIf="!(isLoginWithMobileSubmited$ | async)">
-                <input type="text" class="uname" formControlName="mobileNumber" placeholder="Mobile No">
-                <input class="btn" type="button" [disabled]="mobileVerifyForm.get('mobileNumber').invalid" (click)="getOtp()" name="submit"
-                    value="Get Verification Code" [ladda]='isLoginWithMobileInProcess$ | async'>
+            <form name="login" action="#" [formGroup]="mobileVerifyForm">
+                <div *ngIf="!(isLoginWithMobileSubmited$ | async)">
+                    <input type="text" class="uname" formControlName="mobileNumber" placeholder="Mobile No">
+                    <input class="btn" type="button" [disabled]="mobileVerifyForm.get('mobileNumber').invalid" (click)="getOtp()" name="submit"
+                        value="Get Verification Code" [ladda]='isLoginWithMobileInProcess$ | async'>
+                </div>
+
+                <div *ngIf="(isLoginWithMobileSubmited$ | async)">
+                    <input type="password" name="password" formControlName="otp" class="pass" placeholder="Otp">
+                    <input class="btn" type="button" [disabled]="mobileVerifyForm.invalid" name="submit" [ladda]='isVerifyMobileInProcess$ | async'
+                        (click)="verifyCode()" value="Submit">
+                </div>
+            </form>
+
+            <div class="helperlinks">
+                <ul class="helperlinks">
+                    <li>
+                        <a [routerLink]="['/login/forgot-password']">Forgot Password</a> |
+                        <a [routerLink]="['/login/login-with-email']">Login with Email</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['signup']">Sign UP</a>
+                    </li>
+                </ul>
             </div>
 
-            <div *ngIf="(isLoginWithMobileSubmited$ | async)">
-                <input type="password" name="password" formControlName="otp" class="pass" placeholder="Otp">
-                <input class="btn" type="button" [disabled]="mobileVerifyForm.invalid" name="submit" [ladda]='isVerifyMobileInProcess$ | async'
-                    (click)="verifyCode()" value="Submit">
-            </div>
-        </form>
-
-        <div class="helperlinks">
-            <ul class="helperlinks">
+        </div>
+        <span style="color: darkblue;">&nbsp;&nbsp;or login with&nbsp;&nbsp;</span>
+        <div class="social">
+            <ul>
                 <li>
-                    <a>Forgot Password</a> |
-                    <a>Login with OTP</a>
+                    <a href="#">
+                        <i class="fa fa-linkedin icon" aria-hidden="true"></i>
+                    </a>
                 </li>
                 <li>
-                    <a>Login with Email</a>
-                </li>
-                <li>
-                    <a>Sign UP</a>
+                    <a href="#">
+                        <i class="fa fa-google-plus icon" aria-hidden="true"></i>
+                    </a>
                 </li>
             </ul>
         </div>
-
-    </div>
-    <span>&nbsp;&nbsp;or login with&nbsp;&nbsp;</span>
-
-    <div class="helperlinks">
-        <ul class="helperlinks">
-            <li>
-                <a [routerLink]="['forgot-password']">Forgot Password</a> |
-                <a [routerLink]="['login-with-otp']">Login with OTP</a>
-            </li>
-            <li>
-                <a [routerLink]="['login-with-email']">Login with Email</a>
-            </li>
-            <li>
-                <a [routerLink]="['signup']">Sign UP</a>
-            </li>
-        </ul>
     </div>
 </div>
