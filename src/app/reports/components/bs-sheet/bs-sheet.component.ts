@@ -47,6 +47,10 @@ export class BsSheetComponent implements OnInit, OnDestroy {
         this.chartFilterType$.distinctUntilChanged().subscribe(s => {
             this.fetchData(true);
         });
+
+        this.store.select(p => p.report.activeChartType).takeUntil(this.destroyed$).subscribe(s => {
+            this.fetchData(true);
+        })
     }
 
     public fetchData(refresh: boolean) {

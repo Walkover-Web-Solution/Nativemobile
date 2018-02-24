@@ -30,6 +30,12 @@ export class PlSheetComponent implements OnInit, OnDestroy {
                 this.fetchData(false);
             });
 
+        this.store.select(s => s.report.activeChartType)
+            .takeUntil(this.destroyed$)
+            .subscribe(s => {
+                this.fetchData(false);
+            });
+
         this.data$.subscribe(dt => {
             if (dt) {
                 if (dt.revenue && dt.revenue.amount) {

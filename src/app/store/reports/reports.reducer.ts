@@ -31,6 +31,7 @@ export interface ReportsState {
     profitLossChartFilter: ChartFilterType,
     profirLossChartFilterTitle: string;
     profitLossChartCustomFilter: ChartCustomFilter;
+    activeChartType: string;
     profitLossSheet: PlState;
     balanceSheet: BsState
 }
@@ -72,6 +73,7 @@ const initialState: ReportsState = {
         noData: true,
         showLoader: false
     },
+    activeChartType: 'current'
 };
 
 let isErrorInIncomeData: boolean = false;
@@ -451,6 +453,12 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     }
                 });
             }
+        }
+
+        case ReportConst.SET_REPORT_ACTIVE_CHART_TYPE: {
+            return Object.assign({}, state, {
+                activeChartType: action.payload
+            })
         }
 
         // region ProfitLoss Sheet Data

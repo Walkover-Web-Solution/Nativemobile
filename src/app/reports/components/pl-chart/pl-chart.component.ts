@@ -268,6 +268,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             this.activeChart = type;
             this.renderActiveChart(type);
             this.renderOptions(type === 'current' ? this.series : this.previousSeries);
+            this.store.dispatch(this._reportsActions.setActiveChartType(type));
         }
     }
 
