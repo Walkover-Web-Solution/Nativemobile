@@ -53,7 +53,7 @@ const initialState: ReportsState = {
         lable: ''
     },
     profitLossChartFilter: ChartFilterType.LastMonth,
-    profirLossChartFilterTitle: '',
+    profirLossChartFilterTitle: 'Last Month',
     profitLossChartCustomFilter: {
         activeYear: {
             startDate: '', endDate: ''
@@ -74,10 +74,18 @@ const initialState: ReportsState = {
     },
 };
 
+let isErrorInIncomeData: boolean = false;
+let isErrorInExpenseData: boolean = false;
+
 export function ReportsReducer(state: ReportsState = initialState, action: CustomActions): ReportsState {
     switch (action.type) {
         //#region Income Data
+        case ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_REQUEST: {
+            isErrorInIncomeData = false;
+            return state;
+        }
         case ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_RESPONSE: {
+            isErrorInIncomeData = false;
             let payload: { data: CategoryHistoryResponse, config: ChartFilterConfigs } = action.payload;
             let config: ChartFilterConfigs = _.cloneDeep(payload.config);
             let filterType = _.cloneDeep(state.profitLossChartFilter);
@@ -118,10 +126,11 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     currentIncomeData.intervalBalances.push(newCObj);
                 });
 
-                previousRange.forEach(cr => {
+                previousRange.forEach((cr, ind) => {
                     previousObj.push(previousIncomeData.intervalBalances.filter(ic => {
                         return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
                     }));
+                    previousLegend.push(`Week ${ind + 1}`);
                 });
                 previousIncomeData.intervalBalances = [];
                 previousObj.forEach((po, ind) => {
@@ -134,7 +143,6 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                         closingBalance: po[po.length - 1].closingBalance
                     };
                     previousIncomeData.intervalBalances.push(newCObj);
-                    previousLegend.push(`Week ${ind + 1}`);
                 });
             } else {
                 currentRange.forEach((cr, ind) => {
@@ -186,14 +194,14 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             }
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
-                    incomeData: currentIncomeData,
+                    incomeData: !isErrorInExpenseData ? currentIncomeData : null,
                     legend: currentLegend,
                     from: config.activeYear.startDate,
                     to: config.activeYear.endDate,
                     lable: config.activeYear.lable
                 }),
                 previousData: Object.assign({}, state.previousData, {
-                    incomeData: previousIncomeData,
+                    incomeData: !isErrorInExpenseData ? previousIncomeData : null,
                     legend: previousLegend,
                     from: config.lastYear.startDate,
                     to: config.lastYear.endDate,
@@ -202,16 +210,19 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             });
         }
         case ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR: {
+            isErrorInIncomeData = true;
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
                     incomeData: null,
+                    expensesData: null,
                     legend: [],
                     from: '',
                     to: '',
                     lable: ''
                 }),
-                previousData: Object.assign({}, state.currentData, {
+                previousData: Object.assign({}, state.previousData, {
                     incomeData: null,
+                    expensesData: null,
                     legend: [],
                     from: '',
                     to: '',
@@ -222,7 +233,12 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         //#endregion
 
         //#region Expenses Data
+        case ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_REQUEST: {
+            isErrorInExpenseData = false;
+            return state;
+        }
         case ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_RESPONSE: {
+            isErrorInExpenseData = false;
             let payload: { data: GroupHistoryResponse, config: ChartFilterConfigs } = action.payload;
             let config: ChartFilterConfigs = _.cloneDeep(payload.config);
             let filterType = _.cloneDeep(state.profitLossChartFilter);
@@ -375,33 +391,36 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
 
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
-                    expensesData: currentExpenseData,
-                    legend: payload.config.legend,
-                    from: payload.config.activeYear.startDate,
-                    to: payload.config.activeYear.endDate,
-                    lable: config.activeYear.lable
+                    expensesData: !isErrorInIncomeData ? currentExpenseData : null,
+                    // legend: payload.config.legend,
+                    // from: payload.config.activeYear.startDate,
+                    // to: payload.config.activeYear.endDate,
+                    // lable: config.activeYear.lable
                 }),
                 previousData: Object.assign({}, state.previousData, {
-                    expensesData: previousExpenseData,
-                    legend: payload.config.legend,
-                    from: payload.config.lastYear.startDate,
-                    to: payload.config.lastYear.endDate,
-                    lable: config.lastYear.lable
+                    expensesData: !isErrorInIncomeData ? previousExpenseData : null,
+                    // legend: payload.config.legend,
+                    // from: payload.config.lastYear.startDate,
+                    // to: payload.config.lastYear.endDate,
+                    // lable: config.lastYear.lable
                 })
             });
         }
 
         case ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR: {
+            isErrorInExpenseData = true;
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
                     expensesData: null,
+                    incomeData: null,
                     legend: [],
                     from: '',
                     to: '',
                     lable: ''
                 }),
-                previousData: Object.assign({}, state.currentData, {
+                previousData: Object.assign({}, state.previousData, {
                     expensesData: null,
+                    incomeData: null,
                     legend: [],
                     from: '',
                     to: '',

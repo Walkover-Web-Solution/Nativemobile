@@ -24,7 +24,7 @@ export class PlSheetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.store.select(s => s.report.profitLossChartFilter).distinctUntilKeyChanged('profitLossChartFilter')
+        this.store.select(s => s.report.profitLossChartFilter)
             .takeUntil(this.destroyed$)
             .subscribe(s => {
                 this.fetchData(false);

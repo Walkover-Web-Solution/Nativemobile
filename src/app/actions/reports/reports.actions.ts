@@ -161,6 +161,7 @@ export class ReportsActions {
             let filterType: ChartFilterType;
             let fyIndex: number;
             let activeFinancialYear: ActiveFinancialYear;
+            let lastFinancialYear: ActiveFinancialYear;
             let customFilterObj: ChartCustomFilter;
             this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
             this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
@@ -170,13 +171,30 @@ export class ReportsActions {
                 if (!res.companies) {
                     return;
                 }
+                let financialYears = [];
                 let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
                 if (activeCmp) {
                     activeFinancialYear = activeCmp.activeFinancialYear;
                     fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
+
+                    if (activeCmp.financialYears.length > 1) {
+                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+
+                            return b.diff(a, 'days') < 0;
+                        });
+                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            return b.diff(a, 'days');
+                        }, 'desc');
+                        lastFinancialYear = financialYears[0];
+                    }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
+            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
             let request: ProfitLossRequest = {
                 refresh: action.payload,
                 from: op.activeYear.startDate,

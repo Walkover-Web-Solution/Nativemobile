@@ -40,6 +40,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public previousPieTotal: number = 0;
     public pieLable: string = '';
     public previousPieLable: string = '';
+    public noData: boolean = false;
     public selectedFilter$: Observable<ChartFilterType>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -49,7 +50,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.previousData$ = this.store.select(st => st.report.previousData).takeUntil(this.destroyed$);
         this.options = {
             chart: {
-                type: 'column'
+                type: 'column',
             },
             title: {
                 text: ''
@@ -101,13 +102,14 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200
+                height: 200,
+                backgroundColor: '#F7FAFB'
             },
             credits: {
                 enabled: false
             },
             title: {
-                text: '100%',
+                text: '0%',
                 verticalAlign: 'middle',
                 horizontalAlign: 'middle'
             },
@@ -141,13 +143,14 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200
+                height: 200,
+                // backgroundColor: '#F7FAFB'
             },
             credits: {
                 enabled: false
             },
             title: {
-                text: '100%',
+                text: '0%',
                 verticalAlign: 'middle',
                 horizontalAlign: 'middle'
             },
@@ -185,20 +188,26 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             let expensesData = null;
             let previousIncomeData = null;
             let previousExpensesData = null;
-            let legendData = chartData[0].legend;
+            let legendData = null;
+            let previousLegendData = null;
 
-            this.resetSeriesData();
             if (chartData[0] && chartData[1]) {
+                this.resetSeriesData();
                 incomeData = chartData[0].incomeData;
                 expensesData = chartData[0].expensesData;
+                legendData = chartData[0].legend;
                 this.pieLable = chartData[0].lable;
 
                 previousIncomeData = chartData[1].incomeData;
                 previousExpensesData = chartData[1].expensesData;
+                previousLegendData = chartData[1].legend;
                 this.previousPieLable = chartData[1].lable;
+            } else {
+                this.noData = true;
             }
+
             this.genSeries(incomeData, expensesData, legendData);
-            this.genPreviousSeries(previousIncomeData, previousExpensesData, legendData);
+            this.genPreviousSeries(previousIncomeData, previousExpensesData, previousLegendData);
         });
         this.selectedFilter$.distinctUntilChanged().subscribe(s => {
             this.store.dispatch(this._reportsActions.getIncomeData());
@@ -248,13 +257,16 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.calculateTotals('current');
     }
 
-    public onChartSelection(e, type) {
+    public onChartPointSelection(e, type) {
         if (e && e.point) {
             this.renderPiePer(type, Number((e.point.percentage).toFixed(2)));
         }
+    }
 
+    public onChartSelection(type: string) {
         if (this.activeChart !== type) {
             this.activeChart = type;
+            this.renderActiveChart(type);
             this.renderOptions(type === 'current' ? this.series : this.previousSeries);
         }
     }
@@ -344,6 +356,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 series: this.pieChartOptions.series.map(s => {
                     s.data = this.pieSeries;
                     return s;
+                }),
+                title: Object.assign({}, this.pieChartOptions.title, {
+                    text: `100%`
                 })
             });
         } else {
@@ -351,6 +366,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 series: this.previousPieChartOptions.series.map(s => {
                     s.data = this.previousPieSeries
                     return s;
+                }),
+                title: Object.assign({}, this.previousPieChartOptions.title, {
+                    text: `100%`
                 })
             });
         }
@@ -377,6 +395,34 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cd.detectChanges();
     }
 
+    public renderActiveChart(type: string) {
+        if (type === 'current') {
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                chart: Object.assign({}, this.pieChartOptions.chart, {
+                    backgroundColor: '#F7FAFB'
+                })
+            });
+
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                chart: Object.assign({}, this.previousPieChartOptions.chart, {
+                    backgroundColor: '#FFFFFF'
+                })
+            });
+
+        } else {
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                chart: Object.assign({}, this.previousPieChartOptions.chart, {
+                    backgroundColor: '#F7FAFB'
+                })
+            });
+
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                chart: Object.assign({}, this.pieChartOptions.chart, {
+                    backgroundColor: '#FFFFFF'
+                })
+            });
+        }
+    }
     public openFilter() {
         let dialog = this.dialog.open(ReportsFilterComponent, {
             width: '100%',
