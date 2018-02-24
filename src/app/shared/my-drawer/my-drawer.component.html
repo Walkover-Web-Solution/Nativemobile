@@ -9,13 +9,14 @@
             <h3 mat-subheader>Pages</h3>
             <mat-card-content>
                 <mat-nav-list>
-                    <a [ngClass]="{'active': item.isSelected}" mat-list-item *ngFor="let item of pages" (click)="onNavItemTap(item)">
-                        <mat-icon mat-list-icon>{{ item.icon }}</mat-icon>
+                    <mat-list-item [ngClass]="{'active': item.isSelected}" *ngFor="let item of pages" (click)="onNavItemTap(item)">
+                        <a mat-list-icon class="customFont" [ngStyle]="{'font-family': item.fontFamily}">{{ item.icon }}</a>
                         <h4 mat-line>{{item.title}}</h4>
-                    </a>
+                    </mat-list-item>
                 </mat-nav-list>
             </mat-card-content>
         </mat-card>
+
     </mat-sidenav>
 
     <mat-sidenav-content>
