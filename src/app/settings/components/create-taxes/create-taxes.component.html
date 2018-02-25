@@ -4,9 +4,9 @@
         [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }"
          [rightSideItem]="{ title: 'Save', action: submit.bind(this) }"></my-header>
 
-        <mat-card>
+        <mat-card class="main_card" style="display: flex;flex-direction: column">
             <mat-card-content>
-                <form [formGroup]="taxForm" (submit)="submit()" class="form">
+                <form [formGroup]="taxForm" (submit)="submit()" class="">
 
                     <mat-form-field class="full-width">
                         <input matInput formControlName="name" placeholder="Tax Name">
@@ -72,7 +72,7 @@
                 </form>
             </mat-card-content>
 
-            <mat-card-footer>
+            <mat-card-footer style="align-self: center">
                 <button type="submit" mat-raised-button color="primary" (click)="submit()" [disabled]="taxForm.invalid" [ladda]="(isCreateTaxInProcess$ | async) || (isUpdateTaxInProcess$ | async)">Submit</button>
             </mat-card-footer>
         </mat-card>

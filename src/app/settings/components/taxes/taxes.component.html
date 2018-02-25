@@ -2,7 +2,7 @@
     <ng-template #optionTemplate>
         <my-header [title]="'Taxes'" [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }"></my-header>
 
-        <mat-card>
+        <mat-card class="main_card" style="display: flex;flex-direction: column">
             <mat-card-content>
                 <mat-list>
                     <mat-list-item *ngFor="let item of (taxList$ | async)" [routerLink]="['/settings','create-taxes', item.uniqueName]">
@@ -12,7 +12,7 @@
                 </mat-list>
             </mat-card-content>
 
-            <mat-card-footer>
+            <mat-card-footer style="align-self: center">
                 <button type="button" mat-raised-button color="primary" [routerLink]="['/settings','create-taxes']">Add</button>
             </mat-card-footer>
         </mat-card>
