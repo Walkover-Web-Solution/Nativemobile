@@ -88,7 +88,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        // this.lo
+        this.destroyed$.next(true);
+        this.destroyed$.complete();
     }
 
     public goTo(route: string[]) {
