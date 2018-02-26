@@ -16,6 +16,7 @@ import {
 } from '@angular/material';
 import { MyHeaderComponent } from "./my-header/my-header.component";
 import { LaddaModule } from 'angular2-ladda';
+import { AuthServiceConfig, GoogleLoginProvider, LinkedinLoginProvider, SocialLoginModule } from 'ng4-social-login';
 
 const matModules = [MatButtonModule,
     MatCardModule,
@@ -37,6 +38,22 @@ const matModules = [MatButtonModule,
     MatTabsModule
 ];
 
+const SOCIAL_CONFIG = new AuthServiceConfig([
+    {
+        id: GoogleLoginProvider.PROVIDER_ID,
+        provider: new GoogleLoginProvider('641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com')
+    },
+    {
+        id: LinkedinLoginProvider.PROVIDER_ID,
+        provider: new LinkedinLoginProvider('817roify24ig8g')
+    }
+]);
+
+export function provideConfig() {
+    return SOCIAL_CONFIG;
+}
+
+
 @NgModule({
     imports: [
         CommonModule,
@@ -47,6 +64,7 @@ const matModules = [MatButtonModule,
             style: 'slide-left',
             spinnerSize: 30
         }),
+        SocialLoginModule,
         ...matModules
     ],
     declarations: [
@@ -70,6 +88,12 @@ const matModules = [MatButtonModule,
     ],
     schemas: [
         NO_ERRORS_SCHEMA
+    ],
+    providers: [
+        {
+            provide: AuthServiceConfig,
+            useFactory: provideConfig
+        },
     ]
 })
 export class SharedModule { }

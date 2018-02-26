@@ -6,7 +6,6 @@
                 <mat-card-subtitle>{{ (user$ | async)?.user?.email }}</mat-card-subtitle>
             </mat-card-title-group>
 
-            <h3 mat-subheader>Pages</h3>
             <mat-card-content>
                 <mat-nav-list>
                     <mat-list-item [ngClass]="{'active': item.isSelected}" *ngFor="let item of pages" (click)="onNavItemTap(item)">

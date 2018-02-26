@@ -3,7 +3,8 @@ import {
   VerifyEmailModel,
   VerifyEmailResponseModel,
   VerifyMobileModel,
-  VerifyMobileResponseModel
+  VerifyMobileResponseModel,
+  LinkedInRequestModel
 } from '../../models/api-models/loginModels';
 import {LoginConstants} from '../../actions/login/login.const';
 import {BaseResponse} from '../../models/api-models/BaseResponse';
@@ -113,6 +114,21 @@ export function SessionReducer(state: SessionState = initialState, action: Custo
           userLoginState: userLoginStateEnum.notLoggedIn
         });
       }
+    }
+
+    case LoginConstants.SIGNUP_WITH_LINKEDIN_RESPONSE: {
+        let res: BaseResponse<VerifyEmailResponseModel, LinkedInRequestModel> = action.payload;
+        if (res.status === 'success') {
+            return Object.assign({}, state, {
+              user: res.body,
+              userLoginState: userLoginStateEnum.userLoggedIn
+            });
+          } else {
+            return Object.assign({}, state, {
+              user: null,
+              userLoginState: userLoginStateEnum.notLoggedIn
+            });
+          }
     }
 
     case CompanyConstants.REFRESH_COMPANIES_RESPONSE: {
