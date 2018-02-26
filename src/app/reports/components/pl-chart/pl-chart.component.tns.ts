@@ -18,6 +18,7 @@ import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
 let webViewInterfaceModule = require('nativescript-webview-interface');
 import { Page } from '../../../common/utils/environment';
 import { ReportsActions } from '../../../actions/reports/reports.actions';
+import { on as applicationOn, orientationChangedEvent } from "application";
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
@@ -103,7 +104,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBorderWidth: 0,
                 plotShadow: false,
                 height: 200,
-                width: 300
+                width: 300,
+                backgroundColor: '#F7FAFB'
             },
             credits: {
                 enabled: false
@@ -210,30 +212,35 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.oLangWebViewInterface = new webViewInterfaceModule.WebViewInterface(webView, this.secondWebViewSRC);
         this.oLangWebViewInterface.on('onChartSelection', this.onChartSelection.bind(this));
+
         // loading languages in dropdown, on load of webView.
         webView.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
             if (!args.error) {
-                console.log(JSON.stringify(platformModule.screen.mainScreen));
-                this.oLangWebViewInterface.emit('dimensions',
-                    {
-                        width: platformModule.screen.mainScreen.widthDIPs,
-                        height: platformModule.screen.mainScreen.heightDIPs
-                    });
+                applicationOn(orientationChangedEvent, () => {
+                    this.oLangWebViewInterface.emit('dimensions');
+                    this.renderActiveChart(this.activeChart);
+                    this.renderOptions(this.activeChart === 'current' ? this.series : this.previousSeries);
+                    this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
+                });
+                this.oLangWebViewInterface.emit('dimensions');
                 zip(this.currentData$, this.previousData$).subscribe(chartData => {
                     let incomeData = null;
                     let expensesData = null;
                     let previousIncomeData = null;
                     let previousExpensesData = null;
-                    let legendData = chartData[0].legend;
+                    let legendData = null;
+                    let previousLegendData = null;
 
                     this.resetSeriesData();
                     if (chartData[0] && chartData[1]) {
                         incomeData = chartData[0].incomeData;
                         expensesData = chartData[0].expensesData;
+                        legendData = chartData[0].legend;
                         this.pieLable = chartData[0].lable;
 
                         previousIncomeData = chartData[1].incomeData;
                         previousExpensesData = chartData[1].expensesData;
+                        previousLegendData = chartData[1].legend;
                         this.previousPieLable = chartData[1].lable;
                     }
                     this.genSeries(incomeData, expensesData, legendData);
@@ -284,14 +291,17 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.calculateTotals('current');
     }
 
-    public onChartSelection(obj) {
-        this.renderPiePer(obj.type, Number((obj.percentage).toFixed(2)));
+    public onChartPointSelection(percentage, type) {
+        this.renderPiePer(type, Number((percentage).toFixed(2)));
+    }
 
-
-        if (this.activeChart !== obj.type) {
-            this.activeChart = obj.type;
-            this.renderOptions(obj.type === 'current' ? this.series : this.previousSeries);
+    public onChartSelection(type: string) {
+        if (this.activeChart !== type) {
+            this.activeChart = type;
+            this.renderActiveChart(type);
+            this.renderOptions(type === 'current' ? this.series : this.previousSeries);
             this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
+            this.store.dispatch(this._reportsActions.setActiveChartType(type));
         }
     }
 
@@ -431,6 +441,47 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
         this.cd.detectChanges();
+    }
+
+    public renderActiveChart(type: string) {
+        if (type === 'current') {
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                chart: Object.assign({}, this.pieChartOptions.chart, {
+                    backgroundColor: '#F7FAFB'
+                })
+            });
+
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                chart: Object.assign({}, this.previousPieChartOptions.chart, {
+                    backgroundColor: '#FFFFFF'
+                })
+            });
+
+        } else {
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                chart: Object.assign({}, this.previousPieChartOptions.chart, {
+                    backgroundColor: '#F7FAFB'
+                })
+            });
+
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                chart: Object.assign({}, this.pieChartOptions.chart, {
+                    backgroundColor: '#FFFFFF'
+                })
+            });
+        }
+
+        this.oLangWebViewInterface.emit('currentPieSeriesUpdated', {
+            options: this.pieChartOptions,
+            total: this.pieTotal,
+            lable: this.pieLable
+        });
+
+        this.oLangWebViewInterface.emit('previousPieSeriesUpdated', {
+            options: this.previousPieChartOptions,
+            total: this.previousPieTotal,
+            lable: this.previousPieLable
+        });
     }
 
     public ngOnDestroy() {

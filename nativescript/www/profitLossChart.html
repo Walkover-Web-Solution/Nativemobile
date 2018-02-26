@@ -43,12 +43,12 @@
         </div>
 
         <div id="pieChart" style="display: flex;">
-            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" onclick="onChartSelection('current')">
                 <div style="flex:1 0 auto;" id="currentPieSeries"></div>
                 <span id="pieTotal"></span>
                 <span id="pieLable"></span>
             </div>
-            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" onclick="onChartSelection('previous')">
                 <div style="flex:1 0 auto" id="previousPieSeries"></div>
                 <span id="previousPieTotal"></span>
                 <span id="previousPieLable"></span>
@@ -93,7 +93,7 @@
                 options.options.plotOptions.series = {
                     "events": {
                         click: function (event) {
-                            oWebViewInterface.emit('onChartSelection', { percentage: event.point.percentage, type: 'current' });
+                            oWebViewInterface.emit('onChartPointSelection', { percentage: event.point.percentage, type: 'current' });
                         }
                     }
                 }
@@ -108,7 +108,7 @@
                 options.options.plotOptions.series = {
                     "events": {
                         click: function (event) {
-                            oWebViewInterface.emit('onChartSelection', { percentage: event.point.percentage, type: 'previous' });
+                            oWebViewInterface.emit('onChartPointSelection', { percentage: event.point.percentage, type: 'previous' });
                         }
                     }
                 }
@@ -118,6 +118,10 @@
                 document.getElementById('previousPieTotal').innerHTML = 'Rs, ' + options.total;
                 document.getElementById('previousPieLable').innerHTML = options.lable;
             });
+
+            window.onChartSelection = function(type) {
+                oWebViewInterface.emit('onChartSelection', type);
+            }
         })();
 
     </script>
