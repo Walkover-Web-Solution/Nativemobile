@@ -8,7 +8,6 @@ import { NeedsAuthentication } from '../decorators/needsAuthentication';
 import { SharedModule } from './../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { HomeRoutes } from './home.routes';
-import { SocialLoginModule } from 'ng4-social-login';
 
 
 @NgModule({
