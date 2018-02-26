@@ -27,7 +27,7 @@ export class TaxesComponent implements OnInit, OnDestroy {
         this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
-                    if (iterator.router === '/dashboard') {
+                    if (iterator.router === '/settings') {
                         iterator.isSelected = true;
                     } else {
                         iterator.isSelected = false;
