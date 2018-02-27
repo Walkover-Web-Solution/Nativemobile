@@ -12,7 +12,7 @@ import { ErrorHandler } from './catchManager/catchmanger';
 import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
-import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from '../models/api-models/login';
+import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from '../models/api-models/Login';
 
 @Injectable()
 export class AuthenticationService {
