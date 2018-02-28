@@ -156,7 +156,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public fetchChartData() {
         this.requestInFlight = true;
         this.store.dispatch(this._dashboardActions.getRevenueChartData(false));
-        this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(false));
+        // this.store.dispatch(this._dashboardActions.getRevenueChartDataLastYear(false));
     }
 
     public calculatePieChartPer(t) {
