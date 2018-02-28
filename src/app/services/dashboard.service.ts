@@ -59,6 +59,25 @@ export class DashboardService {
         }).catch((e) => this.errorHandler.HandleCatch<ClosingBalanceResponse, string>(e, '', { fromDate, toDate, groupUniqueName, refresh }));
     }
 
+    public GetClosingBalanceV2(groups: string[], fromDate: string = '', toDate: string = '', refresh: boolean = false): Observable<BaseResponse<ClosingBalanceResponse[], string[]>> {
+        this.user = this._generalService.user;
+        this.companyUniqueName = this._generalService.companyUniqueName;
+
+        return this._http.post(this.config.apiUrl + DASHBOARD_API.CLOSING_BALANCE_V2
+            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)).replace(':fromDate', fromDate)
+            .replace(':toDate', toDate)
+            .replace(':refresh', refresh.toString()), {groups}).map((res) => {
+                let data: BaseResponse<ClosingBalanceResponse[], string[]> = res;
+                data.queryString = { fromDate, toDate, refresh };
+                data.request = groups;
+                return data;
+            }).catch((e) => this.errorHandler.HandleCatch<ClosingBalanceResponse[], string[]>(e, groups, {
+                fromDate,
+                toDate,
+                refresh
+            }));
+    }
+
     public GetBankAccounts(): Observable<BaseResponse<BankAccountsResponse[], string>> {
         this.user = this._generalService.user;
         this.companyUniqueName = this._generalService.companyUniqueName;

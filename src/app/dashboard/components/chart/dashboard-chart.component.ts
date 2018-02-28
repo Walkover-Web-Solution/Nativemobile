@@ -7,6 +7,7 @@ import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
 import { AppState } from '../../../store';
 import { RouterService } from '../../../services/router.service';
 import { MyDrawerComponent } from '../../../shared/my-drawer/my-drawer.component';
+import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
 
 @Component({
     selector: 'ns-dashboard-chart',
@@ -17,7 +18,7 @@ export class DashboardChartComponent implements OnInit {
 
     public navItemObj$: Observable<MyDrawerItem[]>;
     @ViewChild('myDrawer') public myDrawer: MyDrawerComponent;
-    constructor(private store: Store<AppState>, private routerExtensions: RouterService) {
+    constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _dashboardActions: DashboardActions) {
         this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
@@ -33,7 +34,8 @@ export class DashboardChartComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.store.dispatch(this._dashboardActions.getExpensesChartData());
+        this.store.dispatch(this._dashboardActions.getRevenueChartData());
     }
     public toggleDrawer() {
         this.myDrawer.toggle();
