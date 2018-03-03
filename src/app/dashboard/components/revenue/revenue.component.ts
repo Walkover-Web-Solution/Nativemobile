@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { ChartFilterType, IRevenueChartClosingBalanceResponse, IChildGroups } from '../../../models/interfaces/dashboard.interface';
+import { ChartFilterType, IRevenueChartClosingBalanceResponse, IChildGroups, ChartType } from '../../../models/interfaces/dashboard.interface';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
@@ -9,6 +9,8 @@ import { AccountChartDataLastCurrentYear } from '../../../models/view-models/Acc
 import * as _ from 'lodash';
 import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
 import { of } from 'rxjs/observable/of';
+import { DashboardFilterComponent } from '../filter/dashboard-filter.component';
+import { MatDialog } from '@angular/material';
 
 @Component({
     selector: 'ns-revenue-chart,[ns-revenue-chart]',
@@ -43,7 +45,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public lastYearAccountsRanks: number[];
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-    constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
+    constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef, public dialog: MatDialog) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         this.options = {
@@ -322,6 +324,17 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public seriesSeleted(e) {
         debugger;
+    }
+
+    public openFilter() {
+        let dialog = this.dialog.open(DashboardFilterComponent, {
+            width: '100%',
+            position: {
+                top: '100',
+                left: '100',
+            },
+            data: { chartType: ChartType.Revenue }
+        });
     }
 
     ngOnDestroy() {

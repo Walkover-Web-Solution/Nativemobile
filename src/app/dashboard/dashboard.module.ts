@@ -28,6 +28,7 @@ declare let require: any;
     declarations: [DashboardComponent, RevenueChartComponent, ExpensesChartComponent, DashboardFilterComponent, DashboardChartComponent],
     schemas: [
         NO_ERRORS_SCHEMA
-    ]
+    ],
+    entryComponents: [DashboardFilterComponent]
 })
 export class DashboardModule { }

@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
-import { ChartFilterType, IChildGroups, IExpensesChartClosingBalanceResponse } from '../../../models/interfaces/dashboard.interface';
+import { ChartFilterType, IChildGroups, IExpensesChartClosingBalanceResponse, ChartType } from '../../../models/interfaces/dashboard.interface';
 import { AccountChartDataLastCurrentYear } from '../../../models/view-models/AccountChartDataLastCurrentYear';
 import { Observable } from 'rxjs/Observable';
 import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
@@ -8,6 +8,8 @@ import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
 import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
 import * as _ from 'lodash';
+import { DashboardFilterComponent } from '../filter/dashboard-filter.component';
+import { MatDialog } from '@angular/material';
 
 
 @Component({
@@ -42,7 +44,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     public activeYearAccountsRanks: number[];
     public lastYearAccountsRanks: number[];
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-    constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
+    constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef,
+        public dialog: MatDialog) {
         this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         this.options = {
@@ -321,6 +324,17 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
     public seriesSeleted(e) {
         debugger;
+    }
+
+    public openFilter() {
+        let dialog = this.dialog.open(DashboardFilterComponent, {
+            width: '100%',
+            position: {
+                top: '100',
+                left: '100',
+            },
+            data: { chartType: ChartType.Expense }
+        });
     }
 
     ngOnDestroy() {

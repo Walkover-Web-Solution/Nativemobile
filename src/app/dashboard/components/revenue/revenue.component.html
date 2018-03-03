@@ -2,7 +2,7 @@
 
     <div style="display: flex">
         <h4 style="flex: 1 0 auto" matLine>Revenue ({{ chartFilterTitle }})</h4>
-        <button mat-icon-button>
+        <button mat-icon-button (click)="openFilter()">
             <mat-icon>filter_list</mat-icon>
         </button>
     </div>
