@@ -18,6 +18,13 @@ import { of } from 'rxjs/observable/of';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RevenueChartComponent implements OnInit, OnDestroy {
+    public lastPieChartAmount: number;
+    public lastYearGrandAmount: any;
+    public activePieChartAmount: number;
+    public activeYearGrandAmount: any;
+    public activeYearLabel: string;
+    public lastYearLabel: string;
+    public chartFilterTitle: string = '';
     public categories: string[] = [];
     public series: Array<{ name: string, data: number[] }>;
     public options: any;
@@ -27,6 +34,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public previousPieSeries: Array<{ name: string, y: number, color: string }>;
     public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
     public selectedFilter$: Observable<ChartFilterType>;
+    public selectedFilterType: ChartFilterType;
 
     public activeYearAccounts: IChildGroups[] = [];
     public lastYearAccounts: IChildGroups[] = [];
@@ -37,7 +45,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
-        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).takeUntil(this.destroyed$);
+        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         this.options = {
             chart: {
                 type: 'column'
@@ -179,18 +187,23 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
                 // this.resetLastYearChartData();
             }
 
-            // if (rvn && rvn.chartTitle) {
-            //     this.chartFilterTitle = rvn.chartTitle;
-            // }
+            if (rvn && rvn.chartTitle) {
+                this.chartFilterTitle = rvn.chartTitle;
+            }
 
-            // if (rvn && rvn.lable) {
-            //     this.activeYearChartFormatedDate = rvn.lable.activeYearLabel || '';
-            //     this.lastYearChartFormatedDate = rvn.lable.lastYearLabel || '';
-            // }
+            if (rvn && rvn.lable) {
+                this.activeYearLabel = rvn.lable.activeYearLabel || '';
+                this.lastYearLabel = rvn.lable.lastYearLabel || '';
+            }
 
             this.generateCharts();
 
             // this.requestInFlight = false;
+        });
+
+        this.selectedFilter$.subscribe(s => {
+            this.selectedFilterType = s;
+            this.fetchChartData();
         });
     }
 
@@ -243,19 +256,42 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
 
         this.activeYearAccountsRanks = activeAccounts;
-        // this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
-        // this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
+        this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
+        this.activePieChartAmount = this.activeYearGrandAmount >= 0 ? 100 : 0;
 
         this.lastYearAccountsRanks = lastAccounts;
         this.categories = categories;
+
+        let seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: 'Active Year', data: this.activeYearAccountsRanks },
-            { name: 'Last Year', data: this.lastYearAccountsRanks }
+            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks },
+            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks }
         ];
+        this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
+        this.lastPieChartAmount = this.lastYearGrandAmount >= 0 ? 100 : 0;
         this.renderChart();
-        // this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
-        // this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
-        // this.series.push({ name: 'current', data:  });
+    }
+
+    public genSeriesName(filterType: ChartFilterType) {
+        switch (filterType) {
+            case ChartFilterType.ThisMonthToDate:
+            case ChartFilterType.LastMonth:
+                return 'Month';
+
+            case ChartFilterType.ThisQuarterToDate:
+            case ChartFilterType.LastQuater:
+                return 'Quater';
+
+            case ChartFilterType.ThisYearToDate:
+            case ChartFilterType.LastYear:
+                return 'Year';
+
+            case ChartFilterType.ThisFinancialYearToDate:
+            case ChartFilterType.LastFiancialYear:
+                return 'Financial Year';
+            default:
+                return 'Custom';
+        }
     }
 
     public renderChart() {
@@ -266,6 +302,26 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             })
         });
         this.cdRef.detectChanges();
+    }
+
+    public renderPieChart(type = 'current', per) {
+        if (type === 'current') {
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                title: Object.assign({}, this.pieChartOptions.title, {
+                    text: `${per}%`
+                }),
+                series: this.previousPieChartOptions.series.map(s => {
+                    s.data = this.previousPieSeries
+                    return s;
+                }),
+            });
+        } else {
+
+        }
+    }
+
+    public seriesSeleted(e) {
+        debugger;
     }
 
     ngOnDestroy() {
