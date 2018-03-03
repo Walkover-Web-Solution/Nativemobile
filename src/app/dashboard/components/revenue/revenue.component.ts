@@ -32,8 +32,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public options: any;
     public pieChartOptions: any;
     public previousPieChartOptions: any;
-    public pieSeries: Array<{ name: string, y: number, color: string }>;
-    public previousPieSeries: Array<{ name: string, y: number, color: string }>;
+    public pieSeries: Array<{ name?: string, y: number, color?: string }>;
+    public previousPieSeries: Array<{ name?: string, y: number, color?: string }>;
     public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
     public selectedFilter$: Observable<ChartFilterType>;
     public selectedFilterType: ChartFilterType;
@@ -48,9 +48,15 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef, public dialog: MatDialog) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
+        let that = this;
         this.options = {
             chart: {
-                type: 'column'
+                type: 'column',
+                events: {
+                    click: function (e) {
+                        that.seriesSeleted.call(this, [that])
+                    }
+                }
             },
             title: {
                 text: 'Monthly Average Rainfall'
@@ -258,7 +264,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
 
         this.activeYearAccountsRanks = activeAccounts;
-        this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
+        this.activeYearGrandAmount = _.sum(activeAccounts) || 0;
         this.activePieChartAmount = this.activeYearGrandAmount >= 0 ? 100 : 0;
 
         this.lastYearAccountsRanks = lastAccounts;
@@ -269,9 +275,11 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             { name: `This ${seriesName}`, data: this.activeYearAccountsRanks },
             { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks }
         ];
-        this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
+        this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount >= 0 ? 100 : 0;
         this.renderChart();
+        this.renderPieChart('current', 100);
+        this.renderPieChart('previous', 100);
     }
 
     public genSeriesName(filterType: ChartFilterType) {
@@ -308,22 +316,49 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public renderPieChart(type = 'current', per) {
         if (type === 'current') {
+            this.pieSeries = [{ y: per }, { y: 100 - per, color: '#ECECED' }];
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
                     text: `${per}%`
                 }),
-                series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.previousPieSeries
+                series: this.pieChartOptions.series.map(s => {
+                    s.data = this.pieSeries
                     return s;
                 }),
             });
         } else {
-
+            this.previousPieSeries = [{ y: per }, { y: 100 - per, color: '#ECECED' }];
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                title: Object.assign({}, this.previousPieChartOptions.title, {
+                    text: `${per}%`
+                }),
+                series: this.previousPieChartOptions.series.map(s => {
+                    s.data = this.pieSeries
+                    return s;
+                }),
+            });
         }
+        this.cdRef.detectChanges();
     }
 
-    public seriesSeleted(e) {
-        debugger;
+    public seriesSeleted() {
+        let _this: any = this;
+        let compo: RevenueChartComponent;
+
+        arguments[0].forEach(f => compo = f);
+
+        if (_this.hoverPoints && _this.hoverPoints.length > 0) {
+            let activePer = 0;
+            let lastPer = 0;
+            let activePoint = _this.hoverPoints[0].y;
+            let lastPoint = _this.hoverPoints[1].y;
+
+            activePer = Number(((activePoint * 100) / compo.activeYearGrandAmount).toFixed(2));
+            lastPer = Number(((lastPoint * 100) / compo.lastYearGrandAmount).toFixed(2));
+
+            compo.renderPieChart('current', activePer);
+            compo.renderPieChart('previous', lastPer);
+        }
     }
 
     public openFilter() {
