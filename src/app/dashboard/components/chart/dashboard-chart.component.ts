@@ -34,8 +34,8 @@ export class DashboardChartComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.store.dispatch(this._dashboardActions.getExpensesChartData());
-        this.store.dispatch(this._dashboardActions.getRevenueChartData());
+        // this.store.dispatch(this._dashboardActions.getExpensesChartData());
+        // this.store.dispatch(this._dashboardActions.getRevenueChartData());
     }
     public toggleDrawer() {
         this.myDrawer.toggle();

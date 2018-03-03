@@ -27,7 +27,7 @@ const initialState: DashboardState = {
     },
     expensesChartError: '',
     revenueChartError: '',
-    revenueChartFilter: ChartFilterType.LastMonth,
+    revenueChartFilter: ChartFilterType.LastQuater,
     expensesChartFilter: ChartFilterType.ThisMonthToDate,
     revenueChartCustomFilter: {
         activeYear: {

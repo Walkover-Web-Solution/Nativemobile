@@ -272,8 +272,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
         let seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks },
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks }
+            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
+            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
         ];
         this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount >= 0 ? 100 : 0;
@@ -316,7 +316,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public renderPieChart(type = 'current', per) {
         if (type === 'current') {
-            this.pieSeries = [{ y: per }, { y: 100 - per, color: '#ECECED' }];
+            this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
                     text: `${per}%`
@@ -327,7 +327,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
                 }),
             });
         } else {
-            this.previousPieSeries = [{ y: per }, { y: 100 - per, color: '#ECECED' }];
+            this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 title: Object.assign({}, this.previousPieChartOptions.title, {
                     text: `${per}%`
