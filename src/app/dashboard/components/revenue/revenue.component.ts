@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ChartFilterType, IRevenueChartClosingBalanceResponse, IChildGroups } from '../../../models/interfaces/dashboard.interface';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -14,7 +14,8 @@ import { of } from 'rxjs/observable/of';
     selector: 'ns-revenue-chart,[ns-revenue-chart]',
     moduleId: module.id,
     templateUrl: `./revenue.component.html`,
-    styleUrls: ["./revenue.component.scss"]
+    styleUrls: ["./revenue.component.scss"],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RevenueChartComponent implements OnInit, OnDestroy {
     public categories: string[] = [];
@@ -30,11 +31,11 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public activeYearAccounts: IChildGroups[] = [];
     public lastYearAccounts: IChildGroups[] = [];
     public accountStrings: AccountChartDataLastCurrentYear[] = [];
-    public activeYearAccountsRanks: IChildGroups[];
-    public lastYearAccountsRanks: IChildGroups[];
+    public activeYearAccountsRanks: number[];
+    public lastYearAccountsRanks: number[];
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-    constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions) {
+    constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).takeUntil(this.destroyed$);
         this.options = {
@@ -230,35 +231,41 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.accountStrings = _.filter(this.accountStrings, (a) => {
-            return !(a.activeYear === 0 && a.lastYear === 0);
-        });
-
         let activeAccounts = [];
         let lastAccounts = [];
+        let categories = [];
 
         this.accountStrings.forEach(p => {
-            activeAccounts.push({ name: p.name, amount: p.activeYear });
+            activeAccounts.push(p.activeYear);
+            lastAccounts.push(p.lastYear);
+            categories.push(p.name);
         });
 
-        this.accountStrings.forEach(p => {
-            lastAccounts.push({ name: p.name, amount: p.lastYear });
-        });
 
         this.activeYearAccountsRanks = activeAccounts;
         // this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
         // this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
 
         this.lastYearAccountsRanks = lastAccounts;
+        this.categories = categories;
+        this.series = [
+            { name: 'Active Year', data: this.activeYearAccountsRanks },
+            { name: 'Last Year', data: this.lastYearAccountsRanks }
+        ];
+        this.renderChart();
         // this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
         // this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
         // this.series.push({ name: 'current', data:  });
     }
 
-    public renderChart(series: Array<{ name: string, data: number[] }>) {
+    public renderChart() {
         this.options = Object.assign({}, this.options, {
-            series
+            series: this.series,
+            xAxis: Object.assign({}, this.options.xAxis, {
+                categories: this.categories
+            })
         });
+        this.cdRef.detectChanges();
     }
 
     ngOnDestroy() {
