@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 // import { RadSideDrawerComponent } from 'nativescript-pro-ui/sidedrawer/angular';
 // import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
@@ -14,7 +14,7 @@ import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
     moduleId: module.id,
     templateUrl: `./dashboard-chart.component.html`
 })
-export class DashboardChartComponent implements OnInit {
+export class DashboardChartComponent implements OnInit, OnDestroy {
 
     public navItemObj$: Observable<MyDrawerItem[]>;
     @ViewChild('myDrawer') public myDrawer: MyDrawerComponent;
@@ -39,5 +39,9 @@ export class DashboardChartComponent implements OnInit {
     }
     public toggleDrawer() {
         this.myDrawer.toggle();
+    }
+
+    public ngOnDestroy() {
+        this.store.dispatch(this._dashboardActions.resetDashboardState());
     }
 }

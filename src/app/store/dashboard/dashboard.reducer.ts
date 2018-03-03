@@ -123,6 +123,11 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
             }
         }
         // endregion
+
+        // region reset state
+        case DashboardConst.RESET_DASHBOARD_STATE:
+            return initialState;
+        // endregion
         default:
             return state;
     }

@@ -220,6 +220,12 @@ export class DashboardActions {
             payload: { chartType, filterType, customFilterObj }
         };
     }
+
+    public resetDashboardState(): CustomActions {
+        return {
+            type: DashboardConst.RESET_DASHBOARD_STATE
+        }
+    }
 }
 
 const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear, customFilterObj: ChartCustomFilter): ChartFilterConfigs => {
