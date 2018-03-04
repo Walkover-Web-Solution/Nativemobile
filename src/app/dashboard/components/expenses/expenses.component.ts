@@ -32,8 +32,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     public options: any;
     public pieChartOptions: any;
     public previousPieChartOptions: any;
-    public pieSeries: Array<{ name: string, y: number, color: string }>;
-    public previousPieSeries: Array<{ name: string, y: number, color: string }>;
+    public pieSeries: Array<{ name?: string, y: number, color?: string }>;
+    public previousPieSeries: Array<{ name?: string, y: number, color?: string }>;
     public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
     public selectedFilter$: Observable<ChartFilterType>;
     public selectedFilterType: ChartFilterType;
@@ -48,9 +48,15 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
         public dialog: MatDialog) {
         this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
+        let that = this;
         this.options = {
             chart: {
-                type: 'column'
+                type: 'column',
+                events: {
+                    click: function (e) {
+                        that.seriesSeleted.call(this, [that])
+                    }
+                }
             },
             title: {
                 text: 'Monthly Average Rainfall'
@@ -210,7 +216,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     }
 
     public fetchChartData() {
-        this.store.dispatch(this._dashboardActions.getRevenueChartData());
+        this.store.dispatch(this._dashboardActions.getExpensesChartData());
     }
 
     public generateActiveYearString(): INameUniqueName[] {
@@ -258,7 +264,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
 
         this.activeYearAccountsRanks = activeAccounts;
-        this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
+        this.activeYearGrandAmount = _.sum(activeAccounts) || 0;
         this.activePieChartAmount = this.activeYearGrandAmount >= 0 ? 100 : 0;
 
         this.lastYearAccountsRanks = lastAccounts;
@@ -266,12 +272,14 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
         let seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks },
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks }
+            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
+            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
         ];
-        this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
+        this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount >= 0 ? 100 : 0;
         this.renderChart();
+        this.renderPieChart('current', 100);
+        this.renderPieChart('previous', 100);
     }
 
     public genSeriesName(filterType: ChartFilterType) {
@@ -308,22 +316,49 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
     public renderPieChart(type = 'current', per) {
         if (type === 'current') {
+            this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
                     text: `${per}%`
                 }),
-                series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.previousPieSeries
+                series: this.pieChartOptions.series.map(s => {
+                    s.data = this.pieSeries
                     return s;
                 }),
             });
         } else {
-
+            this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                title: Object.assign({}, this.previousPieChartOptions.title, {
+                    text: `${per}%`
+                }),
+                series: this.previousPieChartOptions.series.map(s => {
+                    s.data = this.pieSeries
+                    return s;
+                }),
+            });
         }
+        this.cdRef.detectChanges();
     }
 
-    public seriesSeleted(e) {
-        debugger;
+    public seriesSeleted() {
+        let _this: any = this;
+        let compo: ExpensesChartComponent;
+
+        arguments[0].forEach(f => compo = f);
+
+        if (_this.hoverPoints && _this.hoverPoints.length > 0) {
+            let activePer = 0;
+            let lastPer = 0;
+            let activePoint = _this.hoverPoints[0].y;
+            let lastPoint = _this.hoverPoints[1].y;
+
+            activePer = Number(((activePoint * 100) / compo.activeYearGrandAmount).toFixed(2));
+            lastPer = Number(((lastPoint * 100) / compo.lastYearGrandAmount).toFixed(2));
+
+            compo.renderPieChart('current', activePer);
+            compo.renderPieChart('previous', lastPer);
+        }
     }
 
     public openFilter() {
@@ -341,5 +376,4 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
-
 }
