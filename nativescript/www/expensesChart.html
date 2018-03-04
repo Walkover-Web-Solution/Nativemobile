@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        .colorDiv {
+            height: 15px;
+            width: 15px;
+            display: inline-block;
+        }
+
+        .div-cover {
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+    </style>
+
+    <script src="./lib/es6-promise.js"></script>
+    <script src="./lib/nativescript-webview-interface.js"></script>
+    <script src='./lib/highcharts.js'></script>
+    <script src='./lib/exporting.js'></script>
+
+</head>
+
+<body id="body">
+    <span id="debug" style="color:red;font-size: 20px;"></span>
+    <div style="display: flex;flex-direction: column;" id="container">
+
+        <div id="pieChart" style="display: flex;">
+
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" onclick="onChartSelection('current')">
+                <div style="flex:1 0 auto;" id="currentPieSeries"></div>
+                <span id="pieTotal"></span>
+                <span id="pieLable"></span>
+            </div>
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" onclick="onChartSelection('previous')">
+                <div style="flex:1 0 auto" id="previousPieSeries"></div>
+                <span id="previousPieTotal"></span>
+                <span id="previousPieLable"></span>
+            </div>
+
+        </div>
+
+        <div style="flex:1 0 auto" id="mainSeries"></div>
+    </div>
+
+    <script type='text/javascript'>
+        (function () {
+            var oWebViewInterface = window.nsWebViewInterface;
+
+            oWebViewInterface.on('dimensions', function (dim) {
+                document.getElementById("body").style.width = window.innerWidth + 'px';
+            });
+
+        })();
+
+    </script>
+</body>
