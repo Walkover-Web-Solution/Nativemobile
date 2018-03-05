@@ -17,7 +17,7 @@ const webViewInterfaceModule = require('nativescript-webview-interface');
 @Component({
     selector: 'ns-expenses-chart,[ns-expenses-chart]',
     moduleId: module.id,
-    templateUrl: `./expenses.component.html`,
+    templateUrl: './expenses.component.html',
     styleUrls: ["./expenses.component.scss"]
 })
 export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit {

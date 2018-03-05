@@ -113,7 +113,7 @@
     "phone-android-bundle": "npm run prepPhone && tns prepare android && tns run android --bundle --env.aot --env.uglify",
     "tablet-android-bundle": "npm run prepTablet && tns prepare android && tns run android --bundle --env.aot --env.uglify",
     "build.phone-android-bundle": "npm run prepPhone && tns prepare android && tns build android --bundle --env.aot --env.uglify",
-    "build.tablet-android-bundle": "npm run prepTablet && tns prepare android && tns build android --bundle --env.aot",
+    "build.tablet-android-bundle": "npm run prepTablet && tns prepare android && tns build android --bundle",
     "livesync": "gulp tns.Livesync",
     "livesync.phone": "gulp tns.Livesync.Phone",
     "publish-ios-bundle": "tns publish ios --bundle --env.aot --env.uglify"

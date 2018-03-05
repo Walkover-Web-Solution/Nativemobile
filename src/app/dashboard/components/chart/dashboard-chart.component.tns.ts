@@ -10,7 +10,7 @@ import { RouterService } from '../../../services/router.service';
 @Component({
     selector: 'ns-dashboard-chart',
     moduleId: module.id,
-    templateUrl: `./dashboard-chart.component.html`
+    templateUrl: './dashboard-chart.component.html'
 })
 export class DashboardChartComponent implements OnInit {
 

@@ -13,7 +13,7 @@ import { RouterService } from '../../../services/router.service';
 @Component({
     selector: 'ns-sale-list',
     moduleId: module.id,
-    templateUrl: `./saleList.component.html`
+    templateUrl: './saleList.component.html'
 })
 export class SaleListComponent implements OnInit {
     public navItemObj$: Observable<MyDrawerItem[]>;

@@ -2,7 +2,7 @@ import { OnInit, OnDestroy, Component } from "@angular/core";
 
 @Component({
     selector: 'ns-create-account',
-    templateUrl: `./createAccount.component.html`,
+    templateUrl: './createAccount.component.html',
     moduleId: module.id
 })
 export class CreateAccountComponent implements OnInit, OnDestroy {

@@ -3,7 +3,7 @@ import { Component, Input, AfterViewInit } from '@angular/core';
 @Component({
   selector: 'ns-pie-chart',
   moduleId: module.id,
-  templateUrl: `./pie-chart.component.html`
+  templateUrl: './pie-chart.component.html'
 })
 export class PieChartComponent implements AfterViewInit {
   @Input() maxPoint: number = 0;

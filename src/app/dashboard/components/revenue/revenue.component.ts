@@ -15,7 +15,7 @@ import { MatDialog } from '@angular/material';
 @Component({
     selector: 'ns-revenue-chart,[ns-revenue-chart]',
     moduleId: module.id,
-    templateUrl: `./revenue.component.html`,
+    templateUrl: './revenue.component.html',
     styleUrls: ["./revenue.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

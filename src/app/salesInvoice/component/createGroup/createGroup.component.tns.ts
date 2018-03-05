@@ -4,7 +4,7 @@ import { RouterService } from '../../../services/router.service';
 
 @Component({
     selector: 'ns-group-create',
-    templateUrl: `./createGroup.component.html`,
+    templateUrl: './createGroup.component.html',
     moduleId: module.id,
 })
 export class CreateGroupComponent {

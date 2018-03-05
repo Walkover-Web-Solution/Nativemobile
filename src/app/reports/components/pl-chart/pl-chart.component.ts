@@ -16,7 +16,7 @@ import { ReportsFilterComponent } from '../reports-filter/reports-filter.compone
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
     moduleId: module.id,
-    templateUrl: `./pl-chart.component.html`,
+    templateUrl: './pl-chart.component.html',
     styleUrls: ["./pl-chart.component.scss"],
     changeDetection: ChangeDetectionStrategy.OnPush
 })

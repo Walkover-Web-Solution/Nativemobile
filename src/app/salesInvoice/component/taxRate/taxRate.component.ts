@@ -6,7 +6,7 @@ import { Config } from '../../../common';
 @Component({
     selector: 'ns-tax-rate',
     moduleId: module.id,
-    templateUrl: `./taxRate.component.html`
+    templateUrl: './taxRate.component.html'
 })
 export class TaxRateComponent implements OnInit {
     public chartType: string;

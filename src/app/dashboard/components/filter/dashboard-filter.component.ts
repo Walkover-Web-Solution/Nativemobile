@@ -25,7 +25,7 @@ const MY_FORMATS = {
 @Component({
     selector: 'ns-dashboard-filter',
     moduleId: module.id,
-    templateUrl: `./dashboard-filter.component.html`,
+    templateUrl: './dashboard-filter.component.html',
     styleUrls: ['./dashboard-filter.component.scss'],
     providers: [
         { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
