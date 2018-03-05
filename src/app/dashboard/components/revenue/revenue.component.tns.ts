@@ -10,6 +10,7 @@ import { AccountChartDataLastCurrentYear } from '../../../models/view-models/Acc
 import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
 import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
 import * as _ from 'lodash';
+import { on as applicationOn, orientationChangedEvent } from "application";
 
 const webViewInterfaceModule = require('nativescript-webview-interface');
 
@@ -87,7 +88,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     borderWidth: 0
                 }
             },
-            series: []
+            series: [],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.pieChartOptions = {
             chart: {
@@ -128,7 +134,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: 'Browser share',
                 innerSize: '90%',
                 data: []
-            }]
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         this.previousPieChartOptions = {
             chart: {
@@ -169,7 +180,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 name: 'Browser share',
                 innerSize: '90%',
                 data: []
-            }]
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
         };
         (this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy());
     }
@@ -196,6 +212,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
         webView.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
             if (!args.error) {
+                applicationOn(orientationChangedEvent, () => {
+                    this.oLangWebViewInterface.emit('dimensions');
+                    this.renderChart();
+                    this.renderPieChart('current', 100);
+                    this.renderPieChart('previous', 100);
+                });
                 this.oLangWebViewInterface.emit('dimensions');
 
                 this.revenueChartData$.subscribe(rvn => {
@@ -348,7 +370,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             this.oLangWebViewInterface.emit('currentPieSeriesUpdated', {
                 options: this.pieChartOptions,
                 total: this.activeYearGrandAmount,
-                // lable: this.pieLable
+                lable: this.activeYearLabel
             });
         } else {
             this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
@@ -360,6 +382,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     s.data = this.pieSeries
                     return s;
                 }),
+            });
+
+            this.oLangWebViewInterface.emit('previousPieSeriesUpdated', {
+                options: this.previousPieChartOptions,
+                total: this.lastYearGrandAmount,
+                lable: this.lastYearLabel
             });
 
         }
