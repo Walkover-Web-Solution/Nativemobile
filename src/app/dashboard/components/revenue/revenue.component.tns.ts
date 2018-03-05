@@ -399,10 +399,6 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.cdRef.detectChanges();
     }
 
-    public openFilter() {
-
-    }
-
     public ngOnDestroy() {
         this.destroyed$.next(true);
         this.destroyed$.complete();
