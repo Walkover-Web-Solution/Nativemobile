@@ -62,6 +62,9 @@
 
             oWebViewInterface.on('mainSeriesUpdated', function (options) {
                 options.chart.height = 250;
+                options.chart.events.click = function (e) {
+                    oWebViewInterface.emit('seriesSelected', {current: this.hoverPoints[0].y, last: this.hoverPoints[1].y});
+                }
                 Highcharts.chart('mainSeries', options);
             });
 

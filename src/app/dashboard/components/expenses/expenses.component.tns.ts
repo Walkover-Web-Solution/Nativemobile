@@ -209,6 +209,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
         let webView: WebView = this.webViewRef.nativeElement;
 
         this.oLangWebViewInterface = new webViewInterfaceModule.WebViewInterface(webView, this.webViewSRC);
+        this.oLangWebViewInterface.on('seriesSelected', this.seriesSeleted.bind(this));
 
         webView.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
             if (!args.error) {
@@ -396,6 +397,19 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             });
         }
         this.cdRef.detectChanges();
+    }
+
+    public seriesSeleted(points) {
+        let activePer = 0;
+        let lastPer = 0;
+        let activePoint = points.current;
+        let lastPoint = points.last;
+
+        activePer = Number(((activePoint * 100) / this.activeYearGrandAmount).toFixed(2));
+        lastPer = Number(((lastPoint * 100) / this.lastYearGrandAmount).toFixed(2));
+
+        this.renderPieChart('current', activePer);
+        this.renderPieChart('previous', lastPer);
     }
 
     public ngOnDestroy() {
