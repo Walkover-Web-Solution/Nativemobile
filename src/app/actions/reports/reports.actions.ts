@@ -161,7 +161,10 @@ export class ReportsActions {
             let filterType: ChartFilterType;
             let fyIndex: number;
             let activeFinancialYear: ActiveFinancialYear;
+            let lastFinancialYear: ActiveFinancialYear;
             let customFilterObj: ChartCustomFilter;
+            let activeChartType: string;
+            this.store.select(p => p.report.activeChartType).take(1).subscribe(p => activeChartType = p);
             this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
             this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
             this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
@@ -170,17 +173,34 @@ export class ReportsActions {
                 if (!res.companies) {
                     return;
                 }
+                let financialYears = [];
                 let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
                 if (activeCmp) {
                     activeFinancialYear = activeCmp.activeFinancialYear;
                     fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
+
+                    if (activeCmp.financialYears.length > 1) {
+                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+
+                            return b.diff(a, 'days') < 0;
+                        });
+                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            return b.diff(a, 'days');
+                        }, 'desc');
+                        lastFinancialYear = financialYears[0];
+                    }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
+            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
             let request: ProfitLossRequest = {
                 refresh: action.payload,
-                from: op.activeYear.startDate,
-                to: op.activeYear.endDate,
+                from: activeChartType === 'current' ? op.activeYear.startDate : op.lastYear.startDate,
+                to: activeChartType === 'current' ? op.activeYear.endDate : op.lastYear.endDate,
                 fy: fyIndex === 0 ? 0 : fyIndex * -1,
                 tax: 0
             };
@@ -207,7 +227,10 @@ export class ReportsActions {
             let filterType: ChartFilterType;
             let fyIndex: number;
             let activeFinancialYear: ActiveFinancialYear;
+            let lastFinancialYear: ActiveFinancialYear;
             let customFilterObj: ChartCustomFilter;
+            let activeChartType: string;
+            this.store.select(p => p.report.activeChartType).take(1).subscribe(p => activeChartType = p);
             this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
             this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
             this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
@@ -216,10 +239,27 @@ export class ReportsActions {
                 if (!res.companies) {
                     return;
                 }
+                let financialYears = [];
                 let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
                 if (activeCmp) {
                     activeFinancialYear = activeCmp.activeFinancialYear;
                     fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
+
+                    if (activeCmp.financialYears.length > 1) {
+                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+
+                            return b.diff(a, 'days') < 0;
+                        });
+                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            return b.diff(a, 'days');
+                        }, 'desc');
+                        lastFinancialYear = financialYears[0];
+                    }
                 }
             });
             let op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
@@ -281,6 +321,13 @@ export class ReportsActions {
             type: ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST,
             payload: refresh
         };
+    }
+
+    public setActiveChartType(type: string): CustomActions {
+        return {
+            type: ReportConst.SET_REPORT_ACTIVE_CHART_TYPE,
+            payload: type
+        }
     }
 }
 
@@ -346,9 +393,16 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
                     dateStart.add(1, 'month');
                 }
             } else {
-                config.lastYear.startDate = '00-00-0000';
-                config.lastYear.endDate = '00-00-0000';
-                config.lastYear.lable = '-None-';
+                config.lastYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+                config.lastYear.endDate = moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
+                config.lastYear.lable = 'FY-' + moment(config.lastYear.startDate, 'DD-MM-YYYY').startOf('day').format('YY') + ' - FY-' + moment(config.lastYear.endDate, 'DD-MM-YYYY').endOf('day').format('YY');
+
+                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
+                    lastLegend.push(dateStart.format('MMM'));
+                    dateStart.add(1, 'month');
+                }
             }
 
             config.legend = _.uniq(activeLegend.concat(lastLegend));
@@ -423,9 +477,16 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
                     dateStart.add(1, 'month');
                 }
             } else {
-                config.lastYear.startDate = '00-00-0000';
-                config.lastYear.endDate = '00-00-0000';
-                config.lastYear.lable = '-None-';
+                config.lastYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('year').subtract(2, 'year').format('DD-MM-YYYY');
+                config.lastYear.endDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('year').subtract(2, 'year').format('DD-MM-YYYY');
+                config.lastYear.lable = 'FY-' + moment(config.lastYear.startDate, 'DD-MM-YYYY').startOf('year').subtract(2, 'year').format('YY') + ' - FY-' + moment(config.lastYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(2, 'year').format('YY');
+
+                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
+                    lastLegend.push(dateStart.format('MMM'));
+                    dateStart.add(1, 'month');
+                }
             }
             config.legend = _.uniq(activeLegend.concat(lastLegend));
             return config;

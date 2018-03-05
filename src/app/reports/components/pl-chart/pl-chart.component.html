@@ -1,7 +1,7 @@
 <div style="display: flex;flex-direction: column">
 
     <div style="display: flex">
-        <h4 style="flex: 1 0 auto" matLine>P & L</h4>
+        <h4 style="flex: 1 0 auto" matLine>Profit & Loss</h4>
         <button mat-icon-button (click)="openFilter()">
             <mat-icon>filter_list</mat-icon>
         </button>
@@ -22,13 +22,13 @@
         </div>
     </div>
     <div style="display: flex">
-        <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
-            <chart [options]="pieChartOptions" (click)="onChartSelection($event, 'current')"></chart>
+        <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" (click)="onChartSelection('current')">
+            <chart [options]="pieChartOptions" (click)="onChartPointSelection($event, 'current')"></chart>
             <span>Rs, {{ pieTotal | number: '1.2-2' }}</span>
             <span>{{ pieLable }}</span>
         </div>
-        <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
-            <chart [options]="previousPieChartOptions" (click)="onChartSelection($event, 'previous')"></chart>
+        <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" (click)="onChartSelection('previous')">
+            <chart [options]="previousPieChartOptions" (click)="onChartPointSelection($event, 'previous')"></chart>
             <span>Rs, {{ previousPieTotal | number: '1.2-2' }}</span>
             <span>{{ previousPieLable }}</span>
         </div>

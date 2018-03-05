@@ -4,172 +4,131 @@ import { DashboardConst } from "../../actions/dashboard/dashboard.const";
 import { ChartCustomFilter } from "../../models/api-models/Dashboard";
 
 export interface DashboardState {
-  expensesChart: IExpensesChartClosingBalanceResponse;
-  revenueChart: IRevenueChartClosingBalanceResponse;
-  expensesChartError: string;
-  revenueChartError: string;
+    expensesChart: IExpensesChartClosingBalanceResponse;
+    revenueChart: IRevenueChartClosingBalanceResponse;
+    expensesChartError: string;
+    revenueChartError: string;
 
-  revenueChartFilter: ChartFilterType;
-  expensesChartFilter: ChartFilterType;
+    revenueChartFilter: ChartFilterType;
+    expensesChartFilter: ChartFilterType;
 
-  revenueChartCustomFilter: ChartCustomFilter;
-  expensesChartCustomFilter: ChartCustomFilter;
+    revenueChartCustomFilter: ChartCustomFilter;
+    expensesChartCustomFilter: ChartCustomFilter;
 }
 
 const initialState: DashboardState = {
-  expensesChart: {
-    chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, indirectexpensesActiveyear: null,
-    indirectexpensesLastyear: null, operatingcostActiveyear: null, operatingcostLastyear: null
-  },
-  revenueChart: {
-    chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, otherincomeActiveyear: null,
-    otherincomeLastyear: null, revenuefromoperationsActiveyear: null, revenuefromoperationsLastyear: null
-  },
-  expensesChartError: '',
-  revenueChartError: '',
-  revenueChartFilter: ChartFilterType.ThisMonthToDate,
-  expensesChartFilter: ChartFilterType.ThisMonthToDate,
-  revenueChartCustomFilter: {
-    activeYear: {
-      startDate: '', endDate: ''
+    expensesChart: {
+        chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, indirectexpensesActiveyear: null,
+        indirectexpensesLastyear: null, operatingcostActiveyear: null, operatingcostLastyear: null
     },
-    lastYear: {
-      startDate: '', endDate: ''
+    revenueChart: {
+        chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, otherincomeActiveyear: null,
+        otherincomeLastyear: null, revenuefromoperationsActiveyear: null, revenuefromoperationsLastyear: null
     },
-  },
-  expensesChartCustomFilter: {
-    activeYear: {
-      startDate: '', endDate: ''
+    expensesChartError: '',
+    revenueChartError: '',
+    revenueChartFilter: ChartFilterType.LastQuater,
+    expensesChartFilter: ChartFilterType.ThisMonthToDate,
+    revenueChartCustomFilter: {
+        activeYear: {
+            startDate: '', endDate: ''
+        },
+        lastYear: {
+            startDate: '', endDate: ''
+        },
     },
-    lastYear: {
-      startDate: '', endDate: ''
-    },
-  }
+    expensesChartCustomFilter: {
+        activeYear: {
+            startDate: '', endDate: ''
+        },
+        lastYear: {
+            startDate: '', endDate: ''
+        },
+    }
 }
 
 export function DashboardReducer(state: DashboardState = initialState, action: CustomActions): DashboardState {
-  switch (action.type) {
-    // revenue chart
-    case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE: {
-      let data = action.payload as IRevenueChartClosingBalanceResponse;
-      return Object.assign({}, state, {
-        revenueChart: Object.assign({}, state.revenueChart, {
-          revenuefromoperationsActiveyear: data.revenuefromoperationsActiveyear,
-          otherincomeActiveyear: data.otherincomeActiveyear,
-          chartTitle: data.chartTitle,
-          lable: Object.assign({}, state.revenueChart.lable, {
-            activeYearLabel: data.lable.activeYearLabel
-          })
-        })
-      });
-    }
-    case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE: {
-      return Object.assign({}, state, {
-        revenueChart: {
-          chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, otherincomeActiveyear: null,
-          otherincomeLastyear: null, revenuefromoperationsActiveyear: null, revenuefromoperationsLastyear: null
+    switch (action.type) {
+        // region revenue chart
+        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_RESPONSE: {
+            let data = action.payload as IRevenueChartClosingBalanceResponse;
+            return Object.assign({}, state, {
+                revenueChart: data
+            });
         }
-      })
-    }
+        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE: {
+            return Object.assign({}, state, {
+                revenueChart: action.payload,
+                revenueChartError: 'Something Went Wrong'
+            })
+        }
+        // endregion
 
-    case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE: {
-      let data = action.payload as IRevenueChartClosingBalanceResponse;
-      return Object.assign({}, state, {
-        revenueChart: Object.assign({}, state.revenueChart, {
-          revenuefromoperationsLastyear: data.revenuefromoperationsLastyear,
-          otherincomeLastyear: data.otherincomeLastyear,
-          chartTitle: data.chartTitle,
-          lable: Object.assign({}, state.revenueChart.lable, {
-            lastYearLabel: data.lable.activeYearLabel
-          })
-        })
-      })
-    };
+        // region expenses chart
+        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_RESPONSE: {
+            let data = action.payload as IExpensesChartClosingBalanceResponse;
+            return Object.assign({}, state, {
+                expensesChart: data
+            });
+        }
 
-    // revenue chart
+        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ERROR_RESPONSE: {
+            return Object.assign({}, state, {
+                expensesChart: action.payload,
+                expensesChartFilter: 'Something Went Wrong'
+            })
+        }
+        // endregion
 
-    // expenses chart
-    case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE: {
-      let data = action.payload as IExpensesChartClosingBalanceResponse;
-      return Object.assign({}, state, {
-        expensesChart: Object.assign({}, state.expensesChart, {
-          operatingcostActiveyear: data.operatingcostActiveyear,
-          indirectexpensesActiveyear: data.indirectexpensesActiveyear,
-          chartTitle: data.chartTitle,
-          lable: Object.assign({}, state.expensesChart.lable, {
-            activeYearLabel: data.lable.activeYearLabel
-          })
-        })
-      });
-    }
-
-    case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR_RESPONSE: {
-      return Object.assign({}, state, {
-        expensesChart: {
-          chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, indirectexpensesActiveyear: null,
-          indirectexpensesLastyear: null, operatingcostActiveyear: null, operatingcostLastyear: null
-        },
-      })
-    }
-
-    case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE: {
-      let data = action.payload as IExpensesChartClosingBalanceResponse;
-      return Object.assign({}, state, {
-        expensesChart: Object.assign({}, state.expensesChart, {
-          operatingcostLastyear: data.operatingcostLastyear,
-          indirectexpensesLastyear: data.indirectexpensesLastyear,
-          chartTitle: data.chartTitle,
-          lable: Object.assign({}, state.expensesChart.lable, {
-            lastYearLabel: data.lable.lastYearLabel
-          })
-        })
-      });
-    }
-    // expenses chart
-
-    case DashboardConst.SET_CHART_FILTER_TYPE: {
-      if (action.payload.chartType === ChartType.Revenue) {
-        if (action.payload.filterType === ChartFilterType.Custom) {
-          return Object.assign({}, state, {
-            revenueChartFilter: action.payload.filterType,
-            revenueChartCustomFilter: action.payload.customFilterObj
-          });
-        } else {
-          return Object.assign({}, state, {
-            revenueChartFilter: action.payload.filterType,
-            revenueChartCustomFilter: {
-              activeYear: {
-                startDate: '', endDate: ''
-              },
-              lastYear: {
-                startDate: '', endDate: ''
-              },
+        // region set chart filter
+        case DashboardConst.SET_CHART_FILTER_TYPE: {
+            if (action.payload.chartType === ChartType.Revenue) {
+                if (action.payload.filterType === ChartFilterType.Custom) {
+                    return Object.assign({}, state, {
+                        revenueChartFilter: action.payload.filterType,
+                        revenueChartCustomFilter: action.payload.customFilterObj
+                    });
+                } else {
+                    return Object.assign({}, state, {
+                        revenueChartFilter: action.payload.filterType,
+                        revenueChartCustomFilter: {
+                            activeYear: {
+                                startDate: '', endDate: ''
+                            },
+                            lastYear: {
+                                startDate: '', endDate: ''
+                            },
+                        }
+                    });
+                }
+            } else {
+                if (action.payload.filterType === ChartFilterType.Custom) {
+                    return Object.assign({}, state, {
+                        expensesChartFilter: action.payload.filterType,
+                        expensesChartCustomFilter: action.payload.customFilterObj
+                    })
+                } else {
+                    return Object.assign({}, state, {
+                        expensesChartFilter: action.payload.filterType,
+                        expensesChartCustomFilter: {
+                            activeYear: {
+                                startDate: '', endDate: ''
+                            },
+                            lastYear: {
+                                startDate: '', endDate: ''
+                            },
+                        }
+                    })
+                }
             }
-          });
         }
-      } else {
-        if (action.payload.filterType === ChartFilterType.Custom) {
-          return Object.assign({}, state, {
-            expensesChartFilter: action.payload.filterType,
-            expensesChartCustomFilter: action.payload.customFilterObj
-          })
-        } else {
-          return Object.assign({}, state, {
-            expensesChartFilter: action.payload.filterType,
-            expensesChartCustomFilter: {
-              activeYear: {
-                startDate: '', endDate: ''
-              },
-              lastYear: {
-                startDate: '', endDate: ''
-              },
-            }
-          })
-        }
-      }
-    }
+        // endregion
 
-    default:
-      return state;
-  }
+        // region reset state
+        case DashboardConst.RESET_DASHBOARD_STATE:
+            return initialState;
+        // endregion
+        default:
+            return state;
+    }
 }

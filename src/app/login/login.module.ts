@@ -1,6 +1,5 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 // nativescript
 // app
 import { COMPONENTS, LoginComponent, LoginWithOtpComponent, LoginWithEmailComponent, ForgotComponent, SignUpComponent, LoginTwoWayComponent } from './components';
@@ -8,6 +7,7 @@ import { SharedModule } from '../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '../common';
 import { LoginRoutes } from './login.routes';
+
 
 @NgModule({
     imports: [
@@ -17,10 +17,10 @@ import { LoginRoutes } from './login.routes';
         ReactiveFormsModule,
         SharedModule
     ],
-    exports:[RouterModule],
+    exports: [RouterModule],
     declarations: [...COMPONENTS],
     schemas: [
         NO_ERRORS_SCHEMA
-    ]
+    ],
 })
 export class LoginModule { }

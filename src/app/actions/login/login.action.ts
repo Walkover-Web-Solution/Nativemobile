@@ -7,10 +7,11 @@ import { CustomActions } from "../../store/customActions";
 import { LoginConstants } from "./login.const";
 import { AuthenticationService } from "../../services/authentication.service";
 import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from "../../models/api-models/Login";
-import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel } from "../../models/api-models/loginModels";
+import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel, LinkedInRequestModel } from "../../models/api-models/loginModels";
 import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { Configuration } from "../../app.constants";
 import { ToasterService } from "../../services/toaster.service";
+import { PURCHASE_INVOICE_API } from "../../services/apiurls/purchase-invoice.api";
 
 @Injectable()
 
@@ -127,6 +128,19 @@ export class LoginActions {
         });
 
     @Effect()
+    public signupWithLinkedIn$: Observable<CustomActions> = this.actions$
+        .ofType(LoginConstants.SIGNUP_WITH_LINKEDIN_RESPONSE)
+        .map((action: CustomActions) => {
+            let res: BaseResponse<VerifyEmailResponseModel, LinkedInRequestModel> = action.payload;
+            if (res.status !== 'success') {
+                this._toaster.errorToast(res.message);
+            }
+            return {
+                type: 'EmptyAction'
+            }
+        });
+
+    @Effect()
     public forgotPassword$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.FORGOT_PASSWORD_REQUEST)
         .switchMap((action: CustomActions) =>
@@ -182,7 +196,7 @@ export class LoginActions {
         });
 
     constructor(private actions$: Actions, private _authService: AuthenticationService, public http: HttpClient,
-    private _toaster: ToasterService) {
+        private _toaster: ToasterService) {
 
     }
 
@@ -268,6 +282,13 @@ export class LoginActions {
             type: LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE,
             payload: value
         };
+    }
+
+    public signupWithLinkedInResponse(value: BaseResponse<VerifyEmailResponseModel, LinkedInRequestModel>): CustomActions {
+        return {
+            type: LoginConstants.SIGNUP_WITH_LINKEDIN_RESPONSE,
+            payload: value
+        }
     }
 
 
@@ -363,6 +384,19 @@ export class LoginActions {
             payload: value
         };
     }
+
+    public resetSocialLogoutAttempt(): CustomActions {
+        return {
+            type: LoginConstants.RESET_SOCIAL_LOGOUT_ATTEMPT
+        };
+    }
+
+    public socialLogoutAttempt(): CustomActions {
+        return {
+            type: LoginConstants.SOCIAL_LOGOUT_ATTEMPT
+        };
+    }
+
     private validateResponse<TResponse, TRequest>(response: BaseResponse<TResponse, TRequest>, successAction: CustomActions, showToast: boolean = false, errorAction: CustomActions = { type: 'EmptyAction' }): CustomActions {
         if (response.status === 'error') {
             if (showToast) {

@@ -13,7 +13,6 @@ import { RouterService } from '../services/router.service';
 import { ToasterService } from '../services/toaster.service';
 import { Config } from '../common';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { AuthService } from 'ng4-social-login';
 
 @Component({
     selector: 'ns-home',
@@ -33,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     public companies: MyDrawerItem[] = [];
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _loginActions: LoginActions,
-        private _companyActions: CompanyActions, private _toaster: ToasterService, private socialAuthService: AuthService) {
+        private _companyActions: CompanyActions, private _toaster: ToasterService) {
         this.userStream$ = this.store.select(s => s.session.user);
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             return { companies, uniqueName };
@@ -113,19 +112,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             cancelButtonText: 'No'
         }).then(r => {
             if (r) {
-                this.isLoggedInWithSocialAccount$.take(1).subscribe((val) => {
-                    if (val) {
-                        this.socialAuthService.signOut().then(() => {
-                            this.store.dispatch(this._loginActions.logout());
-                            this.store.dispatch(this._loginActions.socialLogoutAttempt());
-                        }).catch(() => {
-                            this.store.dispatch(this._loginActions.logout());
-                            this.store.dispatch(this._loginActions.socialLogoutAttempt());
-                        });
-                    } else {
-                        this.store.dispatch(this._loginActions.logout());
-                    }
-                });
+                this.store.dispatch(this._loginActions.logout());
                 (this.routerExtensions.router as any).navigateByUrl('/login', { clearHistory: true });
             }
         });

@@ -1,6 +1,7 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
 @import "~ngx-toastr/toastr";
 @import "~ladda/css/ladda";
+@import "~font-awesome/css/font-awesome.css";
 body {
     margin: 0;
     font-family: 'Open Sans', sans-serif;
@@ -31,4 +32,25 @@ body {
 
 .active {
     background-color: #f7ecf4;
+}
+
+.main_card {
+    padding: 20px;
+    background-color: #FAFAFA;
+    height: 100vh;
+}
+
+
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('./fonts/FontAwesome.ttf');
+}
+
+@font-face {
+    font-family: '1515160234';
+    src: url('./fonts/1515160234.ttf');
+}
+
+.customFont {
+    font-family: '1515160234';
 }

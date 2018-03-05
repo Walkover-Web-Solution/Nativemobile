@@ -18,7 +18,7 @@ import { GroupResponse } from '../../../models/api-models/Group';
 
 @Component({
     selector: 'ns-create-account',
-    templateUrl: `./createAccount.component.html`,
+    templateUrl: './createAccount.component.html',
     moduleId: module.id
 })
 export class CreateAccountComponent implements OnInit, OnDestroy {

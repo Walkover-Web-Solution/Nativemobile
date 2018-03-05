@@ -7,6 +7,10 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
 import { ToasterService } from '../../../services/toaster.service';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { AuthService, GoogleLoginProvider, LinkedinLoginProvider } from 'ng4-social-login';
+import { SocialUser } from 'ng4-social-login';
+import { LinkedInRequestModel } from '../../../models/api-models/loginModels';
+import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
     selector: 'ns-login',
@@ -18,12 +22,21 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     public loginProcess$: Observable<boolean>;
     public loginSuccess$: Observable<boolean>;
     public loginWithPasswordForm: FormGroup;
+    public signupWithGoogleInProcess$: Observable<boolean>;
+    public signupWithGoogleSuccess$: Observable<boolean>;
+    public signupWithLinkedInInProcess$: Observable<boolean>;
+    public signupWithLinkedInSuccess$: Observable<boolean>;
+    public isSocialLogoutAttempted$: Observable<boolean>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService,
-        private _toaster: ToasterService) {
-        this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
-        this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
-
+        private _toaster: ToasterService, private socialAuthService: AuthService, private authServiceLocal: AuthenticationService) {
+        this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess).takeUntil(this.destroyed$);
+        this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess).takeUntil(this.destroyed$);
+        this.signupWithGoogleInProcess$ = this.store.select(s => s.login.isSignupWithGoogleInProcess).takeUntil(this.destroyed$);
+        this.signupWithGoogleSuccess$ = this.store.select(s => s.login.isSignupWithGoogleSuccess).takeUntil(this.destroyed$);
+        this.isSocialLogoutAttempted$ = this.store.select(p => p.login.isSocialLogoutAttempted).takeUntil(this.destroyed$);
+        this.signupWithLinkedInInProcess$ = this.store.select(p => p.login.isSignupWithLinkedInInProcess).takeUntil(this.destroyed$);
+        this.signupWithLinkedInSuccess$ = this.store.select(p => p.login.isSignupWithLinkedInSuccess).takeUntil(this.destroyed$);
     }
 
 
@@ -35,8 +48,56 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.loginSuccess$.subscribe(s => {
             if (s) {
-                (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
+                (this.routerExtensions.router as any).navigate(['/home']);
             }
+        });
+
+        this.signupWithGoogleSuccess$.subscribe(s => {
+            if (s) {
+                (this.routerExtensions.router as any).navigate(['/home']);
+            }
+        });
+
+        this.signupWithLinkedInSuccess$.subscribe(s => {
+            if (s) {
+                (this.routerExtensions.router as any).navigate(['/home']);
+            }
+        });
+
+        this.socialAuthService.authState.takeUntil(this.destroyed$).subscribe((user: SocialUser) => {
+            this.isSocialLogoutAttempted$.subscribe((res) => {
+                if (!res && user) {
+                    switch (user.provider) {
+                        case 'GOOGLE': {
+                            this.authServiceLocal.LoginWithGoogle(user.token).subscribe(LoginResult => {
+                                this.store.dispatch(this._loginActions.signupWithGoogleResponse(LoginResult));
+                            }, err => {
+                                if (err) {
+                                    this._toaster.errorToast('Something Went Wrong! Please Try Again');
+                                }
+                            });
+                            break;
+                        }
+                        case 'LINKEDIN': {
+                            let obj: LinkedInRequestModel = new LinkedInRequestModel();
+                            obj.email = user.email;
+                            obj.token = user.token;
+                            this.authServiceLocal.LoginWithLinkedin(obj).subscribe(LoginResult => {
+                                this.store.dispatch(this._loginActions.signupWithLinkedInResponse(LoginResult));
+                            }, err => {
+                                if (err) {
+                                    this._toaster.errorToast('Something Went Wrong! Please Try Again');
+                                }
+                            })
+                            break;
+                        }
+                        default: {
+                            // do something
+                            break;
+                        }
+                    }
+                }
+            });
         });
     }
 
@@ -47,6 +108,16 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         let formValues = this.loginWithPasswordForm.value;
         formValues.uniqueKey = formValues.uniqueKey.toLowerCase();
         this.store.dispatch(this._loginActions.loginWithPassword(this.loginWithPasswordForm.value));
+    }
+
+    public async signInWithProviders(provider: string) {
+        //  web social authentication
+        this.store.dispatch(this._loginActions.resetSocialLogoutAttempt());
+        if (provider === 'google') {
+            this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID);
+        } else if (provider === 'linkedin') {
+            this.socialAuthService.signIn(LinkedinLoginProvider.PROVIDER_ID);
+        }
     }
 
     public ngOnDestroy(): void {

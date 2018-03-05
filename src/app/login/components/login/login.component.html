@@ -1,40 +1,44 @@
-<div class="center">
-    <img class="logo" src="assets/image/logo.png">
-    <div class="form">
-        <form name="login" action="#" [formGroup]="loginWithPasswordForm" (submit)="login()">
-            <input type="text" class="uname" formControlName="uniqueKey" placeholder="Username/Mobile No/Email Id">
-            <input type="password" name="password" formControlName="password" class="pass" placeholder="Password">
-            <button class="btn btn-primary" type="submit" [disabled]="loginWithPasswordForm.invalid" name="submit">Login</button>
-        </form>
-        <div class="helperlinks">
-            <ul class="helperlinks">
+<div class="main">
+    <div class="center">
+        <div class="flex-center">
+            <img class="logo" src="assets/image/logo.png">
+        </div>
+        <div class="form">
+            <form name="login" action="#" [formGroup]="loginWithPasswordForm" (submit)="login()">
+                <input type="text" class="uname" formControlName="uniqueKey" placeholder="Username/Mobile No/Email Id">
+                <input type="password" name="password" formControlName="password" class="pass" placeholder="Password">
+                <button class="btn btn-login" type="submit" [disabled]="loginWithPasswordForm.invalid" name="submit">Login</button>
+            </form>
+            <div class="helperlinks">
+                <ul class="helperlinks">
+                    <li>
+                        <a [routerLink]="['forgot-password']">Forgot Password</a> |
+                        <a [routerLink]="['login-with-otp']">Login with OTP</a>
+                    </li>
+                    <li>
+                        <a [routerLink]="['login-with-email']">Login with Email</a>
+                    </li>
+                    <!-- <li>
+                        <a [routerLink]="['signup']">Sign UP</a>
+                    </li> -->
+                </ul>
+            </div>
+
+        </div>
+        <span style="color: darkblue;">&nbsp;&nbsp;or login with&nbsp;&nbsp;</span>
+        <div class="social">
+            <ul>
                 <li>
-                    <a [routerLink]="['forgot-password']">Forgot Password</a> |
-                    <a [routerLink]="['login-with-otp']">Login with OTP</a>
+                    <a href="#" (click)="signInWithProviders('linkedin')">
+                        <i class="fa fa-linkedin icon" aria-hidden="true"></i>
+                    </a>
                 </li>
                 <li>
-                    <a [routerLink]="['login-with-email']">Login with Email</a>
-                </li>
-                <li>
-                    <a [routerLink]="['signup']">Sign UP</a>
+                    <a href="#" (click)="signInWithProviders('google')">
+                        <i class="fa fa-google-plus icon" aria-hidden="true"></i>
+                    </a>
                 </li>
             </ul>
         </div>
-
-    </div>
-    <span>&nbsp;&nbsp;or login with&nbsp;&nbsp;</span>
-    <div class="social">
-        <ul>
-            <li>
-                <a href="#">
-                    <i class="fa fa-linkedin-square" aria-hidden="true"></i>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fa fa-google-plus-official" aria-hidden="true"></i>
-                </a>
-            </li>
-        </ul>
     </div>
 </div>

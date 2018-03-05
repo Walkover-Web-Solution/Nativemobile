@@ -1,88 +1,283 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
-import * as _ from 'lodash';
-import * as moment from 'moment/moment';
-import { Store } from '@ngrx/store';
-import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
-import { createSelector } from 'reselect';
+import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { ChartType, IChildGroups, IExpensesChartClosingBalanceResponse, ChartFilterType } from '../../../models/interfaces/dashboard.interface';
-import { AccountChartDataLastCurrentYear } from '../../../models/view-models/AccountChartDataLastCurrentYear';
+import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
-import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
 import { Page } from '../../../common/utils/environment';
-import { Config } from '../../../common';
+import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
+import { Observable } from 'rxjs/Observable';
+import { AccountChartDataLastCurrentYear } from '../../../models/view-models/AccountChartDataLastCurrentYear';
+import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
 import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
-import { RouterService } from '../../../services/router.service';
+import * as _ from 'lodash';
+import { on as applicationOn, orientationChangedEvent } from "application";
+import { IExpensesChartClosingBalanceResponse, ChartFilterType, IChildGroups, ChartType } from '../../../models/interfaces/dashboard.interface';
+
+const webViewInterfaceModule = require('nativescript-webview-interface');
 
 @Component({
     selector: 'ns-expenses-chart,[ns-expenses-chart]',
     moduleId: module.id,
-    templateUrl: `./expenses.component.html`,
+    templateUrl: './expenses.component.html',
     styleUrls: ["./expenses.component.scss"]
 })
-export class ExpensesChartComponent implements OnInit {
-    public chartType: ChartType = ChartType.Expense;
-    public requestInFlight: boolean;
+export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit {
+    @ViewChild("myWebView") webViewRef: ElementRef;
+    public webViewSRC = "~/www/expensesChart.html";
+    public chartType = ChartType.Expense;
+    public lastPieChartAmount: number;
+    public lastYearGrandAmount: any;
+    public activePieChartAmount: number;
+    public activeYearGrandAmount: any;
+    public activeYearLabel: string;
+    public lastYearLabel: string;
+    public chartFilterTitle: string = '';
+    public categories: string[] = [];
+    public series: Array<{ name: string, data: number[] }>;
+    public options: any;
+    public pieChartOptions: any;
+    public previousPieChartOptions: any;
+    public pieSeries: Array<{ name?: string, y: number, color?: string }>;
+    public previousPieSeries: Array<{ name?: string, y: number, color?: string }>;
+    public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
+    public selectedFilter$: Observable<ChartFilterType>;
+    public selectedFilterType: ChartFilterType;
+
     public activeYearAccounts: IChildGroups[] = [];
     public lastYearAccounts: IChildGroups[] = [];
-    public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
     public accountStrings: AccountChartDataLastCurrentYear[] = [];
-    public activeYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
-    public lastYearAccountsRanks: ObservableArray<any> = new ObservableArray([]);
-    public activeYearGrandAmount: number = 0;
-    public lastYearGrandAmount: number = 0;
-    public activePieChartAmount: number = 0;
-    public lastPieChartAmount: number = 0;
-    public chartFilterType$: Observable<ChartFilterType>;
-    public chartFilterTitle: string = 'Custom';
-    public activeYearChartFormatedDate: string;
-    public lastYearChartFormatedDate: string;
-    public selectedSeriesLabel: string = '';
+    public activeYearAccountsRanks: number[];
+    public lastYearAccountsRanks: number[];
+    private oLangWebViewInterface;
+
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-    constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private page: Page,
-        private cd: ChangeDetectorRef, private routerExtensions: RouterService) {
+    constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
         this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
-        this.chartFilterType$ = this.store.select(p => p.dashboard.expensesChartFilter).takeUntil(this.destroyed$);
-        Config.IS_MOBILE_NATIVE && (this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy());
+        this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
+        this.options = {
+            chart: {
+                type: 'column',
+                events: {}
+            },
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            xAxis: {
+                categories: [],
+                crosshair: true
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: ''
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            },
+            credits: {
+                enabled: false
+              }
+        };
+        this.pieChartOptions = {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                height: 200,
+                backgroundColor: '#F7FAFB'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: '0%',
+                verticalAlign: 'middle',
+                horizontalAlign: 'middle'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: false,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: 0,
+                    endAngle: 360,
+                    center: ['50%', '50%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                innerSize: '90%',
+                data: []
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
+        };
+        this.previousPieChartOptions = {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false,
+                height: 200,
+                // backgroundColor: '#F7FAFB'
+            },
+            credits: {
+                enabled: false
+            },
+            title: {
+                text: '0%',
+                verticalAlign: 'middle',
+                horizontalAlign: 'middle'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: false,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: 0,
+                    endAngle: 360,
+                    center: ['50%', '50%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                innerSize: '90%',
+                data: []
+            }],
+            navigation: {
+                buttonOptions: {
+                    enabled: false
+                }
+            }
+        };
+        (this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy());
     }
 
     ngOnInit() {
-        this.fetchChartData();
-        this.expensesChartData$.subscribe(exp => {
-            // if (exp) {
-            if (exp && exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
-                let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
-                let operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
-                let accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
-                this.activeYearAccounts = accounts;
-            } else {
-                this.resetActiveYearChartData();
-            }
-
-            if (exp && exp.operatingcostLastyear && exp.indirectexpensesLastyear) {
-                let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
-                let operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
-                let lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
-                this.lastYearAccounts = lastAccounts;
-            } else {
-                this.resetLastYearChartData();
-            }
-            if (exp && exp.chartTitle) {
-                this.chartFilterTitle = exp.chartTitle;
-            }
-
-            if (exp && exp.lable) {
-                this.activeYearChartFormatedDate = exp.lable.activeYearLabel || '';
-                this.lastYearChartFormatedDate = exp.lable.lastYearLabel || '';
-            }
-            // }
-            this.generateCharts();
-            this.requestInFlight = false;
-            this.cd.detectChanges();
-
+        this.selectedFilter$.subscribe(s => {
+            this.selectedFilterType = s;
+            this.fetchChartData();
         });
+    }
+
+    public ngAfterViewInit() {
+        this.setupWebViewInterface();
+    }
+
+    private setupWebViewInterface() {
+        let webView: WebView = this.webViewRef.nativeElement;
+
+        this.oLangWebViewInterface = new webViewInterfaceModule.WebViewInterface(webView, this.webViewSRC);
+        this.oLangWebViewInterface.on('seriesSelected', this.seriesSeleted.bind(this));
+
+        webView.on(WebView.loadFinishedEvent, (args: LoadEventData) => {
+            if (!args.error) {
+                applicationOn(orientationChangedEvent, () => {
+                    this.oLangWebViewInterface.emit('dimensions');
+                    this.renderChart();
+                    this.renderPieChart('current', 100);
+                    this.renderPieChart('previous', 100);
+                });
+                this.oLangWebViewInterface.emit('dimensions');
+
+                this.expensesChartData$.subscribe(exp => {
+                    // if (exp) {
+                    if (exp && exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
+                        let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
+                        let operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
+                        let accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+                        this.activeYearAccounts = accounts;
+                    } else {
+                        // this.resetActiveYearChartData();
+                    }
+
+                    if (exp && exp.operatingcostLastyear && exp.indirectexpensesLastyear) {
+                        let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
+                        let operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
+                        let lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+                        this.lastYearAccounts = lastAccounts;
+                    } else {
+                        // this.resetLastYearChartData();
+                    }
+
+                    if (exp && exp.chartTitle) {
+                        this.chartFilterTitle = exp.chartTitle;
+                    }
+
+                    if (exp && exp.lable) {
+                        this.activeYearLabel = exp.lable.activeYearLabel || '';
+                        this.lastYearLabel = exp.lable.lastYearLabel || '';
+                    }
+
+                    this.generateCharts();
+
+                    // this.requestInFlight = false;
+                });
+            } else {
+                console.log(JSON.stringify(args.error));
+            }
+        });
+    }
+
+    public fetchChartData() {
+        this.store.dispatch(this._dashboardActions.getExpensesChartData());
+    }
+
+    public generateActiveYearString(): INameUniqueName[] {
+        let activeStrings: INameUniqueName[] = [];
+        this.activeYearAccounts.map(acc => {
+            activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+        });
+        return activeStrings;
+    }
+
+    public generateLastYearString(): INameUniqueName[] {
+        let lastStrings: INameUniqueName[] = [];
+        this.lastYearAccounts.map(acc => {
+            lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+        });
+        return lastStrings;
     }
 
     public generateCharts() {
@@ -102,95 +297,119 @@ export class ExpensesChartComponent implements OnInit {
             }
         });
 
-        this.accountStrings = _.filter(this.accountStrings, (a) => {
-            return !(a.activeYear === 0 && a.lastYear === 0);
-        });
-
         let activeAccounts = [];
         let lastAccounts = [];
+        let categories = [];
 
         this.accountStrings.forEach(p => {
-            activeAccounts.push({ name: p.name, amount: p.activeYear });
+            activeAccounts.push(p.activeYear);
+            lastAccounts.push(p.lastYear);
+            categories.push(p.name);
         });
 
-        this.accountStrings.forEach(p => {
-            lastAccounts.push({ name: p.name, amount: p.lastYear });
+
+        this.activeYearAccountsRanks = activeAccounts;
+        this.activeYearGrandAmount = Number(_.sum(activeAccounts).toFixed(2)) || 0;
+        this.activePieChartAmount = this.activeYearGrandAmount >= 0 ? 100 : 0;
+
+        this.lastYearAccountsRanks = lastAccounts;
+        this.categories = categories;
+
+        let seriesName = this.genSeriesName(this.selectedFilterType);
+        this.series = [
+            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
+            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+        ];
+        this.lastYearGrandAmount = Number(_.sum(lastAccounts).toFixed(2)) || 0;
+        this.lastPieChartAmount = this.lastYearGrandAmount >= 0 ? 100 : 0;
+        this.renderChart();
+        this.renderPieChart('current', 100);
+        this.renderPieChart('previous', 100);
+    }
+
+    public genSeriesName(filterType: ChartFilterType) {
+        switch (filterType) {
+            case ChartFilterType.ThisMonthToDate:
+            case ChartFilterType.LastMonth:
+                return 'Month';
+
+            case ChartFilterType.ThisQuarterToDate:
+            case ChartFilterType.LastQuater:
+                return 'Quater';
+
+            case ChartFilterType.ThisYearToDate:
+            case ChartFilterType.LastYear:
+                return 'Year';
+
+            case ChartFilterType.ThisFinancialYearToDate:
+            case ChartFilterType.LastFiancialYear:
+                return 'Financial Year';
+            default:
+                return 'Custom';
+        }
+    }
+
+    public renderChart() {
+        this.options = Object.assign({}, this.options, {
+            series: this.series,
+            xAxis: Object.assign({}, this.options.xAxis, {
+                categories: this.categories
+            })
         });
+        this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
+        this.cdRef.detectChanges();
+    }
 
-        while (this.activeYearAccountsRanks.length) {
-            this.activeYearAccountsRanks.pop();
+    public renderPieChart(type = 'current', per) {
+        if (type === 'current') {
+            this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+            this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
+                title: Object.assign({}, this.pieChartOptions.title, {
+                    text: `${per}%`
+                }),
+                series: this.pieChartOptions.series.map(s => {
+                    s.data = this.pieSeries
+                    return s;
+                }),
+            });
+
+            this.oLangWebViewInterface.emit('currentPieSeriesUpdated', {
+                options: this.pieChartOptions,
+                total: this.activeYearGrandAmount,
+                lable: this.activeYearLabel
+            });
+        } else {
+            this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+            this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
+                title: Object.assign({}, this.previousPieChartOptions.title, {
+                    text: `${per}%`
+                }),
+                series: this.previousPieChartOptions.series.map(s => {
+                    s.data = this.pieSeries
+                    return s;
+                }),
+            });
+
+            this.oLangWebViewInterface.emit('previousPieSeriesUpdated', {
+                options: this.previousPieChartOptions,
+                total: this.lastYearGrandAmount,
+                lable: this.lastYearLabel
+            });
         }
-
-        this.activeYearAccountsRanks.push(activeAccounts);
-        this.activeYearGrandAmount = _.sumBy(activeAccounts, 'amount') || 0;
-        this.activePieChartAmount = this.activeYearGrandAmount >= 1 ? 100 : 0;
-
-        while (this.lastYearAccountsRanks.length) {
-            this.lastYearAccountsRanks.pop();
-        }
-
-        this.lastYearAccountsRanks.push(lastAccounts);
-        this.lastYearGrandAmount = _.sumBy(lastAccounts, 'amount') || 0;
-        this.lastPieChartAmount = this.lastYearGrandAmount >= 1 ? 100 : 0;
-
+        this.cdRef.detectChanges();
     }
 
-    public generateActiveYearString(): INameUniqueName[] {
-        let activeStrings: INameUniqueName[] = [];
-        this.activeYearAccounts.map(acc => {
-            activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
-        });
-        return activeStrings;
-    }
+    public seriesSeleted(points) {
+        let activePer = 0;
+        let lastPer = 0;
+        let activePoint = points.current;
+        let lastPoint = points.last;
 
-    public generateLastYearString(): INameUniqueName[] {
-        let lastStrings: INameUniqueName[] = [];
-        this.lastYearAccounts.map(acc => {
-            lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
-        });
-        return lastStrings;
-    }
+        activePer = Number(((activePoint * 100) / this.activeYearGrandAmount).toFixed(2));
+        lastPer = Number(((lastPoint * 100) / this.lastYearGrandAmount).toFixed(2));
 
-
-    public fetchChartData() {
-        this.requestInFlight = true;
-        this.store.dispatch(this._dashboardActions.getExpensesChartDataActiveYear(false));
-        this.store.dispatch(this._dashboardActions.getExpensesChartDataLastYear(false));
-    }
-
-    public calculatePieChartPer(t) {
-        let activeYearIndexTotal = this.activeYearAccountsRanks.getItem(t.pointIndex).amount || 0;
-        let lastYearIndexTotal = this.lastYearAccountsRanks.getItem(t.pointIndex).amount || 0;
-
-        this.selectedSeriesLabel = this.activeYearAccountsRanks.getItem(t.pointIndex).name;
-
-        this.activePieChartAmount = Math.round((activeYearIndexTotal * 100) / this.activeYearGrandAmount) || 0;
-        this.lastPieChartAmount = Math.round((lastYearIndexTotal * 100) / this.lastYearGrandAmount) || 0;
-    }
-
-    public resetActiveYearChartData() {
-        this.activeYearAccounts = [];
-        while (this.activeYearAccountsRanks.length) {
-            this.activeYearAccountsRanks.pop();
-        }
-        // this.activeBarSeries.nativeElement.items.length = 0;
-        // this.activeYearAccountsRanks = new ObservableArray([]);
-        this.activeYearGrandAmount = 0;
-        this.activePieChartAmount = 0;
-    }
-
-    public resetLastYearChartData() {
-        this.lastYearAccounts = [];
-        while (this.lastYearAccountsRanks.length) {
-            this.lastYearAccountsRanks.pop();
-        }
-        // this.lastYearAccountsRanks = new ObservableArray([]);
-        this.lastYearGrandAmount = 0;
-        this.lastPieChartAmount = 0;
-    }
-
-    public openFilters() {
-        this.routerExtensions.router.navigate(['/dashboard', 'filter', this.chartType]);
+        this.renderPieChart('current', activePer);
+        this.renderPieChart('previous', lastPer);
     }
 
     public ngOnDestroy() {

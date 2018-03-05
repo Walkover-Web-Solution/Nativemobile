@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <style>
+        .colorDiv {
+            height: 15px;
+            width: 15px;
+            display: inline-block;
+        }
+
+        .div-cover {
+            margin-top: 20px;
+            margin-left: 20px;
+        }
+    </style>
+
+    <script src="./lib/es6-promise.js"></script>
+    <script src="./lib/nativescript-webview-interface.js"></script>
+    <script src='./lib/highcharts.js'></script>
+    <script src='./lib/exporting.js'></script>
+
+</head>
+
+<body id="body">
+    <span id="debug" style="color:red;font-size: 20px;"></span>
+    <div style="display: flex;flex-direction: column;" id="container">
+
+        <div id="pieChart" style="display: flex;">
+
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" onclick="onChartSelection('current')">
+                <div style="flex:1 0 auto;" id="currentPieSeries"></div>
+                <span id="pieTotal"></span>
+                <span id="pieLable"></span>
+            </div>
+            <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" onclick="onChartSelection('previous')">
+                <div style="flex:1 0 auto" id="previousPieSeries"></div>
+                <span id="previousPieTotal"></span>
+                <span id="previousPieLable"></span>
+            </div>
+
+        </div>
+
+        <div style="flex:1 0 auto" id="mainSeries"></div>
+    </div>
+
+
+    <script type='text/javascript'>
+        (function () {
+            var oWebViewInterface = window.nsWebViewInterface;
+
+            oWebViewInterface.on('dimensions', function (dim) {
+                document.getElementById("body").style.width = window.innerWidth + 'px';
+                document.getElementById('container').style.width = window.innerWidth + 'px';
+                var pieChart = document.getElementById('pieChart');
+                pieChart.style.width = window.innerWidth + 'px';
+                pieChart.firstElementChild.style.width = ((window.innerWidth / 2) - 20) + 'px';
+                pieChart.lastElementChild.style.width = ((window.innerWidth / 2) - 20) + 'px';
+            });
+
+            oWebViewInterface.on('mainSeriesUpdated', function (options) {
+                options.chart.height = 250;
+                options.chart.events.click = function (e) {
+                    oWebViewInterface.emit('seriesSelected', {current: this.hoverPoints[0].y, last: this.hoverPoints[1].y});
+                }
+                Highcharts.chart('mainSeries', options);
+            });
+
+            oWebViewInterface.on('currentPieSeriesUpdated', function (options) {
+                options.options.chart.width = ((window.innerWidth / 2) - 50);
+
+                Highcharts.chart('currentPieSeries', options.options);
+
+                document.getElementById('pieTotal').innerHTML = 'Rs, ' + options.total;
+                document.getElementById('pieLable').innerHTML = options.lable;
+            });
+            oWebViewInterface.on('previousPieSeriesUpdated', function (options) {
+                options.options.chart.width = ((window.innerWidth / 2) - 50);
+
+                Highcharts.chart('previousPieSeries', options.options);
+
+                document.getElementById('previousPieTotal').innerHTML = 'Rs, ' + options.total;
+                document.getElementById('previousPieLable').innerHTML = options.lable;
+            });
+
+        })();
+
+    </script>
+</body>

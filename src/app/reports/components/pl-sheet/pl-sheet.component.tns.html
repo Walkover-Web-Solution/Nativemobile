@@ -1,7 +1,7 @@
 <FlexboxLayout flexDirection="column" padding="0 10">
 
     <FlexboxLayout justifyContent="center" alignItems="center">
-        <Label text="Profit of Last Quater" fontSize="18" textWrap="true"></Label>
+        <Label text="Profit of {{ chartFilterTitle$ | async }}" fontSize="18" textWrap="true"></Label>
     </FlexboxLayout>
 
     <FlexboxLayout justifyContent="space-around" backgroundColor="#E6E6E8" padding="10">

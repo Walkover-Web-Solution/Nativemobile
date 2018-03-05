@@ -6,7 +6,7 @@ import { RouterService } from '../services/router.service';
 @Component({
     selector: 'ns-dashboard',
     moduleId: module.id,
-    templateUrl: `./dashboard.component.html`,
+    templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
@@ -16,7 +16,6 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
-
     }
 
 
