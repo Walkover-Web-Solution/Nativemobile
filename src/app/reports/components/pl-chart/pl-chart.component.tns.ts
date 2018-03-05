@@ -135,7 +135,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: '',
                 innerSize: '90%',
                 data: []
             }],
@@ -181,7 +181,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: '',
                 innerSize: '90%',
                 data: []
             }],
@@ -488,6 +488,4 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
-
-
 }

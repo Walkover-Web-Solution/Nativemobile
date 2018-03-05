@@ -308,7 +308,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
 
 
         this.activeYearAccountsRanks = activeAccounts;
-        this.activeYearGrandAmount = _.sum(activeAccounts) || 0;
+        this.activeYearGrandAmount = Number(_.sum(activeAccounts).toFixed(2)) || 0;
         this.activePieChartAmount = this.activeYearGrandAmount >= 0 ? 100 : 0;
 
         this.lastYearAccountsRanks = lastAccounts;
@@ -319,7 +319,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
             { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
         ];
-        this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
+        this.lastYearGrandAmount = Number(_.sum(lastAccounts).toFixed(2)) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount >= 0 ? 100 : 0;
         this.renderChart();
         this.renderPieChart('current', 100);
