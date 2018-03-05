@@ -1,4 +1,4 @@
-const { resolve, join  } = require("path");
+const { resolve, join } = require("path");
 
 const webpack = require("webpack");
 const nsWebpack = require("nativescript-dev-webpack");
@@ -68,10 +68,12 @@ module.exports = env => {
                 { test: /\.scss$/, exclude: /\/app\.scss$/, use: ["raw-loader", "resolve-url-loader", "sass-loader"] },
 
                 // Compile TypeScript files with ahead-of-time compiler.
-                { test: /.ts$/, use: [
-                    "nativescript-dev-webpack/moduleid-compat-loader",
-                    { loader: "@ngtools/webpack", options: ngToolsWebpackOptions },
-                ]},
+                {
+                    test: /.ts$/, use: [
+                        "nativescript-dev-webpack/moduleid-compat-loader",
+                        { loader: "@ngtools/webpack", options: ngToolsWebpackOptions },
+                    ]
+                },
             ],
         },
         plugins: [
@@ -86,6 +88,7 @@ module.exports = env => {
             // Copy assets to out dir. Add your own globs as needed.
             new CopyWebpackPlugin([
                 { from: "App_Resources/**" },
+                { from: "www/**/*.*" },
                 { from: "fonts/**" },
                 { from: "**/*.jpg" },
                 { from: "**/*.png" },
@@ -130,7 +133,7 @@ module.exports = env => {
             projectRoot: __dirname,
             webpackConfig: config,
             targetArchs: ["arm", "arm64", "ia32"],
-            tnsJavaClassesOptions: { packages: ["tns-core-modules" ] },
+            tnsJavaClassesOptions: { packages: ["tns-core-modules"] },
             useLibs: false
         }));
     }

@@ -8,6 +8,7 @@ export interface IHeaderItem {
 
 @Component({
     selector: 'my-header',
+    moduleId: module.id,
     templateUrl: './my-header.component.html',
     styleUrls: ['./my-header.component.scss']
 })
