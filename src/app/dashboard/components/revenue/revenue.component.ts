@@ -342,16 +342,16 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     }
 
     public seriesSeleted() {
-        let _this: any = this;
+        let __this: any = this;
         let compo: RevenueChartComponent;
 
         arguments[0].forEach(f => compo = f);
 
-        if (_this.hoverPoints && _this.hoverPoints.length > 0) {
+        if (__this.hoverPoints && __this.hoverPoints.length > 0) {
             let activePer = 0;
             let lastPer = 0;
-            let activePoint = _this.hoverPoints[0].y;
-            let lastPoint = _this.hoverPoints[1].y;
+            let activePoint = __this.hoverPoints[0].y;
+            let lastPoint = __this.hoverPoints[1].y;
 
             activePer = Number(((activePoint * 100) / compo.activeYearGrandAmount).toFixed(2));
             lastPer = Number(((lastPoint * 100) / compo.lastYearGrandAmount).toFixed(2));

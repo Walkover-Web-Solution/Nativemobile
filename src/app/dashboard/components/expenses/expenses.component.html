@@ -11,12 +11,12 @@
         <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
             <chart [options]="pieChartOptions"></chart>
             <span>Rs, {{ activeYearGrandAmount | number: '1.2-2' }}</span>
-            <span>{{ pieLable }}</span>
+            <span>{{ activeYearLabel }}</span>
         </div>
         <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;">
             <chart [options]="previousPieChartOptions"></chart>
             <span>Rs, {{ lastYearGrandAmount | number: '1.2-2' }}</span>
-            <span>{{ previousPieLable }}</span>
+            <span>{{ lastYearLabel }}</span>
         </div>
     </div>
 

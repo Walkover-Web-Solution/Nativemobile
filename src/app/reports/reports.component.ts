@@ -21,6 +21,6 @@ export class ReportsComponent {
     }
 
     pageChanged(args) {
-        this.pageTitle = args.index === 0 ? 'Profit And Loss' : 'Balance Sheet';
+        this.pageTitle = args.index === 0 ? 'Profit And Loss' : '3 Sheet';
     }
 }

@@ -53,6 +53,11 @@
 
             oWebViewInterface.on('dimensions', function (dim) {
                 document.getElementById("body").style.width = window.innerWidth + 'px';
+                document.getElementById('container').style.width = window.innerWidth + 'px';
+            });
+
+            oWebViewInterface.on('mainSeriesUpdated', function (options) {
+                Highcharts.chart('mainSeries', options);
             });
 
         })();
