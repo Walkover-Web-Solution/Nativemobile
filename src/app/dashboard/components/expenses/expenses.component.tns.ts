@@ -10,7 +10,7 @@ import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
 import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
 import * as _ from 'lodash';
 import { on as applicationOn, orientationChangedEvent } from "application";
-import { IExpensesChartClosingBalanceResponse, ChartFilterType, IChildGroups } from '../../../models/interfaces/dashboard.interface';
+import { IExpensesChartClosingBalanceResponse, ChartFilterType, IChildGroups, ChartType } from '../../../models/interfaces/dashboard.interface';
 
 const webViewInterfaceModule = require('nativescript-webview-interface');
 
@@ -23,6 +23,7 @@ const webViewInterfaceModule = require('nativescript-webview-interface');
 export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild("myWebView") webViewRef: ElementRef;
     public webViewSRC = "~/www/expensesChart.html";
+    public chartType = ChartType.Expense;
     public lastPieChartAmount: number;
     public lastYearGrandAmount: any;
     public activePieChartAmount: number;
@@ -50,7 +51,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-    constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions) {
+    constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
         this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         this.options = {
@@ -59,10 +60,10 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                 events: {}
             },
             title: {
-                text: 'Monthly Average Rainfall'
+                text: ''
             },
             subtitle: {
-                text: 'Source: WorldClimate.com'
+                text: ''
             },
             xAxis: {
                 categories: [],
@@ -71,7 +72,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Rainfall (mm)'
+                    text: ''
                 }
             },
             tooltip: {
@@ -93,7 +94,10 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                 buttonOptions: {
                     enabled: false
                 }
-            }
+            },
+            credits: {
+                enabled: false
+              }
         };
         this.pieChartOptions = {
             chart: {
@@ -352,7 +356,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             })
         });
         this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
-        // this.cdRef.detectChanges();
+        this.cdRef.detectChanges();
     }
 
     public renderPieChart(type = 'current', per) {
@@ -391,7 +395,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                 lable: this.lastYearLabel
             });
         }
-        // this.cdRef.detectChanges();
+        this.cdRef.detectChanges();
     }
 
     public openFilter() {

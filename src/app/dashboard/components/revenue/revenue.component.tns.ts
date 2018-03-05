@@ -5,7 +5,7 @@ import { AppState } from '../../../store';
 import { Page } from '../../../common/utils/environment';
 import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
 import { Observable } from 'rxjs/Observable';
-import { IRevenueChartClosingBalanceResponse, ChartFilterType, IChildGroups } from '../../../models/interfaces/dashboard.interface';
+import { IRevenueChartClosingBalanceResponse, ChartFilterType, IChildGroups, ChartType } from '../../../models/interfaces/dashboard.interface';
 import { AccountChartDataLastCurrentYear } from '../../../models/view-models/AccountChartDataLastCurrentYear';
 import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
 import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
@@ -24,6 +24,7 @@ const webViewInterfaceModule = require('nativescript-webview-interface');
 export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild("myWebView") webViewRef: ElementRef;
     public webViewSRC = "~/www/revenueChart.html";
+    public chartType = ChartType.Revenue;
     public options: any;
     public pieChartOptions: any;
     public previousPieChartOptions: any;
@@ -59,10 +60,10 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             },
             title: {
-                text: 'Monthly Average Rainfall'
+                text: ''
             },
             subtitle: {
-                text: 'Source: WorldClimate.com'
+                text: ''
             },
             xAxis: {
                 categories: [],
@@ -71,7 +72,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Rainfall (mm)'
+                    text: ''
                 }
             },
             tooltip: {
@@ -93,6 +94,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 buttonOptions: {
                     enabled: false
                 }
+            },
+            credits: {
+                enabled: false
             }
         };
         this.pieChartOptions = {
@@ -352,6 +356,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             })
         });
         this.oLangWebViewInterface.emit('mainSeriesUpdated', this.options);
+        this.cdRef.detectChanges();
     }
 
     public renderPieChart(type = 'current', per) {
@@ -391,7 +396,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
 
         }
-        // this.cdRef.detectChanges();
+        this.cdRef.detectChanges();
     }
 
     public openFilter() {

@@ -24,6 +24,7 @@ import { localStorageSync } from './store/middleware/rehydrateAppState';
 import { NeedsAuthentication } from './decorators/needsAuthentication';
 import * as elementRegistryModule from 'nativescript-angular/element-registry';
 import { Fab } from 'nativescript-floatingactionbutton';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 Config.PLATFORM_TARGET = Config.PLATFORMS.MOBILE_NATIVE;
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -59,6 +60,9 @@ elementRegistryModule.registerElement("FilterSelect", () => require("nativescrip
         NativeScriptRouterModule,
         NativeScriptRouterModule.forRoot(AppRoutes, { enableTracing: false }),
         StoreModule.forRoot(reducers, { metaReducers }),
+        StoreDevtoolsModule.instrument({
+            maxAge: 25, // Retains last 25 states
+        }),
         ServiceModule.forRoot(),
         ActionModule.forRoot(),
         ...SHARED_MODULES

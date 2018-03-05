@@ -1,4 +1,12 @@
 <StackLayout padding="0 10">
-    <WebView row="0" col="0" #myWebView [src]="webViewSRC">
+
+    <FlexboxLayout justifyContent="space-between" margin="10">
+        <Label text="Revenue ({{ chartFilterTitle }})" class="gen-font-color"></Label>
+        <Label text="&#xf1de;" fontSize="20" [nsRouterLink]="['/dashboard','filter', chartType]" class="" fontFamily="FontAwesome"></Label>
+    </FlexboxLayout>
+
+    <StackLayout class="hr-light"></StackLayout>
+
+    <WebView #myWebView [src]="webViewSRC">
     </WebView>
 </StackLayout>

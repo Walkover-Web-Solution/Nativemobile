@@ -59,10 +59,10 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
                 }
             },
             title: {
-                text: 'Monthly Average Rainfall'
+                text: ''
             },
             subtitle: {
-                text: 'Source: WorldClimate.com'
+                text: ''
             },
             xAxis: {
                 categories: [],
@@ -71,7 +71,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Rainfall (mm)'
+                    text: ''
                 }
             },
             tooltip: {
