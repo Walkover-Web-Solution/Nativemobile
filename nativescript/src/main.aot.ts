@@ -11,7 +11,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/combineLatest';
 
-// import './socialLogin';
+import './socialLogin';
 // "./app.module.ngfactory" is a dynamically generated module when compiled with AoT.
 import { AppModuleNgFactory } from "./app/app.module.ngfactory";
 import { enableProdMode } from "@angular/core";

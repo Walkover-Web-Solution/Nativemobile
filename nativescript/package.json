@@ -62,6 +62,7 @@
     "rxjs": "^5.5.0",
     "tns-core-modules": "^3.4.0",
     "typescript": "~2.6.0",
+    "tns-platform-declarations": "3.4.0",
     "url-parse": "^1.2.0",
     "zone.js": "^0.8.16"
   },
