@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, Optional, Inject } from "@angular/core";
 import { Effect, Actions } from '@ngrx/effects';
 import { Observable } from "rxjs/Observable";
 
@@ -12,6 +12,7 @@ import { HttpHeaders, HttpClient } from "@angular/common/http";
 import { Configuration } from "../../app.constants";
 import { ToasterService } from "../../services/toaster.service";
 import { PURCHASE_INVOICE_API } from "../../services/apiurls/purchase-invoice.api";
+import { ServiceConfig, IServiceConfigArgs } from "../../services/service.config";
 
 @Injectable()
 
@@ -181,7 +182,7 @@ export class LoginActions {
             args.headers['Accept'] = 'application/json';
             args.headers['Access-Token'] = action.payload;
             args.headers = new HttpHeaders(args.headers);
-            return this.http.get(Configuration.ApiUrl + 'v2/login-with-linkedIn', {
+            return this.http.get(this.config.apiUrl + 'v2/login-with-linkedIn', {
                 headers: args.headers,
                 responseType: 'json'
             }).map(p => p as BaseResponse<VerifyEmailResponseModel, string>);
@@ -196,7 +197,7 @@ export class LoginActions {
         });
 
     constructor(private actions$: Actions, private _authService: AuthenticationService, public http: HttpClient,
-        private _toaster: ToasterService) {
+        private _toaster: ToasterService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
 
     }
 
