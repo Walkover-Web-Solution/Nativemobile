@@ -166,6 +166,28 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public googleLogin() {
         let SocialLogin = require('nativescript-social-login-linkedin');
+        // let result = SocialLogin.init({
+        //     activity: args.activity,
+        //     google: {
+        //       initialize: true,
+        //       isRequestAuthCode: true,
+        //       serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
+        //       shouldFetchBasicProfile: true
+        //     },
+        //     facebook: {
+        //       initialize: false
+        //     },
+        //     linkedin: {
+        //       clientId: '75urm0g3386r26',
+        //       clientSecret: '3AJTvaKNOEG4ISJ0',
+        //       permissions: ["r_basicprofile", "r_emailaddress"],
+        //       state: '',
+        //       redirectUri: "https://giddh.com/login"
+        //     },
+
+        //     onActivityResult: (requestCode: number, resultCode: number, data: any) => {
+        //     }
+        //   });
         SocialLogin.loginWithGoogle((result) => {
             if (result.error || !result.authCode) {
                 this._toaster.errorToast('Something Went Wrong! Please Try Again');

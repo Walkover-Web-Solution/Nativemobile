@@ -112,6 +112,8 @@ export class HomeComponent implements OnInit, OnDestroy {
             cancelButtonText: 'No'
         }).then(r => {
             if (r) {
+                let SocialLogin = require('nativescript-social-login-linkedin');
+                debugger;
                 this.store.dispatch(this._loginActions.logout());
                 (this.routerExtensions.router as any).navigateByUrl('/login', { clearHistory: true });
             }
