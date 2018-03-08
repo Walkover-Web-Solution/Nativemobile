@@ -59,7 +59,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.options = {
             chart: {
                 type: 'column',
-                height: 100
+                height: 0
             },
             title: {
                 text: ''
@@ -111,7 +111,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 enabled: false
             },
             title: {
-                text: '100%',
+                text: '0%',
                 verticalAlign: 'middle',
                 horizontalAlign: 'middle'
             },
@@ -157,7 +157,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 enabled: false
             },
             title: {
-                text: '100%',
+                text: '0%',
                 verticalAlign: 'middle',
                 horizontalAlign: 'middle'
             },

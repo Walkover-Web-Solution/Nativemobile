@@ -265,7 +265,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
         this.activeYearAccountsRanks = activeAccounts;
         this.activeYearGrandAmount = _.sum(activeAccounts) || 0;
-        this.activePieChartAmount = this.activeYearGrandAmount >= 0 ? 100 : 0;
+        this.activePieChartAmount = this.activeYearGrandAmount > 0 ? 100 : 0;
 
         this.lastYearAccountsRanks = lastAccounts;
         this.categories = categories;
@@ -276,10 +276,10 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
         ];
         this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
-        this.lastPieChartAmount = this.lastYearGrandAmount >= 0 ? 100 : 0;
+        this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
         this.renderChart();
-        this.renderPieChart('current', 100);
-        this.renderPieChart('previous', 100);
+        this.renderPieChart('current', this.activePieChartAmount);
+        this.renderPieChart('previous', this.lastPieChartAmount);
     }
 
     public genSeriesName(filterType: ChartFilterType) {

@@ -359,7 +359,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     return s;
                 }),
                 title: Object.assign({}, this.pieChartOptions.title, {
-                    text: `100%`
+                    text: `0%`
                 })
             });
         } else {
@@ -369,7 +369,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     return s;
                 }),
                 title: Object.assign({}, this.previousPieChartOptions.title, {
-                    text: `100%`
+                    text: `0%`
                 })
             });
         }
