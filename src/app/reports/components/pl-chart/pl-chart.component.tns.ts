@@ -393,6 +393,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 series: this.pieChartOptions.series.map(s => {
                     s.data = this.pieSeries;
                     return s;
+                }),
+                title: Object.assign({}, this.pieChartOptions.title, {
+                    text: this.pieTotal > 0 ? '100%' : '0%'
                 })
             });
             this.oLangWebViewInterface.emit('currentPieSeriesUpdated', {
@@ -405,6 +408,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 series: this.previousPieChartOptions.series.map(s => {
                     s.data = this.previousPieSeries
                     return s;
+                }),
+                title: Object.assign({}, this.previousPieChartOptions.title, {
+                    text: this.previousPieTotal > 0 ? '100%' : '0%'
                 })
             });
             this.oLangWebViewInterface.emit('previousPieSeriesUpdated', {
