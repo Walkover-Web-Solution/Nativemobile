@@ -75,4 +75,8 @@ export class TaxesComponent implements OnInit {
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
+
+    public editTax(uniqueName: string) {
+        this.routerExtensions.router.navigate(['/settings', 'create-taxes', uniqueName]);
+    }
 }

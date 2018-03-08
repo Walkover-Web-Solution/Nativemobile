@@ -26,7 +26,7 @@
 
                     <ListView row="1" [items]="taxList$ | async" class="">
                         <ng-template let-item="item" let-i="index">
-                            <StackLayout [nsRouterLink]="['/create-taxes', item.uniqueName]">
+                            <StackLayout (tap)="editTax(item.uniqueName)">
                                 <Label class="gen-label-style gen-font-style" verticalAlignment="bottom" text="{{ item.name }}" textWrap="true"></Label>
                             </StackLayout>
                         </ng-template>
