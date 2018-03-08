@@ -433,7 +433,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         //#endregion
 
         case ReportConst.SET_REPORT_FILTER_TYPE: {
-            if (action.payload.filterType === ChartFilterType.Custom) {
+            if (action.payload.filterObj.filterType === ChartFilterType.Custom) {
                 return Object.assign({}, state, {
                     profitLossChartFilter: action.payload.filterObj.filterType,
                     profirLossChartFilterTitle: action.payload.filterObj.filterTitle,

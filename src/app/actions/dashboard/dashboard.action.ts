@@ -14,6 +14,7 @@ import { AppState } from "../../store";
 import { Store, createSelector } from "@ngrx/store";
 
 import { of } from "rxjs/observable/of";
+import { ToasterService } from "../../services/toaster.service";
 
 
 @Injectable()
@@ -91,6 +92,7 @@ export class DashboardActions {
                     payload: obj
                 };
             } else {
+                this._toasterService.errorToast('Something Went Wrong Please Try Again!');
                 let obj: IExpensesChartClosingBalanceResponse = {};
                 obj.chartTitle = res[2].ChartTitle;
                 obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
@@ -177,6 +179,7 @@ export class DashboardActions {
                     payload: obj
                 };
             } else {
+                this._toasterService.errorToast('Something Went Wrong Please Try Again!');
                 let obj: IRevenueChartClosingBalanceResponse = {};
 
                 obj.otherincomeActiveyear = null;
@@ -196,7 +199,7 @@ export class DashboardActions {
 
 
 
-    constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>) {
+    constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>, private _toasterService: ToasterService) {
 
     }
 
