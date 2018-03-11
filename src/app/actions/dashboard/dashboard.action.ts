@@ -20,8 +20,8 @@ import { ToasterService } from "../../services/toaster.service";
 @Injectable()
 export class DashboardActions {
     @Effect()
-    public GetExpensesChartData$: Observable<CustomActions> = this.actions$
-        .ofType(DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA)
+    public GetExpensesChartDataActiveYear$: Observable<CustomActions> = this.actions$
+        .ofType(DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR)
         .switchMap((action: CustomActions) => {
             let filterType: ChartFilterType;
             let activeFinancialYear: ActiveFinancialYear;
@@ -59,36 +59,24 @@ export class DashboardActions {
             });
             let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
             return zip(
-                this._dashboardService.GetClosingBalanceV2(['operatingcost', 'indirectexpenses'], op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
-                this._dashboardService.GetClosingBalanceV2(['operatingcost', 'indirectexpenses'], op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
+                this._dashboardService.GetClosingBalance('operatingcost', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
+                this._dashboardService.GetClosingBalance('indirectexpenses', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
                 of(op)
             );
         }).map((res) => {
 
             if (res[0].status === 'success' && res[1].status === 'success') {
-                let obj: IExpensesChartClosingBalanceResponse = {};
+                let obj: IExpensesChartClosingBalanceResponse = {
+                    operatingcostActiveyear: res[0].body,
+                    indirectexpensesActiveyear: res[1].body
+                };
 
-                res[0].body.forEach(rbd => {
-                    if (rbd.uniqueName === 'operatingcost') {
-                        obj.operatingcostActiveyear = rbd;
-                    } else if (rbd.uniqueName === 'indirectexpenses') {
-                        obj.indirectexpensesActiveyear = rbd;
-                    }
-                });
-
-                res[1].body.forEach(rbd => {
-                    if (rbd.uniqueName === 'operatingcost') {
-                        obj.operatingcostLastyear = rbd;
-                    } else if (rbd.uniqueName === 'indirectexpenses') {
-                        obj.indirectexpensesLastyear = rbd;
-                    }
-                });
 
                 obj.chartTitle = res[2].ChartTitle;
                 obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
-                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_RESPONSE,
+                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
                     payload: obj
                 };
             } else {
@@ -97,19 +85,93 @@ export class DashboardActions {
                 obj.chartTitle = res[2].ChartTitle;
                 obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
                 obj.operatingcostActiveyear = null;
-                obj.operatingcostLastyear = null;
                 obj.indirectexpensesActiveyear = null;
-                obj.indirectexpensesLastyear = null;
 
                 return {
-                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ERROR_RESPONSE,
+                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR,
                     payload: obj
                 };
             }
         });
+
     @Effect()
-    public GetRevenueChartData$: Observable<CustomActions> = this.actions$
-        .ofType(DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA)
+    public GetExpensesChartDataLastYear$: Observable<CustomActions> = this.actions$
+        .ofType(DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR)
+        .switchMap((action: CustomActions) => {
+            let filterType: ChartFilterType;
+            let activeFinancialYear: ActiveFinancialYear;
+            let lastFinancialYear: ActiveFinancialYear;
+            let customFilterObj: ChartCustomFilter;
+            this.store.select(p => p.dashboard.expensesChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
+            this.store.select(s => s.dashboard.expensesChartFilter).take(1).subscribe(p => filterType = p);
+            this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+                return { companies, uniqueName };
+            })).take(1).subscribe(res => {
+                if (!res.companies) {
+                    return;
+                }
+                let financialYears = [];
+                let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                if (activeCmp) {
+                    activeFinancialYear = activeCmp.activeFinancialYear;
+
+                    if (activeCmp.financialYears.length > 1) {
+                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+
+                            return b.diff(a, 'days') < 0;
+                        });
+                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            return b.diff(a, 'days');
+                        }, 'desc');
+                        lastFinancialYear = financialYears[0];
+                    }
+                }
+            });
+            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
+            return zip(
+                this._dashboardService.GetClosingBalance('operatingcost', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
+                this._dashboardService.GetClosingBalance('indirectexpenses', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
+                of(op)
+            );
+        }).map((res) => {
+
+            if (res[0].status === 'success' && res[1].status === 'success') {
+                let obj: IExpensesChartClosingBalanceResponse = {
+                    operatingcostLastyear: res[0].body,
+                    indirectexpensesLastyear: res[1].body
+                };
+
+
+                obj.chartTitle = res[2].ChartTitle;
+                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+
+                return {
+                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
+                    payload: obj
+                };
+            } else {
+                this._toasterService.errorToast('Something Went Wrong Please Try Again!');
+                let obj: IExpensesChartClosingBalanceResponse = {};
+                obj.chartTitle = res[2].ChartTitle;
+                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.operatingcostLastyear = null;
+                obj.indirectexpensesLastyear = null;
+
+                return {
+                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_ERROR,
+                    payload: obj
+                };
+            }
+        });
+
+    @Effect()
+    public GetRevenueChartDataActiveYar$: Observable<CustomActions> = this.actions$
+        .ofType(DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR)
         .switchMap((action: CustomActions) => {
             let filterType: ChartFilterType;
             let activeFinancialYear: ActiveFinancialYear;
@@ -147,35 +209,22 @@ export class DashboardActions {
             });
             let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
             return zip(
-                this._dashboardService.GetClosingBalanceV2(['revenuefromoperations', 'otherincome'], op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
-                this._dashboardService.GetClosingBalanceV2(['revenuefromoperations', 'otherincome'], op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
+                this._dashboardService.GetClosingBalance('revenuefromoperations', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
+                this._dashboardService.GetClosingBalance('otherincome', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
                 of(op)
             );
         }).map((res) => {
             if (res[0].status === 'success' && res[1].status === 'success') {
-                let obj: IRevenueChartClosingBalanceResponse = {};
-
-                res[0].body.forEach(rbd => {
-                    if (rbd.uniqueName === 'revenuefromoperations') {
-                        obj.revenuefromoperationsActiveyear = rbd;
-                    } else if (rbd.uniqueName === 'otherincome') {
-                        obj.otherincomeActiveyear = rbd;
-                    }
-                });
-
-                res[1].body.forEach(rbd => {
-                    if (rbd.uniqueName === 'revenuefromoperations') {
-                        obj.revenuefromoperationsLastyear = rbd;
-                    } else if (rbd.uniqueName === 'otherincome') {
-                        obj.otherincomeLastyear = rbd;
-                    }
-                });
+                let obj: IRevenueChartClosingBalanceResponse = {
+                    revenuefromoperationsActiveyear: res[0].body,
+                    otherincomeActiveyear: res[1].body,
+                };
 
                 obj.chartTitle = res[2].ChartTitle;
                 obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
-                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_RESPONSE,
+                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE,
                     payload: obj
                 };
             } else {
@@ -183,15 +232,90 @@ export class DashboardActions {
                 let obj: IRevenueChartClosingBalanceResponse = {};
 
                 obj.otherincomeActiveyear = null;
-                obj.otherincomeLastyear = null;
                 obj.revenuefromoperationsActiveyear = null;
+
+                obj.chartTitle = res[2].ChartTitle;
+                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+
+                return {
+                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR,
+                    payload: obj
+                };
+            }
+        });
+
+    @Effect()
+    public GetRevenueChartDataLastYear$: Observable<CustomActions> = this.actions$
+        .ofType(DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR)
+        .switchMap((action: CustomActions) => {
+            let filterType: ChartFilterType;
+            let activeFinancialYear: ActiveFinancialYear;
+            let lastFinancialYear: ActiveFinancialYear;
+            let customFilterObj: ChartCustomFilter;
+            this.store.select(p => p.dashboard.revenueChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
+            this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(p => filterType = p);
+            this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+                return { companies, uniqueName };
+            })).take(1).subscribe(res => {
+                if (!res.companies) {
+                    return;
+                }
+                let financialYears = [];
+                let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                if (activeCmp) {
+                    activeFinancialYear = activeCmp.activeFinancialYear;
+
+                    if (activeCmp.financialYears.length > 1) {
+                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+
+                            return b.diff(a, 'days') < 0;
+                        });
+                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            return b.diff(a, 'days');
+                        }, 'desc');
+                        lastFinancialYear = financialYears[0];
+                    }
+                }
+            });
+            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
+            return zip(
+                this._dashboardService.GetClosingBalance('revenuefromoperations', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
+                this._dashboardService.GetClosingBalance('otherincome', op.lastYear.startDate, op.lastYear.endDate, action.payload.refresh),
+                of(op)
+            );
+        }).map((res) => {
+            if (res[0].status === 'success' && res[1].status === 'success') {
+                let obj: IRevenueChartClosingBalanceResponse = {
+                    revenuefromoperationsLastyear: res[0].body,
+                    otherincomeLastyear: res[1].body,
+                };
+
+
+
+                obj.chartTitle = res[2].ChartTitle;
+                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+
+                return {
+                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE,
+                    payload: obj
+                };
+            } else {
+                this._toasterService.errorToast('Something Went Wrong Please Try Again!');
+                let obj: IRevenueChartClosingBalanceResponse = {};
+
+                obj.otherincomeLastyear = null;
                 obj.revenuefromoperationsLastyear = null;
 
                 obj.chartTitle = res[2].ChartTitle;
                 obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
-                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE,
+                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR,
                     payload: obj
                 };
             }
@@ -199,20 +323,35 @@ export class DashboardActions {
 
 
 
-    constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>, private _toasterService: ToasterService) {
+    constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
+        private _toasterService: ToasterService) {
 
     }
 
-    public getExpensesChartData(refresh: boolean = false): CustomActions {
+    public getActiveYearExpensesChartData(refresh: boolean = false): CustomActions {
         return {
-            type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA,
+            type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR,
             payload: { refresh }
         };
     }
 
-    public getRevenueChartData(refresh: boolean = false): CustomActions {
+    public getLastYearExpensesChartData(refresh: boolean = false): CustomActions {
         return {
-            type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA,
+            type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR,
+            payload: { refresh }
+        };
+    }
+
+    public getActiveYearRevenueChartData(refresh: boolean = false): CustomActions {
+        return {
+            type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR,
+            payload: { refresh }
+        };
+    }
+
+    public getLastYearRevenueChartData(refresh: boolean = false): CustomActions {
+        return {
+            type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR,
             payload: { refresh }
         };
     }
@@ -342,8 +481,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
 
             config.legend = ['Month 1', 'Month 2', 'Month 3'];
             return config;
-        case ChartFilterType.LastFiancialYear: {
-            // Last Fiancial Year
+        case ChartFilterType.LastFiancialYear: { // Last Fiancial Year
             config.ChartTitle = 'Last Fiancial Year';
             let activeLegend = [];
             let lastLegend = [];

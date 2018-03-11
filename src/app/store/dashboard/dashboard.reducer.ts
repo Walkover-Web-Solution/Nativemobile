@@ -50,13 +50,42 @@ const initialState: DashboardState = {
 export function DashboardReducer(state: DashboardState = initialState, action: CustomActions): DashboardState {
     switch (action.type) {
         // region revenue chart
-        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_RESPONSE: {
+        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE: {
             let data = action.payload as IRevenueChartClosingBalanceResponse;
             return Object.assign({}, state, {
-                revenueChart: data
+                revenueChart: Object.assign({}, state.revenueChart, {
+                    revenuefromoperationsActiveyear: data.revenuefromoperationsActiveyear,
+                    otherincomeActiveyear: data.otherincomeActiveyear,
+                    chartTitle: data.chartTitle,
+                    lable: Object.assign({}, state.revenueChart.lable, {
+                        activeYearLabel: data.lable.activeYearLabel
+                    })
+                })
             });
         }
-        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ERROR_RESPONSE: {
+        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE: {
+            let data = action.payload as IRevenueChartClosingBalanceResponse;
+            return Object.assign({}, state, {
+                revenueChart: Object.assign({}, state.revenueChart, {
+                    revenuefromoperationsLastyear: data.revenuefromoperationsLastyear,
+                    otherincomeLastyear: data.otherincomeLastyear,
+                    chartTitle: data.chartTitle,
+                    lable: Object.assign({}, state.revenueChart.lable, {
+                        lastYearLabel: data.lable.activeYearLabel
+                    })
+                })
+            });
+        }
+        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR: {
+            return Object.assign({}, state, {
+                revenueChart: Object.assign({}, state.revenueChart, {
+                    chartTitle: '', lable: { activeYearLabel: '' }, otherincomeActiveyear: null,
+                    revenuefromoperationsActiveyear: null
+                }),
+                revenueChartError: 'Something Went Wrong'
+            })
+        }
+        case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR: {
             return Object.assign({}, state, {
                 revenueChart: action.payload,
                 revenueChartError: 'Something Went Wrong'
