@@ -151,7 +151,7 @@ export class DashboardActions {
                 obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
-                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
+                    type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE,
                     payload: obj
                 };
             } else {

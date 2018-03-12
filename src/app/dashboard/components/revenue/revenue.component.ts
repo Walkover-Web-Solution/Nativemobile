@@ -217,6 +217,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public fetchChartData() {
         this.store.dispatch(this._dashboardActions.getActiveYearRevenueChartData());
+        this.store.dispatch(this._dashboardActions.getLastYearRevenueChartData());
     }
 
     public generateActiveYearString(): INameUniqueName[] {
