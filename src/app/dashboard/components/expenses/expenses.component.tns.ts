@@ -261,7 +261,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     public fetchChartData() {
-        this.store.dispatch(this._dashboardActions.getExpensesChartData());
+        this.store.dispatch(this._dashboardActions.getActiveYearExpensesChartData());
+        this.store.dispatch(this._dashboardActions.getLastYearExpensesChartData());
     }
 
     public generateActiveYearString(): INameUniqueName[] {

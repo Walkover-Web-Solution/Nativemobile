@@ -206,7 +206,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public fetchChartData() {
-        this.store.dispatch(this._dashboardActions.getRevenueChartData());
+        this.store.dispatch(this._dashboardActions.getActiveYearRevenueChartData());
+        this.store.dispatch(this._dashboardActions.getLastYearRevenueChartData());
     }
 
     private setupWebViewInterface() {
