@@ -67,13 +67,13 @@ export class DashboardActions {
 
             if (res[0].status === 'success' && res[1].status === 'success') {
                 let obj: IExpensesChartClosingBalanceResponse = {
-                    operatingcostActiveyear: res[0].body,
-                    indirectexpensesActiveyear: res[1].body
+                    operatingcostActiveyear: res[0].body[0],
+                    indirectexpensesActiveyear: res[1].body[0]
                 };
 
 
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
                     type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
@@ -83,7 +83,7 @@ export class DashboardActions {
                 this._toasterService.errorToast('Something Went Wrong Please Try Again!');
                 let obj: IExpensesChartClosingBalanceResponse = {};
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
                 obj.operatingcostActiveyear = null;
                 obj.indirectexpensesActiveyear = null;
 
@@ -142,13 +142,13 @@ export class DashboardActions {
 
             if (res[0].status === 'success' && res[1].status === 'success') {
                 let obj: IExpensesChartClosingBalanceResponse = {
-                    operatingcostLastyear: res[0].body,
-                    indirectexpensesLastyear: res[1].body
+                    operatingcostLastyear: res[0].body[0],
+                    indirectexpensesLastyear: res[1].body[0]
                 };
 
 
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
                     type: DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE,
@@ -158,7 +158,7 @@ export class DashboardActions {
                 this._toasterService.errorToast('Something Went Wrong Please Try Again!');
                 let obj: IExpensesChartClosingBalanceResponse = {};
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
                 obj.operatingcostLastyear = null;
                 obj.indirectexpensesLastyear = null;
 
@@ -216,12 +216,12 @@ export class DashboardActions {
         }).map((res) => {
             if (res[0].status === 'success' && res[1].status === 'success') {
                 let obj: IRevenueChartClosingBalanceResponse = {
-                    revenuefromoperationsActiveyear: res[0].body,
-                    otherincomeActiveyear: res[1].body,
+                    revenuefromoperationsActiveyear: res[0].body[0],
+                    otherincomeActiveyear: res[1].body[0],
                 };
 
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
                     type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE,
@@ -235,7 +235,7 @@ export class DashboardActions {
                 obj.revenuefromoperationsActiveyear = null;
 
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
                     type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR,
@@ -291,14 +291,14 @@ export class DashboardActions {
         }).map((res) => {
             if (res[0].status === 'success' && res[1].status === 'success') {
                 let obj: IRevenueChartClosingBalanceResponse = {
-                    revenuefromoperationsLastyear: res[0].body,
-                    otherincomeLastyear: res[1].body,
+                    revenuefromoperationsLastyear: res[0].body[0],
+                    otherincomeLastyear: res[1].body[0],
                 };
 
 
 
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
                     type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE,
@@ -312,7 +312,7 @@ export class DashboardActions {
                 obj.revenuefromoperationsLastyear = null;
 
                 obj.chartTitle = res[2].ChartTitle;
-                obj.lable = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
                 return {
                     type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR,

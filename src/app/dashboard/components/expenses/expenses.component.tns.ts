@@ -245,9 +245,9 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                         this.chartFilterTitle = exp.chartTitle;
                     }
 
-                    if (exp && exp.lable) {
-                        this.activeYearLabel = exp.lable.activeYearLabel || '';
-                        this.lastYearLabel = exp.lable.lastYearLabel || '';
+                    if (exp && exp.label) {
+                        this.activeYearLabel = exp.label.activeYearLabel || '';
+                        this.lastYearLabel = exp.label.lastYearLabel || '';
                     }
 
                     this.generateCharts();

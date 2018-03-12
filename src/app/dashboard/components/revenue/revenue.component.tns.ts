@@ -249,9 +249,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.chartFilterTitle = rvn.chartTitle;
                     }
 
-                    if (rvn && rvn.lable) {
-                        this.activeYearLabel = rvn.lable.activeYearLabel || '';
-                        this.lastYearLabel = rvn.lable.lastYearLabel || '';
+                    if (rvn && rvn.label) {
+                        this.activeYearLabel = rvn.label.activeYearLabel || '';
+                        this.lastYearLabel = rvn.label.lastYearLabel || '';
                     }
 
                     this.generateCharts();

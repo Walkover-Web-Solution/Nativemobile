@@ -18,11 +18,11 @@ export interface DashboardState {
 
 const initialState: DashboardState = {
     expensesChart: {
-        chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, indirectexpensesActiveyear: null,
+        chartTitle: '', label: { activeYearLabel: '', lastYearLabel: '' }, indirectexpensesActiveyear: null,
         indirectexpensesLastyear: null, operatingcostActiveyear: null, operatingcostLastyear: null
     },
     revenueChart: {
-        chartTitle: '', lable: { activeYearLabel: '', lastYearLabel: '' }, otherincomeActiveyear: null,
+        chartTitle: '', label: { activeYearLabel: '', lastYearLabel: '' }, otherincomeActiveyear: null,
         otherincomeLastyear: null, revenuefromoperationsActiveyear: null, revenuefromoperationsLastyear: null
     },
     expensesChartError: '',
@@ -57,8 +57,8 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                     revenuefromoperationsActiveyear: data.revenuefromoperationsActiveyear,
                     otherincomeActiveyear: data.otherincomeActiveyear,
                     chartTitle: data.chartTitle,
-                    lable: Object.assign({}, state.revenueChart.lable, {
-                        activeYearLabel: data.lable.activeYearLabel
+                    label: Object.assign({}, state.revenueChart.label, {
+                        activeYearLabel: data.label.activeYearLabel
                     })
                 })
             });
@@ -70,8 +70,8 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                     revenuefromoperationsLastyear: data.revenuefromoperationsLastyear,
                     otherincomeLastyear: data.otherincomeLastyear,
                     chartTitle: data.chartTitle,
-                    lable: Object.assign({}, state.revenueChart.lable, {
-                        lastYearLabel: data.lable.activeYearLabel
+                    label: Object.assign({}, state.revenueChart.label, {
+                        lastYearLabel: data.label.activeYearLabel
                     })
                 })
             });
@@ -79,7 +79,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR: {
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
-                    chartTitle: '', lable: { activeYearLabel: '' }, otherincomeActiveyear: null,
+                    chartTitle: '', label: { activeYearLabel: '' }, otherincomeActiveyear: null,
                     revenuefromoperationsActiveyear: null
                 }),
                 revenueChartError: 'Something Went Wrong'
@@ -87,26 +87,70 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         }
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR: {
             return Object.assign({}, state, {
-                revenueChart: action.payload,
+                revenueChart: Object.assign({}, state.revenueChart, {
+                    chartTitle: '', label: { lastYearLabel: '' }, otherincomeLastyear: null,
+                    revenuefromoperationsLastyear: null
+                }),
                 revenueChartError: 'Something Went Wrong'
             })
         }
         // endregion
 
         // region expenses chart
-        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_RESPONSE: {
+        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE: {
             let data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
-                expensesChart: data
+                expensesChart: Object.assign({}, state.expensesChart, {
+                    operatingcostActiveyear: data.operatingcostActiveyear,
+                    indirectexpensesActiveyear: data.indirectexpensesActiveyear,
+                    chartTitle: data.chartTitle,
+                    label: Object.assign({}, state.expensesChart.label, {
+                        activeYearLabel: data.label.activeYearLabel
+                    })
+                })
             });
         }
 
-        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ERROR_RESPONSE: {
+        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE: {
+            let data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
-                expensesChart: action.payload,
+                expensesChart: Object.assign({}, state.expensesChart, {
+                    operatingcostLastyear: data.operatingcostLastyear,
+                    indirectexpensesLastyear: data.indirectexpensesLastyear,
+                    chartTitle: data.chartTitle,
+                    label: Object.assign({}, state.expensesChart.label, {
+                        lastYearLabel: data.label.lastYearLabel
+                    })
+                })
+            });
+        }
+
+        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR: {
+            return Object.assign({}, state, {
+                expensesChart: Object.assign({}, state.expensesChart, {
+                    operatingcostActiveyear: '', indirectexpensesActiveyear: '',
+                    chartTitle: '',
+                    label: Object.assign({}, state.expensesChart.label, {
+                        activeYearLabel: ''
+                    })
+                }),
                 expensesChartFilter: 'Something Went Wrong'
             })
         }
+
+        case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_ERROR: {
+            return Object.assign({}, state, {
+                expensesChart: Object.assign({}, state.expensesChart, {
+                    operatingcostLastyear: '', indirectexpensesLastyear: '',
+                    chartTitle: '',
+                    label: Object.assign({}, state.expensesChart.label, {
+                        lastYearLabel: ''
+                    })
+                }),
+                expensesChartFilter: 'Something Went Wrong'
+            })
+        }
+
         // endregion
 
         // region set chart filter

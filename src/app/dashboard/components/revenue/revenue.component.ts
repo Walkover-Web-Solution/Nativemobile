@@ -199,9 +199,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
                 this.chartFilterTitle = rvn.chartTitle;
             }
 
-            if (rvn && rvn.lable) {
-                this.activeYearLabel = rvn.lable.activeYearLabel || '';
-                this.lastYearLabel = rvn.lable.lastYearLabel || '';
+            if (rvn && rvn.label) {
+                this.activeYearLabel = rvn.label.activeYearLabel || '';
+                this.lastYearLabel = rvn.label.lastYearLabel || '';
             }
 
             this.generateCharts();
@@ -216,7 +216,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     }
 
     public fetchChartData() {
-        this.store.dispatch(this._dashboardActions.getRevenueChartData());
+        this.store.dispatch(this._dashboardActions.getActiveYearRevenueChartData());
     }
 
     public generateActiveYearString(): INameUniqueName[] {
