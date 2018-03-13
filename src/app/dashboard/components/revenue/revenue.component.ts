@@ -317,7 +317,11 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public renderPieChart(type = 'current', per) {
         if (type === 'current') {
-            this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+            if (per === 0) {
+                this.pieSeries = [{ y: 100, color: '#ECECED' }];
+            } else {
+                this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+            }
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
                     text: `${per}%`
@@ -328,7 +332,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
                 }),
             });
         } else {
-            this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+            if (per === 0) {
+                this.previousPieSeries = [{ y: 100, color: '#ECECED' }];
+            } else {
+                this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+            }
+            // this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 title: Object.assign({}, this.previousPieChartOptions.title, {
                     text: `${per}%`
