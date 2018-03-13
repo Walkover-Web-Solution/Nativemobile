@@ -72,6 +72,7 @@ export class CompanyActions {
                 dummyResponse.body.companyUniqueName = response.request;
                 dummyResponse.body.lastState = 'home';
                 dummyResponse.status = 'success';
+                this._generalServices.companyUniqueName = response.request;
                 return this.changeCompanyResponse(dummyResponse);
             }
             this._generalServices.companyUniqueName = response.request;
