@@ -103,7 +103,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBorderWidth: 0,
                 plotShadow: false,
                 height: 200,
-                backgroundColor: '#F7FAFB'
+                backgroundColor: '#F7FAFB',
+                width: ((window.innerWidth / 2) - 50)
             },
             credits: {
                 enabled: false
@@ -144,6 +145,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBorderWidth: 0,
                 plotShadow: false,
                 height: 200,
+                width: ((window.innerWidth / 2) - 50)
                 // backgroundColor: '#F7FAFB'
             },
             credits: {
@@ -213,6 +215,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             this.store.dispatch(this._reportsActions.getIncomeData());
             this.store.dispatch(this._reportsActions.getExpensesData());
         });
+
+        (window as any).onresize = () => {
+            this.pieChartOptions.chart.width = ((window.innerWidth / 2) - 50);
+            this.previousPieChartOptions.chart.width = ((window.innerWidth / 2) - 50);
+            this.cd.detectChanges();
+        }
     }
 
     public ngAfterViewInit() {

@@ -21,13 +21,14 @@
             <span>Operating Cost</span>
         </div>
     </div>
-    <div style="display: flex">
-        <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" (click)="onChartSelection('current')">
+    <div style="display: grid; grid-template-columns:
+    repeat(2, minmax(100px, 1fr));">
+        <div style="display: flex;flex-direction: column;align-items: center;" (click)="onChartSelection('current')">
             <chart [options]="pieChartOptions" (click)="onChartPointSelection($event, 'current')"></chart>
             <span>Rs, {{ pieTotal | number: '1.2-2' }}</span>
             <span>{{ pieLable }}</span>
         </div>
-        <div style="display: flex;flex-direction: column;flex: 1 0 auto;align-items: center;" (click)="onChartSelection('previous')">
+        <div style="display: flex;flex-direction: column;align-items: center;" (click)="onChartSelection('previous')">
             <chart [options]="previousPieChartOptions" (click)="onChartPointSelection($event, 'previous')"></chart>
             <span>Rs, {{ previousPieTotal | number: '1.2-2' }}</span>
             <span>{{ previousPieLable }}</span>
