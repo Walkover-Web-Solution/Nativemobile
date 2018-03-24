@@ -74,7 +74,7 @@ elementRegistryModule.registerElement("FilterSelect", () => require("nativescrip
         NeedsAuthentication,
         {
             provide: ServiceConfig,
-            useValue: { apiUrl: 'http://api.giddh.com/', appUrl: 'http://api.giddh.com/' }
+            useValue: { apiUrl: 'https://api.giddh.com/', appUrl: 'https://api.giddh.com/' }
         },
     ],
     exports: [NativeScriptRouterModule],

@@ -64,7 +64,7 @@ let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logge
         NeedsAuthentication,
         {
             provide: ServiceConfig,
-            useValue: { apiUrl: 'http://api.giddh.com/', appUrl: 'http://api.giddh.com/' }
+            useValue: { apiUrl: 'https://api.giddh.com/', appUrl: 'https://api.giddh.com/' }
         },
     ],
     bootstrap: [AppComponent]
