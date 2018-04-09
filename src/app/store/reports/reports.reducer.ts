@@ -474,7 +474,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             return Object.assign({}, state, {
                 profitLossSheet: Object.assign({}, state.profitLossSheet, {
                     showLoader: false,
-                    data: action.payload.body
+                    data: action.payload.body.incomeStatment
                 })
             });
         }
