@@ -6,7 +6,7 @@ import { UserDetails, VerifyEmailResponseModel } from "../../models/api-models/l
 import { Observable } from "rxjs/Observable";
 import { RouterService } from "../../services/router.service";
 import { Subject } from "rxjs/Subject";
-
+let width = window.innerWidth;
 /* ***********************************************************
 * Keep data that is displayed in your app drawer in the MyDrawer component class.
 * Add new data objects that you want to display in the drawer here in the form of properties.
@@ -20,6 +20,7 @@ import { Subject } from "rxjs/Subject";
 export class MyDrawerComponent implements OnInit {
     public user$: Observable<VerifyEmailResponseModel>;
     public isOpened: boolean = false;
+    public width: number = width;
     @Input() selectedPage: string;
     @Output() public itemSelected: EventEmitter<MyDrawerItem> = new EventEmitter();
     @Input() pages: MyDrawerItem[];
@@ -31,6 +32,7 @@ export class MyDrawerComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.width = window.innerWidth;
     }
 
     public toggle() {

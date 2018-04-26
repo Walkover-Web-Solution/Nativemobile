@@ -104,7 +104,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotShadow: false,
                 height: 200,
                 backgroundColor: '#F7FAFB',
-                width: ((window.innerWidth / 2) - 50)
+                width: window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50)
             },
             credits: {
                 enabled: false
@@ -145,7 +145,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBorderWidth: 0,
                 plotShadow: false,
                 height: 200,
-                width: ((window.innerWidth / 2) - 50)
+                width: window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50)
                 // backgroundColor: '#F7FAFB'
             },
             credits: {
@@ -217,8 +217,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         (window as any).onresize = () => {
-            this.pieChartOptions.chart.width = ((window.innerWidth / 2) - 50);
-            this.previousPieChartOptions.chart.width = ((window.innerWidth / 2) - 50);
+            this.pieChartOptions.chart.width = window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50);
+            this.previousPieChartOptions.chart.width = window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50);
             this.cd.detectChanges();
         }
     }

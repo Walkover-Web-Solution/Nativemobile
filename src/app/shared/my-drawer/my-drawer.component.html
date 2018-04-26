@@ -1,24 +1,30 @@
-<mat-sidenav-container class="example-container">
-    <mat-sidenav mode="over" [(opened)]="isOpened">
-        <mat-card>
-            <mat-card-title-group>
-                <mat-card-title>{{ (user$ | async)?.user?.name }}</mat-card-title>
-                <mat-card-subtitle>{{ (user$ | async)?.user?.email }}</mat-card-subtitle>
-            </mat-card-title-group>
+<div class="container" #containe [ngStyle]="{'padding': '0 '+ ((width - 768)/2) + 'px', 'margin-top': '-22px'}" >
 
-            <mat-card-content>
-                <mat-nav-list>
-                    <mat-list-item [ngClass]="{'active': item.isSelected}" *ngFor="let item of pages" (click)="onNavItemTap(item)">
-                        <a mat-list-icon class="customFont" [ngStyle]="{'font-family': item.fontFamily}">{{ item.icon }}</a>
-                        <h4 mat-line>{{item.title}}</h4>
-                    </mat-list-item>
-                </mat-nav-list>
-            </mat-card-content>
-        </mat-card>
 
-    </mat-sidenav>
+    <div class="sixteen-nine">
+        <mat-sidenav-container class="example-container">
+            <mat-sidenav mode="over" [(opened)]="isOpened">
+                <mat-card>
+                    <mat-card-title-group>
+                        <mat-card-title>{{ (user$ | async)?.user?.name }}</mat-card-title>
+                        <mat-card-subtitle>{{ (user$ | async)?.user?.email }}</mat-card-subtitle>
+                    </mat-card-title-group>
 
-    <mat-sidenav-content>
-        <ng-template [ngTemplateOutlet]="optionTemplate"></ng-template>
-    </mat-sidenav-content>
-</mat-sidenav-container>
+                    <mat-card-content>
+                        <mat-nav-list>
+                            <mat-list-item [ngClass]="{'active': item.isSelected}" *ngFor="let item of pages" (click)="onNavItemTap(item)">
+                                <a mat-list-icon class="customFont" [ngStyle]="{'font-family': item.fontFamily}">{{ item.icon }}</a>
+                                <h4 mat-line>{{item.title}}</h4>
+                            </mat-list-item>
+                        </mat-nav-list>
+                    </mat-card-content>
+                </mat-card>
+
+            </mat-sidenav>
+
+            <mat-sidenav-content>
+                <ng-template [ngTemplateOutlet]="optionTemplate"></ng-template>
+            </mat-sidenav-content>
+        </mat-sidenav-container>
+    </div>
+</div>
