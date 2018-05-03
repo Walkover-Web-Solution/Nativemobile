@@ -97,7 +97,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
                 plotShadow: false,
                 height: 200,
                 backgroundColor: '#F7FAFB',
-                width: window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50)
+                width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
             },
             credits: {
                 enabled: false
@@ -138,7 +138,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
                 plotBorderWidth: 0,
                 plotShadow: false,
                 height: 200,
-                width: window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50)
+                width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
                 // backgroundColor: '#F7FAFB'
             },
             credits: {
@@ -217,8 +217,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
         });
 
         (window as any).onresize = () => {
-            this.pieChartOptions.chart.width = window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50);
-            this.previousPieChartOptions.chart.width = window.innerWidth > 768 ? ((768 / 2) - 50) : ((window.innerWidth / 2) - 50);
+            this.pieChartOptions.chart.width = window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50);
+            this.previousPieChartOptions.chart.width = window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50);
             this.cdRef.detectChanges();
         }
     }

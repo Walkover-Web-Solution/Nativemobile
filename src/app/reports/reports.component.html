@@ -1,9 +1,13 @@
-<my-header [title]="'Profit and Loss'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }" [rightSideItem]="{ icon:'file_download' }">
-</my-header>
+<div class="container" #containe [ngStyle]="{'padding': '0 '+ ((width - 414)/2) + 'px'}">
 
-<!-- <mat-tab-group> -->
 
-    <!-- <mat-tab label="Profit Loss"> -->
+    <div class="sixteen-nine">
+        <my-header [title]="'Profit and Loss'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }" [rightSideItem]="{ icon:'file_download' }">
+        </my-header>
+
+        <!-- <mat-tab-group> -->
+
+        <!-- <mat-tab label="Profit Loss"> -->
         <mat-card class="mat-elevation-z8">
 
             <mat-card-content>
@@ -18,13 +22,15 @@
                 <ns-pl-sheet></ns-pl-sheet>
             </mat-card-content>
         </mat-card>
-    <!-- </mat-tab> -->
+        <!-- </mat-tab> -->
 
-    <!-- <mat-tab label="Balance Sheet"> -->
+        <!-- <mat-tab label="Balance Sheet"> -->
         <!-- <mat-card>
             <mat-card-content>
                 <ns-bs-sheet></ns-bs-sheet>
             </mat-card-content>
         </mat-card> -->
-    <!-- </mat-tab> -->
-<!-- </mat-tab-group> -->
+        <!-- </mat-tab> -->
+        <!-- </mat-tab-group> -->
+    </div>
+</div>

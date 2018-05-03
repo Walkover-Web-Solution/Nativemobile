@@ -8,6 +8,7 @@ import { Config } from '../common';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AuthService } from 'ng4-social-login';
+let width = window.innerWidth;
 
 @Component({
     selector: 'ns-settings',
@@ -17,10 +18,11 @@ import { AuthService } from 'ng4-social-login';
 })
 export class SettingsComponent implements OnInit, OnDestroy {
     public items: Array<{ icon: string, text: string, path: string }>;
+    public width: number = width;
     public isLoggedInWithSocialAccount$: Observable<boolean>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private routerExtensions: RouterService, private store: Store<AppState>, private _loginActions: LoginActions,
-        private _toasterService: ToasterService,  private socialAuthService: AuthService) {
+        private _toasterService: ToasterService, private socialAuthService: AuthService) {
         this.items = [
             { text: 'Company Profile', icon: String.fromCharCode(0x61), path: 'company-profile' },
             { text: 'Currencies', icon: String.fromCharCode(0x61), path: 'currencies' },

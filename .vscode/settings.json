@@ -26,5 +26,6 @@
         "nativescript/src/app": true,
         "nativescript/node_modules": true,
         "nativescript/hooks": true
-    }
+    },
+    "mocha.enabled": false
 }

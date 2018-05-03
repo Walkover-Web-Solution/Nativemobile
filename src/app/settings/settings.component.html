@@ -1,15 +1,21 @@
-<my-header [title]="'Settings'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }">
-</my-header>
+<div class="container" #containe [ngStyle]="{'padding': '0 '+ ((width - 414)/2) + 'px'}">
 
-<div class="main_card">
-    <mat-card class="mat-elevation-z2">
-        <mat-card-content>
-            <mat-nav-list>
-                <mat-list-item *ngFor="let item of items" (click)="doAction(item)" [disableRipple]="true">
-                    <a mat-list-icon class="customFont">{{ item.icon }}</a>
-                    <h4 mat-line>{{item.text}}</h4>
-                </mat-list-item>
-            </mat-nav-list>
-        </mat-card-content>
-    </mat-card>
+
+    <div class="sixteen-nine">
+        <my-header [title]="'Settings'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }">
+        </my-header>
+
+        <div class="main_card">
+            <mat-card class="mat-elevation-z2">
+                <mat-card-content>
+                    <mat-nav-list>
+                        <mat-list-item *ngFor="let item of items" (click)="doAction(item)" [disableRipple]="true">
+                            <a mat-list-icon class="customFont">{{ item.icon }}</a>
+                            <h4 mat-line>{{item.text}}</h4>
+                        </mat-list-item>
+                    </mat-nav-list>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
 </div>
