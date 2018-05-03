@@ -380,11 +380,6 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
     public openFilter() {
         let dialog = this.dialog.open(DashboardFilterComponent, {
-            width: '100%',
-            position: {
-                top: '100',
-                left: '100',
-            },
             data: { chartType: ChartType.Expense }
         });
     }

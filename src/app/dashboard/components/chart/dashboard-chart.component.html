@@ -1,9 +1,7 @@
 <MyDrawer #myDrawer [pages]="navItemObj$ | async">
     <ng-template #optionTemplate>
         <my-header [title]="'Dashboard'" [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }"></my-header>
-
         <mat-card class="mat-elevation-z8">
-
             <mat-card-content>
                 <ns-revenue-chart></ns-revenue-chart>
             </mat-card-content>

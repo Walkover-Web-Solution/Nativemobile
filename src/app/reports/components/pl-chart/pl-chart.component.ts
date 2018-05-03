@@ -434,11 +434,6 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     public openFilter() {
         let dialog = this.dialog.open(ReportsFilterComponent, {
-            width: '100%',
-            position: {
-                top: '100',
-                left: '100',
-            }
         });
     }
 
