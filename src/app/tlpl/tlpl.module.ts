@@ -5,6 +5,8 @@ import { SharedModule } from '../shared/shared.module';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '../common';
 import { TlPlRoutes } from './tlpl.routes';
+import { TlPlComponent } from './tlpl.component';
+import { MatAutocompleteModule } from '@angular/material';
 
 @NgModule({
     imports: [
@@ -13,8 +15,9 @@ import { TlPlRoutes } from './tlpl.routes';
         RouterModule.forChild(TlPlRoutes),
         ReactiveFormsModule,
         SharedModule,
+        MatAutocompleteModule
     ],
-    declarations: [],
+    declarations: [TlPlComponent],
     schemas: [
         NO_ERRORS_SCHEMA
     ],

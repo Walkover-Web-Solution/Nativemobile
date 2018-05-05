@@ -8,6 +8,7 @@ import { NativeScriptUIChartModule } from "nativescript-pro-ui/chart/angular";
 import { SharedModule } from '../shared/shared.module';
 import { TlPlRoutes } from './tlpl.routes';
 import { RouterModule } from '../common';
+import { TlPlComponent } from './tlpl.component';
 
 
 @NgModule({
@@ -20,7 +21,7 @@ import { RouterModule } from '../common';
         SharedModule,
         NativeScriptUIChartModule
     ],
-    declarations: [],
+    declarations: [TlPlComponent],
     schemas: [
         NO_ERRORS_SCHEMA
     ]
