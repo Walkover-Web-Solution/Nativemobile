@@ -146,7 +146,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotShadow: false,
                 height: 200,
                 width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
-                // backgroundColor: '#F7FAFB'
+            // backgroundColor: '#F7FAFB'
             },
             credits: {
                 enabled: false
@@ -219,7 +219,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         (window as any).onresize = () => {
             this.pieChartOptions.chart.width = window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50);
             this.previousPieChartOptions.chart.width = window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50);
-            this.cd.detectChanges();
+            if (!this.cd['destroyed']) {
+                this.cd.detectChanges();
+            }
         }
     }
 

@@ -29,5 +29,10 @@ export const AppRoutes = [
         path: 'reports',
         loadChildren: 'app/reports/reports.module#ReportsModule',
         canActivate: [NeedsAuthentication]
+    },
+    {
+        path: 'tl-pl',
+        loadChildren: 'app/tlpl/tlpl.module#TlPlModule',
+        canActivate: [NeedsAuthentication]
     }
 ];

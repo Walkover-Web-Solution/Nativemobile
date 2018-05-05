@@ -39,5 +39,12 @@ export const AppRoutes = [
         // TODO: Uncomment below line when building for webpack
         loadChildren: './app/reports/reports.module#ReportsModule',
         canActivate: [NeedsAuthentication]
+    },
+    {
+        path: 'tl-pl',
+        // loadChildren: './app/tlpl/tlpl.module#TlPlModule',
+        // TODO: Uncomment below line when building for webpack
+        loadChildren: './app/tlpl/tlpl.module#TlPlModule',
+        canActivate: [NeedsAuthentication]
     }
 ];
