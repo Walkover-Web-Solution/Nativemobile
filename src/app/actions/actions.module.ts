@@ -8,6 +8,7 @@ import { GeneralActions } from './general/general.actions';
 import { SettingsTaxesActions } from './settings/taxes/settings.taxes.action';
 import { SettingsProfileActions } from "./settings/profile/settings.profile.action";
 import { ReportsActions } from './reports/reports.actions';
+import { TBPlBsActions } from './tl-pl/tl-pl.actions';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { ReportsActions } from './reports/reports.actions';
             GeneralActions,
             SettingsTaxesActions,
             SettingsProfileActions,
-            ReportsActions
+            ReportsActions,
+            TBPlBsActions
         ])
     ],
     exports: [EffectsModule]

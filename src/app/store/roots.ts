@@ -7,6 +7,7 @@ import * as fromCompany from './company/company.reducer';
 import * as fromGeneral from './general/general.reducer';
 import * as fromDashboard from './dashboard/dashboard.reducer';
 import * as fromReport from './reports/reports.reducer';
+import * as fromTlPl from './tl-pl/tl-pl.reducer';
 
 export interface AppState {
     router: fromRouter.RouterReducerState;
@@ -16,6 +17,7 @@ export interface AppState {
     general: fromGeneral.GeneralState;
     dashboard: fromDashboard.DashboardState;
     report: fromReport.ReportsState;
+    tlPl: fromTlPl.TBPlBsState;
 }
 
 export const reducers: ActionReducerMap<AppState> = {
@@ -26,4 +28,5 @@ export const reducers: ActionReducerMap<AppState> = {
     general: fromGeneral.GeneralReducer,
     dashboard: fromDashboard.DashboardReducer,
     report: fromReport.ReportsReducer,
+    tlPl: fromTlPl.tbPlBsReducer
 };

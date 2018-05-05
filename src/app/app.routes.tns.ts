@@ -10,34 +10,34 @@ export const AppRoutes = [
         path: 'home',
         // loadChildren: './app/home/home.module#HomeModule',
         // TODO: Uncomment below line when building for webpack
-        loadChildren: './home/home.module#HomeModule',
+        loadChildren: './app/home/home.module#HomeModule',
         canActivate: [NeedsAuthentication]
     },
     {
         path: 'login',
         // loadChildren: './app/login/login.module#LoginModule',
         // TODO: Uncomment below line when building for webpack
-        loadChildren: './login/login.module#LoginModule',
+        loadChildren: './app/login/login.module#LoginModule',
     },
     {
         path: 'dashboard',
         // loadChildren: './app/dashboard/dashboard.module#DashboardModule',
         // TODO: Uncomment below line when building for webpack
-        loadChildren: './dashboard/dashboard.module#DashboardModule',
+        loadChildren: './app/dashboard/dashboard.module#DashboardModule',
         canActivate: [NeedsAuthentication]
     },
     {
         path: 'settings',
         // loadChildren: './app/settings/settings.module#SettingsModule',
         // TODO: Uncomment below line when building for webpack
-        loadChildren: './settings/settings.module#SettingsModule',
+        loadChildren: './app/settings/settings.module#SettingsModule',
         canActivate: [NeedsAuthentication]
     },
     {
         path: 'reports',
         // loadChildren: './app/reports/reports.module#ReportsModule',
         // TODO: Uncomment below line when building for webpack
-        loadChildren: './reports/reports.module#ReportsModule',
+        loadChildren: './app/reports/reports.module#ReportsModule',
         canActivate: [NeedsAuthentication]
     }
 ];
