@@ -3,6 +3,7 @@ import { ChildGroup } from "../../models/api-models/Search";
 import { CustomActions } from "../customActions";
 import { TlPlConst } from "../../actions/tl-pl/tl-pl.const";
 import * as _ from 'lodash';
+import { IFlattenGroupsAccountsDetail } from "../../models/interfaces/flattenGroupsAccountsDetail.interface";
 
 interface TbState {
     data?: AccountDetails;
@@ -15,6 +16,9 @@ interface TbState {
 
 export interface TBPlBsState {
     tb?: TbState;
+    flattenGroupsAccounts: IFlattenGroupsAccountsDetail[];
+
+    isFlyAccountInProcess: boolean;
 }
 
 const initialState: TBPlBsState = {
@@ -25,7 +29,9 @@ const initialState: TBPlBsState = {
         exportData: [],
         count: 0,
         detailedGroups: [],
-    }
+    },
+    flattenGroupsAccounts: [],
+    isFlyAccountInProcess: false
 };
 
 
@@ -52,6 +58,11 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
         case TlPlConst.GET_TRIAL_BALANCE_REQUEST: {
             return { ...state, tb: { ...state.tb, showLoader: true } };
         }
+
+        case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
+            return Object.assign({}, state, { isFlyAccountInProcess: true });
+        case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE:
+            return Object.assign({}, state, { isFlyAccountInProcess: false, flattenGroupsAccounts: prepare(action.payload ? action.payload.results : []) });
     }
 }
 
@@ -80,3 +91,19 @@ const removeZeroAmountAccount = (grpList: ChildGroup[]) => {
 
     return grpList;
 };
+
+// FlattenAccountWGroups Functions
+const prepare = (data: IFlattenGroupsAccountsDetail[]) => {
+    if (data) {
+      return data.map(p => {
+        return {
+          accountDetails: p.accountDetails,
+          groupName: p.groupName,
+          applicableTaxes: p.applicableTaxes,
+          groupSynonyms: p.groupSynonyms,
+          isOpen: false,
+          groupUniqueName: p.groupUniqueName
+        };
+      });
+    }
+  };

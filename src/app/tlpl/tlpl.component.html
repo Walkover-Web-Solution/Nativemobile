@@ -2,7 +2,7 @@
 
 
     <div class="sixteen-nine">
-        <my-header [title]="'Trial Balance'" [leftSideItem]="{ icon:'arrow_back' }">
+        <my-header [title]="'Trial Balance'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }">
         </my-header>
 
         <mat-card class="mat-elevation-z8">
@@ -14,8 +14,8 @@
                 </mat-form-field>
 
                 <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of options" [value]="option">
-                        {{ option }}
+                    <mat-option *ngFor="let item of GWAItems" [value]="item.uniqueName">
+                        {{ item.name }}
                     </mat-option>
                 </mat-autocomplete>
             </mat-card-content>
