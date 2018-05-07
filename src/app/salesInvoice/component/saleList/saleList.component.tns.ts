@@ -5,8 +5,8 @@ import * as moment from 'moment/moment';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
 import { createSelector } from 'reselect';
-import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
-import { RadSideDrawerComponent } from 'nativescript-pro-ui/sidedrawer/angular';
+import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
+import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
 import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
 import { RouterService } from '../../../services/router.service';
 

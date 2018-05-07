@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-// import { RadSideDrawerComponent } from 'nativescript-pro-ui/sidedrawer/angular';
-// import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
+
 import { Store } from '@ngrx/store';
 import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
 import { AppState } from '../../../store';

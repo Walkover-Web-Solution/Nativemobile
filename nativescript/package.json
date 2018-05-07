@@ -15,7 +15,7 @@
       "version": "3.4.0"
     },
     "tns-android": {
-      "version": "3.4.1"
+      "version": "3.4.2"
     }
   },
   "dependencies": {
@@ -48,11 +48,14 @@
     "nativescript-loading-indicator": "^2.4.0",
     "nativescript-modal-datetimepicker": "^1.0.3",
     "nativescript-ngx-fonticon": "^4.0.0",
-    "nativescript-pro-ui": "3.2.0",
     "nativescript-secure-storage": "2.2.1",
     "nativescript-social-login-linkedin": "^3.0.8",
     "nativescript-theme-core": "~1.0.4",
     "nativescript-toast": "~1.4.6",
+    "nativescript-ui-autocomplete": "^3.7.0",
+    "nativescript-ui-chart": "^3.6.0",
+    "nativescript-ui-gauge": "^3.6.0",
+    "nativescript-ui-sidedrawer": "^4.1.0",
     "nativescript-webview-interface": "^1.4.2",
     "ngrx-store-logger": "0.2.0",
     "query-string": "^5.1.0",

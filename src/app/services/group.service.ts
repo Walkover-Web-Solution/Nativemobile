@@ -14,7 +14,7 @@ import { GROUP_API } from './apiurls/group.api';
 import { GroupsWithAccountsResponse } from '../models/api-models/GroupsWithAccounts';
 import { GeneralService } from './general.service';
 import { ServiceConfig, IServiceConfigArgs } from './service.config';
-declare var _: any;
+import * as _ from 'lodash';
 // import { UserManager, Log, MetadataService, User } from 'oidc-client';
 @Injectable()
 export class GroupService {
@@ -27,7 +27,6 @@ export class GroupService {
         private _generalService: GeneralService,
         @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
         this._ = config._;
-        _ = config._;
     }
 
     public flattenGroup(rawList: any[], parents: any[] = []) {

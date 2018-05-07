@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
 import { Observable } from 'rxjs/Observable';
-import { RadSideDrawerComponent } from 'nativescript-pro-ui/sidedrawer/angular';
+import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
-import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
+import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
 import { CompanyResponse, States } from '../../../models/api-models/Company';
 import { createSelector } from 'reselect';
 import { ReplaySubject } from 'rxjs/ReplaySubject';

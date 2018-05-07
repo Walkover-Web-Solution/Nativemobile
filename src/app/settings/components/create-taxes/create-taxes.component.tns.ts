@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
 import { Observable } from 'rxjs/Observable';
-import { RadSideDrawerComponent } from 'nativescript-pro-ui/sidedrawer/angular';
+import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
-import { DrawerTransitionBase } from 'nativescript-pro-ui/sidedrawer';
+import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AfterViewInit, OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { SelectedIndexChangedEventData, ValueList } from 'nativescript-drop-down';

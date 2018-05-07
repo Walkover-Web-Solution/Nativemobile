@@ -1,7 +1,7 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptCommonModule } from "nativescript-angular/common";
-import { NativeScriptUISideDrawerModule } from "nativescript-pro-ui/sidedrawer/angular";
-import { NativeScriptUIGaugesModule } from "nativescript-pro-ui/gauges/angular";
+import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
+import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
 
 import { MyDrawerItemComponent } from "./my-drawer-item/my-drawer-item.component";
 import { MyDrawerComponent } from "./my-drawer/my-drawer.component";
@@ -20,7 +20,7 @@ import { MyHeaderComponent } from "./my-header/my-header.component";
         NativeScriptCommonModule,
         NativeScriptRouterModule,
         NativeScriptUISideDrawerModule,
-        NativeScriptUIGaugesModule,
+        NativeScriptUIGaugeModule,
         DropDownModule,
         TNSCheckBoxModule,
         TNSFontIconModule.forRoot({
@@ -44,7 +44,7 @@ import { MyHeaderComponent } from "./my-header/my-header.component";
         MyChipsComponent,
         PieChartComponent,
         NativeScriptUISideDrawerModule,
-        NativeScriptUIGaugesModule,
+        NativeScriptUIGaugeModule,
         TNSCheckBoxModule,
         DropDownModule,
         TNSFontIconModule
