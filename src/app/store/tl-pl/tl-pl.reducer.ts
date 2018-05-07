@@ -63,6 +63,8 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             return Object.assign({}, state, { isFlyAccountInProcess: true });
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE:
             return Object.assign({}, state, { isFlyAccountInProcess: false, flattenGroupsAccounts: prepare(action.payload ? action.payload.results : []) });
+        default:
+            return state;
     }
 }
 

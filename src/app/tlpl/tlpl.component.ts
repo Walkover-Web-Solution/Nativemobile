@@ -12,6 +12,8 @@ import { IFlattenGroupsAccountsDetail } from "../models/interfaces/flattenGroups
 import { AppState } from "../store";
 import { TlPlFlGWAList, TlPlVM } from "./tlpl.vm";
 import { RouterService } from "../services/router.service";
+import { FormControl } from "@angular/forms";
+import { startWith, map } from "rxjs/operators";
 
 @Component({
     selector: 'ns-tlpl',
@@ -23,15 +25,12 @@ export class TlPlComponent implements OnInit, OnDestroy {
     public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
     public flatAccountWGroupsList$: Observable<IFlattenGroupsAccountsDetail[]>;
     public GWAItems: TlPlFlGWAList[] = [];
+    public GWAFilterdItems$: Observable<TlPlFlGWAList[]>;
     public isFlyAccountInProcess$: Observable<boolean>;
     public request: TrialBalanceRequest;
     public tlplVm: TlPlVM;
+    searchControl = new FormControl();
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-    options = [
-        'One',
-        'Two',
-        'Three'
-    ];
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
         private _routerExtension: RouterService) {
@@ -66,14 +65,31 @@ export class TlPlComponent implements OnInit, OnDestroy {
         });
 
         this.store.dispatch(this._tlPlActions.GetflatAccountWGroups());
+
+        this.GWAFilterdItems$ = this.searchControl.valueChanges.
+            pipe(
+                startWith<string | TlPlFlGWAList>(''),
+                map(val => typeof val === 'string' ? val : val.name),
+                map(name => this.filterGWA(name))
+            )
     }
 
     goBack() {
         this._routerExtension.router.navigate(['/home']);
     }
 
-    public filterData(request: TrialBalanceRequest) {
+    filterData(request: TrialBalanceRequest) {
         this.store.dispatch(this._tlPlActions.GetTrialBalance(_.cloneDeep(request)));
+    }
+
+    filterGWA(term: string): TlPlFlGWAList[] {
+        return this.GWAItems.filter(gw => {
+           return (gw.name.toLowerCase().indexOf(term.toLowerCase()) === 0) || (gw.uniqueName.toLowerCase().indexOf(term.toLowerCase()) === 0)
+        });
+    }
+
+    displayFn4GWA(GWA: TlPlFlGWAList) {
+        return GWA ? GWA.name : undefined;
     }
 
     ngOnDestroy(): void {
