@@ -10,18 +10,57 @@
             <mat-card-content>
                 <form>
                     <mat-form-field style="display: flex">
-                        <input type="text" matInput [matAutocomplete]="auto" [formControl]="searchControl">
+                        <input type="text" matInput #searchControl (change)="searchGWA($event.value)">
                         <mat-icon matPrefix>search</mat-icon>
-
-                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn4GWA">
-                            <mat-option *ngFor="let item of GWAFilterdItems$ | async" [value]="item">
-                                {{ item.name }}
-                            </mat-option>
-                        </mat-autocomplete>
                     </mat-form-field>
                 </form>
             </mat-card-content>
 
+        </mat-card>
+
+        <mat-card>
+            <mat-card-content>
+                <div>
+                    <a (click)="resetNavigation()">Home /</a>
+                    <span *ngFor="let brd of breadCrumb" style="margin: 0 5">
+                        <a *ngIf="brd !== activeGrp;else last" (click)="navigateTo(brd)">{{ brd }} /</a>
+                        <ng-template #last> {{ brd }}</ng-template>
+                    </span>
+                </div>
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card>
+
+            <mat-card-content>
+
+                <mat-nav-list *ngIf="!isSearchEnabled; else searchContainer">
+                    <mat-list-item *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
+                        <a matLine>{{ grp.groupName }}</a>
+
+                        <mat-nav-list>
+                            <mat-list-item *ngFor="let acc of grp.accounts"
+                                           (click)="$event.stopPropagation();goToLedger(acc)">
+                                <p matLine>
+                                    {{ acc.name }}
+                                </p>
+                            </mat-list-item>
+
+                        </mat-nav-list>
+                    </mat-list-item>
+                </mat-nav-list>
+
+                <ng-template #searchContainer>
+                    <mat-nav-list>
+                        <mat-list-item *ngFor="let item of flattenGrpDetails">
+                            <a matLine>
+                                {{ item.isGroup ? item.groupName : item.name }}
+                            </a>
+                        </mat-list-item>
+                    </mat-nav-list>
+                </ng-template>
+
+            </mat-card-content>
         </mat-card>
     </div>
 </div>

@@ -52,6 +52,7 @@ export interface AccountDetails {
     closingBalance: ClosingBalance;
     openingBalance: OpeningBalance;
     groupDetails: ChildGroup[];
+    message?: string;
 }
 
 export interface BalanceSheetRequest extends TrialBalanceRequest {
