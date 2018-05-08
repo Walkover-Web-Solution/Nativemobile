@@ -1,19 +1,17 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ChartModule } from 'angular2-highcharts';
-// nativescript
-
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {ChartModule} from 'angular2-highcharts';
 // app
-import { NeedsAuthentication } from '../decorators/needsAuthentication';
-import { SharedModule } from './../shared/shared.module';
-import { DashboardComponent } from './dashboard.component';
-import { RevenueChartComponent } from './components/revenue/revenue.component';
-import { ExpensesChartComponent } from './components/expenses/expenses.component';
-import { DashboardFilterComponent } from './components/filter/dashboard-filter.component';
-import { DashboardChartComponent } from './components/chart/dashboard-chart.component';
-import { CommonModule } from '@angular/common';
-import { DashboardRoutes } from './dashboard.routes';
-import { RouterModule } from '../common';
+import {SharedModule} from './../shared/shared.module';
+import {DashboardComponent} from './dashboard.component';
+import {RevenueChartComponent} from './components/revenue/revenue.component';
+import {ExpensesChartComponent} from './components/expenses/expenses.component';
+import {DashboardFilterComponent} from './components/filter/dashboard-filter.component';
+import {DashboardChartComponent} from './components/chart/dashboard-chart.component';
+import {CommonModule} from '@angular/common';
+import {DashboardRoutes} from './dashboard.routes';
+import {RouterModule} from '../common';
+// nativescript
 
 declare let require: any;
 @NgModule({

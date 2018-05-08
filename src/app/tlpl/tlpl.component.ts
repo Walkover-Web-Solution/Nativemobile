@@ -28,9 +28,11 @@ export class TlPlComponent implements OnInit, OnDestroy {
     public filterdData: ChildGroup[] = [];
     public breadCrumb: string[] = [];
     public activeGrp: string = '';
+    public activeAcc: string = '';
     public flattenGrpDetails: any[] = [];
     public searchedFlattenGrpDetails: any[] = [];
     public isSearchEnabled: boolean = false;
+    public showLedgerScreen: boolean = false;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
@@ -84,6 +86,7 @@ export class TlPlComponent implements OnInit, OnDestroy {
         })
     }
 
+
     InitData(d: ChildGroup[]) {
         _.each(d, (grp: ChildGroup) => {
             grp.isVisible = false;
@@ -109,6 +112,7 @@ export class TlPlComponent implements OnInit, OnDestroy {
     }
 
     filterData(grp: ChildGroup) {
+        this.showLedgerScreen = false;
         this.activeGrp = grp.uniqueName;
         if (grp.category !== null) {
             this.breadCrumb = [];
@@ -170,7 +174,8 @@ export class TlPlComponent implements OnInit, OnDestroy {
     }
 
     goToLedger(acc: Account) {
-        debugger;
+        this.activeAcc = acc.uniqueName;
+        this.showLedgerScreen = true;
     }
 
     makeFlatten(mainGrps: ChildGroup[], result: any[], parentGrpUniqueName?: string) {

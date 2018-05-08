@@ -9,6 +9,8 @@ import { Action } from "@ngrx/store";
 import { BaseResponse } from "../../models/api-models/BaseResponse";
 import { GroupService } from "../../services/group.service";
 import { FlattenGroupsAccountsResponse } from "../../models/api-models/Group";
+import {TransactionsRequest, TransactionsResponse} from '../../models/api-models/Ledger';
+import {LedgerService} from '../../services/ledger.service';
 
 @Injectable()
 export class TBPlBsActions {
@@ -39,7 +41,20 @@ export class TBPlBsActions {
                 });
         });
 
-    constructor(private action$: Actions, private _tlPlService: TlPlService, private _groupService: GroupService) {
+    @Effect()
+    public GetTransactions$: Observable<Action> = this.action$
+        .ofType(TlPlConst.GET_ACC_TRANSACTION)
+        .switchMap((action: CustomActions) => {
+            let req: TransactionsRequest = action.payload as TransactionsRequest;
+            return this._ledgerService.GetLedgerTranscations(req.q, req.page, req.count, req.accountUniqueName, req.from, req.to, req.sort, req.reversePage);
+        }).map(res => {
+            return {
+                type: TlPlConst.GET_ACC_TRANSACTION_RESPONSE,
+                payload: res.status === 'success' ? res.body : null
+            }
+        });
+
+    constructor(private action$: Actions, private _tlPlService: TlPlService, private _groupService: GroupService, private _ledgerService: LedgerService) {
 
     }
 
@@ -56,6 +71,13 @@ export class TBPlBsActions {
             payload: {
                 q, page, count, showEmptyGroups
             }
+        };
+    }
+
+    public GetTransactions(request: TransactionsRequest): CustomActions {
+        return {
+            type: TlPlConst.GET_ACC_TRANSACTION,
+            payload: request
         };
     }
 }
