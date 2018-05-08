@@ -27,7 +27,10 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnInit() {
-
+        this.request.from = `${this.dateModel.beginDate.day}-${this.dateModel.beginDate.month}-${this.dateModel.beginDate.year}`;
+        this.request.to = `${this.dateModel.endDate.day}-${this.dateModel.endDate.month}-${this.dateModel.endDate.year}`;
+        this.request.accountUniqueName = this.accUniqueName;
+        this.getTrxData();
     }
 
     ngOnDestroy() {
@@ -36,8 +39,8 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
         if ('accUniqueName' in changes && (changes['accUniqueName'].currentValue !== changes['accUniqueName'].previousValue)) {
-            this.request.accountUniqueName = this.accUniqueName;
-            this.getTrxData();
+            // this.request.accountUniqueName = this.accUniqueName;
+            // this.getTrxData();
         }
     }
 

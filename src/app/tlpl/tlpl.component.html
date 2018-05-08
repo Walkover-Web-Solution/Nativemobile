@@ -10,10 +10,10 @@
 
                 <mat-card-content>
                     <form>
-                        <mat-form-field style="display: flex">
-                            <input type="text" matInput #searchControl>
-                            <mat-icon matPrefix>search</mat-icon>
-                        </mat-form-field>
+                        <div style="display: flex;">
+                            <mat-icon class="icon-search" matPrefix>search</mat-icon>
+                            <input class="search-box" type="text" matInput #searchControl>
+                        </div>
                     </form>
                 </mat-card-content>
 
@@ -33,24 +33,41 @@
             </mat-card>
 
             <mat-card>
+                <div class="arrow-text">
+                    <span>particular
+                        <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
+                        </mat-icon>
+                    </span>
+                    <span class="pull-right">Closing Balance
+                        <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
+                        </mat-icon>
+                    </span>
+                </div>
 
-                <mat-card-content>
+                <div>
 
-                    <mat-nav-list *ngIf="!isSearchEnabled; else searchContainer">
-                        <mat-list-item *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
-                            <a matLine>{{ grp.groupName }}</a>
+                    <ul class="list-nav" *ngIf="!isSearchEnabled; else searchContainer">
+                        <li *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
+                            <div class="inner-item">
+                                <a class="list-a" matLine>{{ grp.groupName }} ></a>
+                                <small>bdfkbwsdfbs</small>
+                                <span class="pull-right">₹1000</span>
+                            </div>
 
-                            <mat-nav-list>
-                                <mat-list-item *ngFor="let acc of grp.accounts"
-                                               (click)="$event.stopPropagation();goToLedger(acc)">
-                                    <p matLine>
-                                        {{ acc.name }}
-                                    </p>
-                                </mat-list-item>
+                            <ul class="list-nav">
+                                <li *ngFor="let acc of grp.accounts" (click)="$event.stopPropagation();goToLedger(acc)">
+                                    <div class="inner-item">
+                                        <p class="m-0" matLine>
+                                            {{ acc.name }}
+                                        </p>
+                                        <small>bdfkbwsdfbs</small>
+                                        <span class="pull-right">₹1000</span>
+                                    </div>
+                                </li>
 
-                            </mat-nav-list>
-                        </mat-list-item>
-                    </mat-nav-list>
+                            </ul>
+                        </li>
+                    </ul>
 
                     <ng-template #searchContainer>
                         <mat-nav-list>
@@ -64,7 +81,7 @@
                         </mat-nav-list>
                     </ng-template>
 
-                </mat-card-content>
+                </div>
             </mat-card>
         </ng-container>
 

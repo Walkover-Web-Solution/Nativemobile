@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as _ from 'lodash';
 import {createSelector} from 'reselect';
@@ -17,9 +17,10 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 @Component({
     selector: 'ns-tlpl',
     moduleId: module.id,
-    templateUrl: './tlpl.component.html'
+    templateUrl: './tlpl.component.html',
+    styleUrls: ['./tlpl.component.scss']
 })
-export class TlPlComponent implements OnInit, OnDestroy {
+export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('searchControl') public searchControl: ElementRef;
     public activeCompany: CompanyResponse;
     public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>;
@@ -76,7 +77,9 @@ export class TlPlComponent implements OnInit, OnDestroy {
         });
 
         this.store.dispatch(this._tlPlActions.GetflatAccountWGroups());
+    }
 
+    ngAfterViewInit() {
         fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'input').pipe(
             debounceTime(700),
             distinctUntilChanged(),
@@ -85,7 +88,6 @@ export class TlPlComponent implements OnInit, OnDestroy {
             this.searchGWA(data);
         })
     }
-
 
     InitData(d: ChildGroup[]) {
         _.each(d, (grp: ChildGroup) => {
