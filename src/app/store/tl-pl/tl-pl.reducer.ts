@@ -1,9 +1,10 @@
-import { AccountDetails } from "../../models/api-models/tb-pl-bs";
-import { ChildGroup } from "../../models/api-models/Search";
-import { CustomActions } from "../customActions";
-import { TlPlConst } from "../../actions/tl-pl/tl-pl.const";
+import {AccountDetails} from '../../models/api-models/tb-pl-bs';
+import {ChildGroup} from '../../models/api-models/Search';
+import {CustomActions} from '../customActions';
+import {TlPlConst} from '../../actions/tl-pl/tl-pl.const';
 import * as _ from 'lodash';
-import { IFlattenGroupsAccountsDetail } from "../../models/interfaces/flattenGroupsAccountsDetail.interface";
+import {IFlattenGroupsAccountsDetail} from '../../models/interfaces/flattenGroupsAccountsDetail.interface';
+import {TransactionsResponse} from '../../models/api-models/Ledger';
 
 interface TbState {
     data?: AccountDetails;
@@ -17,8 +18,9 @@ interface TbState {
 export interface TBPlBsState {
     tb?: TbState;
     flattenGroupsAccounts: IFlattenGroupsAccountsDetail[];
-
     isFlyAccountInProcess: boolean;
+    transactionsResponse?: TransactionsResponse;
+    transactionInProgress: boolean;
 }
 
 const initialState: TBPlBsState = {
@@ -31,7 +33,9 @@ const initialState: TBPlBsState = {
         detailedGroups: [],
     },
     flattenGroupsAccounts: [],
-    isFlyAccountInProcess: false
+    isFlyAccountInProcess: false,
+    transactionInProgress: false,
+    transactionsResponse: null
 };
 
 
@@ -49,20 +53,37 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
                 }
                 return {
                     ...state,
-                    tb: { ...state.tb, data, noData, showLoader, exportData: data.groupDetails }
+                    tb: {...state.tb, data, noData, showLoader, exportData: data.groupDetails}
                 };
             } else {
-                return { ...state, tb: { ...state.tb, showLoader: false, exportData: [], data: null, noData: true } };
+                return {...state, tb: {...state.tb, showLoader: false, exportData: [], data: null, noData: true}};
             }
         }
         case TlPlConst.GET_TRIAL_BALANCE_REQUEST: {
-            return { ...state, tb: { ...state.tb, showLoader: true } };
+            return {...state, tb: {...state.tb, showLoader: true}};
         }
 
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
-            return Object.assign({}, state, { isFlyAccountInProcess: true });
+            return Object.assign({}, state, {isFlyAccountInProcess: true});
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE:
-            return Object.assign({}, state, { isFlyAccountInProcess: false, flattenGroupsAccounts: prepare(action.payload ? action.payload.results : []) });
+            return Object.assign({}, state, {
+                isFlyAccountInProcess: false,
+                flattenGroupsAccounts: prepare(action.payload ? action.payload.results : [])
+            });
+
+        case TlPlConst.GET_ACC_TRANSACTION: {
+            return {
+                ...state,
+                transactionInProgress: true
+            };
+        }
+        case TlPlConst.GET_ACC_TRANSACTION_RESPONSE: {
+            return {
+                ...state,
+                transactionInProgress: false,
+                transactionsResponse: action.payload
+            };
+        }
         default:
             return state;
     }
@@ -97,15 +118,15 @@ const removeZeroAmountAccount = (grpList: ChildGroup[]) => {
 // FlattenAccountWGroups Functions
 const prepare = (data: IFlattenGroupsAccountsDetail[]) => {
     if (data) {
-      return data.map(p => {
-        return {
-          accountDetails: p.accountDetails,
-          groupName: p.groupName,
-          applicableTaxes: p.applicableTaxes,
-          groupSynonyms: p.groupSynonyms,
-          isOpen: false,
-          groupUniqueName: p.groupUniqueName
-        };
-      });
+        return data.map(p => {
+            return {
+                accountDetails: p.accountDetails,
+                groupName: p.groupName,
+                applicableTaxes: p.applicableTaxes,
+                groupSynonyms: p.groupSynonyms,
+                isOpen: false,
+                groupUniqueName: p.groupUniqueName
+            };
+        });
     }
-  };
+};

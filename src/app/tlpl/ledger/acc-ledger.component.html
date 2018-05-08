@@ -1,2 +1,25 @@
 <my-date-range-picker name="mydaterange" [options]="myDateRangePickerOptions"
+                      (dateRangeChanged)="onDateRangeChanged($event)"
                       [(ngModel)]="dateModel" required></my-date-range-picker>
+
+<mat-card>
+    <mat-card-content>
+        <table>
+            <ng-template *ngIf="activeTab === 'credit'">
+                <tr *ngFor="let txn of (transactionData$ | async)?.creditTransactions">
+                    <td class="col-xs-2">{{ txn.entryDate }}</td>
+                    <td class="col-xs-7">{{ txn.particular.name }}</td>
+                    <td class="col-xs-3">{{ txn.amount | number: '1.0-2' }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template *ngIf="activeTab === 'debit'">
+                <tr *ngFor="let txn of (transactionData$ | async)?.debitTransactions">
+                    <td class="col-xs-2">{{ txn.entryDate }}</td>
+                    <td class="col-xs-7">{{ txn.particular.name }}</td>
+                    <td class="col-xs-3">{{ txn.amount | number: '1.0-2' }}</td>
+                </tr>
+            </ng-template>
+        </table>
+    </mat-card-content>
+</mat-card>
