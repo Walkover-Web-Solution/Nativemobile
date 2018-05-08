@@ -10,7 +10,7 @@
             <mat-card-content>
                 <form>
                     <mat-form-field style="display: flex">
-                        <input type="text" matInput #searchControl (change)="searchGWA($event.value)">
+                        <input type="text" matInput #searchControl>
                         <mat-icon matPrefix>search</mat-icon>
                     </mat-form-field>
                 </form>
@@ -22,7 +22,7 @@
             <mat-card-content>
                 <div>
                     <a (click)="resetNavigation()">Home /</a>
-                    <span *ngFor="let brd of breadCrumb" style="margin: 0 5">
+                    <span *ngFor="let brd of breadCrumb" style="margin: 0px 5px">
                         <a *ngIf="brd !== activeGrp;else last" (click)="navigateTo(brd)">{{ brd }} /</a>
                         <ng-template #last> {{ brd }}</ng-template>
                     </span>
@@ -52,10 +52,11 @@
 
                 <ng-template #searchContainer>
                     <mat-nav-list>
-                        <mat-list-item *ngFor="let item of flattenGrpDetails">
+                        <mat-list-item *ngFor="let item of searchedFlattenGrpDetails" (click)="searchResultClicked(item)">
                             <a matLine>
                                 {{ item.isGroup ? item.groupName : item.name }}
                             </a>
+                            <p matLine>{{ item.isGroup ? 'Grp' : 'Acc' }}</p>
                         </mat-list-item>
                     </mat-nav-list>
                 </ng-template>

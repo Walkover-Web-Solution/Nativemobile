@@ -11,6 +11,8 @@ import {AccountDetails, TrialBalanceRequest} from '../models/api-models/tb-pl-bs
 import {AppState} from '../store';
 import {RouterService} from '../services/router.service';
 import {Account, ChildGroup} from '../models/api-models/Search';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 
 @Component({
     selector: 'ns-tlpl',
@@ -18,15 +20,16 @@ import {Account, ChildGroup} from '../models/api-models/Search';
     templateUrl: './tlpl.component.html'
 })
 export class TlPlComponent implements OnInit, OnDestroy {
+    @ViewChild('searchControl') public searchControl: ElementRef;
     public activeCompany: CompanyResponse;
-    public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
+    public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>;
     public request: TrialBalanceRequest;
-    @ViewChild('searchControl') searchControl: ElementRef;
     public data$: Observable<AccountDetails>;
     public filterdData: ChildGroup[] = [];
     public breadCrumb: string[] = [];
     public activeGrp: string = '';
     public flattenGrpDetails: any[] = [];
+    public searchedFlattenGrpDetails: any[] = [];
     public isSearchEnabled: boolean = false;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -71,6 +74,14 @@ export class TlPlComponent implements OnInit, OnDestroy {
         });
 
         this.store.dispatch(this._tlPlActions.GetflatAccountWGroups());
+
+        fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'input').pipe(
+            debounceTime(700),
+            distinctUntilChanged(),
+            map((t: any) => t.target.value)
+        ).subscribe(data => {
+            this.searchGWA(data);
+        })
     }
 
     InitData(d: ChildGroup[]) {
@@ -162,30 +173,84 @@ export class TlPlComponent implements OnInit, OnDestroy {
         debugger;
     }
 
-    makeFlatten(mainGrps: ChildGroup[], result: any[]) {
+    makeFlatten(mainGrps: ChildGroup[], result: any[], parentGrpUniqueName?: string) {
 
         _.each(mainGrps, (g) => {
-            result.push({ ...g, isGroup: true });
+            result.push({...g, isGroup: true, parentGrpUniqueName: parentGrpUniqueName});
 
-            if (g.childGroups) {
-                this.makeFlatten(g.childGroups, result);
+            if (g.childGroups && g.childGroups.length > 0) {
+                this.makeFlatten(g.childGroups, result, g.uniqueName);
             }
 
-            if(g.accounts) {
-                result.push(...g.accounts, { isGroup: false });
+            if (g.accounts && g.accounts.length > 0) {
+                g.accounts = g.accounts.map(acc => {
+                    acc.parentGrpUniqueName = g.uniqueName;
+                    return acc;
+                });
+                result.push(...g.accounts);
             }
         });
         return result;
     }
 
     searchGWA(term: string) {
-        return this.flattenGrpDetails.filter(fla => {
-            if (fla.isGroup) {
-                return (fla.groupName.toLowerCase().indexOf(fla.toLowerCase() === 0) || (fla.uniqueName.toLowerCase().indexOf(fla.toLowerCase() === 0)))
-            } else {
-                return (fla.name.toLowerCase().indexOf(fla.toLowerCase() === 0) || (fla.uniqueName.toLowerCase().indexOf(fla.toLowerCase() === 0)))
+        if (term === '') {
+            this.isSearchEnabled = false;
+            return;
+        } else {
+            if (term.startsWith(' ')) {
+                return;
+            }
+            this.isSearchEnabled = true;
+            this.searchedFlattenGrpDetails = this.flattenGrpDetails.filter(fla => {
+                if (fla.isGroup) {
+                    return ((fla.groupName.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
+                } else {
+                    return ((fla.name.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
+                }
+            });
+        }
+    }
+
+    searchResultClicked(res) {
+        this.isSearchEnabled = false;
+        if (res.isGroup) {
+            this.searchWithNavigation(res);
+        } else {
+
+        }
+    }
+
+    searchWithNavigation(res) {
+        let r = this.genBreadcrumb(res.uniqueName, []);
+        if (r && r.length) {
+            this.activeGrp = r[0].uniqueName;
+            this.data$.take(1).subscribe(p => {
+                let d = _.cloneDeep(p) as AccountDetails;
+                let result = this.loopOver(d.groupDetails, this.activeGrp, null);
+                this.filterdData = result.childGroups;
+            });
+
+            this.breadCrumb = [];
+            r.reverse().forEach(a => {
+                this.breadCrumb.push(a.uniqueName);
+            });
+        }
+    }
+
+    genBreadcrumb(uniqueName: string, res) {
+        this.flattenGrpDetails.forEach(fa => {
+            if (fa.uniqueName === uniqueName) {
+                res.push(fa);
+                if (!fa.parentGrpUniqueName) {
+                    return res;
+                } else {
+                    this.genBreadcrumb(fa.parentGrpUniqueName, res);
+                }
             }
         });
+
+        return res;
     }
 
     ngOnDestroy(): void {
