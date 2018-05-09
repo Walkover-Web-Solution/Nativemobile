@@ -8,6 +8,7 @@ import { TransactionsResponse } from '../../models/api-models/Ledger';
 import {Observable} from 'rxjs/Observable';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/shareReplay';
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -27,12 +28,12 @@ export class AccLedgerComponent implements OnInit, OnDestroy {
     };
     public transactionData$: Observable<TransactionsResponse>;
     public isTransactionRequestInProcess$: Observable<boolean>;
-    public activeTab: 'credit' | 'debit' = 'credit';
+    public activeTab: 'credit' | 'debit' = 'debit';
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>) {
         this.request = new TransactionsRequest();
-        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
+        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
     }
 
@@ -52,6 +53,14 @@ export class AccLedgerComponent implements OnInit, OnDestroy {
 
     getTrxData() {
         this.store.dispatch(this._tlPlActions.GetTransactions(this.request));
+    }
+
+    toggleActiveTab() {
+        if (this.activeTab === 'credit') {
+            this.activeTab = 'debit';
+        } else {
+            this.activeTab = 'credit';
+        }
     }
 
     ngOnDestroy() {

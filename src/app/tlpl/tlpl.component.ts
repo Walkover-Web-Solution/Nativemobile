@@ -229,7 +229,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     searchGWA(term: string) {
-        console.log('term changed', term);
         if (term === '') {
             this.isSearchEnabled = false;
         } else {
@@ -256,7 +255,8 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         if (res.isGroup) {
             this.searchWithNavigation(res);
         } else {
-
+            this.activeAcc = res.uniqueName;
+            this.showLedgerScreen = true;
         }
     }
 

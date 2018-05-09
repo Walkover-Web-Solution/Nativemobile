@@ -52,8 +52,8 @@
             <div class="row">
                 <div class="col-3">
                     <span>
-                        <span class="font-bold">50,000</span>
-                        <span>dr</span>
+                        <span class="font-bold">{{ (transactionData$ | async)?.forwardedBalance.amount }}</span>
+                        <span>{{ (transactionData$ | async)?.forwardedBalance.type === 'DEBIT' ? 'DR' : 'CR'}}.</span>
                     </span>
                 </div>
                 <div class="col-3 flex-center">
@@ -70,8 +70,8 @@
                 </div>
                 <div class="col-3">
                     <span class="pull-right">
-                        <span>cr</span>
-                        <span class="font-bold">60.340</span>
+                        <span>{{ (transactionData$ | async)?.closingBalance.type === 'DEBIT' ? 'DR' : 'CR'}}.</span>
+                        <span class="font-bold">{{ (transactionData$ | async)?.closingBalance.amount }}</span>
                     </span>
                 </div>
             </div>
@@ -80,8 +80,8 @@
 
             <table style="width:100%">
                 <tr>
-                    <th class="active">Debit</th>
-                    <th>
+                    <th [ngClass]="{'active': activeTab === 'debit'}" (click)="toggleActiveTab()">Debit</th>
+                    <th (click)="toggleActiveTab()" [ngClass]="{'active': activeTab === 'credit'}">
                         <span class="pull-right">Credit</span>
                     </th>
                 </tr>
@@ -104,41 +104,33 @@
                 </tr>
             </table>
             <table class="table-text">
-                <tr>
-                    <td class="w-20pr">11/05/2018</td>
-                    <td>sales</td>
-                    <td class="w-20pr"></td>
-                </tr>
-                <tr>
-                    <td class="w-20pr">11/05/2018</td>
-                    <td>sales</td>
-                    <td class="w-20pr"></td>
-                </tr>
-                <tr>
-                    <td class="w-20pr">11/05/2018</td>
-                    <td>sales</td>
-                    <td class="w-20pr"></td>
-                </tr>
-                <tr>
-                    <td class="w-20pr">11/05/2018</td>
-                    <td>sales</td>
-                    <td class="w-20pr"></td>
-                </tr>
-                <tr>
-                    <td class="w-20pr">11/05/2018</td>
-                    <td>sales</td>
-                    <td class="w-20pr"></td>
-                </tr>
-                <tr>
-                    <td class="w-20pr">11/05/2018</td>
-                    <td>sales</td>
-                    <td class="w-20pr"></td>
-                </tr>
-                <tr>
-                    <td class="w-20pr">11/05/2018</td>
-                    <td>sales</td>
-                    <td class="w-20pr"></td>
-                </tr>
+                <ng-container *ngIf="activeTab === 'debit'">
+                    <tr *ngFor="let txn of (transactionData$ | async)?.debitTransactions">
+                        <td class="w-20pr">{{ txn.entryDate }}</td>
+                        <td>{{ txn.particular.name }}</td>
+                        <td class="w-20pr">
+                            {{ txn.amount | number: '1.0-2' }}
+                            <span  *ngIf="txn.attachedFileUniqueName.length > 0"
+                                   container="body"
+                                   matTooltip="Download file : {{txn.attachedFileName}}" [matTooltipPosition]="'above'">
+                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>
+                </span>
+                            <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
+                                  container="body"
+                                  matTooltip="Download Invoice : {{txn.voucherNumber}}" [matTooltipPosition]="'above'">
+                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>
+                </span>
+                        </td>
+                    </tr>
+                </ng-container>
+
+                <ng-container *ngIf="activeTab === 'credit'">
+                    <tr *ngFor="let txn of (transactionData$ | async)?.creditTransactions">
+                        <td class="w-20pr">{{ txn.entryDate }}</td>
+                        <td>{{ txn.particular.name }}</td>
+                        <td class="w-20pr">{{ txn.amount | number: '1.0-2' }}</td>
+                    </tr>
+                </ng-container>
             </table>
             <!-- last-2 row -->
             <table style="width:100%;border-top: none;">
