@@ -1,4 +1,13 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as _ from 'lodash';
 import {createSelector} from 'reselect';
@@ -19,7 +28,8 @@ import {Config} from '../common';
     selector: 'ns-tlpl',
     moduleId: module.id,
     templateUrl: './tlpl.component.html',
-    styleUrls: ['./tlpl.component.scss']
+    styleUrls: ['./tlpl.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('searchControl') public searchControl: ElementRef;
@@ -38,7 +48,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
-                private _routerExtension: RouterService) {
+                private _routerExtension: RouterService, private _cdRef: ChangeDetectorRef) {
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             return {companies, uniqueName};
         })).takeUntil(this.destroyed$);
@@ -74,6 +84,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.filterdData = d.groupDetails;
 
                 this.flattenGrpDetails = this.makeFlatten(d.groupDetails, []);
+                this._cdRef.detectChanges();
             }
         });
 
@@ -87,7 +98,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 distinctUntilChanged(),
                 map((t: any) => t.target.value)
             ).subscribe(data => {
-                console.log('Event Registerd');
                 this.searchGWA(data);
             });
         } else {
@@ -219,14 +229,16 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     searchGWA(term: string) {
+        console.log('term changed', term);
         if (term === '') {
             this.isSearchEnabled = false;
-            return;
         } else {
             if (term.startsWith(' ')) {
                 return;
             }
             this.isSearchEnabled = true;
+
+            console.time('search');
             this.searchedFlattenGrpDetails = this.flattenGrpDetails.filter(fla => {
                 if (fla.isGroup) {
                     return ((fla.groupName.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
@@ -234,7 +246,9 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                     return ((fla.name.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
                 }
             });
+            console.timeEnd('search');
         }
+        this._cdRef.detectChanges();
     }
 
     searchResultClicked(res) {
@@ -261,6 +275,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.breadCrumb.push(a.uniqueName);
             });
         }
+        this._cdRef.detectChanges();
     }
 
     genBreadcrumb(uniqueName: string, res) {
