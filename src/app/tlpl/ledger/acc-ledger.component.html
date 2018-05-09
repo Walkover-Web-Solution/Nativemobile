@@ -1,10 +1,32 @@
-<my-date-range-picker name="mydaterange" [options]="myDateRangePickerOptions"
-                      (dateRangeChanged)="onDateRangeChanged($event)"
-                      [(ngModel)]="dateModel" required></my-date-range-picker>
+<mat-card class="bg-offgrye">
+    <mat-card-content>
+        <div>
+            <span>
+                <a href="#">Home</a> /
+                <a href="#">Home</a> /
+                <a href="#">Home</a>
+            </span>
+        </div>
+    </mat-card-content>
+
+</mat-card>
 
 <mat-card>
     <mat-card-content>
-        <table>
+
+        <div>
+            <my-date-range-picker name="mydaterange" [options]="myDateRangePickerOptions"
+                                  (dateRangeChanged)="onDateRangeChanged($event)"
+                                  [(ngModel)]="dateModel" required></my-date-range-picker>
+        </div>
+    </mat-card-content>
+
+</mat-card>
+
+<mat-card>
+    <mat-card-content>
+
+        <!-- <table>
             <ng-template *ngIf="activeTab === 'credit'">
                 <tr *ngFor="let txn of (transactionData$ | async)?.creditTransactions">
                     <td class="col-xs-2">{{ txn.entryDate }}</td>
@@ -20,6 +42,115 @@
                     <td class="col-xs-3">{{ txn.amount | number: '1.0-2' }}</td>
                 </tr>
             </ng-template>
-        </table>
+        </table> -->
+
+        <div>
+            <div>
+                <span>opening</span>
+                <span class="pull-right">closing</span>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                    <span>
+                        <span class="font-bold">50,000</span>
+                        <span>dr</span>
+                    </span>
+                </div>
+                <div class="col-3 flex-center">
+
+                    <small>
+                        <i class="material-icons">
+                            remove
+                        </i>
+                        10,340 dr.
+                        <i class="material-icons">
+                            arrow_right_alt
+                        </i>
+                    </small>
+                </div>
+                <div class="col-3">
+                    <span class="pull-right">
+                        <span>cr</span>
+                        <span class="font-bold">60.340</span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top: 20px;">
+
+            <table style="width:100%">
+                <tr>
+                    <th class="active">Debit</th>
+                    <th>
+                        <span class="pull-right">Credit</span>
+                    </th>
+                </tr>
+
+            </table>
+            <table style="width:100%;border-top: none;">
+                <tr>
+                    <td style="border-top: none;">
+                        <div>
+                            <span _ngcontent-c5="">Cash is
+                                <span _ngcontent-c5="" class="bold">receving</span>
+                            </span>
+                        </div>
+                        <div>
+                            <span class="b-f">B/F</span>
+                        </div>
+
+
+                    </td>
+                </tr>
+            </table>
+            <table class="table-text">
+                <tr>
+                    <td class="w-20pr">11/05/2018</td>
+                    <td>sales</td>
+                    <td class="w-20pr"></td>
+                </tr>
+                <tr>
+                    <td class="w-20pr">11/05/2018</td>
+                    <td>sales</td>
+                    <td class="w-20pr"></td>
+                </tr>
+                <tr>
+                    <td class="w-20pr">11/05/2018</td>
+                    <td>sales</td>
+                    <td class="w-20pr"></td>
+                </tr>
+                <tr>
+                    <td class="w-20pr">11/05/2018</td>
+                    <td>sales</td>
+                    <td class="w-20pr"></td>
+                </tr>
+                <tr>
+                    <td class="w-20pr">11/05/2018</td>
+                    <td>sales</td>
+                    <td class="w-20pr"></td>
+                </tr>
+                <tr>
+                    <td class="w-20pr">11/05/2018</td>
+                    <td>sales</td>
+                    <td class="w-20pr"></td>
+                </tr>
+                <tr>
+                    <td class="w-20pr">11/05/2018</td>
+                    <td>sales</td>
+                    <td class="w-20pr"></td>
+                </tr>
+            </table>
+            <!-- last-2 row -->
+            <table style="width:100%;border-top: none;">
+                <tr>
+                    <td style="border-top: none;">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </mat-card-content>
 </mat-card>

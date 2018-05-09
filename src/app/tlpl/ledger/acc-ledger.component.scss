@@ -1,0 +1,80 @@
+::ng-deep .mydrp{
+    width: 100% !important;
+}
+
+.bg-offgrye{
+    background-color: #fcfcfc;
+    padding: 12px 24px !important;
+}
+
+.row{
+    display: flex;
+}
+.col-3{
+    width: 35%;
+}
+.font-bold{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.flex-center{
+    display: flex;
+    justify-content: center;
+    small{
+        i{
+            position: relative;
+            top: 7px;
+        }
+    }
+}
+
+
+// table style
+
+table, th, td {
+    border: 1px solid lightgrey;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+tr{
+    th{
+        width: 50%;
+        font-size: 16px;
+        background-color: #dfdfdf;
+        font-weight: 400 !important;
+
+    }
+}
+.bold{
+    font-weight: bold;
+}
+
+.b-f{
+    display: block;
+    width: 25%;
+    color: #999999;
+    font-size: 16px;
+    float: right;
+}
+.active{
+    background-color: #f67b41 !important;
+    color: white;
+}
+
+
+.table-text{
+    border-top: none;
+    width: 100%;
+    td{
+        border-top: none;
+    }
+    .w-20pr{
+        width: 20%;
+    }
+}

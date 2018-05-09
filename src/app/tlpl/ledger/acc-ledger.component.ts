@@ -12,7 +12,8 @@ import 'rxjs/add/operator/takeUntil';
 @Component({
     selector: 'ns-acc-ledger',
     moduleId: module.id,
-    templateUrl: './acc-ledger.component.html'
+    templateUrl: './acc-ledger.component.html',
+    styleUrls:['./acc-ledger.component.scss']
 })
 export class AccLedgerComponent implements OnInit, OnDestroy {
     @Input() accUniqueName: string;
