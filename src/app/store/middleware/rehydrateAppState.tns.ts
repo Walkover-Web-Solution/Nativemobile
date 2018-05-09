@@ -84,10 +84,10 @@ export const rehydrateApplicationState = (
                 );
             }
         }
-        console.log('Getting Data');
-        console.log(JSON.stringify(storageKeySerializer(key)));
+        // console.log('Getting Data');
+        // console.log(JSON.stringify(storageKeySerializer(key)));
         let stateSlice = storage.getSync({ key: storageKeySerializer(key) });
-        console.log('Data', JSON.stringify(stateSlice));
+        // console.log('Data', JSON.stringify(stateSlice));
         if (stateSlice) {
             // Use provided decrypt function
             if (decrypt) {

@@ -13,6 +13,7 @@ import {RouterService} from '../services/router.service';
 import {Account, ChildGroup} from '../models/api-models/Search';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {Config} from '../common';
 
 @Component({
     selector: 'ns-tlpl',
@@ -76,17 +77,34 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         });
 
-        this.store.dispatch(this._tlPlActions.GetflatAccountWGroups());
+        // this.store.dispatch(this._tlPlActions.GetflatAccountWGroups());
     }
 
     ngAfterViewInit() {
-        fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'input').pipe(
-            debounceTime(700),
-            distinctUntilChanged(),
-            map((t: any) => t.target.value)
-        ).subscribe(data => {
-            this.searchGWA(data);
-        })
+        if (!Config.IS_MOBILE_NATIVE) {
+            fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'input').pipe(
+                debounceTime(700),
+                distinctUntilChanged(),
+                map((t: any) => t.target.value)
+            ).subscribe(data => {
+                console.log('Event Registerd');
+                this.searchGWA(data);
+            });
+        } else {
+            fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'textChange').pipe(
+                debounceTime(700),
+                distinctUntilChanged(),
+                map((t: any) => {
+                    if (t) {
+                        return t.object.text;
+                    } else {
+                        return '';
+                    }
+                })
+            ).subscribe(data => {
+                this.searchGWA(data);
+            });
+        }
     }
 
     InitData(d: ChildGroup[]) {
