@@ -11,7 +11,10 @@
 </mat-card>
 
 <mat-card>
-    <mat-card-content>
+    <mat-card-content infiniteScroll
+                      [infiniteScrollDistance]="2"
+                      (scrolled)="loadMore()"
+                      [infiniteScrollDisabled]="isTransactionRequestInProcess$ | async">
 
         <div>
             <div>
@@ -21,7 +24,7 @@
             <div class="row">
                 <div class="col-3">
                     <span>
-                        <span class="font-bold">{{ (transactionData$ | async)?.forwardedBalance.amount }}</span>
+                        <span class="font-bold">{{ (transactionData$ | async)?.forwardedBalance.amount  | number: '1.0-2'}}</span>
                         <span>{{ (transactionData$ | async)?.forwardedBalance.type === 'DEBIT' ? 'DR' : 'CR'}}.</span>
                     </span>
                 </div>
@@ -31,7 +34,11 @@
                         <i class="material-icons">
                             remove
                         </i>
-                        10,340 dr.
+                        {{ (transactionData$ | async)?.forwardedBalance.amount > (transactionData$ |
+                        async)?.closingBalance.amount ? 'Cr' : '' }}
+                        {{ diffTotal | number: '1.0-2' }}
+                        {{ (transactionData$ | async)?.closingBalance.amount > (transactionData$ |
+                        async)?.forwardedBalance.amount ? 'Dr' : '' }}
                         <i class="material-icons">
                             arrow_right_alt
                         </i>
@@ -40,7 +47,8 @@
                 <div class="col-3">
                     <span class="pull-right">
                         <span>{{ (transactionData$ | async)?.closingBalance.type === 'DEBIT' ? 'DR' : 'CR'}}.</span>
-                        <span class="font-bold">{{ (transactionData$ | async)?.closingBalance.amount }}</span>
+                        <span
+                            class="font-bold">{{ (transactionData$ | async)?.closingBalance.amount | number: '1.0-2'}}</span>
                     </span>
                 </div>
             </div>
@@ -100,7 +108,7 @@
                             <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
                                   container="body"
                                   matTooltip="Download Invoice : {{txn.voucherNumber}}" [matTooltipPosition]="'above'">
-                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>
+                  <<mat-icon>cloud_download</mat-icon>
                 </span>
                         </td>
                     </tr>
@@ -110,7 +118,19 @@
                     <tr *ngFor="let txn of (transactionData$ | async)?.creditTransactions">
                         <td class="w-20pr">{{ txn.entryDate }}</td>
                         <td>{{ txn.particular.name }}</td>
-                        <td class="w-20pr">{{ txn.amount | number: '1.0-2' }}</td>
+                        <td class="w-20pr">
+                            {{ txn.amount | number: '1.0-2' }}
+                            <span *ngIf="txn.attachedFileUniqueName.length > 0"
+                                  container="body"
+                                  matTooltip="Download file : {{txn.attachedFileName}}" [matTooltipPosition]="'above'">
+                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>
+                </span>
+                            <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
+                                  container="body"
+                                  matTooltip="Download Invoice : {{txn.voucherNumber}}" [matTooltipPosition]="'above'">
+                    <mat-icon>cloud_download</mat-icon>
+                </span>
+                        </td>
                     </tr>
                 </ng-container>
             </table>
@@ -118,15 +138,13 @@
             <table style="width:100%;border-top: none;" *ngIf="activeTab === 'debit'">
                 <tr>
                     <td style="border-top: none;">
+                        <u>{{ (transactionData$ | async)?.debitTotal | number: '1.0-2' }}</u>
                     </td>
                 </tr>
             </table>
 
             <table style="width:100%;border-top: none;" *ngIf="activeTab === 'credit'">
                 <tr>
-
-
-
                     <td style="border-top: none;">
 
                         <span class="pull-right">60,340</span>
@@ -136,11 +154,24 @@
                 <tr>
                     <td>
                         <span class="pull-right">
-                            <u>60,340</u>
+                            <u>{{ (transactionData$ | async)?.creditTotal | number: '1.0-2' }}</u>
                         </span>
                     </td>
                 </tr>
             </table>
         </div>
     </mat-card-content>
+</mat-card>
+
+<button mat-raised-button class="pull-right" color="warn" [disabled]="totalPages === 0 || (request.page === totalPages)"
+        (click)="loadMore()">Load More
+</button>
+
+<mat-card *ngIf="isTransactionRequestInProcess$ | async">
+    <div style="display: flex;justify-content: center;align-items: center;">
+        <mat-progress-spinner
+            [color]="'primary'"
+            [mode]="'indeterminate'">
+        </mat-progress-spinner>
+    </div>
 </mat-card>

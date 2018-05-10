@@ -93,13 +93,13 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
         if (!Config.IS_MOBILE_NATIVE) {
-            fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'input').pipe(
-                debounceTime(700),
-                distinctUntilChanged(),
-                map((t: any) => t.target.value)
-            ).subscribe(data => {
-                this.searchGWA(data);
-            });
+            // fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'input').pipe(
+            //     debounceTime(700),
+            //     distinctUntilChanged(),
+            //     map((t: any) => t.target.value)
+            // ).subscribe(data => {
+            //     this.searchGWA(data);
+            // });
         } else {
             fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'textChange').pipe(
                 debounceTime(700),
@@ -115,6 +115,10 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.searchGWA(data);
             });
         }
+    }
+
+    search(term) {
+        this.searchGWA(term);
     }
 
     InitData(d: ChildGroup[]) {

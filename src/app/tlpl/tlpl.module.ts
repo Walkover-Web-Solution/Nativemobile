@@ -8,7 +8,8 @@ import {TlPlRoutes} from './tlpl.routes';
 import {TlPlComponent} from './tlpl.component';
 import {MatAutocompleteModule} from '@angular/material';
 import {AccLedgerComponent} from './ledger/acc-ledger.component';
-import { MyDateRangePickerModule } from 'mydaterangepicker';
+import {MyDateRangePickerModule} from 'mydaterangepicker';
+import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 
 @NgModule({
     imports: [
@@ -18,7 +19,8 @@ import { MyDateRangePickerModule } from 'mydaterangepicker';
         ReactiveFormsModule,
         SharedModule,
         MatAutocompleteModule,
-        MyDateRangePickerModule
+        MyDateRangePickerModule,
+        InfiniteScrollModule
     ],
     declarations: [TlPlComponent, AccLedgerComponent],
     schemas: [

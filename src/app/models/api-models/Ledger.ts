@@ -141,8 +141,8 @@ export class TransactionsResponse implements ITransactions {
 
 export class TransactionsRequest {
   public q: string = '';
-  public page: number = 0;
-  public count: number = 15;
+  public page: number = 1;
+  public count: number = 30;
   public accountUniqueName: string = '';
   public from: string = '';
   public to: string = '';

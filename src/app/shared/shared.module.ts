@@ -1,20 +1,21 @@
-import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 
-import { MyDrawerItemComponent } from "./my-drawer-item/my-drawer-item.component";
-import { MyDrawerComponent } from "./my-drawer/my-drawer.component";
-import { MyButonComponent } from "./my-button/my-botton.component";
-import { MyLogoutComponent } from "./logout-button/logout-botton.component";
-import { PieChartComponent } from "./pie-chart/pie-chart.component";
-import { MyChipsComponent } from "./my-chips/my-chips.component";
-import { CommonModule } from "@angular/common";
-import { RouterModule } from "@angular/router";
-import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MyDrawerItemComponent } from './my-drawer-item/my-drawer-item.component';
+import { MyDrawerComponent } from './my-drawer/my-drawer.component';
+import { MyButonComponent } from './my-button/my-botton.component';
+import { MyLogoutComponent } from './logout-button/logout-botton.component';
+import { PieChartComponent } from './pie-chart/pie-chart.component';
+import { MyChipsComponent } from './my-chips/my-chips.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import {
     MatButtonModule, MatCardModule, MatListModule, MatGridListModule, MatChipsModule, MatDatepickerModule,
-    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatDialogModule, MatRadioButton, MatRadioModule, MatTabsModule
+    MatFormFieldModule, MatToolbarModule, MatSidenavModule, MatIconModule, MatInputModule, MatCheckboxModule, MatSelectModule, MatDialogModule, MatRadioButton, MatRadioModule, MatTabsModule,
+    MatProgressSpinnerModule
 } from '@angular/material';
-import { MyHeaderComponent } from "./my-header/my-header.component";
+import { MyHeaderComponent } from './my-header/my-header.component';
 import { LaddaModule } from 'angular2-ladda';
 import { AuthServiceConfig, GoogleLoginProvider, LinkedinLoginProvider, SocialLoginModule } from 'ng4-social-login';
 
@@ -34,7 +35,8 @@ const matModules = [MatButtonModule,
     MatMomentDateModule,
     MatDialogModule,
     MatRadioModule,
-    MatTabsModule
+    MatTabsModule,
+    MatProgressSpinnerModule
 ];
 
 const SOCIAL_CONFIG = new AuthServiceConfig([

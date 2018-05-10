@@ -54,6 +54,19 @@ export class TBPlBsActions {
             }
         });
 
+    @Effect()
+    public GetMoreTransactions$: Observable<Action> = this.action$
+        .ofType(TlPlConst.GET_MORE_ACC_TRANSACTION)
+        .switchMap((action: CustomActions) => {
+            let req: TransactionsRequest = action.payload as TransactionsRequest;
+            return this._ledgerService.GetLedgerTranscations(req.q, req.page, req.count, req.accountUniqueName, req.from, req.to, req.sort, req.reversePage);
+        }).map(res => {
+            return {
+                type: TlPlConst.GET_MORE_ACC_TRANSACTION_RESPONSE,
+                payload: res.status === 'success' ? res.body : null
+            }
+        });
+
     constructor(private action$: Actions, private _tlPlService: TlPlService, private _groupService: GroupService, private _ledgerService: LedgerService) {
 
     }
@@ -77,6 +90,13 @@ export class TBPlBsActions {
     public GetTransactions(request: TransactionsRequest): CustomActions {
         return {
             type: TlPlConst.GET_ACC_TRANSACTION,
+            payload: request
+        };
+    }
+
+    public GetMoreTransactions(request: TransactionsRequest): CustomActions {
+        return {
+            type: TlPlConst.GET_MORE_ACC_TRANSACTION,
             payload: request
         };
     }

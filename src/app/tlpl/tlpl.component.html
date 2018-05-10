@@ -9,8 +9,8 @@
             <mat-card-content>
                 <div>
                     <a (click)="resetNavigation()">Home /</a>
-                    <span *ngFor="let brd of breadCrumb" style="margin: 0px 5px">
-                        <a *ngIf="brd !== activeGrp && brd !== activeAcc;else last"
+                    <span *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
+                        <a *ngIf="!l;else last"
                            (click)="navigateTo(brd)">{{ brd }} /</a>
                         <ng-template #last> {{ brd }}</ng-template>
                     </span>
@@ -25,7 +25,7 @@
                     <form>
                         <div style="display: flex;">
                             <mat-icon class="icon-search" matPrefix>search</mat-icon>
-                            <input class="search-box" type="text" matInput #searchControl>
+                            <input class="search-box" type="text" matInput #searchControl (input)="search(searchControl.value)">
                         </div>
                     </form>
                 </mat-card-content>

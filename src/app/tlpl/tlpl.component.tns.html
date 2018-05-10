@@ -20,8 +20,8 @@
 
             <StackLayout orientation="horizontal" padding="15" color="black">
                 <Label text="Home /" (tap)="resetNavigation()"></Label>
-                <StackLayout *ngFor="let brd of breadCrumb" style="margin: 0px 5px">
-                    <Label *ngIf="brd !== activeGrp;else last" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
+                <StackLayout *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
+                    <Label *ngIf="!l;else last" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
                     <ng-template #last>
                         <Label text="{{ brd }}"></Label>
                     </ng-template>
