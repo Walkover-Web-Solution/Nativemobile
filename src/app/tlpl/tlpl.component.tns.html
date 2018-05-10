@@ -12,30 +12,64 @@
 
 <ScrollView>
     <StackLayout margin="5">
-
         <GridLayout rows="auto" columns="*">
             <SearchBar row="0" hint="Search" #searchControl></SearchBar>
         </GridLayout>
 
-        <StackLayout orientation="horizontal">
-            <Label text="Home /" (tap)="resetNavigation()"></Label>
-            <StackLayout *ngFor="let brd of breadCrumb" style="margin: 0px 5px">
-                <Label *ngIf="brd !== activeGrp;else last" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
-                <ng-template #last>
-                    <Label text="{{ brd }}"></Label>
-                </ng-template>
-            </StackLayout>
-        </StackLayout>
+        <CardView class="gen-card-style" elevation="3" radius="1">
 
+            <StackLayout orientation="horizontal" padding="15" color="black">
+                <Label text="Home /" (tap)="resetNavigation()"></Label>
+                <StackLayout *ngFor="let brd of breadCrumb" style="margin: 0px 5px">
+                    <Label *ngIf="brd !== activeGrp;else last" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
+                    <ng-template #last>
+                        <Label text="{{ brd }}"></Label>
+                    </ng-template>
+                </StackLayout>
+            </StackLayout>
+        </CardView>
 
         <CardView class="gen-card-style" elevation="3" radius="1">
-            <FlexboxLayout flexDirection="column" class="list-group" *ngIf="!isSearchEnabled; else searchContainer">
-                <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)" (tap)="filterData(grp)"
-                             class="list-group-item">
-                    <Label text="{{ grp.groupName }}"></Label>
+            <FlexboxLayout flexDirection="row" class="text-box" >
+                <Label text="Total"></Label>
+                <Label text="254,560"></Label>
+            </FlexboxLayout>
+        </CardView>
 
-                    <StackLayout orientation="vertical" *ngFor="let acc of grp.accounts" class="list-group-item">
-                        <Label text="{{ acc.name }}" textWrap="true"></Label>
+        <CardView class="gen-card-style" elevation="3" radius="1">
+
+            <FlexboxLayout flexDirection="column" class="list-group" *ngIf="!isSearchEnabled; else searchContainer">
+                <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
+                    <Label text="Particular"></Label> <Label text="Closing Balance"></Label>
+                </FlexboxLayout>
+
+                <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)" (tap)="filterData(grp)">
+
+                    <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item">
+                        <Label text="{{ grp.groupName }}"></Label>
+                        <GridLayout columns="*,*" rows="auto">
+                            <StackLayout row="0" col="0">
+                                <Label text="Label 1"></Label>
+                            </StackLayout>
+                            <StackLayout row="0" col="1">
+                                <Label class="pull-right" text="Label 1"></Label>
+                            </StackLayout>
+                        </GridLayout>
+                    </StackLayout>
+
+                    <StackLayout orientation="vertical" *ngFor="let acc of grp.accounts"
+                                 (tap)="$event.stopPropagation();goToLedger(acc)">
+                        <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
+                            <Label text="{{ acc.name }}" textWrap="true"></Label>
+                            <GridLayout columns="*,*" rows="auto">
+                                <StackLayout row="0" col="0">
+                                    <Label text="Label 1"></Label>
+                                </StackLayout>
+                                <StackLayout row="0" col="1">
+                                    <Label class="pull-right" text="Label 1"></Label>
+                                </StackLayout>
+                            </GridLayout>
+                        </StackLayout>
                     </StackLayout>
                 </StackLayout>
             </FlexboxLayout>
