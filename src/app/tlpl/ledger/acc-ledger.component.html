@@ -1,16 +1,3 @@
-<mat-card class="bg-offgrye">
-    <mat-card-content>
-        <div>
-            <span>
-                <a href="#">Home</a> /
-                <a href="#">Home</a> /
-                <a href="#">Home</a>
-            </span>
-        </div>
-    </mat-card-content>
-
-</mat-card>
-
 <mat-card>
     <mat-card-content>
 
@@ -25,24 +12,6 @@
 
 <mat-card>
     <mat-card-content>
-
-        <!-- <table>
-            <ng-template *ngIf="activeTab === 'credit'">
-                <tr *ngFor="let txn of (transactionData$ | async)?.creditTransactions">
-                    <td class="col-xs-2">{{ txn.entryDate }}</td>
-                    <td class="col-xs-7">{{ txn.particular.name }}</td>
-                    <td class="col-xs-3">{{ txn.amount | number: '1.0-2' }}</td>
-                </tr>
-            </ng-template>
-
-            <ng-template *ngIf="activeTab === 'debit'">
-                <tr *ngFor="let txn of (transactionData$ | async)?.debitTransactions">
-                    <td class="col-xs-2">{{ txn.entryDate }}</td>
-                    <td class="col-xs-7">{{ txn.particular.name }}</td>
-                    <td class="col-xs-3">{{ txn.amount | number: '1.0-2' }}</td>
-                </tr>
-            </ng-template>
-        </table> -->
 
         <div>
             <div>
@@ -87,12 +56,12 @@
                 </tr>
 
             </table>
-            <table style="width:100%;border-top: none;">
+            <table style="width:100%;border-top: none;" *ngIf="activeTab === 'debit'">
                 <tr>
                     <td style="border-top: none;">
                         <div>
                             <span _ngcontent-c5="">Cash is
-                                <span _ngcontent-c5="" class="bold">receving</span>
+                                <span _ngcontent-c5="" class="bold">receiving</span>
                             </span>
                         </div>
                         <div>
@@ -103,6 +72,19 @@
                     </td>
                 </tr>
             </table>
+
+            <table style="width:100%;border-top: none;" *ngIf="activeTab === 'credit'">
+                <tr>
+                    <td style="border-top: none;">
+                        <div>
+                            <span _ngcontent-c5="" class="pull-right">Cash is
+                                <span _ngcontent-c5="" class="bold">giving</span>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
             <table class="table-text">
                 <ng-container *ngIf="activeTab === 'debit'">
                     <tr *ngFor="let txn of (transactionData$ | async)?.debitTransactions">
@@ -110,9 +92,9 @@
                         <td>{{ txn.particular.name }}</td>
                         <td class="w-20pr">
                             {{ txn.amount | number: '1.0-2' }}
-                            <span  *ngIf="txn.attachedFileUniqueName.length > 0"
-                                   container="body"
-                                   matTooltip="Download file : {{txn.attachedFileName}}" [matTooltipPosition]="'above'">
+                            <span *ngIf="txn.attachedFileUniqueName.length > 0"
+                                  container="body"
+                                  matTooltip="Download file : {{txn.attachedFileName}}" [matTooltipPosition]="'above'">
                   <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>
                 </span>
                             <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
@@ -133,13 +115,29 @@
                 </ng-container>
             </table>
             <!-- last-2 row -->
-            <table style="width:100%;border-top: none;">
+            <table style="width:100%;border-top: none;" *ngIf="activeTab === 'debit'">
                 <tr>
                     <td style="border-top: none;">
                     </td>
                 </tr>
+            </table>
+
+            <table style="width:100%;border-top: none;" *ngIf="activeTab === 'credit'">
+                <tr>
+
+
+
+                    <td style="border-top: none;">
+
+                        <span class="pull-right">60,340</span>
+                        <span class="c-f"> C / F </span>
+                    </td>
+                </tr>
                 <tr>
                     <td>
+                        <span class="pull-right">
+                            <u>60,340</u>
+                        </span>
                     </td>
                 </tr>
             </table>

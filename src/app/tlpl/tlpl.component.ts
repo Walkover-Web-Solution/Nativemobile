@@ -39,7 +39,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public data$: Observable<AccountDetails>;
     public filterdData: ChildGroup[] = [];
     public breadCrumb: string[] = [];
-    public activeGrp: string = '';
+    public activeGrp: ChildGroup = null;
     public activeAcc: string = '';
     public flattenGrpDetails: any[] = [];
     public searchedFlattenGrpDetails: any[] = [];
@@ -143,7 +143,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     filterData(grp: ChildGroup) {
         this.showLedgerScreen = false;
-        this.activeGrp = grp.uniqueName;
+        this.activeGrp = grp;
         if (grp.category !== null) {
             this.breadCrumb = [];
         }
@@ -171,10 +171,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     navigateTo(uniqueName: string) {
-        this.activeGrp = uniqueName;
+        this.activeAcc = '';
         this.data$.subscribe(p => {
             let d = _.cloneDeep(p) as AccountDetails;
             let result = this.loopOver(d.groupDetails, uniqueName, null);
+            this.activeGrp = result;
             this.filterdData = result.childGroups;
         });
         let index = this.breadCrumb.findIndex(f => f === uniqueName);
@@ -204,8 +205,9 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     goToLedger(acc: Account) {
+        this.activeGrp = null;
         this.activeAcc = acc.uniqueName;
-        this.showLedgerScreen = true;
+        this.breadCrumb.push(acc.uniqueName);
     }
 
     makeFlatten(mainGrps: ChildGroup[], result: any[], parentGrpUniqueName?: string) {
@@ -253,20 +255,22 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     searchResultClicked(res) {
         this.isSearchEnabled = false;
         if (res.isGroup) {
+            this.activeGrp = res;
+            this.activeAcc = '';
             this.searchWithNavigation(res);
         } else {
             this.activeAcc = res.uniqueName;
-            this.showLedgerScreen = true;
+            this.activeGrp = null;
         }
     }
 
     searchWithNavigation(res) {
         let r = this.genBreadcrumb(res.uniqueName, []);
         if (r && r.length) {
-            this.activeGrp = r[0].uniqueName;
+            this.activeGrp = r[0];
             this.data$.take(1).subscribe(p => {
                 let d = _.cloneDeep(p) as AccountDetails;
-                let result = this.loopOver(d.groupDetails, this.activeGrp, null);
+                let result = this.loopOver(d.groupDetails, this.activeGrp.uniqueName, null);
                 this.filterdData = result.childGroups;
             });
 
