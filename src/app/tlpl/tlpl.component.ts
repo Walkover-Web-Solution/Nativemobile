@@ -121,15 +121,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.searchGWA(term);
     }
 
-    InitData(d: ChildGroup[], category?: string) {
+    InitData(d: ChildGroup[]) {
         _.each(d, (grp: ChildGroup) => {
             grp.isVisible = false;
             grp.isCreated = false;
             grp.isIncludedInSearch = true;
-
-            if (category) {
-                grp.category = category;
-            }
 
             _.each(grp.accounts, (acc: Account) => {
                 acc.isIncludedInSearch = true;
@@ -137,7 +133,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 acc.isVisible = false;
             });
             if (grp.childGroups) {
-                this.InitData(grp.childGroups, grp.category);
+                this.InitData(grp.childGroups);
             }
         });
     }
@@ -153,9 +149,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     filterData(grp: ChildGroup) {
         this.showLedgerScreen = false;
         this.activeGrp = grp;
+
         if (grp.category !== null) {
             this.breadCrumb = [];
         }
+
         this.breadCrumb.push(grp.uniqueName);
         this.filterdData.filter(p => {
             return p.groupName === grp.groupName;
@@ -217,6 +215,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activeGrp = null;
         this.activeAcc = acc.uniqueName;
         this.breadCrumb.push(acc.uniqueName);
+        this._cdRef.detectChanges();
     }
 
     makeFlatten(mainGrps: ChildGroup[], result: any[], parentGrpUniqueName?: string) {

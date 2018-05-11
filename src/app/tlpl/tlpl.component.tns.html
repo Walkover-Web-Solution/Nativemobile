@@ -21,16 +21,14 @@
             <StackLayout orientation="horizontal" padding="15" color="black">
                 <Label text="Home /" (tap)="resetNavigation()"></Label>
                 <StackLayout *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
-                    <Label *ngIf="!l;else last" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
-                    <ng-template #last>
-                        <Label text="{{ brd }}"></Label>
-                    </ng-template>
+                    <Label *ngIf="!l" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
+                    <Label *ngIf="l" text="{{ brd }}"></Label>
                 </StackLayout>
             </StackLayout>
         </CardView>
 
         <CardView class="gen-card-style" elevation="3" radius="1">
-            <FlexboxLayout flexDirection="row" class="text-box" >
+            <FlexboxLayout flexDirection="row" class="text-box">
                 <Label text="Total"></Label>
                 <Label text="254,560"></Label>
             </FlexboxLayout>
@@ -38,51 +36,67 @@
 
         <CardView class="gen-card-style" elevation="3" radius="1">
 
-            <FlexboxLayout flexDirection="column" class="list-group" *ngIf="!isSearchEnabled; else searchContainer">
-                <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
-                    <Label text="Particular"></Label> <Label text="Closing Balance"></Label>
-                </FlexboxLayout>
+            <FlexboxLayout flexDirection="column">
 
-                <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)" (tap)="filterData(grp)">
+                <ng-container *ngIf="activeAcc === '';">
 
-                    <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item">
-                        <Label text="{{ grp.groupName }}"></Label>
-                        <GridLayout columns="*,*" rows="auto">
-                            <StackLayout row="0" col="0">
-                                <Label text="Label 1"></Label>
+                    <FlexboxLayout flexDirection="column" class="list-group"
+                                   *ngIf="!isSearchEnabled; else searchContainer">
+                        <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
+                            <Label text="Particular"></Label> <Label text="Closing Balance"></Label>
+                        </FlexboxLayout>
+
+                        <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)">
+
+                            <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item"
+                                         (tap)="filterData(grp)">
+                                <Label text="{{ grp.groupName }}"></Label>
+                                <GridLayout columns="*,*" rows="auto">
+                                    <StackLayout row="0" col="0">
+                                        <Label text="Label 1"></Label>
+                                    </StackLayout>
+                                    <StackLayout row="0" col="1">
+                                        <Label class="pull-right" text="Label 1"></Label>
+                                    </StackLayout>
+                                </GridLayout>
                             </StackLayout>
-                            <StackLayout row="0" col="1">
-                                <Label class="pull-right" text="Label 1"></Label>
-                            </StackLayout>
-                        </GridLayout>
-                    </StackLayout>
 
-                    <StackLayout orientation="vertical" *ngFor="let acc of grp.accounts"
-                                 (tap)="$event.stopPropagation();goToLedger(acc)">
-                        <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
-                            <Label text="{{ acc.name }}" textWrap="true"></Label>
-                            <GridLayout columns="*,*" rows="auto">
-                                <StackLayout row="0" col="0">
-                                    <Label text="Label 1"></Label>
+                            <StackLayout orientation="vertical" *ngFor="let acc of grp.accounts"
+                                         (tap)="goToLedger(acc)">
+                                <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
+                                    <Label text="{{ acc.name }}" textWrap="true"></Label>
+                                    <GridLayout columns="*,*" rows="auto">
+                                        <StackLayout row="0" col="0">
+                                            <Label text="Label 1"></Label>
+                                        </StackLayout>
+                                        <StackLayout row="0" col="1">
+                                            <Label class="pull-right" text="Label 1"></Label>
+                                        </StackLayout>
+                                    </GridLayout>
                                 </StackLayout>
-                                <StackLayout row="0" col="1">
-                                    <Label class="pull-right" text="Label 1"></Label>
-                                </StackLayout>
-                            </GridLayout>
+                            </StackLayout>
                         </StackLayout>
-                    </StackLayout>
-                </StackLayout>
-            </FlexboxLayout>
+                    </FlexboxLayout>
 
-            <ng-template #searchContainer>
-                <FlexboxLayout flexDirection="column" class="list-group">
-                    <StackLayout orientation="vertical" *ngFor="let item of searchedFlattenGrpDetails"
-                                 (tap)="searchResultClicked(item)"
-                                 class="list-group-item">
-                        <Label text="{{ item.isGroup ? item.groupName : item.name }}"></Label>
-                    </StackLayout>
-                </FlexboxLayout>
-            </ng-template>
+                    <ng-template #searchContainer>
+                        <FlexboxLayout flexDirection="column" class="list-group">
+                            <StackLayout orientation="vertical" *ngFor="let item of searchedFlattenGrpDetails"
+                                         (tap)="searchResultClicked(item)"
+                                         class="list-group-item">
+                                <Label text="{{ item.isGroup ? item.groupName : item.name }}"></Label>
+                            </StackLayout>
+                        </FlexboxLayout>
+                    </ng-template>
+
+                </ng-container>
+
+                <ng-container *ngIf="activeAcc !== ''">
+                    <FlexboxLayout flexDirection="column">
+                        <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
+                    </FlexboxLayout>
+                </ng-container>
+
+            </FlexboxLayout>
 
         </CardView>
     </StackLayout>
