@@ -12,11 +12,11 @@
 
 <ScrollView>
     <StackLayout margin="5">
-        <GridLayout rows="auto" columns="*">
+        <GridLayout rows="auto" columns="*" *ngIf="breadCrumb.length === 0">
             <SearchBar row="0" hint="Search" #searchControl></SearchBar>
         </GridLayout>
 
-        <CardView class="gen-card-style" elevation="3" radius="1">
+        <CardView class="gen-card-style" elevation="3" radius="1" *ngIf="breadCrumb.length > 0">
 
             <StackLayout orientation="horizontal" padding="15" color="black">
                 <Label text="Home /" (tap)="resetNavigation()"></Label>
@@ -27,10 +27,10 @@
             </StackLayout>
         </CardView>
 
-        <CardView class="gen-card-style" elevation="3" radius="1">
+        <CardView class="gen-card-style" elevation="3" radius="1" *ngIf="breadCrumb.length > 0 && activeGrp">
             <FlexboxLayout flexDirection="row" class="text-box">
                 <Label text="Total"></Label>
-                <Label text="254,560"></Label>
+                <Label text="{{ activeGrp?.closingBalance.amount | number: '1.0-2' }}"></Label>
             </FlexboxLayout>
         </CardView>
 

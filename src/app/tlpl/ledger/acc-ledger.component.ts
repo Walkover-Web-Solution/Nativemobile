@@ -12,7 +12,7 @@ import {AccountResponse} from '../../models/api-models/Account';
 import { underStandingTextData } from './underStandingTextData';
 import * as _ from 'lodash';
 import {LedgerService} from '../../services/ledger.service';
-import { saveAs } from 'file-saver';
+// import { saveAs } from 'file-saver';
 import {ToasterService} from '../../services/toaster.service';
 
 @Component({
@@ -95,14 +95,14 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
     downloadAttachedFile(fileName: string, e: Event) {
         e.stopPropagation();
-        this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
-            if (d.status === 'success') {
-                let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
-                return saveAs(blob, d.body.name);
-            } else {
-                this._toaster.errorToast(d.message);
-            }
-        });
+        // this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
+        //     if (d.status === 'success') {
+        //         let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
+        //         return saveAs(blob, d.body.name);
+        //     } else {
+        //         this._toaster.errorToast(d.message);
+        //     }
+        // });
     }
 
     downloadInvoice(invoiceName: string, e: Event) {
@@ -112,14 +112,14 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         let downloadRequest = new DownloadLedgerRequest();
         downloadRequest.invoiceNumber = [invoiceName];
 
-        this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
-            if (d.status === 'success') {
-                let blob = base64ToBlob(d.body, 'application/pdf', 512);
-                return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
-            } else {
-                this._toaster.errorToast(d.message);
-            }
-        });
+        // this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
+        //     if (d.status === 'success') {
+        //         let blob = base64ToBlob(d.body, 'application/pdf', 512);
+        //         return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
+        //     } else {
+        //         this._toaster.errorToast(d.message);
+        //     }
+        // });
     }
 
     onDateRangeChanged(event: IMyDateRangeModel) {

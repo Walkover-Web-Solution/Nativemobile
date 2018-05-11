@@ -1,3 +1,52 @@
-<StackLayout>
-    <Label text="'Account Ledger'"></Label>
-</StackLayout>
+<!--<CardView class="gen-card-style" elevation="3" radius="1">-->
+
+<FlexboxLayout flexDirection="column">
+    <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
+        <Label text="Opening"></Label>
+        <Label text="Closing"></Label>
+    </FlexboxLayout>
+
+
+    <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10" marginBottom="20">
+        <Label text="50,000 Dr."></Label>
+        <StackLayout orientation="horizontal">
+            <Label text="-"></Label>
+            <Label text="10240 Dr."></Label>
+            <Label text="->"></Label>
+        </StackLayout>
+        <Label text="Cr. 60,000"></Label>
+    </FlexboxLayout>
+
+    <GridLayout rows="auto" columns="*,*">
+        <StackLayout class="tab-button active-tab" row="0" col="0" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4">
+            <Label text="Debit" flexGrow="1"></Label>
+        </StackLayout>
+        <StackLayout class="tab-button" row="0" col="1" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4">
+            <Label class="pull-right" text="Credit" flexGrow="1"></Label>
+        </StackLayout>
+
+    </GridLayout>
+
+    <GridLayout rows="auto,auto" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4">
+        <StackLayout row="0">
+            <Label text="Cash is Receiving"></Label>
+        </StackLayout>
+        <StackLayout row="1">
+            <Label class="pull-right" marginRight="50" text="B/F"></Label>
+        </StackLayout>
+    </GridLayout>
+
+    <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4"
+                *ngFor="let i of [1,2,3,4,5]">
+        <StackLayout col="0" padding="10" borderRightWidth="1">
+            <Label text="110"></Label>
+        </StackLayout>
+        <StackLayout col="1" padding="10" borderRightWidth="1">
+            <Label text="Vishal"></Label>
+        </StackLayout>
+        <StackLayout col="2" padding="10" borderRightWidth="1">
+            <Label text="450"></Label>
+        </StackLayout>
+    </GridLayout>
+
+</FlexboxLayout>

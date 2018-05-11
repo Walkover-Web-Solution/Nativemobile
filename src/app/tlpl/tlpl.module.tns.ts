@@ -9,6 +9,7 @@ import { SharedModule } from '../shared/shared.module';
 import { TlPlRoutes } from './tlpl.routes';
 import { RouterModule } from '../common';
 import { TlPlComponent } from './tlpl.component';
+import {AccLedgerComponent} from './ledger/acc-ledger.component';
 
 
 @NgModule({
@@ -21,7 +22,7 @@ import { TlPlComponent } from './tlpl.component';
         SharedModule,
         NativeScriptUIChartModule
     ],
-    declarations: [TlPlComponent],
+    declarations: [TlPlComponent, AccLedgerComponent],
     schemas: [
         NO_ERRORS_SCHEMA
     ]
