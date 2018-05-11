@@ -121,18 +121,23 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.searchGWA(term);
     }
 
-    InitData(d: ChildGroup[]) {
+    InitData(d: ChildGroup[], category?: string) {
         _.each(d, (grp: ChildGroup) => {
             grp.isVisible = false;
             grp.isCreated = false;
             grp.isIncludedInSearch = true;
+
+            if (category) {
+                grp.category = category;
+            }
+
             _.each(grp.accounts, (acc: Account) => {
                 acc.isIncludedInSearch = true;
                 acc.isCreated = false;
                 acc.isVisible = false;
             });
             if (grp.childGroups) {
-                this.InitData(grp.childGroups);
+                this.InitData(grp.childGroups, grp.category);
             }
         });
     }
@@ -176,7 +181,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     navigateTo(uniqueName: string) {
         this.activeAcc = '';
-        this.data$.subscribe(p => {
+        this.data$.take(1).subscribe(p => {
             let d = _.cloneDeep(p) as AccountDetails;
             let result = this.loopOver(d.groupDetails, uniqueName, null);
             this.activeGrp = result;

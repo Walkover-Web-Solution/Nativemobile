@@ -5,6 +5,7 @@ import {TlPlConst} from '../../actions/tl-pl/tl-pl.const';
 import * as _ from 'lodash';
 import {IFlattenGroupsAccountsDetail} from '../../models/interfaces/flattenGroupsAccountsDetail.interface';
 import {TransactionsResponse} from '../../models/api-models/Ledger';
+import {AccountResponse} from '../../models/api-models/Account';
 
 interface TbState {
     data?: AccountDetails;
@@ -21,6 +22,8 @@ export interface TBPlBsState {
     isFlyAccountInProcess: boolean;
     transactionsResponse?: TransactionsResponse;
     transactionInProgress: boolean;
+    accountDetails?: AccountResponse;
+    accountDetailsInProgress: boolean;
 }
 
 const initialState: TBPlBsState = {
@@ -35,7 +38,9 @@ const initialState: TBPlBsState = {
     flattenGroupsAccounts: [],
     isFlyAccountInProcess: false,
     transactionInProgress: false,
-    transactionsResponse: null
+    transactionsResponse: null,
+    accountDetails: null,
+    accountDetailsInProgress: false
 };
 
 
@@ -84,6 +89,60 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
                 transactionsResponse: action.payload
             };
         }
+        case TlPlConst.GET_MORE_ACC_TRANSACTION: {
+            return {
+                ...state,
+                transactionInProgress: true
+            };
+        }
+        case TlPlConst.GET_MORE_ACC_TRANSACTION_RESPONSE: {
+            let response: TransactionsResponse = action.payload;
+            if (response) {
+                return {
+                    ...state,
+                    transactionInProgress: false,
+                    transactionsResponse: {
+                        ...state.transactionsResponse,
+                        totalPages: response.totalPages,
+                        closingBalance: response.closingBalance,
+                        count: response.count,
+                        creditTotal: response.creditTotal,
+                        creditTransactionsCount: response.creditTransactionsCount,
+                        debitTotal: response.debitTotal,
+                        debitTransactionsCount: response.debitTransactionsCount,
+                        forwardedBalance: response.forwardedBalance,
+                        page: response.page,
+                        totalItems: response.totalItems,
+                        creditTransactions: state.transactionsResponse.creditTransactions.concat(response.creditTransactions),
+                        debitTransactions: state.transactionsResponse.debitTransactions.concat(response.debitTransactions)
+                    }
+                };
+            }
+            return {
+                ...state,
+                transactionInProgress: false,
+                transactionsResponse: response
+            }
+        }
+        case TlPlConst.GET_LEDGER_ACCOUNT:
+            return {
+                ...state,
+                accountDetailsInProgress: true
+            };
+        case  TlPlConst.GET_LEDGER_ACCOUNT_RESPONSE:
+            if (action.payload) {
+                return {
+                    ...state,
+                    accountDetailsInProgress: false,
+                    accountDetails: action.payload
+                };
+            } else {
+                return {
+                    ...state,
+                    accountDetailsInProgress: false,
+                    accountDetails: null
+                };
+            }
         default:
             return state;
     }

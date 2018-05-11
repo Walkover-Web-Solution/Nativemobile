@@ -68,8 +68,8 @@
                 <tr>
                     <td style="border-top: none;">
                         <div>
-                            <span _ngcontent-c5="">Cash is
-                                <span _ngcontent-c5="" class="bold">receiving</span>
+                            <span _ngcontent-c5="">{{ ledgerUnderStandingObj.text.dr }}
+                                <!--<span _ngcontent-c5="" class="bold">receiving</span>-->
                             </span>
                         </div>
                         <div>
@@ -85,8 +85,8 @@
                 <tr>
                     <td style="border-top: none;">
                         <div>
-                            <span _ngcontent-c5="" class="pull-right">Cash is
-                                <span _ngcontent-c5="" class="bold">giving</span>
+                            <span _ngcontent-c5="" class="pull-right">{{ ledgerUnderStandingObj.text.cr }}
+                                <!--<span _ngcontent-c5="" class="bold">giving</span>-->
                             </span>
                         </div>
                     </td>
@@ -97,16 +97,23 @@
                 <ng-container *ngIf="activeTab === 'debit'">
                     <tr *ngFor="let txn of (transactionData$ | async)?.debitTransactions">
                         <td class="w-20pr">{{ txn.entryDate }}</td>
-                        <td>{{ txn.particular.name }}</td>
+                        <td>
+                            <span *ngIf="!txn.isCompoundEntry; else compoundED">
+                                {{ txn.particular.name }}
+                            </span>
+                            <ng-template #compoundED>
+                                <u>{{ txn.particular.name }}</u>
+                            </ng-template>
+                        </td>
                         <td class="w-20pr">
                             {{ txn.amount | number: '1.0-2' }}
-                            <span *ngIf="txn.attachedFileUniqueName.length > 0"
-                                  container="body"
+                            <span *ngIf="txn.attachedFileUniqueName.length > 0" style="cursor: pointer"
+                                  (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
                                   matTooltip="Download file : {{txn.attachedFileName}}" [matTooltipPosition]="'above'">
                   <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>
                 </span>
-                            <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
-                                  container="body"
+                            <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated" style="cursor: pointer"
+                                  (click)="downloadInvoice(txn.voucherNumber, $event)"
                                   matTooltip="Download Invoice : {{txn.voucherNumber}}" [matTooltipPosition]="'above'">
                   <<mat-icon>cloud_download</mat-icon>
                 </span>
@@ -117,16 +124,23 @@
                 <ng-container *ngIf="activeTab === 'credit'">
                     <tr *ngFor="let txn of (transactionData$ | async)?.creditTransactions">
                         <td class="w-20pr">{{ txn.entryDate }}</td>
-                        <td>{{ txn.particular.name }}</td>
+                        <td>
+                             <span *ngIf="!txn.isCompoundEntry; else compoundEC">
+                                {{ txn.particular.name }}
+                            </span>
+                            <ng-template #compoundEC>
+                                <u>{{ txn.particular.name }}</u>
+                            </ng-template>
+                        </td>
                         <td class="w-20pr">
                             {{ txn.amount | number: '1.0-2' }}
-                            <span *ngIf="txn.attachedFileUniqueName.length > 0"
-                                  container="body"
+                            <span *ngIf="txn.attachedFileUniqueName.length > 0" style="cursor: pointer"
+                                  (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
                                   matTooltip="Download file : {{txn.attachedFileName}}" [matTooltipPosition]="'above'">
                   <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>
                 </span>
-                            <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
-                                  container="body"
+                            <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated" style="cursor: pointer"
+                                  (click)="downloadInvoice(txn.voucherNumber, $event)"
                                   matTooltip="Download Invoice : {{txn.voucherNumber}}" [matTooltipPosition]="'above'">
                     <mat-icon>cloud_download</mat-icon>
                 </span>
@@ -138,7 +152,9 @@
             <table style="width:100%;border-top: none;" *ngIf="activeTab === 'debit'">
                 <tr>
                     <td style="border-top: none;">
-                        <u>{{ (transactionData$ | async)?.debitTotal | number: '1.0-2' }}</u>
+                        <span class="pull-right">
+                            <u>{{ (transactionData$ | async)?.debitTotal | number: '1.0-2' }}</u>
+                        </span>
                     </td>
                 </tr>
             </table>

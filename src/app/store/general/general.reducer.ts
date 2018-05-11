@@ -29,13 +29,13 @@ const initialNavObj: MyDrawerItem[] = [
         fontFamily: '1515160234',
         router: '/dashboard'
     } as MyDrawerItem,
-    // {
-    //     title: 'Trial Balance',
-    //     icon: String.fromCharCode(0x63),
-    //     needTopHr: true,
-    //     fontFamily: '1515160234',
-    //     router: '/tb'
-    // } as MyDrawerItem,
+    {
+        title: 'Trial Balance',
+        icon: String.fromCharCode(0x63),
+        needTopHr: true,
+        fontFamily: '1515160234',
+        router: '/tl-pl'
+    } as MyDrawerItem,
     // {
     //     title: 'Sales Invoice',
     //     icon: String.fromCharCode(0x6a),
