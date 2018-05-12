@@ -1,51 +1,129 @@
-<!--<CardView class="gen-card-style" elevation="3" radius="1">-->
-
 <FlexboxLayout flexDirection="column">
-    <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
+
+    <FlexboxLayout flexDirection="row" justifyContent="space-between" padding="5" class="text-color">
+        <Label class="" text="From Date"></Label>
+        <Label class="" text="To Date"></Label>
+    </FlexboxLayout>
+
+    <GridLayout rows="auto" columns="*,*" marginBottom="20">
+
+        <StackLayout row="0" col="0" padding="5">
+            <StackLayout padding="10" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1"
+                         borderColor="#D2D2D4">
+                <Label text="12-05-2018" textWrap="true"
+                       verticalAlignment="bottom"></Label>
+            </StackLayout>
+        </StackLayout>
+
+        <StackLayout row="0" col="1" padding="5">
+            <StackLayout padding="10" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1"
+                         borderColor="#D2D2D4">
+                <Label text="19-05-2018" textWrap="true" class="pull-right"
+                       verticalAlignment="bottom"></Label>
+            </StackLayout>
+        </StackLayout>
+
+    </GridLayout>
+
+    <FlexboxLayout flexDirection="row" justifyContent="space-between" class="text-color" padding="5 10">
         <Label text="Opening"></Label>
         <Label text="Closing"></Label>
     </FlexboxLayout>
 
+    <FlexboxLayout flexDirection="row" justifyContent="space-between" padding="5 10" marginBottom="20">
 
-    <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10" marginBottom="20">
-        <Label text="50,000 Dr."></Label>
-        <StackLayout orientation="horizontal">
+        <FlexboxLayout>
+            <Label text="Cr. " *ngIf="activeTab === 'credit'" marginTop="7"></Label>
+            <Label class="num-bold" text="50,000"></Label>
+            <Label text=" Dr." *ngIf="activeTab === 'debit'" marginTop="7"></Label>
+        </FlexboxLayout>
+
+        <StackLayout orientation="horizontal" class="text-color">
             <Label text="-"></Label>
-            <Label text="10240 Dr."></Label>
+            <FlexboxLayout>
+                <Label text=" Cr. "></Label>
+                <Label text="10240"></Label>
+                <Label text=" Dr. "></Label>
+            </FlexboxLayout>
             <Label text="->"></Label>
         </StackLayout>
-        <Label text="Cr. 60,000"></Label>
+
+        <FlexboxLayout class="pull-right">
+            <Label text="Cr. " *ngIf="activeTab === 'credit'" marginTop="7"></Label>
+            <Label class="num-bold" text="50,000"></Label>
+            <Label text=" Dr." *ngIf="activeTab === 'debit'" marginTop="7"></Label>
+        </FlexboxLayout>
+
     </FlexboxLayout>
 
-    <GridLayout rows="auto" columns="*,*">
-        <StackLayout class="tab-button active-tab" row="0" col="0" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4">
-            <Label text="Debit" flexGrow="1"></Label>
+    <GridLayout rows="auto" columns="*,*" backgroundColor="#D2D2D4">
+        <StackLayout class="tab-button" row="0" col="0" borderBottomWidth="1" borderTopWidth="1"
+                     borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4"
+                     [ngClass]="{'active-tab': activeTab === 'debit'}"
+                     (tap)="toggleActiveTab()">
+            <Label text="Debit"></Label>
         </StackLayout>
-        <StackLayout class="tab-button" row="0" col="1" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4">
-            <Label class="pull-right" text="Credit" flexGrow="1"></Label>
+        <StackLayout class="tab-button" row="0" col="1" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
+                     borderRightWidth="1" borderColor="#D2D2D4" [ngClass]="{'active-tab': activeTab === 'credit'}"
+                     (tap)="toggleActiveTab()">
+            <Label class="pull-right" text="Credit"></Label>
         </StackLayout>
 
     </GridLayout>
 
-    <GridLayout rows="auto,auto" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4">
+    <GridLayout rows="auto,auto" borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1"
+                borderColor="#D2D2D4" padding="10">
         <StackLayout row="0">
-            <Label text="Cash is Receiving"></Label>
+            <FlexboxLayout class="text-color font-18">
+                <Label text="Cash is"></Label>
+                <Label class="bold" text=" Receiving"></Label>
+            </FlexboxLayout>
+
         </StackLayout>
-        <StackLayout row="1">
-            <Label class="pull-right" marginRight="50" text="B/F"></Label>
+        <StackLayout row="1" class="font-18">
+            <Label class="pull-right" marginRight="80" text="B/F"></Label>
         </StackLayout>
     </GridLayout>
 
-    <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4"
-                *ngFor="let i of [1,2,3,4,5]">
-        <StackLayout col="0" padding="10" borderRightWidth="1">
+    <GridLayout rows="auto" borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1"
+                borderColor="#D2D2D4">
+        <StackLayout row="1" padding="10" class="text-color font-18">
+            <Label text="Cash is giving" class="pull-right"></Label>
+        </StackLayout>
+    </GridLayout>
+
+    <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderLeftWidth="1"
+                borderRightWidth="1" borderColor="#D2D2D4"
+                *ngFor="let i of [1,2,3,4,5]" class="font-18">
+        <StackLayout col="0" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
             <Label text="110"></Label>
         </StackLayout>
-        <StackLayout col="1" padding="10" borderRightWidth="1">
-            <Label text="Vishal"></Label>
-        </StackLayout>
-        <StackLayout col="2" padding="10" borderRightWidth="1">
+        <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+            <Label borderBottomWidth="1" text="Vishal"></Label>
+        </FlexboxLayout>
+        <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
             <Label text="450"></Label>
+        </StackLayout>
+    </GridLayout>
+
+    <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
+                borderRightWidth="1"
+                borderColor="#D2D2D4" class="font-18">
+        <StackLayout padding="10" row="0" col="0">
+            <Label></Label>
+        </StackLayout>
+        <StackLayout padding="10" row="0" col="1">
+            <Label text="C/F" marginRight="20" class="pull-right"></Label>
+        </StackLayout>
+        <StackLayout padding="10" row="0" col="2">
+            <Label text="60,340"></Label>
+        </StackLayout>
+    </GridLayout>
+
+    <GridLayout rows="auto" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1"
+                borderColor="#D2D2D4" class="font-18">
+        <StackLayout row="1" padding="10">
+            <Label text="650" borderBottomWidth="2" class="pull-right"></Label>
         </StackLayout>
     </GridLayout>
 

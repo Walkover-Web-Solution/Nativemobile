@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {TBPlBsActions} from '../../actions/tl-pl/tl-pl.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
@@ -19,7 +19,8 @@ import {ToasterService} from '../../services/toaster.service';
     selector: 'ns-acc-ledger',
     moduleId: module.id,
     templateUrl: './acc-ledger.component.html',
-    styleUrls: ['./acc-ledger.component.scss']
+    styleUrls: ['./acc-ledger.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     @Input() accUniqueName: string;
@@ -51,7 +52,8 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     };
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-    constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService) {
+    constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
+                private _cdRef: ChangeDetectorRef) {
         this.request = new TransactionsRequest();
         this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
@@ -140,6 +142,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         } else {
             this.activeTab = 'credit';
         }
+        this._cdRef.detectChanges();
     }
 
     getUnderstandingText(selectedLedgerAccountType, accountName) {

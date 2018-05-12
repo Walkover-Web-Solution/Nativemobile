@@ -12,19 +12,24 @@
 
 <ScrollView>
     <StackLayout margin="5">
-        <GridLayout rows="auto" columns="*" *ngIf="breadCrumb.length === 0">
-            <SearchBar row="0" hint="Search" #searchControl></SearchBar>
+        <GridLayout rows="auto" columns="*" *ngIf="breadCrumb.length === 0" marginBottom="20">
+            <StackLayout borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1" borderTopWidth="1"
+                         borderColor="#D2D2D4">
+                <SearchBar row="0" hint="Search" #searchControl></SearchBar>
+            </StackLayout>
         </GridLayout>
 
         <CardView class="gen-card-style" elevation="3" radius="1" *ngIf="breadCrumb.length > 0">
 
-            <StackLayout orientation="horizontal" padding="15" color="black">
-                <Label text="Home /" (tap)="resetNavigation()"></Label>
-                <StackLayout *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
-                    <Label *ngIf="!l" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
-                    <Label *ngIf="l" text="{{ brd }}"></Label>
+            <ScrollView orientation="horizontal">
+                <StackLayout orientation="horizontal" padding="15" color="black" class="brd-text">
+                    <Label text="Home /" (tap)="resetNavigation()" color="#0aa7fc"></Label>
+                    <StackLayout *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
+                        <Label *ngIf="!l" color="#0aa7fc" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
+                        <Label *ngIf="l" text="{{ brd }}"></Label>
+                    </StackLayout>
                 </StackLayout>
-            </StackLayout>
+            </ScrollView>
         </CardView>
 
         <CardView class="gen-card-style" elevation="3" radius="1" *ngIf="breadCrumb.length > 0 && activeGrp">
@@ -50,13 +55,18 @@
 
                             <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item"
                                          (tap)="filterData(grp)">
-                                <Label text="{{ grp.groupName }}"></Label>
+                                <Label class="main-text" text="{{ grp.groupName }}"></Label>
                                 <GridLayout columns="*,*" rows="auto">
                                     <StackLayout row="0" col="0">
-                                        <Label text="Label 1"></Label>
+                                        <Label text="Label 1" class="sub-text"></Label>
                                     </StackLayout>
                                     <StackLayout row="0" col="1">
-                                        <Label class="pull-right" text="Label 1"></Label>
+                                        <FlexboxLayout justifyContent="space-between" class="pull-right">
+                                            <Label class="main-text"
+                                                   text="{{ grp.closingBalance.amount | number: '1.0-2' }}"
+                                                   marginRight="5"></Label>
+                                            <Label text="Cr" class="sub-text" marginTop="3"></Label>
+                                        </FlexboxLayout>
                                     </StackLayout>
                                 </GridLayout>
                             </StackLayout>
@@ -64,13 +74,18 @@
                             <StackLayout orientation="vertical" *ngFor="let acc of grp.accounts"
                                          (tap)="goToLedger(acc)">
                                 <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
-                                    <Label text="{{ acc.name }}" textWrap="true"></Label>
+                                    <Label class="main-text" text="{{ acc.name }}" textWrap="true"></Label>
                                     <GridLayout columns="*,*" rows="auto">
                                         <StackLayout row="0" col="0">
-                                            <Label text="Label 1"></Label>
+                                            <Label text="Label 1" class="sub-text"></Label>
                                         </StackLayout>
                                         <StackLayout row="0" col="1">
-                                            <Label class="pull-right" text="Label 1"></Label>
+                                            <FlexboxLayout justifyContent="space-between" class="pull-right">
+                                                <Label class="main-text"
+                                                       text="{{ acc.closingBalance.amount | number: '1.0-2' }}"
+                                                       marginRight="5"></Label>
+                                                <Label text="Cr" class="sub-text" marginTop="3"></Label>
+                                            </FlexboxLayout>
                                         </StackLayout>
                                     </GridLayout>
                                 </StackLayout>
@@ -83,7 +98,8 @@
                             <StackLayout orientation="vertical" *ngFor="let item of searchedFlattenGrpDetails"
                                          (tap)="searchResultClicked(item)"
                                          class="list-group-item">
-                                <Label text="{{ item.isGroup ? item.groupName : item.name }}"></Label>
+                                <Label class="main-text" text="{{ item.isGroup ? item.groupName : item.name }}"></Label>
+                                <Label class="sub-text" text="Label 1"></Label>
                             </StackLayout>
                         </FlexboxLayout>
                     </ng-template>
@@ -101,3 +117,5 @@
         </CardView>
     </StackLayout>
 </ScrollView>
+
+
