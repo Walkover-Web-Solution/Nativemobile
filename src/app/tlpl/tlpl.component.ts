@@ -20,8 +20,6 @@ import {AccountDetails, TrialBalanceRequest} from '../models/api-models/tb-pl-bs
 import {AppState} from '../store';
 import {RouterService} from '../services/router.service';
 import {Account, ChildGroup} from '../models/api-models/Search';
-import {fromEvent} from 'rxjs/observable/fromEvent';
-import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import {Config} from '../common';
 
 @Component({
@@ -101,19 +99,19 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             //     this.searchGWA(data);
             // });
         } else {
-            fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'textChange').pipe(
-                debounceTime(700),
-                distinctUntilChanged(),
-                map((t: any) => {
-                    if (t) {
-                        return t.object.text;
-                    } else {
-                        return '';
-                    }
-                })
-            ).subscribe(data => {
-                this.searchGWA(data);
-            });
+            // fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'textChange').pipe(
+            //     debounceTime(700),
+            //     distinctUntilChanged(),
+            //     map((t: any) => {
+            //         if (t) {
+            //             return t.object.text;
+            //         } else {
+            //             return '';
+            //         }
+            //     })
+            // ).subscribe(data => {
+            //     this.searchGWA(data);
+            // });
         }
     }
 
@@ -247,7 +245,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             this.isSearchEnabled = true;
 
-            console.time('search');
             this.searchedFlattenGrpDetails = this.flattenGrpDetails.filter(fla => {
                 if (fla.isGroup) {
                     return ((fla.groupName.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
@@ -255,7 +252,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                     return ((fla.name.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
                 }
             });
-            console.timeEnd('search');
         }
         this._cdRef.detectChanges();
     }
@@ -270,38 +266,42 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             this.activeAcc = res.uniqueName;
             this.activeGrp = null;
         }
+        this._cdRef.detectChanges();
     }
 
     searchWithNavigation(res) {
-        let r = this.genBreadcrumb(res.uniqueName, []);
+        this.breadCrumb = [];
+        this.activeGrp = res;
+
+        let r = this.genBreadcrumb(res.parentGrpUniqueName ? res.parentGrpUniqueName : res.uniqueName, []);
         if (r && r.length) {
-            this.activeGrp = r[0];
             this.data$.take(1).subscribe(p => {
                 let d = _.cloneDeep(p) as AccountDetails;
                 let result = this.loopOver(d.groupDetails, this.activeGrp.uniqueName, null);
                 this.filterdData = result.childGroups;
             });
-
-            this.breadCrumb = [];
             r.reverse().forEach(a => {
                 this.breadCrumb.push(a.uniqueName);
             });
+            this.breadCrumb.push(res.uniqueName);
         }
-        this._cdRef.detectChanges();
+        // this._cdRef.detectChanges();
     }
 
     genBreadcrumb(uniqueName: string, res) {
-        this.flattenGrpDetails.forEach(fa => {
-            if (fa.uniqueName === uniqueName) {
-                res.push(fa);
-                if (!fa.parentGrpUniqueName) {
+        for (let i = 0; i < this.flattenGrpDetails.length; i++) {
+            if (this.flattenGrpDetails[i].uniqueName === uniqueName) {
+                res.push(this.flattenGrpDetails[i]);
+                if (!this.flattenGrpDetails[i].parentGrpUniqueName) {
                     return res;
                 } else {
-                    this.genBreadcrumb(fa.parentGrpUniqueName, res);
+                    res = this.genBreadcrumb(this.flattenGrpDetails[i].parentGrpUniqueName, res);
+                    if (res) {
+                        return res;
+                    }
                 }
             }
-        });
-
+        }
         return res;
     }
 

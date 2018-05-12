@@ -24,8 +24,10 @@
             <div class="row">
                 <div class="col-3">
                     <span>
-                        <span class="font-bold">{{ (transactionData$ | async)?.forwardedBalance.amount  | number: '1.0-2'}}</span>
-                        <span>{{ (transactionData$ | async)?.forwardedBalance.type === 'DEBIT' ? 'DR' : 'CR'}}.</span>
+                        <span *ngIf="(transactionData$ | async)?.forwardedBalance.type === 'CREDIT'">Cr. </span>
+                        <span
+                            class="font-bold">{{ (transactionData$ | async)?.forwardedBalance.amount | number: '1.0-2'}}</span>
+                        <span *ngIf="(transactionData$ | async)?.forwardedBalance.type === 'DEBIT'"> Dr.</span>
                     </span>
                 </div>
                 <div class="col-3 flex-center">
@@ -46,9 +48,10 @@
                 </div>
                 <div class="col-3">
                     <span class="pull-right">
-                        <span>{{ (transactionData$ | async)?.closingBalance.type === 'DEBIT' ? 'DR' : 'CR'}}.</span>
+                        <span *ngIf="(transactionData$ | async)?.closingBalance.type === 'CREDIT'">Cr. </span>
                         <span
                             class="font-bold">{{ (transactionData$ | async)?.closingBalance.amount | number: '1.0-2'}}</span>
+                        <span *ngIf="(transactionData$ | async)?.closingBalance.type === 'DEBIT'"> Dr.</span>
                     </span>
                 </div>
             </div>
@@ -115,7 +118,7 @@
                             <span class="download-invoice-ledger" *ngIf="txn.voucherGenerated" style="cursor: pointer"
                                   (click)="downloadInvoice(txn.voucherNumber, $event)"
                                   matTooltip="Download Invoice : {{txn.voucherNumber}}" [matTooltipPosition]="'above'">
-                  <<mat-icon>cloud_download</mat-icon>
+                  <mat-icon>cloud_download</mat-icon>
                 </span>
                         </td>
                     </tr>

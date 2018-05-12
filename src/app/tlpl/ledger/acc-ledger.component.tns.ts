@@ -12,8 +12,9 @@ import {AccountResponse} from '../../models/api-models/Account';
 import { underStandingTextData } from './underStandingTextData';
 import * as _ from 'lodash';
 import {LedgerService} from '../../services/ledger.service';
-import { saveAs } from 'file-saver';
 import {ToasterService} from '../../services/toaster.service';
+import * as moment from 'moment/moment';
+import {Config} from '../../common/utils';
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -74,9 +75,9 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             }
         });
         this.activeAccount$.subscribe(acc => {
-           if (acc) {
-               this.getUnderstandingText(acc.accountType, acc.name);
-           }
+            if (acc) {
+                this.getUnderstandingText(acc.accountType, acc.name);
+            }
         });
     }
 
@@ -97,14 +98,14 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
     downloadAttachedFile(fileName: string, e: Event) {
         e.stopPropagation();
-        this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
-            if (d.status === 'success') {
-                let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
-                return saveAs(blob, d.body.name);
-            } else {
-                this._toaster.errorToast(d.message);
-            }
-        });
+        // this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
+        //     if (d.status === 'success') {
+        //         let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
+        //         return saveAs(blob, d.body.name);
+        //     } else {
+        //         this._toaster.errorToast(d.message);
+        //     }
+        // });
     }
 
     downloadInvoice(invoiceName: string, e: Event) {
@@ -114,14 +115,14 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         let downloadRequest = new DownloadLedgerRequest();
         downloadRequest.invoiceNumber = [invoiceName];
 
-        this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
-            if (d.status === 'success') {
-                let blob = base64ToBlob(d.body, 'application/pdf', 512);
-                return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
-            } else {
-                this._toaster.errorToast(d.message);
-            }
-        });
+        // this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
+        //     if (d.status === 'success') {
+        //         let blob = base64ToBlob(d.body, 'application/pdf', 512);
+        //         return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
+        //     } else {
+        //         this._toaster.errorToast(d.message);
+        //     }
+        // });
     }
 
     onDateRangeChanged(event: IMyDateRangeModel) {
@@ -155,6 +156,25 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             data.text.cr = data.text.cr.replace('<accountName>', accountName);
             this.ledgerUnderStandingObj = _.cloneDeep(data);
         }
+    }
+
+    openFromDatePicker(type: string = 'from') {
+        if (!Config.IS_MOBILE_NATIVE) return;
+        let ModalPicker = require("nativescript-modal-datetimepicker").ModalDatetimepicker;
+        const picker = new ModalPicker();
+        picker.pickDate({
+            title: "Select From Date",
+            theme: "dark",
+            maxDate: new Date(new Date().getFullYear(), 11, 31),
+            startingDate: new Date(new Date().getFullYear(), 11, 31),
+        }).then((result) => {
+            let date = `${result.day}-${result.month}-${result.year}`;
+            this.request[type] = moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY')
+            this.request.page = 1;
+            this.getTrxData();
+        }).catch((error) => {
+            console.log("Error: " + JSON.stringify(error));
+        });
     }
 
     ngOnDestroy() {

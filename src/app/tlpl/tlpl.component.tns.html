@@ -15,7 +15,7 @@
         <GridLayout rows="auto" columns="*" *ngIf="breadCrumb.length === 0" marginBottom="20">
             <StackLayout borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1" borderTopWidth="1"
                          borderColor="#D2D2D4">
-                <SearchBar row="0" hint="Search" #searchControl></SearchBar>
+                <SearchBar row="0" hint="Search" (textChange)="search($event.object.text)"></SearchBar>
             </StackLayout>
         </GridLayout>
 
@@ -48,7 +48,9 @@
                     <FlexboxLayout flexDirection="column" class="list-group"
                                    *ngIf="!isSearchEnabled; else searchContainer">
                         <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
-                            <Label text="Particular"></Label> <Label text="Closing Balance"></Label>
+                            <Label text="Particular"></Label>
+                            <!--<Label class="fa" text="\uf293"></Label>-->
+                            <Label text="Closing Balance"></Label>
                         </FlexboxLayout>
 
                         <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)">
@@ -99,7 +101,7 @@
                                          (tap)="searchResultClicked(item)"
                                          class="list-group-item">
                                 <Label class="main-text" text="{{ item.isGroup ? item.groupName : item.name }}"></Label>
-                                <Label class="sub-text" text="Label 1"></Label>
+                                <Label class="sub-text" text="{{ item.isGroup ? 'Grp' : 'Acc' }}"></Label>
                             </StackLayout>
                         </FlexboxLayout>
                     </ng-template>
