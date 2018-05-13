@@ -99,7 +99,7 @@
             <table class="table-text">
                 <ng-container *ngIf="activeTab === 'debit'">
                     <tr *ngFor="let txn of (transactionData$ | async)?.debitTransactions">
-                        <td class="w-20pr">{{ txn.entryDate }}</td>
+                        <td class="w-20pr">{{ txn.entryDate | date: 'dd-MM-yyyy' }}</td>
                         <td>
                             <span *ngIf="!txn.isCompoundEntry; else compoundED">
                                 {{ txn.particular.name }}
@@ -126,7 +126,7 @@
 
                 <ng-container *ngIf="activeTab === 'credit'">
                     <tr *ngFor="let txn of (transactionData$ | async)?.creditTransactions">
-                        <td class="w-20pr">{{ txn.entryDate }}</td>
+                        <td class="w-20pr">{{ txn.entryDate | date: 'dd-MM-yyyy' }}</td>
                         <td>
                              <span *ngIf="!txn.isCompoundEntry; else compoundEC">
                                 {{ txn.particular.name }}

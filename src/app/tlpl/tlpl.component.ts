@@ -261,30 +261,35 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         if (res.isGroup) {
             this.activeGrp = res;
             this.activeAcc = '';
-            this.searchWithNavigation(res);
         } else {
             this.activeAcc = res.uniqueName;
             this.activeGrp = null;
         }
+        this.searchWithNavigation(res);
         this._cdRef.detectChanges();
     }
 
     searchWithNavigation(res) {
         this.breadCrumb = [];
-        this.activeGrp = res;
 
-        let r = this.genBreadcrumb(res.parentGrpUniqueName ? res.parentGrpUniqueName : res.uniqueName, []);
-        if (r && r.length) {
-            this.data$.take(1).subscribe(p => {
-                let d = _.cloneDeep(p) as AccountDetails;
-                let result = this.loopOver(d.groupDetails, this.activeGrp.uniqueName, null);
-                this.filterdData = result.childGroups;
-            });
-            r.reverse().forEach(a => {
-                this.breadCrumb.push(a.uniqueName);
-            });
-            this.breadCrumb.push(res.uniqueName);
+        if (res.parentGrpUniqueName) {
+            let r = this.genBreadcrumb(res.parentGrpUniqueName, []);
+            if (r && r.length) {
+                this.data$.take(1).subscribe(p => {
+                    let d = _.cloneDeep(p) as AccountDetails;
+                    let result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
+                    this.filterdData = result.childGroups;
+                });
+                r.reverse().forEach(a => {
+                    this.breadCrumb.push(a.uniqueName);
+                });
+            } else {
+                this.filterdData = res.childGroups;
+            }
+        } else {
+            this.filterdData = res.childGroups;
         }
+        this.breadCrumb.push(res.uniqueName);
         // this._cdRef.detectChanges();
     }
 

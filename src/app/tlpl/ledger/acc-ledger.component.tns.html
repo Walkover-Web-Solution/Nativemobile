@@ -109,16 +109,16 @@
 
     <!--transactions-->
     <FlexboxLayout flexDirection="column">
-
         <!--debit transactions-->
         <ng-container *ngIf="activeTab === 'debit'">
             <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderLeftWidth="1"
                         borderRightWidth="1" borderColor="#D2D2D4"
                         *ngFor="let txn of (transactionData$ | async)?.debitTransactions" class="font-16">
                 <StackLayout col="0" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                    <Label text="{{ txn.entryDate }}"></Label>
+                    <Label text="{{ txn.entryDate | date: 'dd-MM-yy' }}"></Label>
                 </StackLayout>
                 <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+                    <Label text="{{ txn.particular.name }}"></Label>
                     <!--<Label *ngIf="!txn.isCompoundEntry; else compoundED" text="{{ txn.particular.name }}"></Label>-->
                     <!--<Label borderBottomWidth="1" #compoundED text="{{ txn.particular.name }}"></Label>-->
                 </FlexboxLayout>
@@ -146,10 +146,10 @@
                         borderRightWidth="1" borderColor="#D2D2D4"
                         *ngFor="let txn of (transactionData$ | async)?.creditTransactions" class="font-18">
                 <StackLayout col="0" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                    <Label text="{{ txn.entryDate }}123"></Label>
+                    <Label text="{{ txn.entryDate | date: 'dd-MM-yy' }}"></Label>
                 </StackLayout>
                 <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                    {{ txn.particular.name }}
+                    <Label text="{{ txn.particular.name }}"></Label>
                     <!--<Label *ngIf="!txn.isCompoundEntry; else compoundEC" text="{{ txn.particular.name }}"></Label>-->
                     <!--<Label borderBottomWidth="1" #compoundEC text="{{ txn.particular.name }}"></Label>-->
                 </FlexboxLayout>
@@ -173,7 +173,6 @@
         </ng-container>
 
     </FlexboxLayout>
-
     <!--credit cf balance-->
     <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
                 borderRightWidth="1" *ngIf="activeTab === 'credit'"

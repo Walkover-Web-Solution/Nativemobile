@@ -141,7 +141,7 @@ export interface ITransactionItem {
   chequeNumber: string;
   description: string;
   entryCreatedAt: string;
-  entryDate: string;
+  entryDate: string | Date;
   entryUniqueName: string;
   inventory?: IInventory;
   invoiceNumber: string;
