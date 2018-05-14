@@ -10,6 +10,7 @@ import {MatAutocompleteModule} from '@angular/material';
 import {AccLedgerComponent} from './ledger/acc-ledger.component';
 import {MyDateRangePickerModule} from 'mydaterangepicker';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
+import {CompoundEntryDialogComponent} from './compoundEntryDialog/compoundEntryDialog.component';
 
 @NgModule({
     imports: [
@@ -22,11 +23,11 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
         MyDateRangePickerModule,
         InfiniteScrollModule
     ],
-    declarations: [TlPlComponent, AccLedgerComponent],
+    declarations: [TlPlComponent, AccLedgerComponent, CompoundEntryDialogComponent],
     schemas: [
         NO_ERRORS_SCHEMA
     ],
-    entryComponents: []
+    entryComponents: [CompoundEntryDialogComponent]
 })
 export class TlPlModule {
 }

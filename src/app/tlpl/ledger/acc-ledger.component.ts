@@ -9,11 +9,14 @@ import {ReplaySubject} from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/shareReplay';
 import {AccountResponse} from '../../models/api-models/Account';
-import { underStandingTextData } from './underStandingTextData';
+import {underStandingTextData} from './underStandingTextData';
 import * as _ from 'lodash';
 import {LedgerService} from '../../services/ledger.service';
-import { saveAs } from 'file-saver';
+import {saveAs} from 'file-saver';
 import {ToasterService} from '../../services/toaster.service';
+import {MatDialog} from '@angular/material';
+import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
+import {ITransactionItem} from '../../models/interfaces/ledger.interface';
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -53,7 +56,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
-                private _cdRef: ChangeDetectorRef) {
+                private _cdRef: ChangeDetectorRef, private dialog: MatDialog) {
         this.request = new TransactionsRequest();
         this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
@@ -142,7 +145,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         } else {
             this.activeTab = 'credit';
         }
-        this._cdRef.detectChanges();
+        this.detectChanges();
     }
 
     getUnderstandingText(selectedLedgerAccountType, accountName) {
@@ -154,6 +157,29 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             data.text.dr = data.text.dr.replace('<accountName>', accountName);
             data.text.cr = data.text.cr.replace('<accountName>', accountName);
             this.ledgerUnderStandingObj = _.cloneDeep(data);
+        }
+    }
+
+    openCompoundEntry(txnUniqueName: string) {
+        let allItems: ITransactionItem[] = [];
+
+        this.transactionData$.subscribe(t => {
+            if (t) {
+                allItems.push(...t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName));
+                allItems.push(...t.creditTransactions.filter(ct => ct.entryUniqueName === txnUniqueName));
+            }
+        });
+
+        this.dialog.open(CompoundEntryDialogComponent, {
+            data: { compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : '' },
+            height: '400px',
+            width: '800px',
+        });
+    }
+
+    detectChanges() {
+        if (!this._cdRef['destroyed']) {
+            this._cdRef.detectChanges();
         }
     }
 

@@ -76,6 +76,7 @@
                             </span>
                         </div>
                         <div>
+                            <span class="pull-right">{{ (transactionData$ | async)?.forwardedBalance.amount | number: '1.0-2'}}</span>
                             <span class="b-f">B/F</span>
                         </div>
 
@@ -105,7 +106,7 @@
                                 {{ txn.particular.name }}
                             </span>
                             <ng-template #compoundED>
-                                <u>{{ txn.particular.name }}</u>
+                                <a (click)="openCompoundEntry(txn.entryUniqueName)"><u>{{ txn.particular.name }}</u></a>
                             </ng-template>
                         </td>
                         <td class="w-20pr">
@@ -132,7 +133,7 @@
                                 {{ txn.particular.name }}
                             </span>
                             <ng-template #compoundEC>
-                                <u>{{ txn.particular.name }}</u>
+                                <a (click)="openCompoundEntry(txn.entryUniqueName)"><u>{{ txn.particular.name }}</u></a>
                             </ng-template>
                         </td>
                         <td class="w-20pr">
@@ -166,7 +167,7 @@
                 <tr>
                     <td style="border-top: none;">
 
-                        <span class="pull-right">60,340</span>
+                        <span class="pull-right">{{ (transactionData$ | async)?.closingBalance.amount | number: '1.0-2'}}</span>
                         <span class="c-f"> C / F </span>
                     </td>
                 </tr>
@@ -194,3 +195,7 @@
         </mat-progress-spinner>
     </div>
 </mat-card>
+
+<ng-container #compoundEntryDialog>
+
+</ng-container>

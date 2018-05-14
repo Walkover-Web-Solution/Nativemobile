@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import {IFlattenGroupsAccountsDetail} from '../../models/interfaces/flattenGroupsAccountsDetail.interface';
 import {TransactionsResponse} from '../../models/api-models/Ledger';
 import {AccountResponse} from '../../models/api-models/Account';
+import * as moment from 'moment';
 
 interface TbState {
     data?: AccountDetails;
@@ -86,7 +87,7 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             return {
                 ...state,
                 transactionInProgress: false,
-                transactionsResponse: action.payload
+                transactionsResponse: prepareTlEntryDate(action.payload)
             };
         }
         case TlPlConst.GET_MORE_ACC_TRANSACTION: {
@@ -96,7 +97,7 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             };
         }
         case TlPlConst.GET_MORE_ACC_TRANSACTION_RESPONSE: {
-            let response: TransactionsResponse = action.payload;
+            let response: TransactionsResponse = prepareTlEntryDate(action.payload);
             if (response) {
                 return {
                     ...state,
@@ -188,4 +189,21 @@ const prepare = (data: IFlattenGroupsAccountsDetail[]) => {
             };
         });
     }
+};
+
+//lb date prepare
+const prepareTlEntryDate = (transactionsResponse: TransactionsResponse): TransactionsResponse => {
+    if (transactionsResponse) {
+        let update: TransactionsResponse = _.cloneDeep(transactionsResponse);
+        update.debitTransactions = update.debitTransactions.map(db => {
+            db.entryDate = moment(db.entryDate, 'DD-MM-YYYY').toDate();
+            return db;
+        });
+        update.creditTransactions = update.creditTransactions.map(db => {
+            db.entryDate = moment(db.entryDate, 'DD-MM-YYYY').toDate();
+            return db;
+        });
+        return update;
+    }
+    return null;
 };

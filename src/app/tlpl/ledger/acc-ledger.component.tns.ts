@@ -143,7 +143,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         } else {
             this.activeTab = 'credit';
         }
-        this._cdRef.detectChanges();
+        this.detectChanges();
     }
 
     getUnderstandingText(selectedLedgerAccountType, accountName) {
@@ -175,6 +175,12 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         }).catch((error) => {
             console.log("Error: " + JSON.stringify(error));
         });
+    }
+
+    detectChanges() {
+        if (!this._cdRef['destroyed']) {
+            this._cdRef.detectChanges();
+        }
     }
 
     ngOnDestroy() {

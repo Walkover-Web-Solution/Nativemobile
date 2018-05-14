@@ -20,7 +20,7 @@ import {AccountDetails, TrialBalanceRequest} from '../models/api-models/tb-pl-bs
 import {AppState} from '../store';
 import {RouterService} from '../services/router.service';
 import {Account, ChildGroup} from '../models/api-models/Search';
-import {Config} from '../common';
+import {INameUniqueName} from '../models/interfaces/nameUniqueName.interface';
 
 @Component({
     selector: 'ns-tlpl',
@@ -36,7 +36,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public request: TrialBalanceRequest;
     public data$: Observable<AccountDetails>;
     public filterdData: ChildGroup[] = [];
-    public breadCrumb: string[] = [];
+    public breadCrumb: INameUniqueName[] = [];
     public activeGrp: ChildGroup = null;
     public activeAcc: string = '';
     public flattenGrpDetails: any[] = [];
@@ -90,29 +90,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        if (!Config.IS_MOBILE_NATIVE) {
-            // fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'input').pipe(
-            //     debounceTime(700),
-            //     distinctUntilChanged(),
-            //     map((t: any) => t.target.value)
-            // ).subscribe(data => {
-            //     this.searchGWA(data);
-            // });
-        } else {
-            // fromEvent<KeyboardEvent>(this.searchControl.nativeElement, 'textChange').pipe(
-            //     debounceTime(700),
-            //     distinctUntilChanged(),
-            //     map((t: any) => {
-            //         if (t) {
-            //             return t.object.text;
-            //         } else {
-            //             return '';
-            //         }
-            //     })
-            // ).subscribe(data => {
-            //     this.searchGWA(data);
-            // });
-        }
+        //
     }
 
     search(term) {
@@ -124,11 +102,13 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             grp.isVisible = false;
             grp.isCreated = false;
             grp.isIncludedInSearch = true;
+            grp.understandingCategoryText = '';
 
             _.each(grp.accounts, (acc: Account) => {
                 acc.isIncludedInSearch = true;
                 acc.isCreated = false;
                 acc.isVisible = false;
+                acc.understandingCategoryText = grp.understandingCategoryText;
             });
             if (grp.childGroups) {
                 this.InitData(grp.childGroups);
@@ -148,16 +128,10 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.showLedgerScreen = false;
         this.activeGrp = grp;
 
-        if (grp.category !== null) {
-            this.breadCrumb = [];
-        }
-
-        this.breadCrumb.push(grp.uniqueName);
-        this.filterdData.filter(p => {
-            return p.groupName === grp.groupName;
-        }).map(d => {
-            this.filterdData = d.childGroups;
-        });
+        // if (this.breadCrumb.length > 1) {
+            this.breadCrumb.push({uniqueName: grp.uniqueName, name: grp.groupName});
+        // }
+        this.filterdData = grp.childGroups;
     }
 
     resetNavigation() {
@@ -173,6 +147,8 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.filterdData = d.groupDetails;
             }
         });
+        this.activeAcc = '';
+        this.activeGrp = null;
     }
 
     navigateTo(uniqueName: string) {
@@ -183,7 +159,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             this.activeGrp = result;
             this.filterdData = result.childGroups;
         });
-        let index = this.breadCrumb.findIndex(f => f === uniqueName);
+        let index = this.breadCrumb.findIndex(f => f.uniqueName === uniqueName);
         this.breadCrumb = this.breadCrumb.filter((f, i) => {
             return i <= index;
         });
@@ -212,7 +188,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     goToLedger(acc: Account) {
         this.activeGrp = null;
         this.activeAcc = acc.uniqueName;
-        this.breadCrumb.push(acc.uniqueName);
+        this.breadCrumb.push({uniqueName: acc.uniqueName, name: acc.name});
         this._cdRef.detectChanges();
     }
 
@@ -281,7 +257,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.filterdData = result.childGroups;
                 });
                 r.reverse().forEach(a => {
-                    this.breadCrumb.push(a.uniqueName);
+                    this.breadCrumb.push({uniqueName: a.uniqueName, name: a.isGroup ? a.groupName : a.name});
                 });
             } else {
                 this.filterdData = res.childGroups;
@@ -289,7 +265,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.filterdData = res.childGroups;
         }
-        this.breadCrumb.push(res.uniqueName);
+        this.breadCrumb.push({uniqueName: res.uniqueName, name: res.name});
         // this._cdRef.detectChanges();
     }
 
@@ -308,6 +284,19 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
         return res;
+    }
+
+    getCategory(category: string) {
+        let accountType: string = '';
+        switch (category) {
+            case 'liabilities':
+                accountType = '';
+            case 'assets':
+            case 'income':
+            case 'expenses':
+            default:
+                break;
+        }
     }
 
     ngOnDestroy(): void {

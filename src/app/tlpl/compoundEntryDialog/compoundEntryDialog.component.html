@@ -1,0 +1,17 @@
+<my-header title="{{ dialogData.entryDate | date: 'dd-MM-yyyy' }}"
+           [rightSideItem]="{ icon:'close', action: close.bind(this) }"></my-header>
+<mat-dialog-content >
+    <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let item of dialogData.compoundEntries">
+            <span matLine>
+                {{ item.particular.name }} ({{ item.type === 'debit' ? 'DR' : 'CR' }}.)
+                <span class="pull-right">{{ item.amount | number: '1.0-2' }}</span>
+            </span>
+        </mat-list-item>
+    </mat-list>
+
+    <mat-divider></mat-divider>
+    <div style="display: flex;justify-content: flex-end;padding: 10px">
+        <u>{{ entryTotal | number: '1.0-2' }}</u>
+    </div>
+</mat-dialog-content>

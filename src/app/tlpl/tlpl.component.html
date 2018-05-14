@@ -11,8 +11,8 @@
                     <a (click)="resetNavigation()">Home /</a>
                     <span *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
                         <a *ngIf="!l;else last"
-                           (click)="navigateTo(brd)">{{ brd }} /</a>
-                        <ng-template #last> {{ brd }}</ng-template>
+                           (click)="navigateTo(brd.uniqueName)">{{ brd.name }} /</a>
+                        <ng-template #last> {{ brd.name }}</ng-template>
                     </span>
                 </div>
             </mat-card-content>
@@ -61,22 +61,21 @@
                         <li *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
                             <div class="inner-item">
                                 <a class="list-a" matLine>{{ grp.groupName }} ></a>
-                                <small>bdfkbwsdfbs</small>
+                                <small>{{ grp.understandingCategoryText || 'dummy category' }}</small>
                                 <span class="pull-right">{{ grp.closingBalance.amount | number: '1.0-2' }} {{ grp.closingBalance.type === 'DEBIT' ? 'Dr' : 'Cr' }}</span>
                             </div>
+                        </li>
+                    </ul>
 
-                            <ul class="list-nav">
-                                <li *ngFor="let acc of grp.accounts" (click)="$event.stopPropagation();goToLedger(acc)">
-                                    <div class="inner-item">
-                                        <a class="list-a" matLine>
-                                            {{ acc.name }}
-                                        </a>
-                                        <small>bdfkbwsdfbs</small>
-                                        <span class="pull-right">{{ acc.closingBalance.amount | number: '1.0-2' }} {{ acc.closingBalance.type === 'DEBIT' ? 'Dr' : 'Cr' }}</span>
-                                    </div>
-                                </li>
-
-                            </ul>
+                    <ul class="list-nav" *ngIf="activeGrp">
+                        <li *ngFor="let acc of activeGrp.accounts" (click)="$event.stopPropagation();goToLedger(acc)">
+                            <div class="inner-item">
+                                <a class="list-a" matLine>
+                                    {{ acc.name }}
+                                </a>
+                                <small>{{ acc.understandingCategoryText || 'dummy category' }}</small>
+                                <span class="pull-right">{{ acc.closingBalance.amount | number: '1.0-2' }} {{ acc.closingBalance.type === 'DEBIT' ? 'Dr' : 'Cr' }}</span>
+                            </div>
                         </li>
                     </ul>
 
