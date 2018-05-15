@@ -61,7 +61,7 @@
                         <li *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
                             <div class="inner-item">
                                 <a class="list-a" matLine>{{ grp.groupName }} ></a>
-                                <small>{{ grp.understandingCategoryText || 'dummy category' }}</small>
+                                <small>{{ grp.understandingCategoryText }}</small>
                                 <span class="pull-right">{{ grp.closingBalance.amount | number: '1.0-2' }} {{ grp.closingBalance.type === 'DEBIT' ? 'Dr' : 'Cr' }}</span>
                             </div>
                         </li>

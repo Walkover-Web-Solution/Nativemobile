@@ -102,13 +102,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             grp.isVisible = false;
             grp.isCreated = false;
             grp.isIncludedInSearch = true;
-            grp.understandingCategoryText = '';
 
             _.each(grp.accounts, (acc: Account) => {
                 acc.isIncludedInSearch = true;
                 acc.isCreated = false;
                 acc.isVisible = false;
-                acc.understandingCategoryText = grp.understandingCategoryText;
             });
             if (grp.childGroups) {
                 this.InitData(grp.childGroups);

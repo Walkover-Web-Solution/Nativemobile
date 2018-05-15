@@ -1,13 +1,13 @@
-import {AccountDetails} from '../../models/api-models/tb-pl-bs';
-import {ChildGroup} from '../../models/api-models/Search';
-import {CustomActions} from '../customActions';
-import {TlPlConst} from '../../actions/tl-pl/tl-pl.const';
+import { AccountDetails } from '../../models/api-models/tb-pl-bs';
+import { ChildGroup } from '../../models/api-models/Search';
+import { CustomActions } from '../customActions';
+import { TlPlConst } from '../../actions/tl-pl/tl-pl.const';
 import * as _ from 'lodash';
-import {IFlattenGroupsAccountsDetail} from '../../models/interfaces/flattenGroupsAccountsDetail.interface';
-import {TransactionsResponse} from '../../models/api-models/Ledger';
-import {AccountResponse} from '../../models/api-models/Account';
+import { IFlattenGroupsAccountsDetail } from '../../models/interfaces/flattenGroupsAccountsDetail.interface';
+import { TransactionsResponse } from '../../models/api-models/Ledger';
+import { AccountResponse } from '../../models/api-models/Account';
 import * as moment from 'moment';
-import {underStandingTextData} from '../../tlpl/ledger/underStandingTextData';
+import { underStandingTextData } from '../../tlpl/ledger/underStandingTextData';
 
 interface TbState {
     data?: AccountDetails;
@@ -60,18 +60,18 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
                 }
                 return {
                     ...state,
-                    tb: {...state.tb, data, noData, showLoader, exportData: data.groupDetails}
+                    tb: { ...state.tb, data, noData, showLoader, exportData: data.groupDetails }
                 };
             } else {
-                return {...state, tb: {...state.tb, showLoader: false, exportData: [], data: null, noData: true}};
+                return { ...state, tb: { ...state.tb, showLoader: false, exportData: [], data: null, noData: true } };
             }
         }
         case TlPlConst.GET_TRIAL_BALANCE_REQUEST: {
-            return {...state, tb: {...state.tb, showLoader: true}};
+            return { ...state, tb: { ...state.tb, showLoader: true } };
         }
 
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
-            return Object.assign({}, state, {isFlyAccountInProcess: true});
+            return Object.assign({}, state, { isFlyAccountInProcess: true });
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE:
             return Object.assign({}, state, {
                 isFlyAccountInProcess: false,
@@ -131,7 +131,7 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
                 ...state,
                 accountDetailsInProgress: true
             };
-        case  TlPlConst.GET_LEDGER_ACCOUNT_RESPONSE:
+        case TlPlConst.GET_LEDGER_ACCOUNT_RESPONSE:
             if (action.payload) {
                 return {
                     ...state,
@@ -151,25 +151,20 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
 }
 
 // TB Functions
-const removeZeroAmountAccount = (grpList: ChildGroup[]) => {
+const removeZeroAmountAccount = (grpList: ChildGroup[], category?: string) => {
     _.each(grpList, (grp) => {
-
-        let cateData = _.cloneDeep(underStandingTextData.find(p => p.accountType === grp.accountType));
-        if (!cateData) {
-            grp.understandingCategoryText = 'dummy category';
-        } else  {
-            if (grp.closingBalance.type === 'DEBIT') {
-                grp.understandingCategoryText = cateData.balanceText.dr.replace('<accountName>', grp.groupName);
-            } else {
-                grp.understandingCategoryText = cateData.balanceText.cr.replace('<accountName>', grp.groupName);
-            }
-        }
 
         let count = 0;
         let tempAcc = [];
+        if (!grp.category) {
+            grp.category = category;
+        }
+        grp.understandingCategoryText = getUnderstandingText(grp.category, grp.closingBalance.type, grp.groupName);
+
         if (grp.closingBalance.amount > 0 || grp.forwardedBalance.amount > 0 || grp.creditTotal > 0 || grp.debitTotal > 0) {
             _.each(grp.accounts, (account) => {
-                account.understandingCategoryText = grp.understandingCategoryText;
+                account.category = grp.category;
+                account.understandingCategoryText = getUnderstandingText(account.category, account.closingBalance.type, account.name);
                 if (account.closingBalance.amount > 0 || account.openingBalance.amount > 0 || account.creditTotal > 0 || account.debitTotal > 0) {
                     return tempAcc.push(account);
                 } else {
@@ -181,7 +176,7 @@ const removeZeroAmountAccount = (grpList: ChildGroup[]) => {
             grp.accounts = tempAcc;
         }
         if (grp.childGroups.length > 0) {
-            return removeZeroAmountAccount(grp.childGroups);
+            return removeZeroAmountAccount(grp.childGroups, grp.category);
         }
     });
     // console.log(grpList);
@@ -221,3 +216,38 @@ const prepareTlEntryDate = (transactionsResponse: TransactionsResponse): Transac
     }
     return null;
 };
+
+const getUnderstandingText = (category: string, balanceType: string, name: string) => {
+    if (!category) {
+        category = category;
+    }
+    let accountType = '';
+
+    switch (category) {
+        case 'liabilities':
+        accountType = 'Liability';
+            break;
+        case 'assets':
+        accountType = 'Asset';
+            break;
+        case 'income':
+        accountType = 'Revenue';
+            break;
+        case 'expenses':
+        accountType = 'Expense';
+            break;
+        default:
+            break;
+    }
+
+    let cateData = _.cloneDeep(underStandingTextData.find(p => p.accountType === accountType));
+    if (!cateData) {
+        return 'dummy category';
+    } else {
+        if (balanceType === 'DEBIT') {
+           return cateData.balanceText.dr.replace('<accountName>', name);
+        } else {
+           return cateData.balanceText.cr.replace('<accountName>', name);
+        }
+    }
+}
