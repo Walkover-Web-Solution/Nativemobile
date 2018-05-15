@@ -82,7 +82,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.filterdData = d.groupDetails;
 
                 this.flattenGrpDetails = this.makeFlatten(d.groupDetails, []);
-                this._cdRef.detectChanges();
+                this.detectChanges();
             }
         });
 
@@ -189,7 +189,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activeGrp = null;
         this.activeAcc = acc.uniqueName;
         this.breadCrumb.push({uniqueName: acc.uniqueName, name: acc.name});
-        this._cdRef.detectChanges();
+        this.detectChanges();
     }
 
     makeFlatten(mainGrps: ChildGroup[], result: any[], parentGrpUniqueName?: string) {
@@ -229,7 +229,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
         }
-        this._cdRef.detectChanges();
+        this.detectChanges();
     }
 
     searchResultClicked(res) {
@@ -242,7 +242,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             this.activeGrp = null;
         }
         this.searchWithNavigation(res);
-        this._cdRef.detectChanges();
+        this.detectChanges();
     }
 
     searchWithNavigation(res) {
@@ -265,8 +265,8 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.filterdData = res.childGroups;
         }
-        this.breadCrumb.push({uniqueName: res.uniqueName, name: res.name});
-        // this._cdRef.detectChanges();
+        this.breadCrumb.push({uniqueName: res.uniqueName, name: res.isGroup ? res.groupName : res.name});
+        // this.detectChanges();
     }
 
     genBreadcrumb(uniqueName: string, res) {
@@ -284,6 +284,12 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
         return res;
+    }
+
+    detectChanges() {
+        if (!this._cdRef['destroyed']) {
+            this._cdRef.detectChanges();
+        }
     }
 
     ngOnDestroy(): void {

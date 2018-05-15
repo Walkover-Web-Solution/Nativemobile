@@ -35,6 +35,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     };
     public transactionData$: Observable<TransactionsResponse>;
     public isTransactionRequestInProcess$: Observable<boolean>;
+    public isBusy: boolean = false;
     public activeTab: 'credit' | 'debit' = 'debit';
     public totalPages: number = 1;
     public diffTotal: number = 0;
@@ -79,6 +80,13 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
                 this.getUnderstandingText(acc.accountType, acc.name);
             }
         });
+
+        this.isTransactionRequestInProcess$.subscribe(bool => {
+            console.log('busy', bool);
+
+            this.isBusy = bool;
+            this.detectChanges();
+        })
     }
 
     ngOnChanges(changes: SimpleChanges): void {

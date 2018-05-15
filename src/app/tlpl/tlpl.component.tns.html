@@ -25,8 +25,9 @@
                 <StackLayout orientation="horizontal" padding="15" color="black" class="brd-text">
                     <Label text="Home /" (tap)="resetNavigation()" color="#0aa7fc"></Label>
                     <StackLayout *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
-                        <Label *ngIf="!l" color="#0aa7fc" (tap)="navigateTo(brd)" text="{{ brd }} /"></Label>
-                        <Label *ngIf="l" text="{{ brd }}"></Label>
+                        <Label *ngIf="!l" color="#0aa7fc" (tap)="navigateTo(brd.uniqueName)"
+                               text="{{ brd.name }} /"></Label>
+                        <Label *ngIf="l" text="{{ brd.name }}"></Label>
                     </StackLayout>
                 </StackLayout>
             </ScrollView>
@@ -45,19 +46,22 @@
 
                 <ng-container *ngIf="activeAcc === '';">
 
-                    <FlexboxLayout flexDirection="column" class="list-group"
-                                   *ngIf="!isSearchEnabled; else searchContainer">
+                    <StackLayout>
                         <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
                             <Label text="Particular"></Label>
                             <!--<Label class="fa" text="\uf293"></Label>-->
                             <Label text="Closing Balance"></Label>
                         </FlexboxLayout>
+                    </StackLayout>
 
+                    <FlexboxLayout flexDirection="column" class="list-group"
+                                   *ngIf="!isSearchEnabled; else searchContainer">
+                        <!--Groups-->
                         <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)">
 
                             <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item"
                                          (tap)="filterData(grp)">
-                                <Label class="main-text" text="{{ grp.groupName }}"></Label>
+                                <Label class="main-text" text="{{ grp.groupName }} >"></Label>
                                 <GridLayout columns="*,*" rows="auto">
                                     <StackLayout row="0" col="0">
                                         <Label text="Label 1" class="sub-text"></Label>
@@ -73,24 +77,25 @@
                                 </GridLayout>
                             </StackLayout>
 
-                            <StackLayout orientation="vertical" *ngFor="let acc of grp.accounts"
-                                         (tap)="goToLedger(acc)">
-                                <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
-                                    <Label class="main-text" text="{{ acc.name }}" textWrap="true"></Label>
-                                    <GridLayout columns="*,*" rows="auto">
-                                        <StackLayout row="0" col="0">
-                                            <Label text="Label 1" class="sub-text"></Label>
-                                        </StackLayout>
-                                        <StackLayout row="0" col="1">
-                                            <FlexboxLayout justifyContent="space-between" class="pull-right">
-                                                <Label class="main-text"
-                                                       text="{{ acc.closingBalance.amount | number: '1.0-2' }}"
-                                                       marginRight="5"></Label>
-                                                <Label text="Cr" class="sub-text" marginTop="3"></Label>
-                                            </FlexboxLayout>
-                                        </StackLayout>
-                                    </GridLayout>
-                                </StackLayout>
+                        </StackLayout>
+                        <!--Accounts-->
+                        <StackLayout orientation="vertical" *ngFor="let acc of activeGrp?.accounts"
+                                     (tap)="goToLedger(acc)">
+                            <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
+                                <Label class="main-text" text="{{ acc.name }}" textWrap="true"></Label>
+                                <GridLayout columns="*,*" rows="auto">
+                                    <StackLayout row="0" col="0">
+                                        <Label text="Label 1" class="sub-text"></Label>
+                                    </StackLayout>
+                                    <StackLayout row="0" col="1">
+                                        <FlexboxLayout justifyContent="space-between" class="pull-right">
+                                            <Label class="main-text"
+                                                   text="{{ acc.closingBalance.amount | number: '1.0-2' }}"
+                                                   marginRight="5"></Label>
+                                            <Label text="Cr" class="sub-text" marginTop="3"></Label>
+                                        </FlexboxLayout>
+                                    </StackLayout>
+                                </GridLayout>
                             </StackLayout>
                         </StackLayout>
                     </FlexboxLayout>
