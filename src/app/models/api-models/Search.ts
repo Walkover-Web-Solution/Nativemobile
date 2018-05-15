@@ -64,6 +64,7 @@ export class ChildGroup {
     public accounts: Account[];
     public uniqueName: string;
     public category?: any;
+    public accountType: string;
     public understandingCategoryText?: string;
     public groupName: string;
     public isIncludedInSearch: boolean = true;

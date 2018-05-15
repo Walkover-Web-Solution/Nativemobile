@@ -7,6 +7,7 @@ import {IFlattenGroupsAccountsDetail} from '../../models/interfaces/flattenGroup
 import {TransactionsResponse} from '../../models/api-models/Ledger';
 import {AccountResponse} from '../../models/api-models/Account';
 import * as moment from 'moment';
+import {underStandingTextData} from '../../tlpl/ledger/underStandingTextData';
 
 interface TbState {
     data?: AccountDetails;
@@ -152,10 +153,23 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
 // TB Functions
 const removeZeroAmountAccount = (grpList: ChildGroup[]) => {
     _.each(grpList, (grp) => {
+
+        let cateData = _.cloneDeep(underStandingTextData.find(p => p.accountType === grp.accountType));
+        if (!cateData) {
+            grp.understandingCategoryText = 'dummy category';
+        } else  {
+            if (grp.closingBalance.type === 'DEBIT') {
+                grp.understandingCategoryText = cateData.balanceText.dr.replace('<accountName>', grp.groupName);
+            } else {
+                grp.understandingCategoryText = cateData.balanceText.cr.replace('<accountName>', grp.groupName);
+            }
+        }
+
         let count = 0;
         let tempAcc = [];
         if (grp.closingBalance.amount > 0 || grp.forwardedBalance.amount > 0 || grp.creditTotal > 0 || grp.debitTotal > 0) {
             _.each(grp.accounts, (account) => {
+                account.understandingCategoryText = grp.understandingCategoryText;
                 if (account.closingBalance.amount > 0 || account.openingBalance.amount > 0 || account.creditTotal > 0 || account.debitTotal > 0) {
                     return tempAcc.push(account);
                 } else {

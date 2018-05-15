@@ -64,16 +64,5 @@ export const underStandingTextData = [
       cr: 'Liability Payable',
       dr: 'Liabilities paid in advance (hurrey!)'
     }
-  },
-  {
-    accountType: null,
-    text: {
-      cr: '<accountName> liability is going out',
-      dr: '<accountName> liability is coming in'
-    },
-    balanceText: {
-      cr: '',
-      dr: ''
-    }
   }
 ];

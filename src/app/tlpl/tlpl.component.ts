@@ -286,19 +286,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         return res;
     }
 
-    getCategory(category: string) {
-        let accountType: string = '';
-        switch (category) {
-            case 'liabilities':
-                accountType = '';
-            case 'assets':
-            case 'income':
-            case 'expenses':
-            default:
-                break;
-        }
-    }
-
     ngOnDestroy(): void {
         this.destroyed$.next(true);
         this.destroyed$.complete();
