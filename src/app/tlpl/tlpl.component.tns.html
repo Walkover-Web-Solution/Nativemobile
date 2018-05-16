@@ -46,13 +46,13 @@
 
                 <ng-container *ngIf="activeAcc === '';">
 
-                    <StackLayout>
-                        <FlexboxLayout flexDirection="row" justifyContent="space-between" class="bold" padding="5 10">
+                    <!--<StackLayout orientation="horizontal">-->
+                        <FlexboxLayout class="bold" padding="5 10" flexDirection="row">
                             <Label text="Particular"></Label>
                             <!--<Label class="fa" text="\uf293"></Label>-->
                             <Label text="Closing Balance"></Label>
                         </FlexboxLayout>
-                    </StackLayout>
+                    <!--</StackLayout>-->
 
                     <FlexboxLayout flexDirection="column" class="list-group"
                                    *ngIf="!isSearchEnabled; else searchContainer">
@@ -64,7 +64,7 @@
                                 <Label class="main-text" text="{{ grp.groupName }} >"></Label>
                                 <GridLayout columns="*,*" rows="auto">
                                     <StackLayout row="0" col="0">
-                                        <Label text="Label 1" class="sub-text"></Label>
+                                        <Label text="{{ grp.understandingCategoryText }}" class="sub-text"></Label>
                                     </StackLayout>
                                     <StackLayout row="0" col="1">
                                         <FlexboxLayout justifyContent="space-between" class="pull-right">
@@ -85,7 +85,7 @@
                                 <Label class="main-text" text="{{ acc.name }}" textWrap="true"></Label>
                                 <GridLayout columns="*,*" rows="auto">
                                     <StackLayout row="0" col="0">
-                                        <Label text="Label 1" class="sub-text"></Label>
+                                        <Label text="{{ acc.understandingCategoryText }}" class="sub-text"></Label>
                                     </StackLayout>
                                     <StackLayout row="0" col="1">
                                         <FlexboxLayout justifyContent="space-between" class="pull-right">

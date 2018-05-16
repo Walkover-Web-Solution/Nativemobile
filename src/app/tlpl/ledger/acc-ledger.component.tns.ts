@@ -57,6 +57,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
                 private _cdRef: ChangeDetectorRef) {
         this.request = new TransactionsRequest();
+        this.request.page = 0;
         this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
         this.activeAccount$ = this.store.select(p => p.tlPl.accountDetails).takeUntil(this.destroyed$);
@@ -73,6 +74,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             if (t) {
                 this.totalPages = t.totalPages;
                 this.diffTotal = (t.closingBalance.amount - t.forwardedBalance.amount);
+                this.detectChanges();
             }
         });
         this.activeAccount$.subscribe(acc => {
@@ -174,7 +176,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             title: "Select From Date",
             theme: "dark",
             maxDate: new Date(new Date().getFullYear(), 11, 31),
-            startingDate: new Date(new Date().getFullYear(), 11, 31),
+            startingDate:  this.request['type'] ? moment(this.request['type'], 'DD-MM-YYYY').format('DD-MM-YYYY') : new Date(new Date().getFullYear(), 11, 31),
         }).then((result) => {
             let date = `${result.day}-${result.month}-${result.year}`;
             this.request[type] = moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY')
