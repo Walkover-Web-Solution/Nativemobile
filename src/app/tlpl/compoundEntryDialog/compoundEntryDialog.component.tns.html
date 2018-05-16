@@ -1,19 +1,20 @@
-<ActionBar class="action-bar" width="100%">
-    <GridLayout columns="auto,*,auto" rows="*" width="100%">
-        <Label row="0" col="0" class="action-bar-title" text="{{ dialogData.entryDate | date: 'dd-MM-yyyy' }}"></Label>
-        <Button row="0" col="1" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="close()"
-                textAlignment="center"
-                text="&#xf00d;" fontFamily="FontAwesome">
-        </Button>
-        <!-- <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> -->
-    </GridLayout>
-</ActionBar>
+<!--<ActionBar class="action-bar" width="100%">-->
+    <!--<GridLayout columns="auto,*,auto" rows="*" width="100%">-->
+        <!--<Label row="0" col="0" class="action-bar-title" text="{{ dialogData.entryDate | date: 'dd-MM-yyyy' }}"></Label>-->
+        <!--<Button row="0" col="1" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="close()"-->
+                <!--textAlignment="center"-->
+                <!--text="&#xf00d;" fontFamily="FontAwesome">-->
+        <!--</Button>-->
+        <!--&lt;!&ndash; <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> &ndash;&gt;-->
+    <!--</GridLayout>-->
+<!--</ActionBar>-->
 
-<StackLayout orientation="vertical">
-    <FlexboxLayout justifyContent="space-between" flexDirection="column">
-        <StackLayout *ngFor="let item of dialogData.compoundEntries">
-            <Label text="{{ item.particular.name }} ({{ item.type === 'debit' ? 'DR' : 'CR' }}.)"></Label>
-            <Label class="pull-right" text="{{ item.amount | number: '1.0-2' }}"></Label>
-        </StackLayout>
-    </FlexboxLayout>
-</StackLayout>
+<GridLayout backgroundColor="white" rows="auto">
+    <ListView [items]="dialogData.compoundEntries" class="list-group" row="0">
+        <ng-template let-framework="item">
+            <StackLayout class="list-group-item" (tap)="close()">
+                <Label text="{{ item.particular.name }}" class="label"></Label>
+            </StackLayout>
+        </ng-template>
+    </ListView>
+</GridLayout>
