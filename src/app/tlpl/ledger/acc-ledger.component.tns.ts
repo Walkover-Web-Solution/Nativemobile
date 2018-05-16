@@ -213,7 +213,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         let options: ModalDialogOptions = {
             viewContainerRef: this.viewContainerRef,
             context: {data: {compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : ''}},
-            fullscreen: false,
+            fullscreen: true,
         };
 
         this.modalService.showModal(CompoundEntryDialogComponent, options);

@@ -28,6 +28,8 @@ export class Account {
     public isIncludedInSearch: boolean = true;
     public isCreated: boolean = false;
     public understandingCategoryText?: string;
+    public category?: string;
+    public parentGrpUniqueName?: string;
 }
 
 export interface AccountFlat {

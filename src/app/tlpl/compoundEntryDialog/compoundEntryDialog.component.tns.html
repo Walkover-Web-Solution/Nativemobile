@@ -9,12 +9,16 @@
     <!--</GridLayout>-->
 <!--</ActionBar>-->
 
-<GridLayout backgroundColor="white" rows="auto">
-    <ListView [items]="dialogData.compoundEntries" class="list-group" row="0">
-        <ng-template let-framework="item">
-            <StackLayout class="list-group-item" (tap)="close()">
-                <Label text="{{ item.particular.name }}" class="label"></Label>
-            </StackLayout>
-        </ng-template>
-    </ListView>
-</GridLayout>
+<!--<GridLayout backgroundColor="white" rows="auto">-->
+    <!--<ListView [items]="dialogData.compoundEntries" class="list-group" row="0">-->
+        <!--<ng-template let-framework="item">-->
+            <!--<StackLayout class="list-group-item" (tap)="close()">-->
+                <!--<Label text="{{ item.particular.name }}" class="label"></Label>-->
+            <!--</StackLayout>-->
+        <!--</ng-template>-->
+    <!--</ListView>-->
+<!--</GridLayout>-->
+
+<StackLayout>
+    <Label text="{{ 2 * 16 }}"></Label>
+</StackLayout>
