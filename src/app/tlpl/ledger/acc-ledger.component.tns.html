@@ -50,7 +50,7 @@
             <FlexboxLayout>
                 <Label text=" Cr. " *ngIf="(transactionData$ | async)?.forwardedBalance.amount > (transactionData$ |
                         async)?.closingBalance.amount"></Label>
-                <Label text="10240"></Label>
+                <Label text="{{ diffTotal | number: '1.0-2' }}"></Label>
                 <Label text=" Dr. " *ngIf="(transactionData$ | async)?.closingBalance.amount > (transactionData$ |
                         async)?.forwardedBalance.amount"></Label>
             </FlexboxLayout>
@@ -130,7 +130,7 @@
                 <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
                     <Label *ngIf="!txn.isCompoundEntry; else compoundED" text="{{ txn.particular.name }}"></Label>
                     <ng-template #compoundED>
-                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}"></Label>
+                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}" (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
                     </ng-template>
                 </FlexboxLayout>
                 <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
@@ -162,7 +162,7 @@
                 <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
                     <Label *ngIf="!txn.isCompoundEntry; else compoundEC" text="{{ txn.particular.name }}"></Label>
                     <ng-template #compoundEC>
-                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}"></Label>
+                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}" (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
                     </ng-template>
                 </FlexboxLayout>
                 <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">

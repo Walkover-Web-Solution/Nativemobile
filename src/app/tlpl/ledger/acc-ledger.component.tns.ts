@@ -1,4 +1,15 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    Input,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    SimpleChanges,
+    ViewContainerRef
+} from '@angular/core';
+import {ModalDialogOptions, ModalDialogService} from 'nativescript-angular/modal-dialog';
 import {TBPlBsActions} from '../../actions/tl-pl/tl-pl.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
@@ -9,12 +20,14 @@ import {ReplaySubject} from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/shareReplay';
 import {AccountResponse} from '../../models/api-models/Account';
-import { underStandingTextData } from './underStandingTextData';
+import {underStandingTextData} from './underStandingTextData';
 import * as _ from 'lodash';
 import {LedgerService} from '../../services/ledger.service';
 import {ToasterService} from '../../services/toaster.service';
 import * as moment from 'moment/moment';
 import {Config} from '../../common/utils';
+import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
+import {ITransactionItem} from '../../models/interfaces/ledger.interface';
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -55,7 +68,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
-                private _cdRef: ChangeDetectorRef) {
+                private _cdRef: ChangeDetectorRef, private modalService: ModalDialogService, private viewContainerRef: ViewContainerRef) {
         this.request = new TransactionsRequest();
         this.request.page = 0;
         this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
@@ -170,21 +183,46 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
     openFromDatePicker(type: string = 'from') {
         if (!Config.IS_MOBILE_NATIVE) return;
-        let ModalPicker = require("nativescript-modal-datetimepicker").ModalDatetimepicker;
+        let ModalPicker = require('nativescript-modal-datetimepicker').ModalDatetimepicker;
         const picker = new ModalPicker();
         picker.pickDate({
-            title: "Select From Date",
-            theme: "dark",
+            title: 'Select From Date',
+            theme: 'dark',
             maxDate: new Date(new Date().getFullYear(), 11, 31),
-            startingDate:  this.request['type'] ? moment(this.request['type'], 'DD-MM-YYYY').format('DD-MM-YYYY') : new Date(new Date().getFullYear(), 11, 31),
+            startingDate: this.request['type'] ? moment(this.request['type'], 'DD-MM-YYYY').format('DD-MM-YYYY') : new Date(new Date().getFullYear(), 11, 31),
         }).then((result) => {
             let date = `${result.day}-${result.month}-${result.year}`;
             this.request[type] = moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY')
             this.request.page = 1;
             this.getTrxData();
         }).catch((error) => {
-            console.log("Error: " + JSON.stringify(error));
+            console.log('Error: ' + JSON.stringify(error));
         });
+    }
+
+    openCompoundEntry(txnUniqueName: string) {
+        let allItems: ITransactionItem[] = [];
+
+        this.transactionData$.subscribe(t => {
+            if (t) {
+                allItems.push(...t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName));
+                allItems.push(...t.creditTransactions.filter(ct => ct.entryUniqueName === txnUniqueName));
+            }
+        });
+
+        let options: ModalDialogOptions = {
+            viewContainerRef: this.viewContainerRef,
+            context: {data: {compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : ''}},
+            fullscreen: false,
+        };
+
+        this.modalService.showModal(CompoundEntryDialogComponent, options);
+
+        // this.dialog.open(CompoundEntryDialogComponent, {
+        //     data: { compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : '' },
+        //     height: '400px',
+        //     width: '800px',
+        // });
     }
 
     detectChanges() {
@@ -217,5 +255,5 @@ const base64ToBlob = (b64Data, contentType, sliceSize) => {
         byteArrays.push(byteArray);
         offset += sliceSize;
     }
-    return new Blob(byteArrays, { type: contentType });
+    return new Blob(byteArrays, {type: contentType});
 };
