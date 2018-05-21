@@ -172,8 +172,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
         this.dialog.open(CompoundEntryDialogComponent, {
             data: { compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : '' },
-            height: '400px',
-            width: '800px',
+            width: '340px',
         });
     }
 

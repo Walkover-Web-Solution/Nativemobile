@@ -4,103 +4,104 @@
     <div class="sixteen-nine">
         <my-header [title]="'Trial Balance'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }">
         </my-header>
-
-        <mat-card *ngIf="breadCrumb.length > 0">
-            <mat-card-content>
-                <div>
-                    <a (click)="resetNavigation()">Home /</a>
-                    <span *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
-                        <a *ngIf="!l;else last"
-                           (click)="navigateTo(brd.uniqueName)">{{ brd.name }} /</a>
-                        <ng-template #last> {{ brd.name }}</ng-template>
-                    </span>
-                </div>
-            </mat-card-content>
-        </mat-card>
-
-        <ng-container *ngIf="activeAcc === ''">
-            <mat-card class="mat-elevation-z8" *ngIf="breadCrumb.length === 0">
-
+        <div class="main_card" style="display: flex;flex-direction: column">
+            <mat-card *ngIf="breadCrumb.length > 0">
                 <mat-card-content>
-                    <form>
-                        <div style="display: flex;">
-                            <mat-icon class="icon-search" matPrefix>search</mat-icon>
-                            <input class="search-box" type="text" matInput #searchControl (input)="search(searchControl.value)">
-                        </div>
-                    </form>
-                </mat-card-content>
-
-            </mat-card>
-
-            <mat-card class="mat-elevation-z2" *ngIf="breadCrumb.length > 0 && activeGrp">
-
-                <mat-card-content>
-                    <div class="totalContainer">
-                        <p>Total</p>
-                        <p style="font-weight: 600">{{ activeGrp?.closingBalance.amount | number: '1.0-2' }}</p>
+                    <div>
+                        <a (click)="resetNavigation()">Home /</a>
+                        <span *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
+                            <a *ngIf="!l;else last" (click)="navigateTo(brd.uniqueName)">{{ brd.name }} /</a>
+                            <ng-template #last> {{ brd.name }}</ng-template>
+                        </span>
                     </div>
                 </mat-card-content>
-
             </mat-card>
 
-            <mat-card>
-                <div class="arrow-text">
-                    <span>Particular
-                        <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
-                        </mat-icon>
-                    </span>
-                    <span class="pull-right">Closing Balance
-                        <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
-                        </mat-icon>
-                    </span>
-                </div>
+            <ng-container *ngIf="activeAcc === ''">
+                <mat-card class="mat-elevation-z8" *ngIf="breadCrumb.length === 0">
 
-                <div>
-
-                    <ul class="list-nav" *ngIf="!isSearchEnabled; else searchContainer">
-                        <li *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
-                            <div class="inner-item">
-                                <a class="list-a" matLine>{{ grp.groupName }} ></a>
-                                <small>{{ grp.understandingCategoryText }}</small>
-                                <span class="pull-right">{{ grp.closingBalance.amount | number: '1.0-2' }} {{ grp.closingBalance.type === 'DEBIT' ? 'Dr' : 'Cr' }}</span>
+                    <mat-card-content>
+                        <form>
+                            <div style="display: flex;">
+                                <mat-icon class="icon-search" matPrefix>search</mat-icon>
+                                <input class="search-box" type="text" matInput #searchControl (input)="search(searchControl.value)">
                             </div>
-                        </li>
-                    </ul>
+                        </form>
+                    </mat-card-content>
 
-                    <ul class="list-nav" *ngIf="activeGrp">
-                        <li *ngFor="let acc of activeGrp.accounts" (click)="$event.stopPropagation();goToLedger(acc)">
-                            <div class="inner-item">
-                                <a class="list-a" matLine>
-                                    {{ acc.name }}
-                                </a>
-                                <small>{{ acc.understandingCategoryText || 'dummy category' }}</small>
-                                <span class="pull-right">{{ acc.closingBalance.amount | number: '1.0-2' }} {{ acc.closingBalance.type === 'DEBIT' ? 'Dr' : 'Cr' }}</span>
-                            </div>
-                        </li>
-                    </ul>
+                </mat-card>
 
-                    <ng-template #searchContainer>
-                        <mat-nav-list>
-                            <mat-list-item *ngFor="let item of searchedFlattenGrpDetails"
-                                           (click)="searchResultClicked(item)">
-                                <a matLine>
-                                    {{ item.isGroup ? item.groupName : item.name }}
-                                </a>
-                                <p matLine>{{ item.isGroup ? 'Grp' : 'Acc' }}</p>
-                            </mat-list-item>
-                        </mat-nav-list>
-                    </ng-template>
+                <mat-card class="mat-elevation-z2" *ngIf="breadCrumb.length > 0 && activeGrp">
 
-                </div>
-            </mat-card>
-        </ng-container>
+                    <mat-card-content>
+                        <div class="totalContainer">
+                            <p>Total</p>
+                            <p style="font-weight: 600">{{ activeGrp?.closingBalance.amount | number: '1.0-2' }}</p>
+                        </div>
+                    </mat-card-content>
 
-        <ng-container *ngIf="activeAcc !== ''">
-            <div>
+                </mat-card>
+
+                <mat-card>
+                    <div class="arrow-text">
+                        <span>Particular
+                            <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
+                            </mat-icon>
+                        </span>
+                        <span class="pull-right">Closing Balance
+                            <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
+                            </mat-icon>
+                        </span>
+                    </div>
+
+                    <div>
+
+                        <ul class="list-nav" *ngIf="!isSearchEnabled; else searchContainer">
+                            <li *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
+                                <div class="inner-item">
+                                    <a class="list-a" matLine>{{ grp.groupName }} ></a>
+                                    <small>{{ grp.understandingCategoryText }}</small>
+                                    <span class="pull-right">{{ grp.closingBalance.amount | number: '1.0-2' }} {{ grp.closingBalance.type === 'DEBIT'
+                                        ? 'Dr' : 'Cr' }}</span>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <ul class="list-nav" *ngIf="activeGrp">
+                            <li *ngFor="let acc of activeGrp.accounts" (click)="$event.stopPropagation();goToLedger(acc)">
+                                <div class="inner-item">
+                                    <a class="list-a" matLine>
+                                        {{ acc.name }}
+                                    </a>
+                                    <small>{{ acc.understandingCategoryText || 'dummy category' }}</small>
+                                    <span class="pull-right">{{ acc.closingBalance.amount | number: '1.0-2' }} {{ acc.closingBalance.type === 'DEBIT'
+                                        ? 'Dr' : 'Cr' }}</span>
+                                </div>
+                            </li>
+                        </ul>
+
+                        <ng-template #searchContainer>
+                            <mat-nav-list>
+                                <mat-list-item *ngFor="let item of searchedFlattenGrpDetails" (click)="searchResultClicked(item)">
+                                    <a matLine>
+                                        {{ item.isGroup ? item.groupName : item.name }}
+                                    </a>
+                                    <p matLine>{{ item.isGroup ? 'Grp' : 'Acc' }}</p>
+                                </mat-list-item>
+                            </mat-nav-list>
+                        </ng-template>
+
+                    </div>
+                </mat-card>
+            </ng-container>
+
+            <ng-container *ngIf="activeAcc !== ''">
                 <div>
-                    <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
+                    <div>
+                        <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
+                    </div>
                 </div>
-            </div>
-        </ng-container>
+            </ng-container>
+        </div>
     </div>
 </div>
