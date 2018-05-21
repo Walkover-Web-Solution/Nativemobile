@@ -1,22 +1,23 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {TBPlBsActions} from '../../actions/tl-pl/tl-pl.actions';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {DownloadLedgerRequest, TransactionsRequest, TransactionsResponse} from '../../models/api-models/Ledger';
-import {IMyDateRangeModel, IMyDrpOptions} from 'mydaterangepicker';
-import {Observable} from 'rxjs/Observable';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { TBPlBsActions } from '../../actions/tl-pl/tl-pl.actions';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { DownloadLedgerRequest, TransactionsRequest, TransactionsResponse } from '../../models/api-models/Ledger';
+import { IMyDateRangeModel, IMyDrpOptions } from 'mydaterangepicker';
+import { Observable } from 'rxjs/Observable';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import 'rxjs/add/operator/takeUntil';
+import 'rxjs/add/operator/last';
 import 'rxjs/add/operator/shareReplay';
-import {AccountResponse} from '../../models/api-models/Account';
-import {underStandingTextData} from './underStandingTextData';
+import { AccountResponse } from '../../models/api-models/Account';
+import { underStandingTextData } from './underStandingTextData';
 import * as _ from 'lodash';
-import {LedgerService} from '../../services/ledger.service';
-import {saveAs} from 'file-saver';
-import {ToasterService} from '../../services/toaster.service';
-import {MatDialog} from '@angular/material';
-import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
-import {ITransactionItem} from '../../models/interfaces/ledger.interface';
+import { LedgerService } from '../../services/ledger.service';
+import { saveAs } from 'file-saver';
+import { ToasterService } from '../../services/toaster.service';
+import { MatDialog } from '@angular/material';
+import { CompoundEntryDialogComponent } from '../compoundEntryDialog/compoundEntryDialog.component';
+import { ITransactionItem } from '../../models/interfaces/ledger.interface';
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -32,10 +33,11 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         dateFormat: 'dd-mm-yyyy',
     };
     public dateModel: any = {
-        beginDate: {year: 2018, month: 10, day: 9},
-        endDate: {year: 2018, month: 10, day: 19}
+        beginDate: { year: 2018, month: 10, day: 9 },
+        endDate: { year: 2018, month: 10, day: 19 }
     };
     public transactionData$: Observable<TransactionsResponse>;
+    public transactionDataWithOutShare$: Observable<TransactionsResponse>;
     public isTransactionRequestInProcess$: Observable<boolean>;
     public activeTab: 'credit' | 'debit' = 'debit';
     public totalPages: number = 1;
@@ -56,9 +58,10 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
-                private _cdRef: ChangeDetectorRef, private dialog: MatDialog) {
+        private _cdRef: ChangeDetectorRef, private dialog: MatDialog) {
         this.request = new TransactionsRequest();
-        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
+        this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$)
+        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
         this.activeAccount$ = this.store.select(p => p.tlPl.accountDetails).takeUntil(this.destroyed$);
         this.accountDetailsInProgress$ = this.store.select(p => p.tlPl.accountDetailsInProgress).takeUntil(this.destroyed$);
@@ -77,9 +80,9 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             }
         });
         this.activeAccount$.subscribe(acc => {
-           if (acc) {
-               this.getUnderstandingText(acc.accountType, acc.name);
-           }
+            if (acc) {
+                this.getUnderstandingText(acc.accountType, acc.name);
+            }
         });
     }
 
@@ -161,9 +164,10 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     openCompoundEntry(txnUniqueName: string) {
+        
         let allItems: ITransactionItem[] = [];
 
-        this.transactionData$.subscribe(t => {
+        this.transactionDataWithOutShare$.take(1).subscribe(t => {
             if (t) {
                 allItems.push(...t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName));
                 allItems.push(...t.creditTransactions.filter(ct => ct.entryUniqueName === txnUniqueName));

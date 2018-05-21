@@ -18,6 +18,7 @@ import { NeedsAuthentication } from './decorators/needsAuthentication';
 import { ToastrModule } from 'ngx-toastr';
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from 'environments/environment';
 
 
 Config.PLATFORM_TARGET = Config.PLATFORMS.WEB;
@@ -64,7 +65,7 @@ let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logge
         NeedsAuthentication,
         {
             provide: ServiceConfig,
-            useValue: { apiUrl: 'https://api.giddh.com/', appUrl: 'https://api.giddh.com/' }
+            useValue: { apiUrl: environment.apiUrl, appUrl: environment.appUrl }
         },
     ],
     bootstrap: [AppComponent]
