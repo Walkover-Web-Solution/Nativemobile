@@ -20,4 +20,7 @@ export class MyLogoutComponent implements OnInit, OnChanges {
     showLoader() {
 
     }
+    logout() {
+
+    }
 }

@@ -4,7 +4,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { ChartFilterType, ChartType } from '../../../models/interfaces/dashboard.interface';
 import { ReplaySubject } from 'rxjs';
 import { ChartCustomFilter } from '../../../models/api-models/Dashboard';
-import { ReportsFilterComponent } from '../../../reports/components/reports-filter/reports-filter.component.tns';
+import { ReportsFilterComponent } from '../../../reports/components/reports-filter/reports-filter.component';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
 import { DashboardActions } from '../../../actions/dashboard/dashboard.action';

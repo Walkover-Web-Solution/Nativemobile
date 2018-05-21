@@ -1,7 +1,7 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartModule } from 'angular2-highcharts';
-import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
+
 
 
 import { SharedModule } from '../shared/shared.module';
@@ -13,16 +13,31 @@ import { ReportsRoutes } from './reports.routes';
 import { ReportsFilterComponent } from './components/reports-filter/reports-filter.component';
 import { PlSheetComponent } from './components/pl-sheet/pl-sheet.component';
 import { BsSheetComponent } from './components/bs-sheet/bs-sheet.component';
+import { HighchartsStatic } from 'angular2-highcharts/dist/HighchartsService';
+
+
 
 declare let require: any;
+export function highchartsFactory() {
+    const hc = require('highcharts/highstock');
+    const dd = require('highcharts/modules/exporting');
+    dd(hc);
+    return hc;
+}
 
 @NgModule({
+    providers: [
+        {
+            provide: HighchartsStatic,
+            useFactory: highchartsFactory
+        }
+    ],
     imports: [
         CommonModule,
         FormsModule,
         RouterModule.forChild(ReportsRoutes),
         ReactiveFormsModule,
-        ChartModule.forRoot(require('highcharts')),
+        ChartModule,
         SharedModule,
     ],
     declarations: [ReportsComponent, PlChartComponent, ReportsFilterComponent, PlSheetComponent, BsSheetComponent],
