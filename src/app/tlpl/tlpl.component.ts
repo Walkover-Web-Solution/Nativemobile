@@ -27,7 +27,7 @@ import {INameUniqueName} from '../models/interfaces/nameUniqueName.interface';
     moduleId: module.id,
     templateUrl: './tlpl.component.html',
     styleUrls: ['./tlpl.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('searchControl') public searchControl: ElementRef;

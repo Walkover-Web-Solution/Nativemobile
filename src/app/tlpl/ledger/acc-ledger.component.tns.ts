@@ -34,7 +34,7 @@ import {ITransactionItem} from '../../models/interfaces/ledger.interface';
     moduleId: module.id,
     templateUrl: './acc-ledger.component.html',
     styleUrls: ['./acc-ledger.component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     @Input() accUniqueName: string;
@@ -235,6 +235,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
+
 }
 
 const base64ToBlob = (b64Data, contentType, sliceSize) => {

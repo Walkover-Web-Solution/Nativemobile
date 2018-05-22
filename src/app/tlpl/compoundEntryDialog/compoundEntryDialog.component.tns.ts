@@ -6,7 +6,7 @@ import { ModalDialogParams } from "nativescript-angular/modal-dialog";
     selector: 'ns-compound-entry-dialog',
     templateUrl: './compoundEntryDialog.component.html',
     moduleId: module.id,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    // changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class CompoundEntryDialogComponent implements OnInit, AfterViewInit {
@@ -15,7 +15,6 @@ export class CompoundEntryDialogComponent implements OnInit, AfterViewInit {
 
     constructor(private params: ModalDialogParams, private _cdRef: ChangeDetectorRef) {
         this.dialogData = this.params.context.data;
-        console.log(JSON.stringify(this.dialogData.compoundEntries));
     }
 
     ngOnInit() {
@@ -25,7 +24,7 @@ export class CompoundEntryDialogComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this._cdRef.detectChanges();
+        // this._cdRef.detectChanges();
     }
 
     close() {
