@@ -48,7 +48,7 @@ const SOCIAL_CONFIG = new AuthServiceConfig([
         id: LinkedinLoginProvider.PROVIDER_ID,
         provider: new LinkedinLoginProvider('817roify24ig8g')
     }
-]);
+], false);
 
 export function provideConfig() {
     return SOCIAL_CONFIG;
