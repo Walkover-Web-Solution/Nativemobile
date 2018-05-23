@@ -21,7 +21,7 @@ import {AppState} from '../store';
 import {RouterService} from '../services/router.service';
 import {Account, ChildGroup} from '../models/api-models/Search';
 import {INameUniqueName} from '../models/interfaces/nameUniqueName.interface';
-
+let width = window.innerWidth;
 @Component({
     selector: 'ns-tlpl',
     moduleId: module.id,
@@ -43,6 +43,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public searchedFlattenGrpDetails: any[] = [];
     public isSearchEnabled: boolean = false;
     public showLedgerScreen: boolean = false;
+    public width: number = width;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
