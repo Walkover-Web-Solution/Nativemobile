@@ -60,7 +60,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
         private _cdRef: ChangeDetectorRef, private dialog: MatDialog) {
         this.request = new TransactionsRequest();
-        this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$)
+        this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
         this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
         this.activeAccount$ = this.store.select(p => p.tlPl.accountDetails).takeUntil(this.destroyed$);
@@ -164,7 +164,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     openCompoundEntry(txnUniqueName: string) {
-        
+
         let allItems: ITransactionItem[] = [];
 
         this.transactionDataWithOutShare$.take(1).subscribe(t => {

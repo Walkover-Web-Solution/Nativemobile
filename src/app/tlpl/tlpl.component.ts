@@ -1,13 +1,4 @@
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    ElementRef,
-    OnDestroy,
-    OnInit,
-    ViewChild
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as _ from 'lodash';
 import {createSelector} from 'reselect';
@@ -21,7 +12,8 @@ import {AppState} from '../store';
 import {RouterService} from '../services/router.service';
 import {Account, ChildGroup} from '../models/api-models/Search';
 import {INameUniqueName} from '../models/interfaces/nameUniqueName.interface';
-let width = window.innerWidth;
+import {Config} from '../common/utils';
+
 @Component({
     selector: 'ns-tlpl',
     moduleId: module.id,
@@ -43,7 +35,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public searchedFlattenGrpDetails: any[] = [];
     public isSearchEnabled: boolean = false;
     public showLedgerScreen: boolean = false;
-    public width: number = width;
+    public width: number = 0;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
@@ -55,6 +47,9 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit(): void {
+        if (Config.IS_WEB) {
+            this.width = (window as any).innerWidth;
+        }
         this.companyData$.subscribe(res => {
             if (!res.companies) {
                 return;

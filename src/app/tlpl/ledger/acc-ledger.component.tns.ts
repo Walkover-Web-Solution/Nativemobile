@@ -1,14 +1,4 @@
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    OnChanges,
-    OnDestroy,
-    OnInit,
-    SimpleChanges,
-    ViewContainerRef
-} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewContainerRef} from '@angular/core';
 import {ModalDialogOptions, ModalDialogService} from 'nativescript-angular/modal-dialog';
 import {TBPlBsActions} from '../../actions/tl-pl/tl-pl.actions';
 import {Store} from '@ngrx/store';
@@ -28,6 +18,26 @@ import * as moment from 'moment/moment';
 import {Config} from '../../common/utils';
 import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
 import {ITransactionItem} from '../../models/interfaces/ledger.interface';
+import { Downloader, ProgressEventData, DownloadEventData } from 'nativescript-downloader';
+const downloader = new Downloader();
+const imageDownloaderId = downloader.createDownload({
+    url:
+        'https://wallpaperscraft.com/image/hulk_wolverine_x_men_marvel_comics_art_99032_3840x2400.jpg'
+});
+
+downloader
+    .start(imageDownloaderId, (progressData: ProgressEventData) => {
+        console.log(`Progress : ${progressData.value}%`);
+        console.log(`Current Size : ${progressData.currentSize}%`);
+        console.log(`Total Size : ${progressData.totalSize}%`);
+        console.log(`Download Speed in bytes : ${progressData.speed}%`);
+    })
+    .then((completed: DownloadEventData) => {
+        console.log(`Image : ${completed.path}`);
+    })
+    .catch(error => {
+        console.log(error.message);
+    });
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -47,6 +57,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         endDate: {year: 2018, month: 10, day: 19}
     };
     public transactionData$: Observable<TransactionsResponse>;
+    public transactionDataWithOutShare$: Observable<TransactionsResponse>;
     public isTransactionRequestInProcess$: Observable<boolean>;
     public isBusy: boolean = false;
     public activeTab: 'credit' | 'debit' = 'debit';
@@ -72,6 +83,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         this.request = new TransactionsRequest();
         this.request.page = 0;
         this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
+        this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
         this.activeAccount$ = this.store.select(p => p.tlPl.accountDetails).takeUntil(this.destroyed$);
         this.accountDetailsInProgress$ = this.store.select(p => p.tlPl.accountDetailsInProgress).takeUntil(this.destroyed$);
@@ -203,7 +215,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     openCompoundEntry(txnUniqueName: string) {
         let allItems: ITransactionItem[] = [];
 
-        this.transactionData$.subscribe(t => {
+        this.transactionDataWithOutShare$.take(1).subscribe(t => {
             if (t) {
                 allItems.push(...t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName));
                 allItems.push(...t.creditTransactions.filter(ct => ct.entryUniqueName === txnUniqueName));
