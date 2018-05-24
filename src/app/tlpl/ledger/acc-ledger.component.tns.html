@@ -46,15 +46,16 @@
         </FlexboxLayout>
 
         <StackLayout orientation="horizontal" class="text-color">
-            <Label text="-"></Label>
+
+            <Label text="&#xf068;" fontFamily="FontAwesome" marginRight="3" verticalAlignment="center"></Label>
             <FlexboxLayout>
                 <Label text=" Cr. " *ngIf="(transactionData$ | async)?.forwardedBalance.amount > (transactionData$ |
-                        async)?.closingBalance.amount"></Label>
-                <Label text="{{ diffTotal | number: '1.0-2' }}"></Label>
+                        async)?.closingBalance.amount" marginTop="3"></Label>
+                <Label text="{{ diffTotal | number: '1.0-2' }}" marginTop="3"></Label>
                 <Label text=" Dr. " *ngIf="(transactionData$ | async)?.closingBalance.amount > (transactionData$ |
-                        async)?.forwardedBalance.amount"></Label>
+                        async)?.forwardedBalance.amount" marginTop="3"></Label>
             </FlexboxLayout>
-            <Label text="->"></Label>
+            <Label text="&#xf061;" fontFamily="FontAwesome" marginLeft="3" verticalAlignment="center"></Label>
         </StackLayout>
 
         <FlexboxLayout class="pull-right">
@@ -85,28 +86,25 @@
     </GridLayout>
 
     <!--balance understanding tax debit-->
-    <GridLayout rows="auto,auto" borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1"
+    <GridLayout rows="auto,auto" borderLeftWidth="1" borderRightWidth="1"
                 borderColor="#D2D2D4" padding="10" *ngIf="activeTab === 'debit'">
         <StackLayout row="0">
-            <FlexboxLayout class="text-color font-18">
-                <Label text="{{ ledgerUnderStandingObj.text.dr }}"></Label>
-                <!--<Label class="bold" text=" Receiving"></Label>-->
-            </FlexboxLayout>
-
+            <Label class="text-color font-18" text="{{ ledgerUnderStandingObj.text.dr }}"></Label>
         </StackLayout>
+    </GridLayout>
 
-        <GridLayout rows="auto" columns="*,2*,*" class="font-18">
-            <StackLayout padding="10" row="0" col="0">
-                <Label></Label>
-            </StackLayout>
-            <StackLayout padding="10" row="0" col="1">
-                <Label text="B/F" marginRight="20" class="pull-right"></Label>
-            </StackLayout>
-            <StackLayout padding="10" row="0" col="2">
-                <Label text="{{ (transactionData$ | async)?.forwardedBalance.amount | number: '1.0-2'}}"></Label>
-            </StackLayout>
-        </GridLayout>
+    <GridLayout rows="auto" columns="*,2*,*" class="font-18" borderLeftWidth="1" borderRightWidth="1"
+                borderColor="#D2D2D4">
 
+        <StackLayout padding="7" row="0" col="0">
+            <Label></Label>
+        </StackLayout>
+        <StackLayout padding="7" row="0" col="1">
+            <Label text="B/F" marginRight="20" class="pull-right"></Label>
+        </StackLayout>
+        <StackLayout padding="10" row="0" col="2">
+            <Label text="{{ (transactionData$ | async)?.forwardedBalance.amount | number: '1.0-2'}}"></Label>
+        </StackLayout>
     </GridLayout>
 
     <!--balance understanding tax credit-->
@@ -130,27 +128,32 @@
                 <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
                     <Label *ngIf="!txn.isCompoundEntry; else compoundED" text="{{ txn.particular.name }}"></Label>
                     <ng-template #compoundED>
-                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}" (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
+                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}"
+                               (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
                     </ng-template>
                 </FlexboxLayout>
                 <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                    <Label text="{{ txn.amount | number: '1.0-2' }}"></Label>
+                    <FlexboxLayout>
+                        <Label text="{{ txn.amount | number: '1.0-2' }}" horizontalAlignment="left"></Label>
 
-                    <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
-                                 (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
-                                 matTooltip="Download file : {{txn.attachedFileName}}">
-                        <Label text="Download"></Label>
-                        <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
-                    </StackLayout>
-                    <StackLayout class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
-                                 (click)="downloadInvoice(txn.voucherNumber, $event)"
-                                 matTooltip="Download Invoice : {{txn.voucherNumber}}">
-                        <Label text="Download"></Label>
-                    </StackLayout>
+                        <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
+                                     (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
+                                     matTooltip="Download file : {{txn.attachedFileName}}">
+                            <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
+                                   marginTop="5"></Label>
+                            <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
+                        </StackLayout>
+                        <StackLayout *ngIf="txn.voucherGenerated"
+                                     (click)="downloadInvoice(txn.voucherNumber, $event)"
+                                     matTooltip="Download Invoice : {{txn.voucherNumber}}">
+                            <Label text="&#xf019;" fontFamily="FontAwesome" marginTop="5" fontSize="14"></Label>
+                        </StackLayout>
+                    </FlexboxLayout>
 
                 </StackLayout>
             </GridLayout>
         </ng-container>
+
         <!--credit transactions-->
         <ng-container *ngIf="activeTab === 'credit'">
             <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderLeftWidth="1"
@@ -162,23 +165,26 @@
                 <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
                     <Label *ngIf="!txn.isCompoundEntry; else compoundEC" text="{{ txn.particular.name }}"></Label>
                     <ng-template #compoundEC>
-                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}" (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
+                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}"
+                               (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
                     </ng-template>
                 </FlexboxLayout>
                 <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                    <Label text="{{ txn.amount | number: '1.0-2' }}"></Label>
+                    <FlexboxLayout justifyContent="space-between">
+                        <Label text="{{ txn.amount | number: '1.0-2' }}"></Label>
 
-                    <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
-                                 (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
-                                 matTooltip="Download file : {{txn.attachedFileName}}">
-                        <Label text="Download"></Label>
-                        <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
-                    </StackLayout>
-                    <StackLayout class="download-invoice-ledger" *ngIf="txn.voucherGenerated"
-                                 (click)="downloadInvoice(txn.voucherNumber, $event)"
-                                 matTooltip="Download Invoice : {{txn.voucherNumber}}">
-                        <Label text="Download"></Label>
-                    </StackLayout>
+                        <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
+                                     (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
+                                     matTooltip="Download file : {{txn.attachedFileName}}">
+                            <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14" marginTop="5"></Label>
+                            <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
+                        </StackLayout>
+                        <StackLayout *ngIf="txn.voucherGenerated"
+                                     (click)="downloadInvoice(txn.voucherNumber, $event)"
+                                     matTooltip="Download Invoice : {{txn.voucherNumber}}">
+                            <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14" marginTop="5"></Label>
+                        </StackLayout>
+                    </FlexboxLayout>
 
                 </StackLayout>
             </GridLayout>
@@ -232,3 +238,5 @@
     </GridLayout>
 
 </FlexboxLayout>
+
+

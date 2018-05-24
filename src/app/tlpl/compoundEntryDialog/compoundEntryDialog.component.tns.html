@@ -1,24 +1,37 @@
-<!--<ActionBar class="action-bar" width="100%">-->
-    <!--<GridLayout columns="auto,*,auto" rows="*" width="100%">-->
-        <!--<Label row="0" col="0" class="action-bar-title" text="{{ dialogData.entryDate | date: 'dd-MM-yyyy' }}"></Label>-->
-        <!--<Button row="0" col="1" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="close()"-->
-                <!--textAlignment="center"-->
-                <!--text="&#xf00d;" fontFamily="FontAwesome">-->
-        <!--</Button>-->
-        <!--&lt;!&ndash; <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> &ndash;&gt;-->
-    <!--</GridLayout>-->
-<!--</ActionBar>-->
+<ScrollView>
 
-<!--<GridLayout backgroundColor="white" rows="auto">-->
-    <!--<ListView [items]="dialogData.compoundEntries" class="list-group" row="0">-->
-        <!--<ng-template let-framework="item">-->
-            <!--<StackLayout class="list-group-item" (tap)="close()">-->
-                <!--<Label text="{{ item.particular.name }}" class="label"></Label>-->
-            <!--</StackLayout>-->
-        <!--</ng-template>-->
-    <!--</ListView>-->
-<!--</GridLayout>-->
+    <StackLayout>
 
-<StackLayout>
-    <Label text="{{ 2 * 16 }}"></Label>
-</StackLayout>
+        <GridLayout rows="auto" height="60" columns="*,auto" backgroundColor="#27283C" borderBottomWidth="1"
+                     borderColor="#D2D2D4" padding="15">
+            <Label col="0" row="0" text="{{ dialogData.entryDate | date: 'dd-MM-yyyy' }}" color="white" fontSize="18" verticalAlignment="center"></Label>
+            <Label text="&#xf00d;" fontFamily="FontAwesome" row="0" fontSize="26" color="white" col="1" (tap)="close()"></Label>
+        </GridLayout>
+
+
+        <ListView [items]="dialogData.compoundEntries" class="list-group" margin="10">
+            <ng-template let-item="item">
+
+                <GridLayout columns="*,*" rows="auto">
+                    <StackLayout row="0" col="0">
+                        <Label text="{{ item.particular.name }} ({{ item.type === 'debit' ? 'DR' : 'CR' }}.)"
+                               class="label" fontSize="16"></Label>
+                    </StackLayout>
+                    <StackLayout row="0" col="1">
+                        <Label text="{{ item.amount | number: '1.0-2' }}" class="label pull-right" fontSize="16"></Label>
+                    </StackLayout>
+                </GridLayout>
+
+            </ng-template>
+        </ListView>
+
+        <!--total-->
+        <GridLayout rows="auto" borderTopWidth="1" borderColor="#D2D2D4" class="font-18">
+            <StackLayout row="1" padding="10">
+                <Label text="{{ entryTotal | number: '1.0-2' }}" borderBottomWidth="2"
+                       class="pull-right"></Label>
+            </StackLayout>
+        </GridLayout>
+
+    </StackLayout>
+</ScrollView>

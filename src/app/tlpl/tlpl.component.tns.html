@@ -46,70 +46,80 @@
 
                 <ng-container *ngIf="activeAcc === '';">
 
-                    <!--<StackLayout orientation="horizontal">-->
-                        <FlexboxLayout class="bold" padding="5 10" flexDirection="row" justifyContent="space-between">
-                            <Label text="Particular"></Label>
-                            <!--<Label class="fa" text="\uf293"></Label>-->
-                            <Label text="Closing Balance"></Label>
+                    <DockLayout>
+                        <!--<StackLayout orientation="horizontal">-->
+                        <FlexboxLayout class="bold" padding="5 10" flexDirection="row" justifyContent="space-between"
+                                       dock="top">
+                            <FlexboxLayout>
+                                <Label text="Particular" marginRight="7"></Label>
+                                <Label text="&#xf0dd;" fontFamily="FontAwesome"></Label>
+                            </FlexboxLayout>
+                            <FlexboxLayout>
+                                <Label text="Closing Balance" marginRight="7"></Label>
+                                <Label text="&#xf0dd;" fontFamily="FontAwesome"></Label>
+                            </FlexboxLayout>
                         </FlexboxLayout>
-                    <!--</StackLayout>-->
+                        <!--</StackLayout>-->
 
-                    <FlexboxLayout flexDirection="column" class="list-group"
-                                   *ngIf="!isSearchEnabled; else searchContainer">
-                        <!--Groups-->
-                        <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)">
+                        <FlexboxLayout flexDirection="column" class="list-group"
+                                       *ngIf="!isSearchEnabled; else searchContainer">
+                            <!--Groups-->
+                            <StackLayout orientation="vertical" *ngFor="let grp of (filterdData)">
 
-                            <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item"
-                                         (tap)="filterData(grp)">
-                                <Label class="main-text" text="{{ grp.groupName }} >"></Label>
-                                <GridLayout columns="*,*" rows="auto">
-                                    <StackLayout row="0" col="0">
-                                        <Label text="{{ grp.understandingCategoryText }}" class="sub-text"></Label>
-                                    </StackLayout>
-                                    <StackLayout row="0" col="1">
-                                        <FlexboxLayout justifyContent="space-between" class="pull-right">
-                                            <Label class="main-text"
-                                                   text="{{ grp.closingBalance.amount | number: '1.0-2' }}"
-                                                   marginRight="5"></Label>
-                                            <Label text="Cr" class="sub-text" marginTop="3"></Label>
-                                        </FlexboxLayout>
-                                    </StackLayout>
-                                </GridLayout>
+                                <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item"
+                                             (tap)="filterData(grp)">
+                                    <Label class="main-text" text="{{ grp.groupName }} >"></Label>
+                                    <GridLayout columns="*,*" rows="auto">
+                                        <StackLayout row="0" col="0">
+                                            <Label text="{{ grp.understandingCategoryText }}" class="sub-text"></Label>
+                                        </StackLayout>
+                                        <StackLayout row="0" col="1">
+                                            <FlexboxLayout justifyContent="space-between" class="pull-right">
+                                                <Label class="main-text"
+                                                       text="{{ grp.closingBalance.amount | number: '1.0-2' }}"
+                                                       marginRight="5"></Label>
+                                                <Label text="Cr" class="sub-text" marginTop="3"></Label>
+                                            </FlexboxLayout>
+                                        </StackLayout>
+                                    </GridLayout>
+                                </StackLayout>
+
                             </StackLayout>
-
-                        </StackLayout>
-                        <!--Accounts-->
-                        <StackLayout orientation="vertical" *ngFor="let acc of activeGrp?.accounts"
-                                     (tap)="goToLedger(acc)">
-                            <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
-                                <Label class="main-text" text="{{ acc.name }}" textWrap="true"></Label>
-                                <GridLayout columns="*,*" rows="auto">
-                                    <StackLayout row="0" col="0">
-                                        <Label text="{{ acc.understandingCategoryText }}" class="sub-text"></Label>
-                                    </StackLayout>
-                                    <StackLayout row="0" col="1">
-                                        <FlexboxLayout justifyContent="space-between" class="pull-right">
-                                            <Label class="main-text"
-                                                   text="{{ acc.closingBalance.amount | number: '1.0-2' }}"
-                                                   marginRight="5"></Label>
-                                            <Label text="Cr" class="sub-text" marginTop="3"></Label>
-                                        </FlexboxLayout>
-                                    </StackLayout>
-                                </GridLayout>
-                            </StackLayout>
-                        </StackLayout>
-                    </FlexboxLayout>
-
-                    <ng-template #searchContainer>
-                        <FlexboxLayout flexDirection="column" class="list-group">
-                            <StackLayout orientation="vertical" *ngFor="let item of searchedFlattenGrpDetails"
-                                         (tap)="searchResultClicked(item)"
-                                         class="list-group-item">
-                                <Label class="main-text" text="{{ item.isGroup ? item.groupName : item.name }}"></Label>
-                                <Label class="sub-text" text="{{ item.isGroup ? 'Grp' : 'Acc' }}"></Label>
+                            <!--Accounts-->
+                            <StackLayout orientation="vertical" *ngFor="let acc of activeGrp?.accounts"
+                                         (tap)="goToLedger(acc)">
+                                <StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">
+                                    <Label class="main-text" text="{{ acc.name }}" textWrap="true"></Label>
+                                    <GridLayout columns="*,*" rows="auto">
+                                        <StackLayout row="0" col="0">
+                                            <Label text="{{ acc.understandingCategoryText }}" class="sub-text"></Label>
+                                        </StackLayout>
+                                        <StackLayout row="0" col="1">
+                                            <FlexboxLayout justifyContent="space-between" class="pull-right">
+                                                <Label class="main-text"
+                                                       text="{{ acc.closingBalance.amount | number: '1.0-2' }}"
+                                                       marginRight="5"></Label>
+                                                <Label text="Cr" class="sub-text" marginTop="3"></Label>
+                                            </FlexboxLayout>
+                                        </StackLayout>
+                                    </GridLayout>
+                                </StackLayout>
                             </StackLayout>
                         </FlexboxLayout>
-                    </ng-template>
+
+                        <ng-template #searchContainer>
+                            <FlexboxLayout flexDirection="column" class="list-group">
+                                <StackLayout orientation="vertical" *ngFor="let item of searchedFlattenGrpDetails"
+                                             (tap)="searchResultClicked(item)">
+                                    <StackLayout class="list-group-item">
+                                        <Label class="main-text"
+                                               text="{{ item.isGroup ? item.groupName : item.name }}"></Label>
+                                        <Label class="sub-text" text="{{ item.isGroup ? 'Grp' : 'Acc' }}"></Label>
+                                    </StackLayout>
+                                </StackLayout>
+                            </FlexboxLayout>
+                        </ng-template>
+                    </DockLayout>
 
                 </ng-container>
 

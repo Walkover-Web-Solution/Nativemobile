@@ -11,7 +11,9 @@ import {RouterModule} from '../common';
 import {TlPlComponent} from './tlpl.component';
 import {AccLedgerComponent} from './ledger/acc-ledger.component';
 import {CompoundEntryDialogComponent} from './compoundEntryDialog/compoundEntryDialog.component';
+import { Downloader } from 'nativescript-downloader';
 
+Downloader.init();
 
 @NgModule({
     imports: [
