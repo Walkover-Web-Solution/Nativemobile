@@ -97,7 +97,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this.isTransactionRequestInProcess$.subscribe(bool => {
-            console.log('busy', bool);
+            // console.log('busy', bool);
 
             this.isBusy = bool;
             this.detectChanges();
@@ -196,7 +196,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             this.request.page = 1;
             this.getTrxData();
         }).catch((error) => {
-            console.log('Error: ' + JSON.stringify(error));
+            //console.log('Error: ' + JSON.stringify(error));
         });
     }
 

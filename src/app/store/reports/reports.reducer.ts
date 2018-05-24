@@ -1,10 +1,10 @@
-import { CustomActions } from "../../store/customActions";
-import { ChartFilterType, IReportChartData, IIntervalBalancesItem } from "../../models/interfaces/dashboard.interface";
-import { ReportConst } from "../../actions/reports/reports.const";
-import { GroupHistoryResponse, CategoryHistoryResponse, ChartFilterConfigs, ChartCustomFilter } from "../../models/api-models/Dashboard";
+import {CustomActions} from '../../store/customActions';
+import {ChartFilterType, IIntervalBalancesItem, IReportChartData} from '../../models/interfaces/dashboard.interface';
+import {ReportConst} from '../../actions/reports/reports.const';
+import {CategoryHistoryResponse, ChartCustomFilter, ChartFilterConfigs, GroupHistoryResponse} from '../../models/api-models/Dashboard';
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
-import { ProfitLossDataV3, BalanceSheetData } from "../../models/api-models/tb-pl-bs";
+import {BalanceSheetData, ProfitLossDataV3} from '../../models/api-models/tb-pl-bs';
 
 moment.updateLocale('en', {
     'week': {
@@ -513,7 +513,9 @@ const getDate = (start, end, key, arr = [start.startOf(key)]) => {
 }
 
 const getDateRange = (start, end, key, arr = [{ rangeStart: moment(start), rangeEnd: moment(start).endOf(key) }]): Array<{ rangeStart: moment.Moment, rangeEnd: moment.Moment }> => {
-    if (start.isAfter(end)) { console.log('start must precede end'); }
+    if (start.isAfter(end)) {
+        // console.log('start must precede end');
+    }
 
     let rangeStart = moment(moment(start).add(1, key).startOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');
     let rangeEnd = moment(moment(rangeStart).endOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');

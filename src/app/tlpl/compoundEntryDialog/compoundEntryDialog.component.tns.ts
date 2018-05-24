@@ -1,6 +1,6 @@
-import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ITransactionItem} from '../../models/interfaces/ledger.interface';
-import { ModalDialogParams } from "nativescript-angular/modal-dialog";
+import {ModalDialogParams} from 'nativescript-angular/modal-dialog';
 
 @Component({
     selector: 'ns-compound-entry-dialog',
@@ -15,7 +15,7 @@ export class CompoundEntryDialogComponent implements OnInit, AfterViewInit {
 
     constructor(private params: ModalDialogParams, private _cdRef: ChangeDetectorRef) {
         this.dialogData = this.params.context.data;
-        console.log(JSON.stringify(this.dialogData.compoundEntries));
+        // console.log(JSON.stringify(this.dialogData.compoundEntries));
     }
 
     ngOnInit() {

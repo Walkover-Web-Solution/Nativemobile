@@ -1,15 +1,15 @@
-import { Component, OnInit, OnDestroy, Optional } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { Observable } from 'rxjs/Observable';
-import { LoginActions } from '../../../actions/login/login.action';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { VerifyEmailModel } from '../../../models/api-models/loginModels';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { NavigationStart } from '@angular/router';
-import { RouterService } from '../../../services/router.service';
-import { Page, AnimationCurve, Color } from '../../../common/utils/environment';
-import { Config } from '../../../common';
+import {Component, OnDestroy, OnInit, Optional} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {Observable} from 'rxjs/Observable';
+import {LoginActions} from '../../../actions/login/login.action';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {VerifyEmailModel} from '../../../models/api-models/loginModels';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {NavigationStart} from '@angular/router';
+import {RouterService} from '../../../services/router.service';
+import {AnimationCurve, Color, Page} from '../../../common/utils/environment';
+import {Config} from '../../../common';
 
 @Component({
     selector: 'ns-login-with-email',
@@ -42,7 +42,7 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
         if (Config.IS_MOBILE_NATIVE) {
             (this.routerExtensions.router as any).router.events.takeUntil(this.destroyed$).subscribe(ev => {
                 if (ev instanceof NavigationStart) {
-                    console.log(JSON.stringify(ev));
+                    // console.log(JSON.stringify(ev));
                     this.ngOnDestroy();
                 }
             });
@@ -52,7 +52,7 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        console.log('login with email init');
+        // console.log('login with email init');
         this.store.dispatch(this._loginActions.resetLoginWithEmailFlags());
         this.emailVerifyForm = this._fb.group({
             email: ['', [Validators.required, Validators.email]],
@@ -76,7 +76,7 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
         })
     }
     public ngOnDestroy(): void {
-        console.log('login with email destroyed');
+        // console.log('login with email destroyed');
         this.store.dispatch(this._loginActions.resetLoginWithEmailFlags());
         this.destroyed$.next(true);
         this.destroyed$.complete();

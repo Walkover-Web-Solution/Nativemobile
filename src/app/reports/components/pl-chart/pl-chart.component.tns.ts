@@ -1,24 +1,21 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
-import { ObservableArray } from 'tns-core-modules/data/observable-array/observable-array';
-import { AppState } from '../../../store';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
-import { ChartFilterType, ChartType, IProfitLossChartResponse, IReportChartData } from '../../../models/interfaces/dashboard.interface';
-import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ObservableArray} from 'tns-core-modules/data/observable-array/observable-array';
+import {AppState} from '../../../store';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {ChartFilterType, IReportChartData} from '../../../models/interfaces/dashboard.interface';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 import * as _ from 'lodash';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { GroupHistoryResponse, CategoryHistoryResponse } from '../../../models/api-models/Dashboard';
-import { zip } from 'rxjs/observable/zip';
-import * as platformModule from "tns-core-modules/platform";
+import {CategoryHistoryResponse, GroupHistoryResponse} from '../../../models/api-models/Dashboard';
+import {zip} from 'rxjs/observable/zip';
 
-import { EventData } from 'tns-core-modules/data/observable';
-import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
+import {EventData} from 'tns-core-modules/data/observable';
+import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
+import {Page} from '../../../common/utils/environment';
+import {ReportsActions} from '../../../actions/reports/reports.actions';
+import {on as applicationOn, orientationChangedEvent} from 'application';
 
 let webViewInterfaceModule = require('nativescript-webview-interface');
-import { Page } from '../../../common/utils/environment';
-import { ReportsActions } from '../../../actions/reports/reports.actions';
-import { on as applicationOn, orientationChangedEvent } from "application";
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
@@ -247,7 +244,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.genPreviousSeries(previousIncomeData, previousExpensesData, legendData);
                 });
             }
-            console.log(JSON.stringify(args.error));
+            // console.log(JSON.stringify(args.error));
         });
 
         // this.listenLangWebViewEvents();

@@ -1,18 +1,17 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { VerifyEmailResponseModel } from '../models/api-models/loginModels';
-import { AppState } from '../store';
-import { Store } from '@ngrx/store';
-import { LoginActions } from '../actions/login/login.action';
-import { Router } from '@angular/router';
-import { CompanyActions } from '../actions/company/company.action';
-import { CompanyResponse } from '../models/api-models/Company';
-import { MyDrawerItem } from '../shared/my-drawer-item/my-drawer-item';
-import { createSelector } from 'reselect';
-import { RouterService } from '../services/router.service';
-import { ToasterService } from '../services/toaster.service';
-import { Config } from '../common';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {VerifyEmailResponseModel} from '../models/api-models/loginModels';
+import {AppState} from '../store';
+import {Store} from '@ngrx/store';
+import {LoginActions} from '../actions/login/login.action';
+import {CompanyActions} from '../actions/company/company.action';
+import {CompanyResponse} from '../models/api-models/Company';
+import {MyDrawerItem} from '../shared/my-drawer-item/my-drawer-item';
+import {createSelector} from 'reselect';
+import {RouterService} from '../services/router.service';
+import {ToasterService} from '../services/toaster.service';
+import {Config} from '../common';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 @Component({
     selector: 'ns-home',
@@ -112,7 +111,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             cancelButtonText: 'No'
         }).then(r => {
             if (r) {
-                let SocialLogin = require('nativescript-social-login-linkedin');
+                let SocialLogin = require('nativescript-social-login');
                 debugger;
                 this.store.dispatch(this._loginActions.logout());
                 (this.routerExtensions.router as any).navigateByUrl('/login', { clearHistory: true });

@@ -1,15 +1,20 @@
-import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { ReplaySubject } from 'rxjs';
-import { ChartFilterType, IChildGroups, IExpensesChartClosingBalanceResponse, ChartType } from '../../../models/interfaces/dashboard.interface';
-import { AccountChartDataLastCurrentYear } from '../../../models/view-models/AccountChartDataLastCurrentYear';
-import { Observable } from 'rxjs/Observable';
-import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
-import { AppState } from '../../../store';
-import { Store } from '@ngrx/store';
-import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {
+    ChartFilterType,
+    ChartType,
+    IChildGroups,
+    IExpensesChartClosingBalanceResponse
+} from '../../../models/interfaces/dashboard.interface';
+import {AccountChartDataLastCurrentYear} from '../../../models/view-models/AccountChartDataLastCurrentYear';
+import {Observable} from 'rxjs/Observable';
+import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
+import {AppState} from '../../../store';
+import {Store} from '@ngrx/store';
+import {INameUniqueName} from '../../../models/interfaces/nameUniqueName.interface';
 import * as _ from 'lodash';
-import { DashboardFilterComponent } from '../filter/dashboard-filter.component';
-import { MatDialog } from '@angular/material';
+import {DashboardFilterComponent} from '../filter/dashboard-filter.component';
+import {MatDialog} from '@angular/material';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 
 @Component({

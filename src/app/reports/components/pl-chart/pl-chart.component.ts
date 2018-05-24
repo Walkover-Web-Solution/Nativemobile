@@ -1,17 +1,15 @@
-import { Component, OnDestroy, OnInit, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy, ViewChild } from '@angular/core';
-import { ReportsActions } from '../../../actions/reports/reports.actions';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { Observable } from 'rxjs/Observable';
-import { IReportChartData, ChartFilterType } from '../../../models/interfaces/dashboard.interface';
-import { ReplaySubject } from 'rxjs';
-import { CategoryHistoryResponse, GroupHistoryResponse } from '../../../models/api-models/Dashboard';
-import { zip } from 'rxjs/observable/zip';
-import { Options } from 'highcharts';
-import { ChartComponent } from 'angular2-highcharts';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ReportsActions} from '../../../actions/reports/reports.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {Observable} from 'rxjs/Observable';
+import {ChartFilterType, IReportChartData} from '../../../models/interfaces/dashboard.interface';
+import {CategoryHistoryResponse, GroupHistoryResponse} from '../../../models/api-models/Dashboard';
+import {zip} from 'rxjs/observable/zip';
 import * as _ from 'lodash';
-import { MatDialog } from '@angular/material';
-import { ReportsFilterComponent } from '../reports-filter/reports-filter.component';
+import {MatDialog} from '@angular/material';
+import {ReportsFilterComponent} from '../reports-filter/reports-filter.component';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',

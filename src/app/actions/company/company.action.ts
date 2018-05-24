@@ -1,23 +1,22 @@
-import { Injectable } from "@angular/core";
-import { Effect, Actions } from '@ngrx/effects';
-import { Observable } from "rxjs/Observable";
+import {Injectable} from '@angular/core';
+import {Actions, Effect} from '@ngrx/effects';
+import {Observable} from 'rxjs/Observable';
 
-import { BaseResponse } from "../../models/api-models/BaseResponse";
-import { CustomActions } from "../../store/customActions";
-import { CompanyConstants } from "./company.const";
-import { AuthenticationService } from "../../services/authentication.service";
-import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from "../../models/api-models/Login";
-import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel } from "../../models/api-models/loginModels";
+import {BaseResponse} from '../../models/api-models/BaseResponse';
+import {CustomActions} from '../../store/customActions';
+import {CompanyConstants} from './company.const';
+import {AuthenticationService} from '../../services/authentication.service';
 
-import { CompanyService } from "../../services/companyService.service";
-import { CompanyResponse, StateDetailsResponse, TaxResponse } from "../../models/api-models/Company";
-import { AppState } from "../../store";
-import { Store } from "@ngrx/store";
-import { GeneralService } from "../../services/general.service";
+import {CompanyService} from '../../services/companyService.service';
+import {CompanyResponse, StateDetailsResponse} from '../../models/api-models/Company';
+import {AppState} from '../../store';
+import {Store} from '@ngrx/store';
+import {GeneralService} from '../../services/general.service';
 // import * as Toast from 'nativescript-toast';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/take';
-import { ToasterService } from "../../services/toaster.service";
+import {ToasterService} from '../../services/toaster.service';
+
 @Injectable()
 
 export class CompanyActions {
@@ -87,7 +86,7 @@ export class CompanyActions {
         .switchMap((action: CustomActions) => this._companyService.getComapnyTaxes())
         .map(response => {
             if (response.status === 'error') {
-                console.log(JSON.stringify(response.message));
+                // console.log(JSON.stringify(response.message));
             }
             return {
                 type: CompanyConstants.GET_COMPANY_TAX_RESPONSE,

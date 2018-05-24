@@ -1,7 +1,8 @@
 
 const queryString = require('query-string');
-import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
-import { AnimationCurve } from "../../../common/utils/environment";
+import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
+import {AnimationCurve} from '../../../common/utils/environment';
+
 const nodeUrl = require('url-parse');
 const generateRandomString = function (length) {
   let text = '';
@@ -48,7 +49,7 @@ export default (config, webview: WebView, routerExtension) => {
       let onCallback = (url) => {
         // debugger;
         let url_parts: any = nodeUrl(url, true);
-        console.log(JSON.stringify(url));
+        // console.log(JSON.stringify(url));
         let query = url_parts.query;
         let code = query.code;
         let error = query.error;
@@ -75,7 +76,7 @@ export default (config, webview: WebView, routerExtension) => {
       }
 
       authWindow.on('loadStarted', (event: LoadEventData) => {
-        console.log()
+        // console.log()
         onCallback(event.url);
       });
 

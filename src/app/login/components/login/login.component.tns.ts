@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { Observable } from 'rxjs/Observable';
-import { LoginActions } from '../../../actions/login/login.action';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AuthenticationService } from '../../../services/authentication.service';
-import { Page, Color, AnimationCurve, isIOS } from '../../../common/utils/environment';
-import { ToasterService } from '../../../services/toaster.service';
-import { RouterService } from '../../../services/router.service';
-import { Config } from '../../../common';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {Observable} from 'rxjs/Observable';
+import {LoginActions} from '../../../actions/login/login.action';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthenticationService} from '../../../services/authentication.service';
+import {AnimationCurve, Color, isIOS, Page} from '../../../common/utils/environment';
+import {ToasterService} from '../../../services/toaster.service';
+import {RouterService} from '../../../services/router.service';
+import {Config} from '../../../common';
 import 'rxjs/add/operator/mergeMap';
 // import {EventData} from 'tns-core-modules/data/observable';
 // import {LoadEventData, WebView} from "tns-core-modules/ui/web-view";
@@ -70,7 +70,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         if (isIOS) {
-            let SocialLogin = require('nativescript-social-login-linkedin');
+            let SocialLogin = require('nativescript-social-login');
             SocialLogin.init({
                 google: {
                     initialize: true,
@@ -81,13 +81,6 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 facebook: {
                     initialize: false
-                },
-                linkedin: {
-                    clientId: '75urm0g3386r26',
-                    clientSecret: '3AJTvaKNOEG4ISJ0',
-                    permissions: ["r_basicprofile", "r_emailaddress"],
-                    state: '',
-                    redirectUri: "https://giddh.com/login"
                 },
                 onActivityResult: (requestCode: number, resultCode: number, data: any) => {
                 }
@@ -165,7 +158,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public googleLogin() {
-        let SocialLogin = require('nativescript-social-login-linkedin');
+        let SocialLogin = require('nativescript-social-login');
         // let result = SocialLogin.init({
         //     activity: args.activity,
         //     google: {
@@ -207,9 +200,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public linkedinLogin() {
-        let SocialLogin = require('nativescript-social-login-linkedin');
+        let SocialLogin = require('nativescript-social-login');
         SocialLogin.loginWithLinkedIn((result) => {
-            console.log(JSON.stringify(result));
+            // console.log(JSON.stringify(result));
 
             if (result.error || !result.authCode) {
                 this._toaster.errorToast('Something Went Wrong! Please Try Again');

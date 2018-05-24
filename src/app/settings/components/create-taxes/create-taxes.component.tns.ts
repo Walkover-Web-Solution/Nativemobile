@@ -1,27 +1,27 @@
-import { Component, ViewChild } from '@angular/core';
-import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
-import { Observable } from 'rxjs/Observable';
-import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
-import { AppState } from '../../../store';
-import { Store } from '@ngrx/store';
-import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AfterViewInit, OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { SelectedIndexChangedEventData, ValueList } from 'nativescript-drop-down';
-import { NsDropDownOptions } from '../../../models/other-models/HelperModels';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import {Component, ViewChild} from '@angular/core';
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {Observable} from 'rxjs/Observable';
+import {RadSideDrawerComponent} from 'nativescript-ui-sidedrawer/angular';
+import {AppState} from '../../../store';
+import {Store} from '@ngrx/store';
+import {DrawerTransitionBase} from 'nativescript-ui-sidedrawer';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AfterViewInit, OnInit} from '@angular/core/src/metadata/lifecycle_hooks';
+import {SelectedIndexChangedEventData, ValueList} from 'nativescript-drop-down';
+import {NsDropDownOptions} from '../../../models/other-models/HelperModels';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 import * as moment from 'moment/moment';
-import { SettingsTaxesActions } from '../../../actions/settings/taxes/settings.taxes.action';
-import { IFlattenAccountsResultItem } from '../../../models/interfaces/flattenAccountsResultItem.interface';
-import { GeneralActions } from '../../../actions/general/general.actions';
-import { TaxResponse } from '../../../models/api-models/Company';
-import { LoadingIndicator } from 'nativescript-loading-indicator';
+import {SettingsTaxesActions} from '../../../actions/settings/taxes/settings.taxes.action';
+import {IFlattenAccountsResultItem} from '../../../models/interfaces/flattenAccountsResultItem.interface';
+import {GeneralActions} from '../../../actions/general/general.actions';
+import {TaxResponse} from '../../../models/api-models/Company';
+import {LoadingIndicator} from 'nativescript-loading-indicator';
 import * as _ from 'lodash';
-import { LoaderService } from "../../../services/loader.service";
-import { Config, ActivatedRoute } from '../../../common';
-import { Page } from '../../../common/utils/environment';
-import { RouterService } from '../../../services/router.service';
-import { ToasterService } from '../../../services/toaster.service';
+import {LoaderService} from '../../../services/loader.service';
+import {ActivatedRoute, Config} from '../../../common';
+import {Page} from '../../../common/utils/environment';
+import {RouterService} from '../../../services/router.service';
+import {ToasterService} from '../../../services/toaster.service';
 
 const taxesType: NsDropDownOptions[] = [
     { display: 'GST', value: 'GST' },
@@ -230,7 +230,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
             let date = `${result.day}-${result.month}-${result.year}`
             this.taxForm.get('date').patchValue(date);
         }).catch((error) => {
-            console.log("Error: " + JSON.stringify(error));
+            // console.log("Error: " + JSON.stringify(error));
         });
     }
 

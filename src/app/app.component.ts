@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 // vendor dependencies
-import { Store } from '@ngrx/store';
-import { AppState } from './store';
-import { GeneralService } from './services/general.service';
-import { GeneralActions } from './actions/general/general.actions';
-import { CompanyActions } from './actions/company/company.action';
+import {Store} from '@ngrx/store';
+import {AppState} from './store';
+import {GeneralService} from './services/general.service';
+import {GeneralActions} from './actions/general/general.actions';
+import {CompanyActions} from './actions/company/company.action';
 import 'rxjs/add/operator/distinctUntilChanged'
+
 // app
 
 @Component({
@@ -24,7 +25,7 @@ export class AppComponent implements OnInit {
         this.store.select(s => s.session).distinctUntilChanged((x, y) => {
             return x.userLoginState === y.userLoginState
         }).subscribe(ss => {
-            console.log('key changed');
+            // console.log('key changed');
             if (ss.user) {
                 this._generalService.user = ss.user.user;
                 this.store.dispatch(this._generalActions.setCountriesWithCodes());

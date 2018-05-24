@@ -1,14 +1,14 @@
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { ChartFilterType, ChartType } from '../../../models/interfaces/dashboard.interface';
-import { ReplaySubject } from 'rxjs';
-import { ChartCustomFilter } from '../../../models/api-models/Dashboard';
-import { ReportsFilterComponent } from '../../../reports/components/reports-filter/reports-filter.component';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
+import {Component, Inject, OnDestroy} from '@angular/core';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
+import {ChartFilterType, ChartType} from '../../../models/interfaces/dashboard.interface';
+import {ChartCustomFilter} from '../../../models/api-models/Dashboard';
+import {ReportsFilterComponent} from '../../../reports/components/reports-filter/reports-filter.component';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
 import * as moment from 'moment';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 const MY_FORMATS = {
     parse: {

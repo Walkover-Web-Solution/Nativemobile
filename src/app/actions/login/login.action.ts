@@ -1,18 +1,23 @@
-import { Injectable, Optional, Inject } from "@angular/core";
-import { Effect, Actions } from '@ngrx/effects';
-import { Observable } from "rxjs/Observable";
+import {Inject, Injectable, Optional} from '@angular/core';
+import {Actions, Effect} from '@ngrx/effects';
+import {Observable} from 'rxjs/Observable';
 
-import { BaseResponse } from "../../models/api-models/BaseResponse";
-import { CustomActions } from "../../store/customActions";
-import { LoginConstants } from "./login.const";
-import { AuthenticationService } from "../../services/authentication.service";
-import { SignUpWithPassword, LoginWithPassword, ResetPasswordV2 } from "../../models/api-models/Login";
-import { VerifyMobileResponseModel, SignupWithMobile, VerifyMobileModel, VerifyEmailModel, VerifyEmailResponseModel, LinkedInRequestModel } from "../../models/api-models/loginModels";
-import { HttpHeaders, HttpClient } from "@angular/common/http";
-import { Configuration } from "../../app.constants";
-import { ToasterService } from "../../services/toaster.service";
-import { PURCHASE_INVOICE_API } from "../../services/apiurls/purchase-invoice.api";
-import { ServiceConfig, IServiceConfigArgs } from "../../services/service.config";
+import {BaseResponse} from '../../models/api-models/BaseResponse';
+import {CustomActions} from '../../store/customActions';
+import {LoginConstants} from './login.const';
+import {AuthenticationService} from '../../services/authentication.service';
+import {LoginWithPassword, ResetPasswordV2, SignUpWithPassword} from '../../models/api-models/Login';
+import {
+    LinkedInRequestModel,
+    SignupWithMobile,
+    VerifyEmailModel,
+    VerifyEmailResponseModel,
+    VerifyMobileModel,
+    VerifyMobileResponseModel
+} from '../../models/api-models/loginModels';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {ToasterService} from '../../services/toaster.service';
+import {IServiceConfigArgs, ServiceConfig} from '../../services/service.config';
 
 @Injectable()
 
@@ -188,7 +193,7 @@ export class LoginActions {
             }).map(p => p as BaseResponse<VerifyEmailResponseModel, string>);
         })
         .map((data) => {
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
             if (data.status === 'error') {
                 return { type: 'EmptyAction' };
             }

@@ -1,16 +1,30 @@
-import { Component, OnDestroy, OnInit, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { Page } from '../../../common/utils/environment';
-import { LoadEventData, WebView } from "tns-core-modules/ui/web-view";
-import { Observable } from 'rxjs/Observable';
-import { IRevenueChartClosingBalanceResponse, ChartFilterType, IChildGroups, ChartType } from '../../../models/interfaces/dashboard.interface';
-import { AccountChartDataLastCurrentYear } from '../../../models/view-models/AccountChartDataLastCurrentYear';
-import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
-import { INameUniqueName } from '../../../models/interfaces/nameUniqueName.interface';
+import {
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    OnDestroy,
+    OnInit,
+    ViewChild
+} from '@angular/core';
+import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {Page} from '../../../common/utils/environment';
+import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
+import {Observable} from 'rxjs/Observable';
+import {
+    ChartFilterType,
+    ChartType,
+    IChildGroups,
+    IRevenueChartClosingBalanceResponse
+} from '../../../models/interfaces/dashboard.interface';
+import {AccountChartDataLastCurrentYear} from '../../../models/view-models/AccountChartDataLastCurrentYear';
+import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
+import {INameUniqueName} from '../../../models/interfaces/nameUniqueName.interface';
 import * as _ from 'lodash';
-import { on as applicationOn, orientationChangedEvent } from "application";
+import {on as applicationOn, orientationChangedEvent} from 'application';
 
 const webViewInterfaceModule = require('nativescript-webview-interface');
 
@@ -260,7 +274,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     // this.requestInFlight = false;
                 });
             } else {
-                console.log(JSON.stringify(args.error));
+                // console.log(JSON.stringify(args.error));
             }
         });
     }

@@ -1,22 +1,29 @@
-import { Actions, Effect } from "@ngrx/effects";
-import { DashboardService } from "../../services/dashboard.service";
-import { CustomActions } from "../../store/customActions";
-import { ReportConst } from "../../actions/reports/reports.const";
-import { ChartFilterType, IGroupHistoryGroups } from "../../models/interfaces/dashboard.interface";
-import { ChartCustomFilter, ChartFilterConfigs, GroupHistoryRequest, CategoryHistoryResponse, GroupHistoryResponse } from "../../models/api-models/Dashboard";
-import { createSelector, Store } from "@ngrx/store";
-import { AppState } from "../../store/roots";
-import { ActiveFinancialYear } from "../../models/api-models/Company";
+import {Actions, Effect} from '@ngrx/effects';
+import {DashboardService} from '../../services/dashboard.service';
+import {CustomActions} from '../../store/customActions';
+import {ReportConst} from '../../actions/reports/reports.const';
+import {ChartFilterType} from '../../models/interfaces/dashboard.interface';
+import {
+    CategoryHistoryResponse,
+    ChartCustomFilter,
+    ChartFilterConfigs,
+    GroupHistoryRequest,
+    GroupHistoryResponse
+} from '../../models/api-models/Dashboard';
+import {createSelector, Store} from '@ngrx/store';
+import {AppState} from '../../store/roots';
+import {ActiveFinancialYear} from '../../models/api-models/Company';
 
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
-import { zip } from "rxjs/observable/zip";
-import { of } from "rxjs/observable/of";
-import { Observable } from "rxjs/Observable";
-import { Injectable } from "@angular/core";
-import { ToasterService } from "../../services/toaster.service";
-import { ProfitLossRequest, BalanceSheetRequest } from "../../models/api-models/tb-pl-bs";
-import { TlPlService } from "../../services/tl-pl.service";
+import {zip} from 'rxjs/observable/zip';
+import {of} from 'rxjs/observable/of';
+import {Observable} from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
+import {ToasterService} from '../../services/toaster.service';
+import {BalanceSheetRequest, ProfitLossRequest} from '../../models/api-models/tb-pl-bs';
+import {TlPlService} from '../../services/tl-pl.service';
+
 @Injectable()
 export class ReportsActions {
 
@@ -207,7 +214,7 @@ export class ReportsActions {
             return zip(this._tlPlService.GetProfitLoss(request), of(op));
         })
         .map(response => {
-            console.log(JSON.stringify(response[0]));
+            // console.log(JSON.stringify(response[0]));
             if (response[0].status === 'success') {
                 return {
                     type: ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE,

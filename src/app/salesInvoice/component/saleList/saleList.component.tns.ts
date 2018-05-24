@@ -1,14 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
-import * as _ from 'lodash';
-import * as moment from 'moment/moment';
-import { AppState } from '../../../store';
-import { Store } from '@ngrx/store';
-import { createSelector } from 'reselect';
-import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
-import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
-import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
-import { RouterService } from '../../../services/router.service';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {AppState} from '../../../store';
+import {Store} from '@ngrx/store';
+import {DrawerTransitionBase} from 'nativescript-ui-sidedrawer';
+import {RadSideDrawerComponent} from 'nativescript-ui-sidedrawer/angular';
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {RouterService} from '../../../services/router.service';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
     selector: 'ns-sale-list',

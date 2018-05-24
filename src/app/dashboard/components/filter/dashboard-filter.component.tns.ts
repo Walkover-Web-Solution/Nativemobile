@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Store } from '@ngrx/store';
+import {Component, OnInit} from '@angular/core';
+import {Store} from '@ngrx/store';
 import * as moment from 'moment/moment';
-import { ChartType, ChartFilterType } from '../../../models/interfaces/dashboard.interface';
-import { ChartCustomFilter } from '../../../models/api-models/Dashboard';
-import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
-import { AppState } from '../../../store';
-import { RouterService } from '../../../services/router.service';
-import { Config, ActivatedRoute } from '../../../common';
-import { ReportsActions } from '../../../actions/reports/reports.actions';
+import {ChartFilterType, ChartType} from '../../../models/interfaces/dashboard.interface';
+import {ChartCustomFilter} from '../../../models/api-models/Dashboard';
+import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
+import {AppState} from '../../../store';
+import {RouterService} from '../../../services/router.service';
+import {ActivatedRoute, Config} from '../../../common';
+import {ReportsActions} from '../../../actions/reports/reports.actions';
 
 @Component({
     selector: 'ns-dashboard-filter',
@@ -120,7 +120,7 @@ export class DashboardFilterComponent implements OnInit {
             let date = `${result.day}-${result.month}-${result.year}`
             this.customFilterObj[year].startDate = moment(date, 'DD-MM-YYYY').toDate();
         }).catch((error) => {
-            console.log("Error: " + JSON.stringify(error));
+            // console.log("Error: " + JSON.stringify(error));
         });
     }
 
@@ -136,7 +136,7 @@ export class DashboardFilterComponent implements OnInit {
             let date = `${result.day}-${result.month}-${result.year}`
             this.customFilterObj[year].endDate = moment(date, 'DD-MM-YYYY').toDate();
         }).catch((error) => {
-            console.log("Error: " + JSON.stringify(error));
+            // console.log("Error: " + JSON.stringify(error));
         });
     }
 }
