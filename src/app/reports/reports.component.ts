@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { RouterService } from '../services/router.service';
-import { Options } from 'highcharts';
-import { ChartType } from '../models/interfaces/dashboard.interface';
-let width = window.innerWidth;
+import {Component} from '@angular/core';
+import {RouterService} from '../services/router.service';
+import {ChartType} from '../models/interfaces/dashboard.interface';
+import {Config} from '../common/utils';
+
 @Component({
     selector: 'ns-reports',
     moduleId: module.id,
@@ -12,9 +12,12 @@ let width = window.innerWidth;
 
 export class ReportsComponent {
     public chartType: ChartType = ChartType.ProfitLoss;
-    public width: number = width;
+    public width: number = 0;
     public pageTitle: string = 'Profit And Loss';
     constructor(private _routerExtension: RouterService) {
+        if (Config.IS_WEB) {
+            this.width = (window as any).innerWidth;
+        }
     }
 
     goBack() {
