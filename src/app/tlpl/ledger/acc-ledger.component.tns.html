@@ -137,14 +137,14 @@
                         <Label text="{{ txn.amount | number: '1.0-2' }}" horizontalAlignment="left"></Label>
 
                         <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
-                                     (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
+                                     (tap)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
                                      matTooltip="Download file : {{txn.attachedFileName}}">
                             <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
                                    marginTop="5"></Label>
                             <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
                         </StackLayout>
                         <StackLayout *ngIf="txn.voucherGenerated"
-                                     (click)="downloadInvoice(txn.voucherNumber, $event)"
+                                     (tap)="downloadInvoice(txn.voucherNumber, $event)"
                                      matTooltip="Download Invoice : {{txn.voucherNumber}}">
                             <Label text="&#xf019;" fontFamily="FontAwesome" marginTop="5" fontSize="14"></Label>
                         </StackLayout>
@@ -174,13 +174,13 @@
                         <Label text="{{ txn.amount | number: '1.0-2' }}"></Label>
 
                         <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
-                                     (click)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
+                                     (tap)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
                                      matTooltip="Download file : {{txn.attachedFileName}}">
                             <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14" marginTop="5"></Label>
                             <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
                         </StackLayout>
                         <StackLayout *ngIf="txn.voucherGenerated"
-                                     (click)="downloadInvoice(txn.voucherNumber, $event)"
+                                     (tap)="downloadInvoice(txn.voucherNumber, $event)"
                                      matTooltip="Download Invoice : {{txn.voucherNumber}}">
                             <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14" marginTop="5"></Label>
                         </StackLayout>

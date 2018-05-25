@@ -18,26 +18,12 @@ import * as moment from 'moment/moment';
 import {Config} from '../../common/utils';
 import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
 import {ITransactionItem} from '../../models/interfaces/ledger.interface';
-// import { Downloader, ProgressEventData, DownloadEventData } from 'nativescript-downloader';
-// const downloader = new Downloader();
-// const imageDownloaderId = downloader.createDownload({
-//     url:
-//         'https://wallpaperscraft.com/image/hulk_wolverine_x_men_marvel_comics_art_99032_3840x2400.jpg'
-// });
-//
-// downloader
-//     .start(imageDownloaderId, (progressData: ProgressEventData) => {
-//         console.log(`Progress : ${progressData.value}%`);
-//         console.log(`Current Size : ${progressData.currentSize}%`);
-//         console.log(`Total Size : ${progressData.totalSize}%`);
-//         console.log(`Download Speed in bytes : ${progressData.speed}%`);
-//     })
-//     .then((completed: DownloadEventData) => {
-//         console.log(`Image : ${completed.path}`);
-//     })
-//     .catch(error => {
-//         console.log(error.message);
-//     });
+import {HandleFile} from 'nativescript-handle-file';
+import {isIOS} from '../../common/utils/environment';
+import * as permissions from 'nativescript-permissions';
+
+const fileSystemModule = require("tns-core-modules/file-system");
+require('~/www/base64');
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -90,6 +76,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnInit() {
+        console.log('busy');
         this.request.from = `${this.dateModel.beginDate.day}-${this.dateModel.beginDate.month}-${this.dateModel.beginDate.year}`;
         this.request.to = `${this.dateModel.endDate.day}-${this.dateModel.endDate.month}-${this.dateModel.endDate.year}`;
         this.request.accountUniqueName = this.accUniqueName;
@@ -113,7 +100,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
             this.isBusy = bool;
             this.detectChanges();
-        })
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -132,32 +119,109 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     downloadAttachedFile(fileName: string, e: Event) {
-        e.stopPropagation();
-        // this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
-        //     if (d.status === 'success') {
-        //         let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
-        //         return saveAs(blob, d.body.name);
-        //     } else {
-        //         this._toaster.errorToast(d.message);
-        //     }
-        // });
+        // e.stopPropagation();
+
+        // permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
+        //     .then(function () {
+        //         console.log('Woo Hoo, I have the power!');
+        //         if (isIOS) {
+        //             handleFile.open({
+        //                 name: 'G.pdf',
+        //                 url: 'http://www.pdf995.com/samples/pdf.pdf'
+        //             })
+        //         } else {
+        //             handleFile.open({
+        //                 name: 'G.pdf',
+        //                 url: 'http://www.pdf995.com/samples/pdf.pdf',
+        //                 directory: 'downloads',
+        //                 title: 'Save Invoice to'
+        //             });
+        //         }
+        //     })
+        //     .catch(function () {
+        //         console.log('Uh oh, no permissions - plan B time!');
+        //     });
+        // let handleFile = new HandleFile();
+
+        this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
+            if (d.status === 'success') {
+                permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
+                    .then(function () {
+                        console.log('Woo Hoo, I have the power!');
+                        if (isIOS) {
+                            let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
+                            const documents = fileSystemModule.knownFolders.documents();
+                            const file = documents.getFile(`${d.body.name}`);
+                            file.writeSync(blob,(e)=>{
+                                console.log("error in saving file");
+                            });
+                        } else {
+                            let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
+                            let directoryDestiny: string = android.os.Environment.DIRECTORY_DOWNLOADS;
+                            console.log(JSON.stringify(directoryDestiny));
+                            let androidDownloadsPath: any = global.android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
+                            console.log(JSON.stringify(androidDownloadsPath));
+                            const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath)
+
+                            const file = documents.getFile(`${d.body.name}`);
+                            file.writeSync(blob,(e)=>{
+                                console.log("error in saving file");
+                            });
+                        }
+                    })
+                    .catch(function () {
+                        console.log('Uh oh, no permissions - plan B time!');
+                    });
+
+            } else {
+                this._toaster.errorToast(d.message);
+            }
+        });
     }
 
     downloadInvoice(invoiceName: string, e: Event) {
-        e.stopPropagation();
+        // e.stopPropagation();
         let activeAccount = null;
         this.activeAccount$.take(1).subscribe(p => activeAccount = p);
         let downloadRequest = new DownloadLedgerRequest();
         downloadRequest.invoiceNumber = [invoiceName];
 
-        // this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
-        //     if (d.status === 'success') {
-        //         let blob = base64ToBlob(d.body, 'application/pdf', 512);
-        //         return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
-        //     } else {
-        //         this._toaster.errorToast(d.message);
-        //     }
-        // });
+        this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
+            if (d.status === 'success') {
+                let blob = base64ToBlob(d.body, 'application/pdf', 512);
+                permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
+                    .then(function () {
+                        console.log('Woo Hoo, I have the power!');
+                        if (isIOS) {
+                            let blob = base64ToBlob(d.body, `application/pdf`, 512);
+                            var reader = new FileReader();
+                            reader.readAsText(blob);
+                            const documents = fileSystemModule.knownFolders.documents();
+                            const file = documents.getFile(`${activeAccount.name} - ${invoiceName}.pdf`);
+                            file.writeSync(blob,(e)=>{
+                                console.log("error in saving file");
+                            });
+                        } else {
+                            let blob = base64ToBlob(d.body, `application/pdf`, 512);
+                            let directoryDestiny: string = android.os.Environment.DIRECTORY_DOWNLOADS;
+                            console.log(JSON.stringify(directoryDestiny));
+                            let androidDownloadsPath: any = global.android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
+                            console.log(JSON.stringify(androidDownloadsPath));
+                            const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath)
+                            const file = documents.getFile(`${activeAccount.name} - ${invoiceName}.pdf`);
+                            file.writeSync(blob,(e)=>{
+                                console.log("error in saving file");
+                            });
+                        }
+                    })
+                    .catch(function () {
+                        console.log('Uh oh, no permissions - plan B time!');
+                    });
+                // return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
+            } else {
+                this._toaster.errorToast(d.message);
+            }
+        });
     }
 
     onDateRangeChanged(event: IMyDateRangeModel) {
@@ -253,7 +317,19 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 const base64ToBlob = (b64Data, contentType, sliceSize) => {
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
-    let byteCharacters = atob(b64Data);
+    // console.log(JSON.stringify(b64Data));
+    // console.log(JSON.stringify(global['atob']));
+
+    let byteCharacters = global['atob'](b64Data);
+    // console.log(JSON.stringify(byteCharacters));
+    // if(isIOS){
+    //     const text = NSString.stringWithString(b64Data);
+    //     byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
+    // }else{
+    //     const text = new java.lang.String(b64Data);
+    //     byteCharacters = text.getBytes("UTF-8");
+    // }
+    console.log(JSON.stringify(byteCharacters.length));
     let byteArrays = [];
     let offset = 0;
     while (offset < byteCharacters.length) {
@@ -270,3 +346,4 @@ const base64ToBlob = (b64Data, contentType, sliceSize) => {
     }
     return new Blob(byteArrays, {type: contentType});
 };
+
