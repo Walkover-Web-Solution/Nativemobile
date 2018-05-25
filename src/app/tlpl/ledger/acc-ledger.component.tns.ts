@@ -18,26 +18,26 @@ import * as moment from 'moment/moment';
 import {Config} from '../../common/utils';
 import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
 import {ITransactionItem} from '../../models/interfaces/ledger.interface';
-import { Downloader, ProgressEventData, DownloadEventData } from 'nativescript-downloader';
-const downloader = new Downloader();
-const imageDownloaderId = downloader.createDownload({
-    url:
-        'https://wallpaperscraft.com/image/hulk_wolverine_x_men_marvel_comics_art_99032_3840x2400.jpg'
-});
-
-downloader
-    .start(imageDownloaderId, (progressData: ProgressEventData) => {
-        console.log(`Progress : ${progressData.value}%`);
-        console.log(`Current Size : ${progressData.currentSize}%`);
-        console.log(`Total Size : ${progressData.totalSize}%`);
-        console.log(`Download Speed in bytes : ${progressData.speed}%`);
-    })
-    .then((completed: DownloadEventData) => {
-        console.log(`Image : ${completed.path}`);
-    })
-    .catch(error => {
-        console.log(error.message);
-    });
+// import { Downloader, ProgressEventData, DownloadEventData } from 'nativescript-downloader';
+// const downloader = new Downloader();
+// const imageDownloaderId = downloader.createDownload({
+//     url:
+//         'https://wallpaperscraft.com/image/hulk_wolverine_x_men_marvel_comics_art_99032_3840x2400.jpg'
+// });
+//
+// downloader
+//     .start(imageDownloaderId, (progressData: ProgressEventData) => {
+//         console.log(`Progress : ${progressData.value}%`);
+//         console.log(`Current Size : ${progressData.currentSize}%`);
+//         console.log(`Total Size : ${progressData.totalSize}%`);
+//         console.log(`Download Speed in bytes : ${progressData.speed}%`);
+//     })
+//     .then((completed: DownloadEventData) => {
+//         console.log(`Image : ${completed.path}`);
+//     })
+//     .catch(error => {
+//         console.log(error.message);
+//     });
 
 @Component({
     selector: 'ns-acc-ledger',

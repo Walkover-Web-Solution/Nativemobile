@@ -170,7 +170,7 @@ gulp.task('tns.Livesync', () => {
             // console.log('step 3 :-  ' + file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), 'app\\').replace('..\\', ''));
             var outputDest = file.substring(0, file.lastIndexOf('\\') + 1).replace(SRC.substring(0, SRC.length - 1), 'app\\').replace('..\\', '');
             // var outputDest = 'app\\';
-            console.log('isWWW :- ', outputDest === 'www\\');
+            // console.log('isWWW :- ', outputDest === 'www\\');
             if (outputDest === 'www\\') {
                 outputDest = 'app\\';
             }

@@ -1,30 +1,29 @@
-import { NgModule, NO_ERRORS_SCHEMA, NgModuleFactoryLoader } from '@angular/core';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
 // nativescript
-import { NativeScriptRouterModule } from "nativescript-angular/router";
-import { NativeScriptModule } from "nativescript-angular/nativescript.module";
-import { NativeScriptFormsModule } from "nativescript-angular/forms";
-import { NativeScriptHttpClientModule } from "nativescript-angular/http-client";
+import {NativeScriptRouterModule} from 'nativescript-angular/router';
+import {NativeScriptModule} from 'nativescript-angular/nativescript.module';
+import {NativeScriptFormsModule} from 'nativescript-angular/forms';
+import {NativeScriptHttpClientModule} from 'nativescript-angular/http-client';
 // vendor dependencies
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 // app
-import { Config } from './common/index';
-import { AppComponent } from './app.component';
-import { SHARED_MODULES } from './app.common';
-import { AppRoutes } from './app.routes';
-import { ServiceModule } from './services/service.module';
-import { reducers, AppState } from './store';
-import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
-import { ActionModule } from './actions/actions.module';
-import { ServiceConfig } from './services/service.config';
-import { storeLogger } from './store/middleware/storeLogger';
-import { localStorageSync } from './store/middleware/rehydrateAppState';
-import { NeedsAuthentication } from './decorators/needsAuthentication';
+import {Config} from './common/index';
+import {AppComponent} from './app.component';
+import {SHARED_MODULES} from './app.common';
+import {AppRoutes} from './app.routes';
+import {ServiceModule} from './services/service.module';
+import {AppState, reducers} from './store';
+import {ActionReducer, MetaReducer, StoreModule} from '@ngrx/store';
+import {ActionModule} from './actions/actions.module';
+import {ServiceConfig} from './services/service.config';
+import {storeLogger} from './store/middleware/storeLogger';
+import {localStorageSync} from './store/middleware/rehydrateAppState';
+import {NeedsAuthentication} from './decorators/needsAuthentication';
 import * as elementRegistryModule from 'nativescript-angular/element-registry';
-import { Fab } from 'nativescript-floatingactionbutton';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import {Fab} from 'nativescript-floatingactionbutton';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+
 Config.PLATFORM_TARGET = Config.PLATFORMS.MOBILE_NATIVE;
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -40,8 +39,7 @@ export function logger(reducer: ActionReducer<AppState>): any {
     return storeLogger()(reducer);
 }
 
-
-let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logger];
+let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
 elementRegistryModule.registerElement("CardView", () => require("nativescript-cardview").CardView);
 elementRegistryModule.registerElement("Fab", () => Fab);
