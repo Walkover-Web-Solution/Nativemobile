@@ -2,9 +2,13 @@
     <ng-template #optionTemplate>
         <my-header [title]="'Taxes'" [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }"></my-header>
 
+        <div style="display: flex;justify-content: center;" *ngIf="(isTaxLoading$ | async)">
+            <img src="assets/image/loader.png" class="roted-logo">
+        </div>
+
         <mat-card class="main_card" style="display: flex;flex-direction: column">
             <mat-card-content>
-                <mat-nav-list>
+                <mat-nav-list *ngIf="!(isTaxLoading$ | async)">
                     <mat-list-item *ngFor="let item of (taxList$ | async)" [routerLink]="['/settings','create-taxes', item.uniqueName]">
                         {{ item.name }}
                         <mat-divider></mat-divider>

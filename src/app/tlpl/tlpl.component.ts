@@ -27,6 +27,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>;
     public request: TrialBalanceRequest;
     public data$: Observable<AccountDetails>;
+    public showLoader$: Observable<boolean>;
     public filterdData: ChildGroup[] = [];
     public breadCrumb: INameUniqueName[] = [];
     public activeGrp: ChildGroup = null;
@@ -44,6 +45,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             return {companies, uniqueName};
         })).takeUntil(this.destroyed$);
         this.data$ = this.store.select(s => s.tlPl.tb.data).takeUntil(this.destroyed$);
+        this.showLoader$ = this.store.select(s => s.tlPl.tb.showLoader).takeUntil(this.destroyed$);
     }
 
     ngOnInit(): void {
