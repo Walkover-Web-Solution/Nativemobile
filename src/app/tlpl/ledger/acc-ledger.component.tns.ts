@@ -18,12 +18,15 @@ import * as moment from 'moment/moment';
 import {Config} from '../../common/utils';
 import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
 import {ITransactionItem} from '../../models/interfaces/ledger.interface';
-import {HandleFile} from 'nativescript-handle-file';
 import {isIOS} from '../../common/utils/environment';
 import * as permissions from 'nativescript-permissions';
 
-const fileSystemModule = require("tns-core-modules/file-system");
+declare var java;
+declare var NSUTF8StringEncoding;
+declare var NSString;
+const fileSystemModule = require('tns-core-modules/file-system');
 require('~/www/base64');
+const applicationModule = require('tns-core-modules/application');
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -119,54 +122,41 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     downloadAttachedFile(fileName: string, e: Event) {
-        // e.stopPropagation();
-
-        // permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
-        //     .then(function () {
-        //         console.log('Woo Hoo, I have the power!');
-        //         if (isIOS) {
-        //             handleFile.open({
-        //                 name: 'G.pdf',
-        //                 url: 'http://www.pdf995.com/samples/pdf.pdf'
-        //             })
-        //         } else {
-        //             handleFile.open({
-        //                 name: 'G.pdf',
-        //                 url: 'http://www.pdf995.com/samples/pdf.pdf',
-        //                 directory: 'downloads',
-        //                 title: 'Save Invoice to'
-        //             });
-        //         }
-        //     })
-        //     .catch(function () {
-        //         console.log('Uh oh, no permissions - plan B time!');
-        //     });
-        // let handleFile = new HandleFile();
-
+        let that = this;
         this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
             if (d.status === 'success') {
                 permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
                     .then(function () {
                         console.log('Woo Hoo, I have the power!');
                         if (isIOS) {
-                            let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
                             const documents = fileSystemModule.knownFolders.documents();
                             const file = documents.getFile(`${d.body.name}`);
-                            file.writeSync(blob,(e)=>{
-                                console.log("error in saving file");
+                            const text = NSString.stringWithString(d.body.uploadedFile);
+                            let byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
+                            let isFileSaved = true;
+                            file.writeSync(byteCharacters, (e) => {
+                                that._toaster.errorToast(`There's an error while saving file..`);
+                                console.log('error in saving file');
                             });
+                            if (isFileSaved) {
+                                that._toaster.successToast(`File saved Successfully To Downloads Folder`);
+                            }
                         } else {
-                            let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
-                            let directoryDestiny: string = android.os.Environment.DIRECTORY_DOWNLOADS;
-                            console.log(JSON.stringify(directoryDestiny));
+                            let directoryDestiny: string = global.android.os.Environment.DIRECTORY_DOWNLOADS;
                             let androidDownloadsPath: any = global.android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
-                            console.log(JSON.stringify(androidDownloadsPath));
-                            const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath)
-
+                            const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath);
                             const file = documents.getFile(`${d.body.name}`);
-                            file.writeSync(blob,(e)=>{
-                                console.log("error in saving file");
+                            const text = new java.lang.String(d.body.uploadedFile);
+                            let byteEncoded = global.android.util.Base64.decode(text, global.android.util.Base64.DEFAULT);
+                            let isFileSaved = true;
+                            file.writeSync(byteEncoded, (e) => {
+                                isFileSaved = false;
+                                that._toaster.errorToast(`There's an error while saving file..`);
+                                console.log('error in saving file');
                             });
+                            if (isFileSaved) {
+                                that._toaster.successToast(`File saved Successfully To Downloads Folder`);
+                            }
                         }
                     })
                     .catch(function () {
@@ -180,6 +170,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     downloadInvoice(invoiceName: string, e: Event) {
+        let that = this;
         // e.stopPropagation();
         let activeAccount = null;
         this.activeAccount$.take(1).subscribe(p => activeAccount = p);
@@ -188,36 +179,51 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
         this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
             if (d.status === 'success') {
-                let blob = base64ToBlob(d.body, 'application/pdf', 512);
+                // let blob = base64ToBlob(d.body, 'application/pdf', 512);
                 permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
                     .then(function () {
                         console.log('Woo Hoo, I have the power!');
                         if (isIOS) {
-                            let blob = base64ToBlob(d.body, `application/pdf`, 512);
-                            var reader = new FileReader();
-                            reader.readAsText(blob);
                             const documents = fileSystemModule.knownFolders.documents();
                             const file = documents.getFile(`${activeAccount.name} - ${invoiceName}.pdf`);
-                            file.writeSync(blob,(e)=>{
-                                console.log("error in saving file");
+                            const text = NSString.stringWithString(d.body);
+                            let byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
+                            let isFileSaved = true;
+                            file.writeSync(byteCharacters, (e) => {
+                                that._toaster.errorToast(`There's an error while saving file..`);
+                                console.log('error in saving file');
                             });
+                            if (isFileSaved) {
+                                that._toaster.successToast(`File saved Successfully To Downloads Folder`);
+                            }
+                            // let blob = base64ToBlob(d.body, `application/pdf`, 512);
+                            // var reader = new FileReader();
+                            // // reader.readAsText(blob);
+                            // const documents = fileSystemModule.knownFolders.documents();
+                            // const file = documents.getFile(`${activeAccount.name} - ${invoiceName}.pdf`);
+                            // file.writeSync(blob,(e)=>{
+                            //     console.log("error in saving file");
+                            // });
                         } else {
-                            let blob = base64ToBlob(d.body, `application/pdf`, 512);
-                            let directoryDestiny: string = android.os.Environment.DIRECTORY_DOWNLOADS;
-                            console.log(JSON.stringify(directoryDestiny));
+                            let directoryDestiny: string = global.android.os.Environment.DIRECTORY_DOWNLOADS;
                             let androidDownloadsPath: any = global.android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
-                            console.log(JSON.stringify(androidDownloadsPath));
-                            const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath)
+                            const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath);
                             const file = documents.getFile(`${activeAccount.name} - ${invoiceName}.pdf`);
-                            file.writeSync(blob,(e)=>{
-                                console.log("error in saving file");
+                            const text = new java.lang.String(d.body);
+                            let byteEncoded = global.android.util.Base64.decode(text, global.android.util.Base64.DEFAULT);
+                            let isFileSaved = true;
+                            file.writeSync(byteEncoded, (e) => {
+                                that._toaster.errorToast(`There's an error while saving file..`);
+                                console.log('error in saving file');
                             });
+                            if (isFileSaved) {
+                                that._toaster.successToast(`File saved Successfully To Downloads Folder`);
+                            }
                         }
                     })
                     .catch(function () {
                         console.log('Uh oh, no permissions - plan B time!');
                     });
-                // return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
             } else {
                 this._toaster.errorToast(d.message);
             }
@@ -313,37 +319,4 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
 }
-
-const base64ToBlob = (b64Data, contentType, sliceSize) => {
-    contentType = contentType || '';
-    sliceSize = sliceSize || 512;
-    // console.log(JSON.stringify(b64Data));
-    // console.log(JSON.stringify(global['atob']));
-
-    let byteCharacters = global['atob'](b64Data);
-    // console.log(JSON.stringify(byteCharacters));
-    // if(isIOS){
-    //     const text = NSString.stringWithString(b64Data);
-    //     byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
-    // }else{
-    //     const text = new java.lang.String(b64Data);
-    //     byteCharacters = text.getBytes("UTF-8");
-    // }
-    console.log(JSON.stringify(byteCharacters.length));
-    let byteArrays = [];
-    let offset = 0;
-    while (offset < byteCharacters.length) {
-        let slice = byteCharacters.slice(offset, offset + sliceSize);
-        let byteNumbers = new Array(slice.length);
-        let i = 0;
-        while (i < slice.length) {
-            byteNumbers[i] = slice.charCodeAt(i);
-            i++;
-        }
-        let byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
-        offset += sliceSize;
-    }
-    return new Blob(byteArrays, {type: contentType});
-};
 
