@@ -188,10 +188,11 @@
 </button>
 
 <mat-card *ngIf="isTransactionRequestInProcess$ | async">
-    <div style="display: flex;justify-content: center;align-items: center;">
+    <div style="display: flex;justify-content: center;align-items: center; width: 100%;">
         <mat-progress-spinner
             [color]="'primary'"
-            [mode]="'indeterminate'">
+            [mode]="'indeterminate'"
+        [diameter]="50">
         </mat-progress-spinner>
     </div>
 </mat-card>

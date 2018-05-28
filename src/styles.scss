@@ -61,3 +61,19 @@ body {
 .mat-drawer-content {
     overflow: hidden;
 }
+
+.roted-logo{
+    height: 50px;
+    -webkit-animation: mymove 1s infinite; /* Safari 4.0 - 8.0 */
+    animation: roted  1s infinite linear;
+}
+
+@-webkit-keyframes roted {
+    0%{transform: rotate(0deg);}
+    100% {transform: rotate(359deg);}
+}
+
+@keyframes roted{
+    0%{transform: rotate(0deg);}
+    100% {transform: rotate(359deg);}
+}

@@ -8,23 +8,28 @@
             <mat-card *ngIf="breadCrumb.length > 0">
                 <mat-card-content>
                     <div>
-                        <a (click)="resetNavigation()">Home /</a>
+                        <a (click)="resetNavigation()" href="javascript:void (0)">Home /</a>
                         <span *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
-                            <a *ngIf="!l;else last" (click)="navigateTo(brd.uniqueName)">{{ brd.name }} /</a>
+                            <a *ngIf="!l;else last" (click)="navigateTo(brd.uniqueName)" href="javascript:void (0)">{{ brd.name }} /</a>
                             <ng-template #last> {{ brd.name }}</ng-template>
                         </span>
                     </div>
                 </mat-card-content>
             </mat-card>
 
-            <ng-container *ngIf="activeAcc === ''">
-                <mat-card class="mat-elevation-z8" *ngIf="breadCrumb.length === 0">
+            <div style="display: flex;justify-content: center;" *ngIf="(showLoader$ | async)">
+                <img src="assets/image/loader.png" class="roted-logo">
+            </div>
+
+            <ng-container *ngIf="activeAcc === '' && !(showLoader$ | async)">
+                <mat-card class="mat-elevation-z2" *ngIf="breadCrumb.length === 0">
 
                     <mat-card-content>
                         <form>
                             <div style="display: flex;">
                                 <mat-icon class="icon-search" matPrefix>search</mat-icon>
-                                <input class="search-box" type="text" matInput #searchControl (input)="search(searchControl.value)">
+                                <input class="search-box" type="text" matInput #searchControl
+                                       (input)="search(searchControl.value)">
                             </div>
                         </form>
                     </mat-card-content>
@@ -68,7 +73,8 @@
                         </ul>
 
                         <ul class="list-nav" *ngIf="activeGrp">
-                            <li *ngFor="let acc of activeGrp.accounts" (click)="$event.stopPropagation();goToLedger(acc)">
+                            <li *ngFor="let acc of activeGrp.accounts"
+                                (click)="$event.stopPropagation();goToLedger(acc)">
                                 <div class="inner-item">
                                     <a class="list-a" matLine>
                                         {{ acc.name }}
@@ -82,7 +88,8 @@
 
                         <ng-template #searchContainer>
                             <mat-nav-list>
-                                <mat-list-item *ngFor="let item of searchedFlattenGrpDetails" (click)="searchResultClicked(item)">
+                                <mat-list-item *ngFor="let item of searchedFlattenGrpDetails"
+                                               (click)="searchResultClicked(item)">
                                     <a matLine>
                                         {{ item.isGroup ? item.groupName : item.name }}
                                     </a>
@@ -95,7 +102,7 @@
                 </mat-card>
             </ng-container>
 
-            <ng-container *ngIf="activeAcc !== ''">
+            <ng-container *ngIf="activeAcc !== '' && !(showLoader$ | async)">
                 <div>
                     <div>
                         <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
