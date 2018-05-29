@@ -25,7 +25,6 @@ declare var java;
 declare var NSUTF8StringEncoding;
 declare var NSString;
 const fileSystemModule = require('tns-core-modules/file-system');
-require('~/www/base64');
 const applicationModule = require('tns-core-modules/application');
 
 @Component({

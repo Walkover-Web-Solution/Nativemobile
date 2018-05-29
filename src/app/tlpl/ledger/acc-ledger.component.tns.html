@@ -133,7 +133,7 @@
                     </ng-template>
                 </FlexboxLayout>
                 <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                    <FlexboxLayout>
+                    <FlexboxLayout justifyContent="space-between">
                         <Label text="{{ txn.amount | number: '1.0-2' }}" horizontalAlignment="left"></Label>
 
                         <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
