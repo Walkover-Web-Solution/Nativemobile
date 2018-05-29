@@ -286,8 +286,14 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
         this.transactionDataWithOutShare$.take(1).subscribe(t => {
             if (t) {
-                allItems.push(...t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName));
-                allItems.push(...t.creditTransactions.filter(ct => ct.entryUniqueName === txnUniqueName));
+                t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName).forEach(function (dtrx) {
+                    allItems.push(dtrx);
+                });
+                t.creditTransactions.filter(ct => ct.entryUniqueName === txnUniqueName).forEach(function (ctrx) {
+                    allItems.push(ctrx);
+                });
+                // allItems.push(...t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName));
+                // allItems.push(...t.creditTransactions.filter(ct => ct.entryUniqueName === txnUniqueName));
             }
         });
 

@@ -58,16 +58,16 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
                 if (data.closingBalance.amount === 0 && data.creditTotal === 0 && data.debitTotal === 0 && data.forwardedBalance.amount === 0) {
                     noData = true;
                 }
-                return {
-                    ...state,
-                    tb: { ...state.tb, data, noData, showLoader, exportData: data.groupDetails }
-                };
+                return Object.assign({}, state, {
+                    tb: Object.assign({}, state.tb, { data, noData, showLoader, exportData: data.groupDetails })
+                });
             } else {
-                return { ...state, tb: { ...state.tb, showLoader: false, exportData: [], data: null, noData: true } };
+                return Object.assign({}, state,
+                    { tb: Object.assign({}, state.tb, { showLoader: false, exportData: [], data: null, noData: true }) });
             }
         }
         case TlPlConst.GET_TRIAL_BALANCE_REQUEST: {
-            return { ...state, tb: { ...state.tb, showLoader: true } };
+            return Object.assign({}, state, { tb: Object.assign({}, state.tb, { showLoader: true }) });
         }
 
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
@@ -79,32 +79,27 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             });
 
         case TlPlConst.GET_ACC_TRANSACTION: {
-            return {
-                ...state,
+            return Object.assign({}, state, {
                 transactionInProgress: true
-            };
+            });
         }
         case TlPlConst.GET_ACC_TRANSACTION_RESPONSE: {
-            return {
-                ...state,
+            return Object.assign({}, state, {
                 transactionInProgress: false,
                 transactionsResponse: prepareTlEntryDate(action.payload)
-            };
+            });
         }
         case TlPlConst.GET_MORE_ACC_TRANSACTION: {
-            return {
-                ...state,
+            return Object.assign({}, state, {
                 transactionInProgress: true
-            };
+            });
         }
         case TlPlConst.GET_MORE_ACC_TRANSACTION_RESPONSE: {
             let response: TransactionsResponse = prepareTlEntryDate(action.payload);
             if (response) {
-                return {
-                    ...state,
+                return Object.assign({}, state, {
                     transactionInProgress: false,
-                    transactionsResponse: {
-                        ...state.transactionsResponse,
+                    transactionsResponse: Object.assign({}, state.transactionsResponse, {
                         totalPages: response.totalPages,
                         closingBalance: response.closingBalance,
                         count: response.count,
@@ -117,33 +112,29 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
                         totalItems: response.totalItems,
                         creditTransactions: state.transactionsResponse.creditTransactions.concat(response.creditTransactions),
                         debitTransactions: state.transactionsResponse.debitTransactions.concat(response.debitTransactions)
-                    }
-                };
+                    })
+                });
             }
-            return {
-                ...state,
+            return Object.assign({}, state, {
                 transactionInProgress: false,
                 transactionsResponse: response
-            }
+            })
         }
         case TlPlConst.GET_LEDGER_ACCOUNT:
-            return {
-                ...state,
+            return Object.assign({}, state, {
                 accountDetailsInProgress: true
-            };
+            });
         case TlPlConst.GET_LEDGER_ACCOUNT_RESPONSE:
             if (action.payload) {
-                return {
-                    ...state,
+                return Object.assign({}, state, {
                     accountDetailsInProgress: false,
                     accountDetails: action.payload
-                };
+                });
             } else {
-                return {
-                    ...state,
+                return Object.assign({}, state, {
                     accountDetailsInProgress: false,
                     accountDetails: null
-                };
+                });
             }
         default:
             return state;
@@ -225,16 +216,16 @@ const getUnderstandingText = (category: string, balanceType: string, name: strin
 
     switch (category) {
         case 'liabilities':
-        accountType = 'Liability';
+            accountType = 'Liability';
             break;
         case 'assets':
-        accountType = 'Asset';
+            accountType = 'Asset';
             break;
         case 'income':
-        accountType = 'Revenue';
+            accountType = 'Revenue';
             break;
         case 'expenses':
-        accountType = 'Expense';
+            accountType = 'Expense';
             break;
         default:
             break;
@@ -245,9 +236,9 @@ const getUnderstandingText = (category: string, balanceType: string, name: strin
         return 'dummy category';
     } else {
         if (balanceType === 'DEBIT') {
-           return cateData.balanceText.dr.replace('<accountName>', name);
+            return cateData.balanceText.dr.replace('<accountName>', name);
         } else {
-           return cateData.balanceText.cr.replace('<accountName>', name);
+            return cateData.balanceText.cr.replace('<accountName>', name);
         }
     }
 }

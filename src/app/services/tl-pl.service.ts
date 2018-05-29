@@ -45,7 +45,7 @@ export class TlPlService {
         this.companyUniqueName = this._generalService.companyUniqueName;
         let filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => ({ ...r, [i]: request[i] }), {}));
+            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_PROFIT_LOSS
             .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
@@ -65,7 +65,7 @@ export class TlPlService {
         this.companyUniqueName = this._generalService.companyUniqueName;
         let filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => ({ ...r, [i]: request[i] }), {}));
+            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_BALANCE_SHEET
             .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
@@ -96,7 +96,7 @@ export class TlPlService {
         this.companyUniqueName = this._generalService.companyUniqueName;
         let filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => ({ ...r, [i]: request[i] }), {}));
+            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.DOWNLOAD_BALANCE_SHEET_EXCEL
             .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
@@ -113,7 +113,7 @@ export class TlPlService {
         this.companyUniqueName = this._generalService.companyUniqueName;
         let filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => ({ ...r, [i]: request[i] }), {}));
+            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.DOWNLOAD_PROFIT_LOSS_EXCEL
             .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
