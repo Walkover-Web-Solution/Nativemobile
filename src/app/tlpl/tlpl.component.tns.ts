@@ -12,6 +12,10 @@ import {AppState} from '../store';
 import {RouterService} from '../services/router.service';
 import {Account, ChildGroup} from '../models/api-models/Search';
 import {INameUniqueName} from '../models/interfaces/nameUniqueName.interface';
+import {defaultLoaderOptions, Page} from '../common/utils/environment';
+import { LoadingIndicator } from 'nativescript-loading-indicator';
+
+const loader: LoadingIndicator = new LoadingIndicator();
 
 @Component({
     selector: 'ns-tlpl',
@@ -35,20 +39,20 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public searchedFlattenGrpDetails: any[] = [];
     public isSearchEnabled: boolean = false;
     public showLedgerScreen: boolean = false;
-    public width: number = 0;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
-                private _routerExtension: RouterService, private _cdRef: ChangeDetectorRef) {
+                private _routerExtension: RouterService, private _cdRef: ChangeDetectorRef, private page: Page) {
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-            return {companies, uniqueName};
+            return { companies, uniqueName };
         })).takeUntil(this.destroyed$);
         this.data$ = this.store.select(s => s.tlPl.tb.data).takeUntil(this.destroyed$);
         this.showLoader$ = this.store.select(s => s.tlPl.tb.showLoader).takeUntil(this.destroyed$);
+
+        (this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy());
     }
 
     ngOnInit(): void {
-        this.width = (window as any).innerWidth;
         this.companyData$.subscribe(res => {
             if (!res.companies) {
                 return;
@@ -64,6 +68,13 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 to: this.activeCompany.activeFinancialYear.financialYearEnds
             };
             this.getData(this.request);
+        });
+        this.showLoader$.subscribe(s => {
+            // if (s) {
+            //     // loader.show(Object.assign({}, defaultLoaderOptions, { message: 'Loading TL / PL...' }));
+            // } else  {
+            //     // loader.hide();
+            // }
         });
 
         this.data$.subscribe(p => {
@@ -122,7 +133,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activeGrp = grp;
 
         // if (this.breadCrumb.length > 1) {
-        this.breadCrumb.push({uniqueName: grp.uniqueName, name: grp.groupName});
+        this.breadCrumb.push({ uniqueName: grp.uniqueName, name: grp.groupName });
         // }
         this.filterdData = grp.childGroups;
     }
@@ -181,14 +192,14 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     goToLedger(acc: Account) {
         this.activeGrp = null;
         this.activeAcc = acc.uniqueName;
-        this.breadCrumb.push({uniqueName: acc.uniqueName, name: acc.name});
+        this.breadCrumb.push({ uniqueName: acc.uniqueName, name: acc.name });
         this.detectChanges();
     }
 
     makeFlatten(mainGrps: ChildGroup[], result: any[], parentGrpUniqueName?: string) {
 
         _.each(mainGrps, (g) => {
-            result.push(Object.assign({}, g, {isGroup: true, parentGrpUniqueName: parentGrpUniqueName}));
+            result.push(Object.assign({}, g, { isGroup: true, parentGrpUniqueName: parentGrpUniqueName }));
 
             if (g.childGroups && g.childGroups.length > 0) {
                 this.makeFlatten(g.childGroups, result, g.uniqueName);
@@ -251,7 +262,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.filterdData = result.childGroups;
                 });
                 r.reverse().forEach(a => {
-                    this.breadCrumb.push({uniqueName: a.uniqueName, name: a.isGroup ? a.groupName : a.name});
+                    this.breadCrumb.push({ uniqueName: a.uniqueName, name: a.isGroup ? a.groupName : a.name });
                 });
             } else {
                 this.filterdData = res.childGroups;
@@ -259,7 +270,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.filterdData = res.childGroups;
         }
-        this.breadCrumb.push({uniqueName: res.uniqueName, name: res.isGroup ? res.groupName : res.name});
+        this.breadCrumb.push({ uniqueName: res.uniqueName, name: res.isGroup ? res.groupName : res.name });
         // this.detectChanges();
     }
 

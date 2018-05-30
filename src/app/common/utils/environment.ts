@@ -17,3 +17,4 @@ export const isIOS: boolean = false;
 export enum AnimationCurve {
     ease
 }
+export const defaultLoaderOptions  = {};

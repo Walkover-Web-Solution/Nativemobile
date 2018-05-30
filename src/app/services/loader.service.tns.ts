@@ -3,8 +3,8 @@ import { LoadingIndicator } from 'nativescript-loading-indicator';
 
 @Injectable()
 export class LoaderService {
-    private loader: LoadingIndicator = new LoadingIndicator();
-    private defaultOptions: any;
+    // private loader: LoadingIndicator = new LoadingIndicator();
+    public defaultOptions: any;
 
     constructor() {
         this.defaultOptions = {
