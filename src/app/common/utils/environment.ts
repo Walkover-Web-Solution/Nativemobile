@@ -1,6 +1,3 @@
-import { of } from "rxjs/observable/of";
-import { Observable } from "rxjs/Observable";
-
 export class dialogs { };
 export class Page {
     public backgroundColor: Color;
@@ -17,4 +14,6 @@ export const isIOS: boolean = false;
 export enum AnimationCurve {
     ease
 }
-export const defaultLoaderOptions  = {};
+export const defaultLoaderOptions  = {
+
+};

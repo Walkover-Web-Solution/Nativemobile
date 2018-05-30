@@ -107,6 +107,12 @@ export class TBPlBsActions {
         };
     }
 
+    public RESET_LOADER(): CustomActions {
+        return {
+            type: TlPlConst.RESET_LOADER
+        };
+    }
+
     public GetflatAccountWGroups(q: string = '', page: number = 1, count: number = 20000, showEmptyGroups: string = 'false'): CustomActions {
         return {
             type: TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST,

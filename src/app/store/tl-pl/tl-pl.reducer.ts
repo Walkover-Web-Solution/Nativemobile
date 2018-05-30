@@ -1,13 +1,13 @@
-import { AccountDetails } from '../../models/api-models/tb-pl-bs';
-import { ChildGroup } from '../../models/api-models/Search';
-import { CustomActions } from '../customActions';
-import { TlPlConst } from '../../actions/tl-pl/tl-pl.const';
+import {AccountDetails} from '../../models/api-models/tb-pl-bs';
+import {ChildGroup} from '../../models/api-models/Search';
+import {CustomActions} from '../customActions';
+import {TlPlConst} from '../../actions/tl-pl/tl-pl.const';
 import * as _ from 'lodash';
-import { IFlattenGroupsAccountsDetail } from '../../models/interfaces/flattenGroupsAccountsDetail.interface';
-import { TransactionsResponse } from '../../models/api-models/Ledger';
-import { AccountResponse } from '../../models/api-models/Account';
+import {IFlattenGroupsAccountsDetail} from '../../models/interfaces/flattenGroupsAccountsDetail.interface';
+import {TransactionsResponse} from '../../models/api-models/Ledger';
+import {AccountResponse} from '../../models/api-models/Account';
 import * as moment from 'moment';
-import { underStandingTextData } from '../../tlpl/ledger/underStandingTextData';
+import {underStandingTextData} from '../../tlpl/ledger/underStandingTextData';
 
 interface TbState {
     data?: AccountDetails;
@@ -67,9 +67,11 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             }
         }
         case TlPlConst.GET_TRIAL_BALANCE_REQUEST: {
-            return Object.assign({}, state, { tb: Object.assign({}, state.tb, { showLoader: true }) });
+            return Object.assign({}, initialState, { tb: Object.assign({}, initialState.tb, { showLoader: true }) });
         }
-
+        case TlPlConst.RESET_LOADER:{
+            return Object.assign({}, state, { tb: Object.assign({}, state.tb, { showLoader: false }) });
+        }
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
             return Object.assign({}, state, { isFlyAccountInProcess: true });
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE:

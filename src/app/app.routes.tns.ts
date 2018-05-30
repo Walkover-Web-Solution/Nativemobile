@@ -15,9 +15,9 @@ export const AppRoutes = [
     },
     {
         path: 'login',
-        loadChildren: 'app/login/login.module#LoginModule',
+        // loadChildren: 'app/login/login.module#LoginModule',
         // TODO: Uncomment below line when building for webpack
-        // loadChildren: './app/login/login.module#LoginModule',
+        loadChildren: './app/login/login.module#LoginModule',
     },
     {
         path: 'dashboard',
