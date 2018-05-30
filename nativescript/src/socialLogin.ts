@@ -13,21 +13,22 @@ import * as SocialLogin from 'nativescript-social-login';
 
 if (application.android) {
   application.android.on(application.AndroidApplication.activityCreatedEvent, (args) => {
-    let result = SocialLogin.init({
-      activity: args.activity,
-      google: {
-        initialize: true,
-        isRequestAuthCode: true,
-        serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
-        shouldFetchBasicProfile: true
-      },
-      facebook: {
-        initialize: false
-      },
-      onActivityResult: (requestCode: number, resultCode: number, data: any) => {
-      }
-    });
+    // let result = SocialLogin.init({
+    //   activity: args.activity,
+    //   google: {
+    //     initialize: true,
+    //     isRequestAuthCode: true,
+    //     serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
+    //     shouldFetchBasicProfile: true
+    //   },
+    //   facebook: {
+    //     initialize: false
+    //   },
+    //   onActivityResult: (requestCode: number, resultCode: number, data: any) => {
+    //   }
+    // });
     SocialLogin.addLogger(function (msg, tag) {
+        console.log('giddh_app: ', msg);
     });
   });
 }

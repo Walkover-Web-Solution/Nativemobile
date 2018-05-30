@@ -125,6 +125,7 @@ export class LoginActions {
         .ofType(LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE)
         .map((action: CustomActions) => {
             let res: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
+            console.log('giddh_app: ', res.status);
             if (res.status !== 'success') {
                 this._toaster.errorToast(res.message);
             }

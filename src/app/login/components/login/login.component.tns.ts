@@ -1,15 +1,16 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../store';
-import {Observable} from 'rxjs/Observable';
-import {LoginActions} from '../../../actions/login/login.action';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationService} from '../../../services/authentication.service';
-import {AnimationCurve, Color, isIOS, Page} from '../../../common/utils/environment';
-import {ToasterService} from '../../../services/toaster.service';
-import {RouterService} from '../../../services/router.service';
-import {Config} from '../../../common';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../../store';
+import { Observable } from 'rxjs/Observable';
+import { LoginActions } from '../../../actions/login/login.action';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { AnimationCurve, Color, isIOS, Page } from '../../../common/utils/environment';
+import { ToasterService } from '../../../services/toaster.service';
+import { RouterService } from '../../../services/router.service';
+import { Config } from '../../../common';
 import 'rxjs/add/operator/mergeMap';
+import * as app from "tns-core-modules/application";
 // import {EventData} from 'tns-core-modules/data/observable';
 // import {LoadEventData, WebView} from "tns-core-modules/ui/web-view";
 // import {isAndroid} from "tns-core-modules/platform"
@@ -65,6 +66,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.signupWithGoogleSuccess$.subscribe(s => {
             if (s) {
+                console.log('giddh_app: ', 'Google Login Success Going to home');
                 (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
             }
         });
@@ -159,28 +161,29 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public googleLogin() {
         let SocialLogin = require('nativescript-social-login');
-        // let result = SocialLogin.init({
-        //     activity: args.activity,
-        //     google: {
-        //       initialize: true,
-        //       isRequestAuthCode: true,
-        //       serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
-        //       shouldFetchBasicProfile: true
-        //     },
-        //     facebook: {
-        //       initialize: false
-        //     },
-        //     linkedin: {
-        //       clientId: '75urm0g3386r26',
-        //       clientSecret: '3AJTvaKNOEG4ISJ0',
-        //       permissions: ["r_basicprofile", "r_emailaddress"],
-        //       state: '',
-        //       redirectUri: "https://giddh.com/login"
-        //     },
+        const androidApp = app.android;
+        let result = SocialLogin.init({
+            activity: androidApp.foregroundActivity,
+            google: {
+              initialize: true,
+              isRequestAuthCode: true,
+              serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
+              shouldFetchBasicProfile: true
+            },
+            facebook: {
+              initialize: false
+            },
+            linkedin: {
+              clientId: '75urm0g3386r26',
+              clientSecret: '3AJTvaKNOEG4ISJ0',
+              permissions: ["r_basicprofile", "r_emailaddress"],
+              state: '',
+              redirectUri: "https://giddh.com/login"
+            },
 
-        //     onActivityResult: (requestCode: number, resultCode: number, data: any) => {
-        //     }
-        //   });
+            onActivityResult: (requestCode: number, resultCode: number, data: any) => {
+            }
+          });
         SocialLogin.loginWithGoogle((result) => {
             if (result.error || !result.authCode) {
                 this._toaster.errorToast('Something Went Wrong! Please Try Again');
@@ -188,6 +191,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.authservice.GetAtuhToken(result)
                     .mergeMap((token: any) => this.authservice.LoginWithGoogle(token.access_token))
                     .subscribe(LoginResult => {
+                        console.log('giddh_app: ', 'Got Google Login Result');
                         this.store.dispatch(this._loginActions.signupWithGoogleResponse(LoginResult));
                     }, err => {
                         if (err) {
