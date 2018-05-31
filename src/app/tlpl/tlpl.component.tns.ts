@@ -15,7 +15,7 @@ import {INameUniqueName} from '../models/interfaces/nameUniqueName.interface';
 import {defaultLoaderOptions, Page} from '../common/utils/environment';
 import {LoadingIndicator} from 'nativescript-loading-indicator';
 import {Subscription} from 'rxjs/Subscription';
-
+import 'rxjs/add/operator/debounceTime';
 
 @Component({
     selector: 'ns-tlpl',
@@ -59,28 +59,29 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loader = new LoadingIndicator();
         console.log(JSON.stringify('loading tbpl'));
         this.companyData$.subscribe(res => {
+            console.log(JSON.stringify('getting company data'));
             if (!res.companies) {
                 return;
             }
-
+            console.log(JSON.stringify('getting active company'));
             this.activeCompany = res.companies.find(cmp => {
                 return cmp.uniqueName === res.uniqueName;
             });
-
+            console.log(JSON.stringify('preparing request'));
             this.request = {
                 refresh: false,
                 from: this.activeCompany.activeFinancialYear.financialYearStarts,
                 to: this.activeCompany.activeFinancialYear.financialYearEnds
             };
+            console.log(JSON.stringify('calling get data'));
             this.getData(this.request);
         });
-        this.loaderSubcriber$ = this.showLoader$.subscribe(s => {
+        this.loaderSubcriber$ = this.showLoader$.debounceTime(500).subscribe(s => {
             if (s && this.loader) {
                 console.log(JSON.stringify('Hey I am called'));
                 this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Loading TL / PL...'}));
             } else {
                 this.loader.hide();
-                this.loader = null;
             }
         });
 
@@ -130,6 +131,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getData(request: TrialBalanceRequest) {
+        console.log(JSON.stringify("action dispatched"));
         this.store.dispatch(this._tlPlActions.GetTrialBalance(_.cloneDeep(request)));
     }
 
@@ -304,8 +306,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngOnDestroy(): void {
         if (this.loaderSubcriber$) {
-            this.loader = null;
-            console.log(JSON.stringify("unsubcribed"));
+            console.log(JSON.stringify('unsubcribed'));
             this.loaderSubcriber$.unsubscribe();
         }
         this.store.dispatch(this._tlPlActions.RESET_LOADER());

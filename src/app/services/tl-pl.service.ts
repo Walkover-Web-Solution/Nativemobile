@@ -1,16 +1,23 @@
-import { Injectable, Optional, Inject } from '@angular/core';
+import {Inject, Injectable, Optional} from '@angular/core';
 import 'rxjs/add/operator/map';
-import { HttpWrapperService } from './httpWrapper.service';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { BaseResponse } from '../models/api-models/BaseResponse';
-import { UserDetails } from '../models/api-models/loginModels';
-import { ErrorHandler } from './catchManager/catchmanger';
-import { TB_PL_BS_API } from './apiurls/tl-pl.api';
-import { AccountDetails, BalanceSheetRequest, ProfitLossRequest, TrialBalanceExportExcelRequest, TrialBalanceRequest, ProfitLossDataV3 } from '../models/api-models/tb-pl-bs';
+import {HttpWrapperService} from './httpWrapper.service';
+import {Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {BaseResponse} from '../models/api-models/BaseResponse';
+import {UserDetails} from '../models/api-models/loginModels';
+import {ErrorHandler} from './catchManager/catchmanger';
+import {TB_PL_BS_API} from './apiurls/tl-pl.api';
+import {
+    AccountDetails,
+    BalanceSheetRequest,
+    ProfitLossDataV3,
+    ProfitLossRequest,
+    TrialBalanceExportExcelRequest,
+    TrialBalanceRequest
+} from '../models/api-models/tb-pl-bs';
 // import { saveAs } from 'file-saver';
-import { GeneralService } from './general.service';
-import { ServiceConfig, IServiceConfigArgs } from './service.config';
+import {GeneralService} from './general.service';
+import {IServiceConfigArgs, ServiceConfig} from './service.config';
 
 @Injectable()
 export class TlPlService {
@@ -30,6 +37,7 @@ export class TlPlService {
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_TRIAL_BALANCE
             .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), { from: request.from, to: request.to, refresh: request.refresh })
             .map((res) => {
+
                 let data: BaseResponse<AccountDetails, TrialBalanceRequest> = res;
                 data.request = request;
                 return data;

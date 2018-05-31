@@ -21,11 +21,13 @@ export class TBPlBsActions {
     private GetTrialBalance$: Observable<CustomActions> = this.action$
         .ofType(TlPlConst.GET_TRIAL_BALANCE_REQUEST)
         .switchMap((action: CustomActions) => {
+            console.log(JSON.stringify("calling Searvice"));
             return this._tlPlService.GetTrailBalance(action.payload)
                 .map((r: BaseResponse<AccountDetails, TrialBalanceRequest>) => {
                     if (r.status !== 'success') {
                         this._toaster.errorToast(r.message);
                     }
+                    console.log(JSON.stringify("hurrye I got tb pl data"));
                     return {
                         type: TlPlConst.GET_TRIAL_BALANCE_RESPONSE,
                         payload: r.status === 'success' ? r.body : null

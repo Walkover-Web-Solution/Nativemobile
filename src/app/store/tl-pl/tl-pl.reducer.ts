@@ -50,6 +50,7 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
     switch (action.type) {
         case TlPlConst.GET_TRIAL_BALANCE_RESPONSE: {
             // no payload means error from server
+            console.log(JSON.stringify("I am updating store"));
             if (action.payload) {
                 let data: AccountDetails = _.cloneDeep(action.payload) as AccountDetails;
                 data.groupDetails = removeZeroAmountAccount((data.groupDetails));
@@ -70,7 +71,7 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             return Object.assign({}, initialState, { tb: Object.assign({}, initialState.tb, { showLoader: true }) });
         }
         case TlPlConst.RESET_LOADER:{
-            return Object.assign({}, state, { tb: Object.assign({}, state.tb, { showLoader: false }) });
+            return Object.assign({}, initialState);
         }
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
             return Object.assign({}, state, { isFlyAccountInProcess: true });

@@ -106,7 +106,7 @@
     "prepCLITablet": "gulp build.cli.Default",
     "ios": "npm run prepCLITablet && tns run ios",
     "ios.phone": "npm run prepCLIPhone && tns run ios",
-    "android": "npm run prepCLITablet && tns run android --env.aot",
+    "android": "npm run prepCLITablet && tns run android",
     "android.phone": "npm run prepCLIPhone && tns run android --env.aot",
     "debug:android": "npm run prepCLITablet && tns debug android --chrome",
     "phone-ios-bundle": "npm run prepPhone && tns prepare ios && tns run ios --bundle --env.aot --env.uglify",
