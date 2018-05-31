@@ -3,7 +3,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 // nativescript
 import {NativeScriptFormsModule} from 'nativescript-angular/forms';
 import {NativeScriptCommonModule} from 'nativescript-angular/common';
-import {NativeScriptUIChartModule} from 'nativescript-ui-chart/angular';
 
 import {SharedModule} from '../shared/shared.module';
 import {TlPlRoutes} from './tlpl.routes';
@@ -19,8 +18,7 @@ import {CompoundEntryDialogComponent} from './compoundEntryDialog/compoundEntryD
         FormsModule,
         RouterModule.forChild(TlPlRoutes),
         ReactiveFormsModule,
-        SharedModule,
-        NativeScriptUIChartModule
+        SharedModule
     ],
     declarations: [TlPlComponent, AccLedgerComponent, CompoundEntryDialogComponent],
     entryComponents: [CompoundEntryDialogComponent],
