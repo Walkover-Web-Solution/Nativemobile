@@ -1,16 +1,17 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { Observable } from 'rxjs/Observable';
-import { LoginActions } from '../../../actions/login/login.action';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthenticationService } from '../../../services/authentication.service';
-import { AnimationCurve, Color, isIOS, Page } from '../../../common/utils/environment';
-import { ToasterService } from '../../../services/toaster.service';
-import { RouterService } from '../../../services/router.service';
-import { Config } from '../../../common';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {Observable} from 'rxjs/Observable';
+import {LoginActions} from '../../../actions/login/login.action';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthenticationService} from '../../../services/authentication.service';
+import {AnimationCurve, Color, defaultLoaderOptions, isIOS, Page} from '../../../common/utils/environment';
+import {ToasterService} from '../../../services/toaster.service';
+import {RouterService} from '../../../services/router.service';
+import {Config} from '../../../common';
 import 'rxjs/add/operator/mergeMap';
-import * as app from "tns-core-modules/application";
+import * as app from 'tns-core-modules/application';
+import {LoadingIndicator} from 'nativescript-loading-indicator';
 // import {EventData} from 'tns-core-modules/data/observable';
 // import {LoadEventData, WebView} from "tns-core-modules/ui/web-view";
 // import {isAndroid} from "tns-core-modules/platform"
@@ -25,10 +26,11 @@ import * as app from "tns-core-modules/application";
     styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
-    @ViewChild("myWebView") webViewRef: ElementRef;
+    public loader: LoadingIndicator;
+    @ViewChild('myWebView') webViewRef: ElementRef;
     public loginProcess$: Observable<boolean>;
     public loginSuccess$: Observable<boolean>;
-    public secondWebViewSRC = "~/www/chart.html"
+    public secondWebViewSRC = '~/www/chart.html'
     public signupWithGoogleInProcess$: Observable<boolean>;
     public signupWithGoogleSuccess$: Observable<boolean>;
 
@@ -36,8 +38,8 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     public loginWithPasswordForm: FormGroup;
 
     constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService,
-        private page: Page, private authservice: AuthenticationService, private changeDetectorRef: ChangeDetectorRef,
-        private _toaster: ToasterService) {
+                private page: Page, private authservice: AuthenticationService, private changeDetectorRef: ChangeDetectorRef,
+                private _toaster: ToasterService) {
         this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess);
         this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess);
         this.signupWithGoogleInProcess$ = this.store.select(s => s.login.isSignupWithGoogleInProcess);
@@ -46,7 +48,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
     public ngOnInit(): void {
-
+        this.loader = new LoadingIndicator();
         this.loginWithPasswordForm = this._fb.group({
             uniqueKey: ['', [Validators.required]],
             password: ['', [Validators.required]],
@@ -60,14 +62,17 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.loginSuccess$.subscribe(s => {
             if (s) {
-                (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
+                (this.routerExtensions.router as any).navigate(['/home'], {clearHistory: true});
             }
         });
 
         this.signupWithGoogleSuccess$.subscribe(s => {
             if (s) {
+                this.loader.hide();
                 console.log('giddh_app: ', 'Google Login Success Going to home');
-                (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
+                setTimeout(() => {
+                    (this.routerExtensions.router as any).navigate(['/home'], {clearHistory: true})
+                }, 500);
             }
         });
 
@@ -77,7 +82,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                 google: {
                     initialize: true,
                     isRequestAuthCode: true,
-                    scopes: ["profile", "email"],
+                    scopes: ['profile', 'email'],
                     serverClientId: '641015054140-22m4v5kgtpnedfiq4peo9u3vcojmespu.apps.googleusercontent.com',
                     shouldFetchBasicProfile: true,
                 },
@@ -165,29 +170,30 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         let result = SocialLogin.init({
             activity: androidApp.foregroundActivity,
             google: {
-              initialize: true,
-              isRequestAuthCode: true,
-              serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
-              shouldFetchBasicProfile: true
+                initialize: true,
+                isRequestAuthCode: true,
+                serverClientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com',
+                shouldFetchBasicProfile: true
             },
             facebook: {
-              initialize: false
+                initialize: false
             },
             linkedin: {
-              clientId: '75urm0g3386r26',
-              clientSecret: '3AJTvaKNOEG4ISJ0',
-              permissions: ["r_basicprofile", "r_emailaddress"],
-              state: '',
-              redirectUri: "https://giddh.com/login"
+                clientId: '75urm0g3386r26',
+                clientSecret: '3AJTvaKNOEG4ISJ0',
+                permissions: ['r_basicprofile', 'r_emailaddress'],
+                state: '',
+                redirectUri: 'https://giddh.com/login'
             },
 
             onActivityResult: (requestCode: number, resultCode: number, data: any) => {
             }
-          });
+        });
         SocialLogin.loginWithGoogle((result) => {
             if (result.error || !result.authCode) {
                 this._toaster.errorToast('Something Went Wrong! Please Try Again');
             } else {
+                this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Logging With Google...'}));
                 this.authservice.GetAtuhToken(result)
                     .mergeMap((token: any) => this.authservice.LoginWithGoogle(token.access_token))
                     .subscribe(LoginResult => {
@@ -196,7 +202,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                     }, err => {
                         if (err) {
                             this._toaster.errorToast('Something Went Wrong! Please Try Again');
-
+                            this.loader.hide();
                         }
                     })
             }
