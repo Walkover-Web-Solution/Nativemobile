@@ -16,6 +16,10 @@ import {defaultLoaderOptions, Page} from '../common/utils/environment';
 import {LoadingIndicator} from 'nativescript-loading-indicator';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/debounceTime';
+import * as app from 'application';
+import {isAndroid} from 'platform';
+
+declare let android: any;
 
 @Component({
     selector: 'ns-tlpl',
@@ -76,7 +80,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             console.log(JSON.stringify('calling get data'));
             this.getData(this.request);
         });
-        this.loaderSubcriber$ = this.showLoader$.debounceTime(500).subscribe(s => {
+        this.loaderSubcriber$ = this.showLoader$.subscribe(s => {
             if (s && this.loader) {
                 console.log(JSON.stringify('Hey I am called'));
                 this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Loading TL / PL...'}));
@@ -102,7 +106,12 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        //
+
+        if (isAndroid) {
+            app.android.on(app.AndroidApplication.activityBackPressedEvent, function (d) {
+                console.log('back btn event');
+            });
+        }
     }
 
     search(term) {
@@ -127,11 +136,12 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     goBack() {
-        this._routerExtension.router.navigate(['/home']);
+        this.hideKeyboard();
+        (this._routerExtension.router as any).back()
     }
 
     getData(request: TrialBalanceRequest) {
-        console.log(JSON.stringify("action dispatched"));
+        console.log(JSON.stringify('action dispatched'));
         this.store.dispatch(this._tlPlActions.GetTrialBalance(_.cloneDeep(request)));
     }
 
@@ -301,6 +311,20 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     detectChanges() {
         if (!this._cdRef['destroyed']) {
             this._cdRef.detectChanges();
+        }
+    }
+
+    private hideKeyboard() {
+
+        if (isAndroid) {
+            try {
+                let activity = app.android.foregroundActivity;
+                let Context = app.android.currentContext;
+                let inputManager = Context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS);
+            } catch (err) {
+                console.log(err);
+            }
         }
     }
 

@@ -12,12 +12,19 @@
 
 <ScrollView>
     <StackLayout margin="5">
-        <GridLayout rows="auto" columns="*" *ngIf="breadCrumb.length === 0" marginBottom="20">
-            <StackLayout borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1" borderTopWidth="1"
-                         borderColor="#D2D2D4">
-                <SearchBar row="0" hint="Search" (textChange)="search($event.object.text)"></SearchBar>
-            </StackLayout>
-        </GridLayout>
+        <CardView class="gen-card-style" elevation="10" radius="5" marginBottom="20" ripple="true">
+            <GridLayout rows="auto" columns="*" *ngIf="breadCrumb.length === 0">
+                <!--<StackLayout>-->
+                    <FlexboxLayout>
+                        <Label text="&#xf002;" fontFamily="FontAwesome" alignSelf="center" margin="0 15"
+                               fontSize="20"></Label>
+                        <TextView hint="Search group and accounts, e.g. Sales" row="0"
+                                  (textChange)="search($event.object.text)" returnKeyType="send"
+                                  class="input customTextView" backgroundColor="white"></TextView>
+                    </FlexboxLayout>
+                <!--</StackLayout>-->
+            </GridLayout>
+        </CardView>
 
         <CardView class="gen-card-style" elevation="3" radius="1" *ngIf="breadCrumb.length > 0">
 
