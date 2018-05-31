@@ -18,7 +18,6 @@ import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/debounceTime';
 import * as app from 'application';
 import {isAndroid} from 'platform';
-import {SearchBar} from "ui/search-bar"
 
 declare let android: any;
 
@@ -112,13 +111,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             app.android.on(app.AndroidApplication.activityBackPressedEvent, function (d) {
                 console.log('back btn event');
             });
-        }
-    }
-
-    public sBLoaded(args){
-        var searchbar:SearchBar = <SearchBar>args.object;
-        if(isAndroid){
-            searchbar.android.clearFocus();
         }
     }
 
