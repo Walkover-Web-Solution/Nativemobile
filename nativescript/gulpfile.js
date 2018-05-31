@@ -18,6 +18,7 @@ function removePhone(path) {
 gulp.task('clean.Dist', () => {
     return del([
         'app/**/*',
+
         '!**/vendor.ts',
         '!**/vendor-platform.android.ts',
         '!**/vendor-platform.ios.ts',
@@ -37,7 +38,8 @@ gulp.task('copy_www', () => {
     return gulp.src(['www/**/*'], { follow: true })
         .pipe(debug({ title: 'copy_www' }))
         .pipe(gulp.dest(`${DEST}www`));
-})
+});
+
 
 // gulp.task('resources.SCSS', () => {
 //     return gulp.src(['scss/**/*'], { follow: true })

@@ -12,9 +12,12 @@ var cp = require('child_process');
 var path = require('path');
 
 var webAppPath = './src/app';
+var webAppEnvironmentPath = './src/environments';
 var webFontsPath = './src/fonts';
 var webAssetsPath = './src/assets';
+
 var nativescriptAppPath = './nativescript/src/app/';
+var nativescriptAppEnvironmentPath = './nativescript/src/environments/';
 var nativescriptFontsPath = './nativescript/src/fonts/';
 var nativescriptAssetsPath = './nativescript/src/assets';
 
@@ -37,6 +40,9 @@ console.log("Configuring...");
 try {
     if (fs.existsSync(resolve(nativescriptAppPath))) {
         fs.unlinkSync(resolve(nativescriptAppPath));
+    }
+    if (fs.existsSync(resolve(nativescriptAppEnvironmentPath))) {
+        fs.unlinkSync(resolve(nativescriptAppEnvironmentPath));
     }
     if (fs.existsSync(resolve(nativescriptFontsPath))) {
         fs.unlinkSync(resolve(nativescriptFontsPath));
@@ -116,6 +122,7 @@ function createSymLink() {
         console.log("Attempting to Symlink", webAppPath, nativescriptAppPath);
     }
     fs.symlinkSync(resolve(webAppPath), resolve(nativescriptAppPath), 'junction');
+    fs.symlinkSync(resolve(webAppEnvironmentPath), resolve(nativescriptAppEnvironmentPath), 'junction');
     fs.symlinkSync(resolve(webFontsPath), resolve(nativescriptFontsPath), 'junction');
     fs.symlinkSync(resolve(webAssetsPath), resolve(nativescriptAssetsPath), 'junction');
 }
