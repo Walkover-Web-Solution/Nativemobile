@@ -16,9 +16,9 @@
             <GridLayout rows="auto" columns="*" *ngIf="breadCrumb.length === 0">
                 <!--<StackLayout>-->
                     <FlexboxLayout>
-                        <Label text="&#xf002;" fontFamily="FontAwesome" alignSelf="center" margin="0 15"
-                               fontSize="20"></Label>
-                        <TextView hint="Search group and accounts, e.g. Sales" row="0"
+                        <Label [text]="icon" fontFamily="FontAwesome" alignSelf="center" margin="0 15"
+                               fontSize="16"></Label>
+                        <TextView hint="Search group and accounts" row="0"
                                   (textChange)="search($event.object.text)" returnKeyType="send"
                                   class="input customTextView" backgroundColor="white"></TextView>
                     </FlexboxLayout>

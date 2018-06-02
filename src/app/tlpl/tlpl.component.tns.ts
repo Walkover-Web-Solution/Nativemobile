@@ -30,6 +30,7 @@ declare let android: any;
 })
 export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public loader: LoadingIndicator;
+    public icon = String.fromCharCode(0xf002)
     @ViewChild('searchControl') public searchControl: ElementRef;
     public activeCompany: CompanyResponse;
     public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>;
