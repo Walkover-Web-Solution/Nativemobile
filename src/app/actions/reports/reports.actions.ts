@@ -23,6 +23,7 @@ import {Injectable} from '@angular/core';
 import {ToasterService} from '../../services/toaster.service';
 import {BalanceSheetRequest, ProfitLossRequest} from '../../models/api-models/tb-pl-bs';
 import {TlPlService} from '../../services/tl-pl.service';
+import {GeneralActions} from '../general/general.actions';
 
 @Injectable()
 export class ReportsActions {
@@ -84,7 +85,8 @@ export class ReportsActions {
                 };
             }
             else {
-                this._toasterService.errorToast(res[0].message);
+                // this._toasterService.errorToast(res[0].message);
+                this.store.dispatch(this._generalAction.setError(res[0].message));
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR,
                 };
@@ -155,7 +157,8 @@ export class ReportsActions {
                 //     { name: 'Operating Cost', uniqueName: 'operatingcost', intervalBalances: [] } as IGroupHistoryGroups
                 //   ]
                 // };
-                this._toasterService.errorToast(res[0].message);
+                // this._toasterService.errorToast(res[0].message);
+                this.store.dispatch(this._generalAction.setError(res[0].message));
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR,
                 };
@@ -221,7 +224,6 @@ export class ReportsActions {
                     payload: response[0]
                 };
             } else {
-                // this._toasterService.errorToast(response[0].message);
                 return {
                     type: 'EmptyActions'
                 }
@@ -285,7 +287,8 @@ export class ReportsActions {
                     payload: response[0]
                 };
             } else {
-                this._toasterService.errorToast(response[0].message);
+                // this._toasterService.errorToast(response[0].message);
+                this.store.dispatch(this._generalAction.setError(response[0].message));
                 return {
                     type: 'EmptyActions'
                 }
@@ -293,7 +296,7 @@ export class ReportsActions {
         });
 
     constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
-        private _toasterService: ToasterService, private _tlPlService: TlPlService) {
+        private _toasterService: ToasterService, private _tlPlService: TlPlService, private _generalAction: GeneralActions) {
 
     }
 

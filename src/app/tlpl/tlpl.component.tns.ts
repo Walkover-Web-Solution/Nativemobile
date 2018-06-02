@@ -108,11 +108,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     ngAfterViewInit() {
 
-        if (isAndroid) {
-            app.android.on(app.AndroidApplication.activityBackPressedEvent, function (d) {
-                console.log('back btn event');
-            });
-        }
+        // if (isAndroid) {
+        //     app.android.on(app.AndroidApplication.activityBackPressedEvent, function (d) {
+        //         console.log('back btn event');
+        //     });
+        // }
     }
 
     search(term) {
@@ -137,7 +137,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     goBack() {
-        this.hideKeyboard();
+        // this.hideKeyboard();
         (this._routerExtension.router as any).back()
     }
 
@@ -322,7 +322,10 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 let activity = app.android.foregroundActivity;
                 let Context = app.android.currentContext;
                 let inputManager = Context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
-                inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS);
+
+                if (activity.getCurrentFocus()) {
+                    inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS);
+                }
             } catch (err) {
                 console.log(err);
             }

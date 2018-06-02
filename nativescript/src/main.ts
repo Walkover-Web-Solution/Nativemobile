@@ -12,6 +12,7 @@ import 'rxjs/add/operator/mergeMap';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/distinctUntilKeyChanged';
 import 'rxjs/add/operator/combineLatest';
+import 'rxjs/add/operator/skip';
 
 import {AppModule} from './app/app.module';
 import './socialLogin';

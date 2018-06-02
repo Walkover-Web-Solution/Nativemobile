@@ -193,6 +193,7 @@ export interface GeneralState {
     flattenAccounts: IFlattenAccountsResultItem[];
     states: States[];
     currencies: string[];
+    errorString: string;
 }
 
 const initialState: GeneralState = {
@@ -200,7 +201,8 @@ const initialState: GeneralState = {
     contriesWithCodes: [],
     states: null,
     flattenAccounts: null,
-    currencies: initialCurrenciesData
+    currencies: initialCurrenciesData,
+    errorString: ''
 };
 
 export function GeneralReducer(state: GeneralState = initialState, action: CustomActions): GeneralState {
@@ -229,6 +231,12 @@ export function GeneralReducer(state: GeneralState = initialState, action: Custo
                 });
             }
             return state;
+        }
+
+        case GeneralConst.SET_ERROR_STRING: {
+            return Object.assign({}, state, {
+                errorString: action.payload
+            });
         }
         default:
             return state;

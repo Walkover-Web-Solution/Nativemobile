@@ -47,6 +47,7 @@
     "nativescript-ngx-fonticon": "4.0.0",
     "nativescript-permissions": "^1.2.3",
     "nativescript-secure-storage": "2.2.1",
+    "nativescript-snackbar": "^3.1.0",
     "nativescript-social-login": "^4.0.1",
     "nativescript-theme-core": "~1.0.4",
     "nativescript-toast": "~1.4.6",

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {VerifyEmailResponseModel} from '../models/api-models/loginModels';
 import {AppState} from '../store';
@@ -12,12 +12,14 @@ import {RouterService} from '../services/router.service';
 import {ToasterService} from '../services/toaster.service';
 import {Config} from '../common';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {Page} from '../common/utils/environment';
 
 @Component({
     selector: 'ns-home',
     moduleId: module.id,
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.scss']
+    styleUrls: ['./home.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit, OnDestroy {
     public logoutIcon: string = String.fromCharCode(0xf073);
@@ -27,19 +29,27 @@ export class HomeComponent implements OnInit, OnDestroy {
     public isLoggedInWithSocialAccount$: Observable<boolean>;
     public userName: string;
     public activeCompany: CompanyResponse;
-    public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
+    public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>;
     public companies: MyDrawerItem[] = [];
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _loginActions: LoginActions,
-        private _companyActions: CompanyActions, private _toaster: ToasterService) {
+        private _companyActions: CompanyActions, private _toaster: ToasterService, private _cdRef: ChangeDetectorRef, private page: Page) {
         this.userStream$ = this.store.select(s => s.session.user);
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             return { companies, uniqueName };
         }));
         this.isLoggedInWithSocialAccount$ = this.store.select(p => p.login.isLoggedInWithSocialAccount).takeUntil(this.destroyed$);
+        (this.page as any).on((Page as any).unloadedEvent, (ev) => {
+            this.ngOnDestroy();
+        });
     }
 
     public ngOnInit(): void {
+        this.store.select(s => s.session.companyUniqueName).takeUntil(this.destroyed$).subscribe(s => {
+            if (Config.IS_MOBILE_NATIVE) {
+                // this.drawerComponent.sideDrawer.toggleDrawerState();
+            }
+        });
         this.store.dispatch(this._companyActions.refreshCompanies());
 
         this.companyData$.subscribe(res => {
@@ -65,7 +75,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.activeCompany = res.companies.find(cmp => {
                 return cmp.uniqueName === res.uniqueName;
             });
-
+            this._cdRef.detectChanges();
         });
 
         this.userStream$.subscribe(u => {
@@ -122,7 +132,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     public changeCompany(item: MyDrawerItem) {
         this.store.dispatch(this._companyActions.changeCompany(item.customData.uniqueName));
         if (Config.IS_MOBILE_NATIVE) {
-            this.drawerComponent.sideDrawer.toggleDrawerState();
+            // this.drawerComponent.sideDrawer.toggleDrawerState();
         } else {
             this.toggleWebDrawer();
         }

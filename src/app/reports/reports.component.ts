@@ -1,7 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {RouterService} from '../services/router.service';
 import {ChartType} from '../models/interfaces/dashboard.interface';
 import {Config} from '../common/utils';
+import {AppState} from '../store';
+import {Store} from '@ngrx/store';
+import {ToasterService} from '../services/toaster.service';
 
 @Component({
     selector: 'ns-reports',
@@ -10,14 +13,22 @@ import {Config} from '../common/utils';
     styleUrls: ['./reports.component.scss']
 })
 
-export class ReportsComponent {
+export class ReportsComponent implements OnInit{
     public chartType: ChartType = ChartType.ProfitLoss;
     public width: number = 0;
     public pageTitle: string = 'Profit And Loss';
-    constructor(private _routerExtension: RouterService) {
+    constructor(private _routerExtension: RouterService, private store: Store<AppState>, private _toasterService: ToasterService) {
         if (Config.IS_WEB) {
             this.width = (window as any).innerWidth;
         }
+    }
+
+    public ngOnInit() {
+        this.store.select(s => s.general.errorString).subscribe(s => {
+            if (s && s!== '') {
+                this._toasterService.errorToast(s);
+            }
+        });
     }
 
     goBack() {

@@ -165,6 +165,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public googleLogin() {
+        setTimeout(()  => {
+            this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Logging With Google...'}));
+        }, 300);
         let SocialLogin = require('nativescript-social-login');
         const androidApp = app.android;
         let result = SocialLogin.init({
@@ -191,9 +194,10 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         SocialLogin.loginWithGoogle((result) => {
             if (result.error || !result.authCode) {
+                console.log('error: ',result.error);
+                console.log('auth_code_err: ', result.authCode);
                 this._toaster.errorToast('Something Went Wrong! Please Try Again');
             } else {
-                this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Logging With Google...'}));
                 this.authservice.GetAtuhToken(result)
                     .mergeMap((token: any) => this.authservice.LoginWithGoogle(token.access_token))
                     .subscribe(LoginResult => {
@@ -201,6 +205,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                         this.store.dispatch(this._loginActions.signupWithGoogleResponse(LoginResult));
                     }, err => {
                         if (err) {
+                            console.log(err);
                             this._toaster.errorToast('Something Went Wrong! Please Try Again');
                             this.loader.hide();
                         }
