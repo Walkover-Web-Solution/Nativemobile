@@ -18,6 +18,8 @@ import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/debounceTime';
 import * as app from 'application';
 import {isAndroid} from 'platform';
+// const platformModule = require('tns-core-modules/platform');
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 declare let android: any;
 
@@ -30,19 +32,22 @@ declare let android: any;
 })
 export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public loader: LoadingIndicator;
-    public icon = String.fromCharCode(0xf002)
+    public icon = String.fromCharCode(0xf002);
     @ViewChild('searchControl') public searchControl: ElementRef;
     public activeCompany: CompanyResponse;
     public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>;
     public request: TrialBalanceRequest;
     public data$: Observable<AccountDetails>;
     public showLoader$: Observable<boolean>;
+    public mergedGroupAndAccountData: any[] = [];
+    public mergedGroupAndAccountData$: BehaviorSubject<ChildGroup[]> = new BehaviorSubject([]);
     public filterdData: ChildGroup[] = [];
     public breadCrumb: INameUniqueName[] = [];
     public activeGrp: ChildGroup = null;
     public activeAcc: string = '';
     public flattenGrpDetails: any[] = [];
     public searchedFlattenGrpDetails: any[] = [];
+    public searchedFlattenGrpDetails$: BehaviorSubject<any []> = new BehaviorSubject([]);
     public isSearchEnabled: boolean = false;
     public showLedgerScreen: boolean = false;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
@@ -56,7 +61,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         })).takeUntil(this.destroyed$);
         this.data$ = this.store.select(s => s.tlPl.tb.data).takeUntil(this.destroyed$);
         (this.page as any).on((Page as any).unloadedEvent, (ev) => {
-            this.ngOnDestroy()
+            this.ngOnDestroy();
         });
     }
 
@@ -99,7 +104,8 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                     g.isCreated = true;
                 });
                 this.filterdData = d.groupDetails;
-
+                // this.filterdData$.next(_.cloneDeep(this.filterdData));
+                this.mergeGroupAndAccount();
                 this.flattenGrpDetails = this.makeFlatten(d.groupDetails, []);
                 this.detectChanges();
             }
@@ -146,14 +152,24 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store.dispatch(this._tlPlActions.GetTrialBalance(_.cloneDeep(request)));
     }
 
+    itemTap(item: any) {
+        if (item.isGroup) {
+            this.filterData(item);
+        } else {
+            this.goToLedger(item);
+        }
+    }
+
     filterData(grp: ChildGroup) {
         this.showLedgerScreen = false;
         this.activeGrp = grp;
-
+        // this.activeGrpAccount$.next(_.cloneDeep(this.activeGrp.accounts));
         // if (this.breadCrumb.length > 1) {
         this.breadCrumb.push({uniqueName: grp.uniqueName, name: grp.groupName});
         // }
         this.filterdData = grp.childGroups;
+        // this.filterdData$.next(_.cloneDeep(this.filterdData));
+        this.mergeGroupAndAccount();
     }
 
     resetNavigation() {
@@ -167,10 +183,14 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                     g.isCreated = true;
                 });
                 this.filterdData = d.groupDetails;
+                // this.filterdData$.next(_.cloneDeep(this.filterdData));
+                this.mergeGroupAndAccount();
             }
         });
         this.activeAcc = '';
         this.activeGrp = null;
+        // this.activeGrpAccount$.next([]);
+        this.mergeGroupAndAccount();
     }
 
     navigateTo(uniqueName: string) {
@@ -179,7 +199,10 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             let d = _.cloneDeep(p) as AccountDetails;
             let result = this.loopOver(d.groupDetails, uniqueName, null);
             this.activeGrp = result;
+            // this.activeGrpAccount$.next(_.cloneDeep(this.activeGrp.accounts));
             this.filterdData = result.childGroups;
+            // this.filterdData$.next(_.cloneDeep(this.filterdData));
+            this.mergeGroupAndAccount();
         });
         let index = this.breadCrumb.findIndex(f => f.uniqueName === uniqueName);
         this.breadCrumb = this.breadCrumb.filter((f, i) => {
@@ -209,6 +232,8 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     goToLedger(acc: Account) {
         this.activeGrp = null;
+        // this.activeGrpAccount$.next([]);
+        this.mergeGroupAndAccount();
         this.activeAcc = acc.uniqueName;
         this.breadCrumb.push({uniqueName: acc.uniqueName, name: acc.name});
         this.detectChanges();
@@ -225,14 +250,24 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
             if (g.accounts && g.accounts.length > 0) {
                 g.accounts = g.accounts.map(acc => {
-                    acc.parentGrpUniqueName = g.uniqueName;
-                    return acc;
+                    // acc.parentGrpUniqueName = g.uniqueName;
+                    return Object.assign({}, acc, {isGroup: false, parentGrpUniqueName: g.uniqueName});
                 });
                 result.push.apply(result, g.accounts);
                 // result.push(...g.accounts);
             }
         });
         return result;
+    }
+
+    mergeGroupAndAccount() {
+        this.mergedGroupAndAccountData = [];
+        this.mergedGroupAndAccountData.push.apply(this.mergedGroupAndAccountData, this.filterdData.map(g => Object.assign({}, g, {isGroup: true})));
+        if (this.activeGrp && this.activeGrp.accounts && this.activeGrp.accounts.length > 0) {
+            this.mergedGroupAndAccountData.push.apply(this.mergedGroupAndAccountData, this.activeGrp.accounts.map(g => Object.assign({}, g, {isGroup: false})));
+        }
+        this.mergedGroupAndAccountData$.next(_.cloneDeep(this.mergedGroupAndAccountData));
+
     }
 
     searchGWA(term: string) {
@@ -245,25 +280,35 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             this.isSearchEnabled = true;
 
             this.searchedFlattenGrpDetails = this.flattenGrpDetails.filter(fla => {
-                if (fla.isGroup) {
+                // console.log(JSON.stringify(fla));
+
+                console.log(JSON.stringify('searchGWA error'));
+                if (fla && fla['isGroup']) {
                     return ((fla.groupName.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
                 } else {
                     return ((fla.name.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
                 }
+
+
             });
+            this.searchedFlattenGrpDetails$.next(_.cloneDeep(this.searchedFlattenGrpDetails));
         }
         this.detectChanges();
     }
 
     searchResultClicked(res) {
         this.isSearchEnabled = false;
+        console.log(JSON.stringify('I AM GETTING ERROR'));
         if (res.isGroup) {
             this.activeGrp = res;
+            // this.activeGrpAccount$.next(_.cloneDeep(this.activeGrp.accounts));
             this.activeAcc = '';
         } else {
             this.activeAcc = res.uniqueName;
             this.activeGrp = null;
+            // this.activeGrpAccount$.next([]);
         }
+        this.mergeGroupAndAccount();
         this.searchWithNavigation(res);
         this.detectChanges();
     }
@@ -278,15 +323,22 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                     let d = _.cloneDeep(p) as AccountDetails;
                     let result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
                     this.filterdData = result.childGroups;
+                    this.mergeGroupAndAccount();
+                    // this.filterdData$.next(_.cloneDeep(this.filterdData));
                 });
                 r.reverse().forEach(a => {
                     this.breadCrumb.push({uniqueName: a.uniqueName, name: a.isGroup ? a.groupName : a.name});
                 });
             } else {
                 this.filterdData = res.childGroups;
+                // this.filterdData$.next(_.cloneDeep(this.filterdData));
+                this.mergeGroupAndAccount();
             }
+
         } else {
             this.filterdData = res.childGroups;
+            // this.filterdData$.next(_.cloneDeep(this.filterdData));
+            this.mergeGroupAndAccount();
         }
         this.breadCrumb.push({uniqueName: res.uniqueName, name: res.isGroup ? res.groupName : res.name});
         // this.detectChanges();
