@@ -58,6 +58,7 @@ export class AuthenticationService {
             }).catch((e) => this.errorHandler.HandleCatch<string, ResetPasswordV2>(e));
     }
     public SignupWithMobile(model: SignupWithMobile): Observable<BaseResponse<string, SignupWithMobile>> {
+        console.log('service called');
         return this._http.post(this.config.apiUrl + LOGIN_API.SignupWithMobile, model).map((res) => {
             let data: BaseResponse<string, SignupWithMobile> = res;
             data.request = model;

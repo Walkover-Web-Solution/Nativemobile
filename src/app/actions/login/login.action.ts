@@ -58,6 +58,7 @@ export class LoginActions {
         .ofType(LoginConstants.SIGNUP_WITH_MOBILE_REQUEST)
         .switchMap((action: CustomActions) => this._authService.SignupWithMobile(action.payload))
         .map(response => {
+            console.log('Status', response.status);
             if (response.status !== 'success') {
                 this._toaster.errorToast(response.message);
             }

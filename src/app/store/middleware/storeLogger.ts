@@ -56,8 +56,8 @@ const printBuffer = options => logBuffer => {
         const nextStateLevel = getLogLevel(level, formattedAction, [nextState], `nextState`);
 
         if (prevStateLevel) {
-            if (colors.prevState) logger[prevStateLevel](`%c prev state`, `color: ${colors.prevState(prevState)}; font-weight: bold`, prevState);
-            else logger[prevStateLevel](`prev state`, JSON.stringify(prevState));
+            // if (colors.prevState) logger[prevStateLevel](`%c prev state`, `color: ${colors.prevState(prevState)}; font-weight: bold`, prevState);
+            // else logger[prevStateLevel](`prev state`, JSON.stringify(prevState));
         }
 
         if (actionLevel) {
@@ -71,8 +71,8 @@ const printBuffer = options => logBuffer => {
         }
 
         if (nextStateLevel) {
-            if (colors.nextState) logger[nextStateLevel](`%c next state`, `color: ${colors.nextState(nextState)}; font-weight: bold`, nextState);
-            else logger[nextStateLevel](`next state`, JSON.stringify(nextState));
+            // if (colors.nextState) logger[nextStateLevel](`%c next state`, `color: ${colors.nextState(nextState)}; font-weight: bold`, nextState);
+            // else logger[nextStateLevel](`next state`, JSON.stringify(nextState));
         }
 
         try {

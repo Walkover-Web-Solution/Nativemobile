@@ -102,7 +102,7 @@
                                         <!--<ng-template >-->
                                         <StackLayout class="list-group-item" borderBottomWidth="1"
                                                      *ngIf="!grp.isGroup"
-                                                     borderBottomColor="#ebebeb" (tap)="goToLedger($event)">
+                                                     borderBottomColor="#ebebeb" (tap)="goToLedger(grp)">
                                             <Label class="main-text" text="{{ grp.name }}" textWrap="true"></Label>
                                             <GridLayout columns="*,*" rows="auto">
                                                 <StackLayout row="0" col="0">
@@ -124,52 +124,7 @@
                                     </GridLayout>
                                 </ng-template>
                             </ListView>
-                            <!--<StackLayout orientation="vertical" *ngFor="let grp of (filterdData)">-->
 
-                            <!--<StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb" class="list-group-item"-->
-                            <!--(tap)="filterData(grp)">-->
-                            <!--<Label class="main-text" text="{{ grp.groupName }} >"></Label>-->
-                            <!--<GridLayout columns="*,*" rows="auto">-->
-                            <!--<StackLayout row="0" col="0">-->
-                            <!--<Label text="{{ grp.understandingCategoryText }}" class="sub-text"></Label>-->
-                            <!--</StackLayout>-->
-                            <!--<StackLayout row="0" col="1">-->
-                            <!--<FlexboxLayout justifyContent="space-between" class="pull-right">-->
-                            <!--<Label class="main-text"-->
-                            <!--text="{{ grp.closingBalance.amount | number: '1.0-2' }}"-->
-                            <!--marginRight="5"></Label>-->
-                            <!--<Label text="Cr" class="sub-text" marginTop="3"></Label>-->
-                            <!--</FlexboxLayout>-->
-                            <!--</StackLayout>-->
-                            <!--</GridLayout>-->
-                            <!--</StackLayout>-->
-
-                            <!--</StackLayout>-->
-                            <!--Accounts-->
-                            <!--<ListView [items]="activeGrp?.accounts" class="list-group">-->
-                            <!--<ng-template let-acc="item">-->
-
-                            <!--</ng-template>-->
-                            <!--</ListView>-->
-                            <!--<StackLayout orientation="vertical" *ngFor="let acc of activeGrp?.accounts"-->
-                            <!--(tap)="goToLedger(acc)">-->
-                            <!--<StackLayout class="list-group-item" borderBottomWidth="1" borderBottomColor="#ebebeb">-->
-                            <!--<Label class="main-text" text="{{ acc.name }}" textWrap="true"></Label>-->
-                            <!--<GridLayout columns="*,*" rows="auto">-->
-                            <!--<StackLayout row="0" col="0">-->
-                            <!--<Label text="{{ acc.understandingCategoryText }}" class="sub-text"></Label>-->
-                            <!--</StackLayout>-->
-                            <!--<StackLayout row="0" col="1">-->
-                            <!--<FlexboxLayout justifyContent="space-between" class="pull-right">-->
-                            <!--<Label class="main-text"-->
-                            <!--text="{{ acc.closingBalance.amount | number: '1.0-2' }}"-->
-                            <!--marginRight="5"></Label>-->
-                            <!--<Label text="Cr" class="sub-text" marginTop="3"></Label>-->
-                            <!--</FlexboxLayout>-->
-                            <!--</StackLayout>-->
-                            <!--</GridLayout>-->
-                            <!--</StackLayout>-->
-                            <!--</StackLayout>-->
                         </FlexboxLayout>
 
                         <ng-template #searchContainer>
@@ -191,9 +146,11 @@
                 </ng-container>
                 <!--account view-->
                 <ng-container *ngIf="activeAcc !== ''">
-                    <FlexboxLayout flexDirection="column">
-                        <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
-                    </FlexboxLayout>
+                    <ScrollView>
+                        <FlexboxLayout flexDirection="column">
+                            <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
+                        </FlexboxLayout>
+                    </ScrollView>
                 </ng-container>
 
             </FlexboxLayout>

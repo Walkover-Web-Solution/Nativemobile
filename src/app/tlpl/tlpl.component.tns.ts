@@ -233,7 +233,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     goToLedger(acc: Account) {
         this.activeGrp = null;
         // this.activeGrpAccount$.next([]);
-        this.mergeGroupAndAccount();
+        // this.mergeGroupAndAccount();
         this.activeAcc = acc.uniqueName;
         this.breadCrumb.push({uniqueName: acc.uniqueName, name: acc.name});
         this.detectChanges();
@@ -282,7 +282,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             this.searchedFlattenGrpDetails = this.flattenGrpDetails.filter(fla => {
                 // console.log(JSON.stringify(fla));
 
-                console.log(JSON.stringify('searchGWA error'));
                 if (fla && fla['isGroup']) {
                     return ((fla.groupName.toLowerCase().indexOf(term.toLowerCase()) > -1) || (fla.uniqueName.toLowerCase().indexOf(term.toLowerCase()) > -1))
                 } else {
@@ -298,7 +297,6 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     searchResultClicked(res) {
         this.isSearchEnabled = false;
-        console.log(JSON.stringify('I AM GETTING ERROR'));
         if (res.isGroup) {
             this.activeGrp = res;
             // this.activeGrpAccount$.next(_.cloneDeep(this.activeGrp.accounts));
