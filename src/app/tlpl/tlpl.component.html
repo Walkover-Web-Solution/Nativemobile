@@ -59,36 +59,44 @@
                         </span>
                     </div>
 
-                    <div>
-
-                        <ul class="list-nav" *ngIf="!isSearchEnabled; else searchContainer">
-                            <li *ngFor="let grp of (filterdData)" (click)="filterData(grp)">
-                                <div class="inner-item">
-                                    <a class="list-a" matLine>{{ grp.groupName }} ></a>
-                                    <small>{{ grp.understandingCategoryText }}</small>
-                                    <span class="pull-right">{{ grp.closingBalance.amount | number: '1.0-2' }} {{ grp.closingBalance.type === 'DEBIT'
+                    <div [style.height.px]="parentListHeight">
+                        <ng-container *ngIf="!isSearchEnabled; else searchContainer">
+                            <ul class="list-nav vs4-1"
+                                *vsFor="filterdData; tagName:'li'; let _items = vsCollection;scrollParent:'.vs4-1'">
+                                <ng-container *ngFor="let grp of _items">
+                                    <li (click)="filterData(grp)">
+                                        <div class="inner-item">
+                                            <a class="list-a" matLine>{{ grp.groupName }} ></a>
+                                            <small>{{ grp.understandingCategoryText }}</small>
+                                            <span class="pull-right">{{ grp.closingBalance.amount | number: '1.0-2' }} {{ grp.closingBalance.type === 'DEBIT'
                                         ? 'Dr' : 'Cr' }}</span>
-                                </div>
-                            </li>
-                        </ul>
+                                        </div>
+                                    </li>
+                                </ng-container>
+                            </ul>
+                        </ng-container>
 
-                        <ul class="list-nav" *ngIf="activeGrp">
-                            <li *ngFor="let acc of activeGrp.accounts"
-                                (click)="$event.stopPropagation();goToLedger(acc)">
-                                <div class="inner-item">
-                                    <a class="list-a" matLine>
-                                        {{ acc.name }}
-                                    </a>
-                                    <small>{{ acc.understandingCategoryText || 'dummy category' }}</small>
-                                    <span class="pull-right">{{ acc.closingBalance.amount | number: '1.0-2' }} {{ acc.closingBalance.type === 'DEBIT'
+                        <ng-container *ngIf="activeGrp">
+                            <ul class="list-nav vs4-1"
+                                *vsFor="activeGrp.accounts;tagName:'li'; let _items = vsCollection;scrollParent:'.vs4-1'">
+                                <li *ngFor="let acc of _items"
+                                    (click)="$event.stopPropagation();goToLedger(acc)">
+                                    <div class="inner-item">
+                                        <a class="list-a" matLine>
+                                            {{ acc.name }}
+                                        </a>
+                                        <small>{{ acc.understandingCategoryText || 'dummy category' }}</small>
+                                        <span class="pull-right">{{ acc.closingBalance.amount | number: '1.0-2' }} {{ acc.closingBalance.type === 'DEBIT'
                                         ? 'Dr' : 'Cr' }}</span>
-                                </div>
-                            </li>
-                        </ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </ng-container>
 
                         <ng-template #searchContainer>
-                            <mat-nav-list>
-                                <mat-list-item *ngFor="let item of searchedFlattenGrpDetails"
+                            <mat-nav-list class="vs4-2"
+                                *vsFor="searchedFlattenGrpDetails;tagName:'mat-list-item';let _items = vsCollection;scrollParent:'.vs4-2'">
+                                <mat-list-item *ngFor="let item of _items"
                                                (click)="searchResultClicked(item)">
                                     <a matLine>
                                         {{ item.isGroup ? item.groupName : item.name }}

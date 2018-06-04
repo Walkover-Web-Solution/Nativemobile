@@ -32,6 +32,7 @@ import {
 import {MyHeaderComponent} from './my-header/my-header.component';
 import {LaddaModule} from 'angular2-ladda';
 import {AuthServiceConfig, GoogleLoginProvider, LinkedinLoginProvider, SocialLoginModule} from 'ng4-social-login';
+import {VsForDirective} from './ng2-vs-for/ng2-vs-for';
 
 const matModules = [MatButtonModule,
     MatCardModule,
@@ -89,7 +90,8 @@ export function provideConfig() {
         MyLogoutComponent,
         PieChartComponent,
         MyChipsComponent,
-        MyHeaderComponent
+        MyHeaderComponent,
+        VsForDirective
     ],
     exports: [
         MyDrawerComponent,
@@ -99,6 +101,7 @@ export function provideConfig() {
         PieChartComponent,
         MyHeaderComponent,
         LaddaModule,
+        VsForDirective,
         ...matModules
     ],
     schemas: [

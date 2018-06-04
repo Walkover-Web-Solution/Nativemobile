@@ -36,6 +36,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public isSearchEnabled: boolean = false;
     public showLedgerScreen: boolean = false;
     public width: number = 0;
+    public parentListHeight: number = 0;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
@@ -85,7 +86,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        //
+        this.parentListHeight = window.innerHeight - 190;
     }
 
     search(term) {
