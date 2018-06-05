@@ -14,6 +14,7 @@ import { MyChipsComponent } from "../shared/my-chips/my-chips.component";
 import { TNSFontIconModule } from "nativescript-ngx-fonticon";
 import { NativeScriptRouterModule } from "nativescript-angular/router";
 import { MyHeaderComponent } from "./my-header/my-header.component";
+import {VsForDirective} from './ng2-vs-for/ng2-vs-for';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { MyHeaderComponent } from "./my-header/my-header.component";
         MyLogoutComponent,
         PieChartComponent,
         MyChipsComponent,
-        MyHeaderComponent
+        MyHeaderComponent,
+        VsForDirective
     ],
     exports: [
         NativeScriptRouterModule,

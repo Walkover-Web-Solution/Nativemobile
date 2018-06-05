@@ -2,11 +2,11 @@ import {Injectable} from '@angular/core';
 import {APP_DEFAULT_TITLE} from '../app.constants';
 import * as ToastModule from "nativescript-toast";
 import { Toast } from "nativescript-toast";
-// import {SnackBar} from 'nativescript-snackbar';
+import {SnackBar} from 'nativescript-snackbar';
 import * as dialogs from 'ui/dialogs';
 import { isIOS } from "platform";
 
-// let snackbar = new SnackBar();
+let snackbar = new SnackBar();
 
 @Injectable()
 export class ToasterService {
@@ -16,18 +16,18 @@ export class ToasterService {
     }
 
     public successToast(msg: string = 'Something went wrong', title: string = APP_DEFAULT_TITLE): void {
-        // snackbar.simple(msg, 'black', 'green');
-        this.show(msg);
+        snackbar.simple(msg, 'black', 'green');
+        // this.show(msg);
     }
 
     public errorToast(msg: string = 'Something went wrong', title: string = APP_DEFAULT_TITLE): void {
-        // snackbar.simple(msg, 'black', 'red');
-        this.show(msg);
+        snackbar.simple(msg, 'black', 'red');
+        // this.show(msg);
     }
 
     public warningToast(msg: string = 'Something went wrong', title: string = APP_DEFAULT_TITLE): void {
-        // snackbar.simple(msg, 'black', 'orange');
-        this.show(msg);
+        snackbar.simple(msg, 'black', 'orange');
+        // this.show(msg);
     }
 
     public infoToast(msg: string = 'Something went wrong', title: string = APP_DEFAULT_TITLE): void {
