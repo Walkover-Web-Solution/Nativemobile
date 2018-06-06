@@ -76,9 +76,9 @@ export class ReportsActions {
                 of(op)
             );
         }).map((res) => {
+            let config: ChartFilterConfigs = res[1];
             if (res[0].status === 'success') {
                 let obj: CategoryHistoryResponse = res[0].body[0];
-                let config: ChartFilterConfigs = res[1];
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_RESPONSE,
                     payload: { data: obj, config }
@@ -89,6 +89,7 @@ export class ReportsActions {
                 this.store.dispatch(this._generalAction.setError(res[0].message));
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR,
+                    payload: {data: null, config}
                 };
             }
         });
@@ -142,25 +143,19 @@ export class ReportsActions {
                 of(op)
             );
         }).map((res) => {
+            let config: ChartFilterConfigs = res[1];
             if (res[0].status === 'success') {
                 let obj: GroupHistoryResponse = res[0].body;
-                let config: ChartFilterConfigs = res[1];
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_RESPONSE,
                     payload: { data: obj, config }
                 };
             }
             else {
-                // let obj: GroupHistoryResponse = {
-                //   groups: [
-                //     { name: 'Indirect Expenses', uniqueName: 'indirectexpenses', intervalBalances: [] } as IGroupHistoryGroups,
-                //     { name: 'Operating Cost', uniqueName: 'operatingcost', intervalBalances: [] } as IGroupHistoryGroups
-                //   ]
-                // };
-                // this._toasterService.errorToast(res[0].message);
                 this.store.dispatch(this._generalAction.setError(res[0].message));
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR,
+                    payload: { data: null, config }
                 };
             }
         });

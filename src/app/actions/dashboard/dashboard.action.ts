@@ -57,7 +57,7 @@ export class DashboardActions {
                     }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj)
+            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
             return zip(
                 this._dashboardService.GetClosingBalance('operatingcost', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),
                 this._dashboardService.GetClosingBalance('indirectexpenses', op.activeYear.startDate, op.activeYear.endDate, action.payload.refresh),

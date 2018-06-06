@@ -1,7 +1,12 @@
-import { IExpensesChartClosingBalanceResponse, IRevenueChartClosingBalanceResponse, ChartFilterType, ChartType } from "../../models/interfaces/dashboard.interface";
-import { CustomActions } from "../../store/customActions";
-import { DashboardConst } from "../../actions/dashboard/dashboard.const";
-import { ChartCustomFilter } from "../../models/api-models/Dashboard";
+import {
+    ChartFilterType,
+    ChartType,
+    IExpensesChartClosingBalanceResponse,
+    IRevenueChartClosingBalanceResponse
+} from '../../models/interfaces/dashboard.interface';
+import {CustomActions} from '../../store/customActions';
+import {DashboardConst} from '../../actions/dashboard/dashboard.const';
+import {ChartCustomFilter} from '../../models/api-models/Dashboard';
 
 export interface DashboardState {
     expensesChart: IExpensesChartClosingBalanceResponse;
@@ -18,11 +23,11 @@ export interface DashboardState {
 
 const initialState: DashboardState = {
     expensesChart: {
-        chartTitle: '', label: { activeYearLabel: '', lastYearLabel: '' }, indirectexpensesActiveyear: null,
+        chartTitle: '', label: {activeYearLabel: '', lastYearLabel: ''}, indirectexpensesActiveyear: null,
         indirectexpensesLastyear: null, operatingcostActiveyear: null, operatingcostLastyear: null
     },
     revenueChart: {
-        chartTitle: '', label: { activeYearLabel: '', lastYearLabel: '' }, otherincomeActiveyear: null,
+        chartTitle: '', label: {activeYearLabel: '', lastYearLabel: ''}, otherincomeActiveyear: null,
         otherincomeLastyear: null, revenuefromoperationsActiveyear: null, revenuefromoperationsLastyear: null
     },
     expensesChartError: '',
@@ -71,25 +76,33 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                     otherincomeLastyear: data.otherincomeLastyear,
                     chartTitle: data.chartTitle,
                     label: Object.assign({}, state.revenueChart.label, {
-                        lastYearLabel: data.label.activeYearLabel
+                        lastYearLabel: data.label.lastYearLabel
                     })
                 })
             });
         }
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR: {
+            let data = action.payload as IRevenueChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
-                    chartTitle: '', label: { activeYearLabel: '' }, otherincomeActiveyear: null,
-                    revenuefromoperationsActiveyear: null
+                    chartTitle: data.chartTitle, otherincomeActiveyear: null,
+                    revenuefromoperationsActiveyear: null,
+                    label: Object.assign({}, state.revenueChart.label, {
+                        activeYearLabel: data.label.activeYearLabel
+                    })
                 }),
                 revenueChartError: 'Something Went Wrong'
             })
         }
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR: {
+            let data = action.payload as IRevenueChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
-                    chartTitle: '', label: { lastYearLabel: '' }, otherincomeLastyear: null,
-                    revenuefromoperationsLastyear: null
+                    chartTitle: data.chartTitle, otherincomeLastyear: null,
+                    revenuefromoperationsLastyear: null,
+                    label: Object.assign({}, state.revenueChart.label, {
+                        lastYearLabel: data.label.lastYearLabel
+                    })
                 }),
                 revenueChartError: 'Something Went Wrong'
             })
@@ -126,28 +139,30 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         }
 
         case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR: {
+            let data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 expensesChart: Object.assign({}, state.expensesChart, {
                     operatingcostActiveyear: '', indirectexpensesActiveyear: '',
-                    chartTitle: '',
+                    chartTitle: data.chartTitle,
                     label: Object.assign({}, state.expensesChart.label, {
-                        activeYearLabel: ''
+                        activeYearLabel: data.label.activeYearLabel
                     })
                 }),
-                expensesChartFilter: 'Something Went Wrong'
+                expensesChartError: 'Something Went Wrong'
             })
         }
 
         case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_ERROR: {
+            let data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 expensesChart: Object.assign({}, state.expensesChart, {
                     operatingcostLastyear: '', indirectexpensesLastyear: '',
-                    chartTitle: '',
+                    chartTitle: data.chartTitle,
                     label: Object.assign({}, state.expensesChart.label, {
-                        lastYearLabel: ''
+                        lastYearLabel: data.label.lastYearLabel
                     })
                 }),
-                expensesChartFilter: 'Something Went Wrong'
+                expensesChartError: 'Something Went Wrong'
             })
         }
 

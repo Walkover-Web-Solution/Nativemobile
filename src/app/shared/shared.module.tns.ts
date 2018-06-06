@@ -36,7 +36,7 @@ import {VsForDirective} from './ng2-vs-for/ng2-vs-for';
         PieChartComponent,
         MyChipsComponent,
         MyHeaderComponent,
-        VsForDirective
+        // VsForDirective
     ],
     exports: [
         NativeScriptRouterModule,

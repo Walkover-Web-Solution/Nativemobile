@@ -212,23 +212,24 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             });
         }
         case ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR: {
+            let config: ChartFilterConfigs = _.cloneDeep(action.payload.config);
             isErrorInIncomeData = true;
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
                     incomeData: null,
                     expensesData: null,
                     legend: [],
-                    from: '',
-                    to: '',
-                    lable: ''
+                    from: config.activeYear.startDate,
+                    to: config.activeYear.endDate,
+                    lable: config.activeYear.lable
                 }),
                 previousData: Object.assign({}, state.previousData, {
                     incomeData: null,
                     expensesData: null,
                     legend: [],
-                    from: '',
-                    to: '',
-                    lable: ''
+                    from: config.lastYear.startDate,
+                    to: config.lastYear.endDate,
+                    lable: config.lastYear.lable
                 })
             });
         }
@@ -410,23 +411,24 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         }
 
         case ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR: {
+            let config: ChartFilterConfigs = _.cloneDeep(action.payload.config);
             isErrorInExpenseData = true;
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
                     expensesData: null,
                     incomeData: null,
                     legend: [],
-                    from: '',
-                    to: '',
-                    lable: ''
+                    from: config.activeYear.startDate,
+                    to: config.activeYear.endDate,
+                    lable: config.activeYear.lable
                 }),
                 previousData: Object.assign({}, state.previousData, {
                     expensesData: null,
                     incomeData: null,
                     legend: [],
-                    from: '',
-                    to: '',
-                    lable: ''
+                    from: config.lastYear.startDate,
+                    to: config.lastYear.endDate,
+                    lable: config.lastYear.lable
                 })
             });
         }
