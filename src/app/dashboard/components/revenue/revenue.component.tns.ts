@@ -149,7 +149,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: 'Revenue',
                 innerSize: '90%',
                 data: []
             }],
@@ -195,7 +195,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: 'Revenue',
                 innerSize: '90%',
                 data: []
             }],
