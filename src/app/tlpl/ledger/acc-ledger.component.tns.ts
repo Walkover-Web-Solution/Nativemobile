@@ -64,6 +64,8 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             dr: ''
         }
     };
+    public debitTrxHeight: number = 0;
+    public creditTrxHeight: number = 0;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
@@ -88,6 +90,8 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             if (t) {
                 this.totalPages = t.totalPages;
                 this.diffTotal = (t.closingBalance.amount - t.forwardedBalance.amount);
+                this.debitTrxHeight = Math.min((t.debitTransactions.length) * 40, (40 * 30));
+                this.creditTrxHeight = Math.min((t.creditTransactions.length) * 40, (40 * 30));
                 this.detectChanges();
             }
         });
@@ -112,6 +116,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     loadMore() {
+        console.log('called', this.request.page, this.totalPages);
         if (this.request.page === this.totalPages) {
             return;
         } else {

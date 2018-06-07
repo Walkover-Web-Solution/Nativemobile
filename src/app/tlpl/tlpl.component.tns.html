@@ -146,11 +146,11 @@
                 </ng-container>
                 <!--account view-->
                 <ng-container *ngIf="activeAcc !== ''">
-                    <ScrollView>
+                    <!--<ScrollView>-->
                         <FlexboxLayout flexDirection="column">
                             <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
                         </FlexboxLayout>
-                    </ScrollView>
+                    <!--</ScrollView>-->
                 </ng-container>
 
             </FlexboxLayout>

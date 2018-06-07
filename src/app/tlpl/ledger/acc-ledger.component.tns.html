@@ -1,258 +1,275 @@
-<FlexboxLayout flexDirection="column">
-    <!--date picker label -->
-    <FlexboxLayout flexDirection="row" justifyContent="space-between" padding="5" class="text-color" flexGrow="1"
-                   flexShrink="0">
-        <Label class="" text="From Date"></Label>
-        <Label class="" text="To Date"></Label>
-    </FlexboxLayout>
-
-    <!--date picker-->
-    <GridLayout rows="auto" columns="*,*" marginBottom="20" flexGrow="1" flexShrink="0">
-
-        <StackLayout row="0" col="0" padding="5" (tap)="openFromDatePicker('from')">
-            <StackLayout padding="10" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
-                         borderRightWidth="1"
-                         borderColor="#D2D2D4">
-                <Label text="{{ request.from }}" textWrap="true"
-                       verticalAlignment="bottom"></Label>
-            </StackLayout>
-        </StackLayout>
-
-        <StackLayout row="0" col="1" padding="5" (tap)="openFromDatePicker('to')">
-            <StackLayout padding="10" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
-                         borderRightWidth="1"
-                         borderColor="#D2D2D4">
-                <Label text="{{ request.to }}" textWrap="true" class="pull-right"
-                       verticalAlignment="bottom"></Label>
-            </StackLayout>
-        </StackLayout>
-
-    </GridLayout>
-
-    <!--opening / closing label-->
-    <FlexboxLayout flexDirection="row" justifyContent="space-between" class="text-color" padding="5 10" flexGrow="1"
-                   flexShrink="0">
-        <Label text="Opening"></Label>
-        <Label text="Closing"></Label>
-    </FlexboxLayout>
-
-    <!--opening / closing value-->
-    <FlexboxLayout flexDirection="row" justifyContent="space-between" padding="5 10" marginBottom="20" flexGrow="1"
-                   flexShrink="0">
-
-        <FlexboxLayout>
-            <Label text="Cr. " *ngIf="(transactionData$ | async)?.forwardedBalance.type === 'CREDIT'"
-                   marginTop="7"></Label>
-            <Label class="num-bold"
-                   text="{{ (transactionData$ | async)?.forwardedBalance.amount  | number: '1.0-2'}}"></Label>
-            <Label text=" Dr." *ngIf="(transactionData$ | async)?.forwardedBalance.type === 'DEBIT'"
-                   marginTop="7"></Label>
-        </FlexboxLayout>
-
-        <StackLayout orientation="horizontal" class="text-color">
-
-            <Label text="&#xf068;" fontFamily="FontAwesome" marginRight="3" verticalAlignment="center"></Label>
-            <FlexboxLayout>
-                <Label text=" Cr. " *ngIf="(transactionData$ | async)?.forwardedBalance.amount > (transactionData$ |
-                        async)?.closingBalance.amount" marginTop="3"></Label>
-                <Label text="{{ diffTotal | number: '1.0-2' }}" marginTop="3"></Label>
-                <Label text=" Dr. " *ngIf="(transactionData$ | async)?.closingBalance.amount > (transactionData$ |
-                        async)?.forwardedBalance.amount" marginTop="3"></Label>
+<StackLayout>
+    <ScrollView>
+        <GridLayout rows="auto,auto,auto,auto,auto,auto,auto,auto,auto">
+            <!--date picker label -->
+            <FlexboxLayout row="0" flexDirection="row" justifyContent="space-between" padding="5" class="text-color"
+                           flexGrow="1"
+                           flexShrink="0">
+                <Label class="" text="From Date"></Label>
+                <Label class="" text="To Date"></Label>
             </FlexboxLayout>
-            <Label text="&#xf061;" fontFamily="FontAwesome" marginLeft="3" verticalAlignment="center"></Label>
-        </StackLayout>
 
-        <FlexboxLayout class="pull-right">
-            <Label text="Cr. " *ngIf="(transactionData$ | async)?.closingBalance.type === 'CREDIT'"
-                   marginTop="7"></Label>
-            <Label class="num-bold"
-                   text="{{ (transactionData$ | async)?.closingBalance.amount  | number: '1.0-2'}}"></Label>
-            <Label text=" Dr." *ngIf="(transactionData$ | async)?.closingBalance.type === 'DEBIT'"
-                   marginTop="7"></Label>
-        </FlexboxLayout>
+            <!--date picker-->
+            <GridLayout rows="auto" row="1" columns="*,*" marginBottom="20" flexGrow="1" flexShrink="0">
 
-    </FlexboxLayout>
+                <StackLayout row="0" col="0" padding="5" (tap)="openFromDatePicker('from')">
+                    <StackLayout padding="10" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
+                                 borderRightWidth="1"
+                                 borderColor="#D2D2D4">
+                        <Label text="{{ request.from }}" textWrap="true"
+                               verticalAlignment="bottom"></Label>
+                    </StackLayout>
+                </StackLayout>
 
-    <!--credit / debit tab-->
-    <GridLayout rows="auto" columns="*,*" backgroundColor="#D2D2D4" flexGrow="1" flexShrink="0">
-        <StackLayout class="tab-button" row="0" col="0" borderBottomWidth="1" borderTopWidth="1"
-                     borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4"
-                     [ngClass]="{'active-tab': activeTab === 'debit'}"
-                     (tap)="toggleActiveTab()">
-            <Label text="Debit"></Label>
-        </StackLayout>
-        <StackLayout class="tab-button" row="0" col="1" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
-                     borderRightWidth="1" borderColor="#D2D2D4" [ngClass]="{'active-tab': activeTab === 'credit'}"
-                     (tap)="toggleActiveTab()">
-            <Label class="pull-right" text="Credit"></Label>
-        </StackLayout>
+                <StackLayout row="0" col="1" padding="5" (tap)="openFromDatePicker('to')">
+                    <StackLayout padding="10" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
+                                 borderRightWidth="1"
+                                 borderColor="#D2D2D4">
+                        <Label text="{{ request.to }}" textWrap="true" class="pull-right"
+                               verticalAlignment="bottom"></Label>
+                    </StackLayout>
+                </StackLayout>
 
-    </GridLayout>
+            </GridLayout>
 
-    <!--balance understanding tax debit-->
-    <GridLayout rows="auto,auto" borderLeftWidth="1" borderRightWidth="1"
-                borderColor="#D2D2D4" padding="10" *ngIf="activeTab === 'debit'" flexGrow="1" flexShrink="0">
-        <StackLayout row="0">
-            <Label class="text-color font-18" text="{{ ledgerUnderStandingObj.text.dr }}"></Label>
-        </StackLayout>
-    </GridLayout>
+            <!--opening / closing label-->
+            <FlexboxLayout flexDirection="row" row="2" justifyContent="space-between" class="text-color" padding="5 10"
+                           flexGrow="1"
+                           flexShrink="0">
+                <Label text="Opening"></Label>
+                <Label text="Closing"></Label>
+            </FlexboxLayout>
 
-    <GridLayout rows="auto" columns="*,2*,*" class="font-18" borderLeftWidth="1" borderRightWidth="1"
-                borderColor="#D2D2D4" flexGrow="1" flexShrink="0">
+            <!--opening / closing value-->
+            <FlexboxLayout flexDirection="row" row="3" justifyContent="space-between" padding="5 10" marginBottom="20"
+                           flexGrow="1"
+                           flexShrink="0">
 
-        <StackLayout padding="7" row="0" col="0">
-            <Label></Label>
-        </StackLayout>
-        <StackLayout padding="7" row="0" col="1">
-            <Label text="B/F" marginRight="20" class="pull-right"></Label>
-        </StackLayout>
-        <StackLayout padding="10" row="0" col="2">
-            <Label text="{{ (transactionData$ | async)?.forwardedBalance.amount | number: '1.0-2'}}"></Label>
-        </StackLayout>
-    </GridLayout>
+                <FlexboxLayout>
+                    <Label text="Cr. " *ngIf="(transactionData$ | async)?.forwardedBalance.type === 'CREDIT'"
+                           marginTop="7"></Label>
+                    <Label class="num-bold"
+                           text="{{ (transactionData$ | async)?.forwardedBalance.amount  | number: '1.0-2'}}"></Label>
+                    <Label text=" Dr." *ngIf="(transactionData$ | async)?.forwardedBalance.type === 'DEBIT'"
+                           marginTop="7"></Label>
+                </FlexboxLayout>
 
-    <!--balance understanding tax credit-->
-    <GridLayout rows="auto" borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1"
-                borderColor="#D2D2D4" *ngIf="activeTab === 'credit'" flexGrow="1" flexShrink="0">
-        <StackLayout row="1" padding="10" class="text-color font-18">
-            <Label text="{{ ledgerUnderStandingObj.text.cr }}" class="pull-right"></Label>
-        </StackLayout>
-    </GridLayout>
+                <StackLayout orientation="horizontal" class="text-color">
 
-    <!--transactions-->
-    <FlexboxLayout flexDirection="column" flexGrow="1" flexShrink="0">
-        <!--debit transactions-->
-        <ng-container *ngIf="activeTab === 'debit'">
-            <ListView [items]="(transactionData$ | async)?.debitTransactions" class="list-group">
-                <ng-template let-txn="item">
-                    <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderLeftWidth="1"
-                                borderRightWidth="1" borderColor="#D2D2D4"
-                                class="font-16">
-                        <StackLayout col="0" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                            <Label text="{{ txn.entryDate | date: 'dd-MM-yy' }}"></Label>
-                        </StackLayout>
-                        <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                            <Label *ngIf="!txn.isCompoundEntry; else compoundED"
-                                   text="{{ txn.particular.name }}"></Label>
-                            <ng-template #compoundED>
-                                <Label borderBottomWidth="1" text="{{ txn.particular.name }}"
-                                       (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
-                            </ng-template>
-                        </FlexboxLayout>
-                        <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                            <FlexboxLayout justifyContent="space-between">
-                                <Label text="{{ txn.amount | number: '1.0-2' }}" horizontalAlignment="left"></Label>
+                    <Label text="&#xf068;" fontFamily="FontAwesome" marginRight="3" verticalAlignment="center"></Label>
+                    <FlexboxLayout>
+                        <Label text=" Cr. " *ngIf="(transactionData$ | async)?.forwardedBalance.amount > (transactionData$ |
+                        async)?.closingBalance.amount" marginTop="3"></Label>
+                        <Label text="{{ diffTotal | number: '1.0-2' }}" marginTop="3"></Label>
+                        <Label text=" Dr. " *ngIf="(transactionData$ | async)?.closingBalance.amount > (transactionData$ |
+                        async)?.forwardedBalance.amount" marginTop="3"></Label>
+                    </FlexboxLayout>
+                    <Label text="&#xf061;" fontFamily="FontAwesome" marginLeft="3" verticalAlignment="center"></Label>
+                </StackLayout>
 
-                                <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
-                                             (tap)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
-                                             matTooltip="Download file : {{txn.attachedFileName}}">
-                                    <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
-                                           marginTop="5"></Label>
-                                    <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
+                <FlexboxLayout class="pull-right">
+                    <Label text="Cr. " *ngIf="(transactionData$ | async)?.closingBalance.type === 'CREDIT'"
+                           marginTop="7"></Label>
+                    <Label class="num-bold"
+                           text="{{ (transactionData$ | async)?.closingBalance.amount  | number: '1.0-2'}}"></Label>
+                    <Label text=" Dr." *ngIf="(transactionData$ | async)?.closingBalance.type === 'DEBIT'"
+                           marginTop="7"></Label>
+                </FlexboxLayout>
+
+            </FlexboxLayout>
+
+            <!--credit / debit tab-->
+            <GridLayout rows="auto" columns="*,*" row="4" backgroundColor="#D2D2D4" flexGrow="1" flexShrink="0">
+                <StackLayout class="tab-button" row="0" col="0" borderBottomWidth="1" borderTopWidth="1"
+                             borderLeftWidth="1" borderRightWidth="1" borderColor="#D2D2D4"
+                             [ngClass]="{'active-tab': activeTab === 'debit'}"
+                             (tap)="toggleActiveTab()">
+                    <Label text="Debit"></Label>
+                </StackLayout>
+                <StackLayout class="tab-button" row="0" col="1" borderBottomWidth="1" borderTopWidth="1"
+                             borderLeftWidth="1"
+                             borderRightWidth="1" borderColor="#D2D2D4"
+                             [ngClass]="{'active-tab': activeTab === 'credit'}"
+                             (tap)="toggleActiveTab()">
+                    <Label class="pull-right" text="Credit"></Label>
+                </StackLayout>
+
+            </GridLayout>
+
+            <!--balance understanding tax debit-->
+            <GridLayout rows="auto,auto" row="5" borderLeftWidth="1" borderRightWidth="1"
+                        borderColor="#D2D2D4" padding="10" *ngIf="activeTab === 'debit'" flexGrow="1" flexShrink="0">
+                <StackLayout row="0">
+                    <Label class="text-color font-18" text="{{ ledgerUnderStandingObj.text.dr }}"></Label>
+                </StackLayout>
+            </GridLayout>
+            <!--debit bf balance-->
+            <GridLayout rows="auto" row="6" columns="*,2*,*" class="font-18" borderLeftWidth="1" borderRightWidth="1"
+                        borderColor="#D2D2D4" flexGrow="1" flexShrink="0" *ngIf="activeTab === 'debit'">
+
+                <StackLayout padding="7" row="0" col="0">
+                    <Label></Label>
+                </StackLayout>
+                <StackLayout padding="7" row="0" col="1">
+                    <Label text="B/F" marginRight="20" class="pull-right"></Label>
+                </StackLayout>
+                <StackLayout padding="10" row="0" col="2">
+                    <Label text="{{ (transactionData$ | async)?.forwardedBalance.amount | number: '1.0-2'}}"></Label>
+                </StackLayout>
+            </GridLayout>
+
+            <!--balance understanding tax credit-->
+            <GridLayout rows="auto" row="5" borderBottomWidth="1" borderLeftWidth="1" borderRightWidth="1"
+                        borderColor="#D2D2D4" *ngIf="activeTab === 'credit'" flexGrow="1" flexShrink="0">
+                <StackLayout row="1" padding="10" class="text-color font-18">
+                    <Label text="{{ ledgerUnderStandingObj.text.cr }}" class="pull-right"></Label>
+                </StackLayout>
+            </GridLayout>
+
+            <!--transactions-->
+            <FlexboxLayout flexDirection="column" row="{{ activeTab === 'debit' ? 7 : 6}}">
+                <!--debit transactions-->
+                <ng-container *ngIf="activeTab === 'debit'">
+                    <ListView [items]="(transactionData$ | async)?.debitTransactions" class="list-group"
+                              [height]="debitTrxHeight" (loadMoreItems)="loadMore()">
+                        <ng-template let-txn="item">
+                            <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderLeftWidth="1"
+                                        borderRightWidth="1" borderColor="#D2D2D4"
+                                        class="font-16">
+                                <StackLayout col="0" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+                                    <Label text="{{ txn.entryDate | date: 'dd-MM-yy' }}"></Label>
                                 </StackLayout>
-                                <StackLayout *ngIf="txn.voucherGenerated"
-                                             (tap)="downloadInvoice(txn.voucherNumber, $event)"
-                                             matTooltip="Download Invoice : {{txn.voucherNumber}}">
-                                    <Label text="&#xf019;" fontFamily="FontAwesome" marginTop="5"
-                                           fontSize="14"></Label>
+                                <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+                                    <Label *ngIf="!txn.isCompoundEntry; else compoundED"
+                                           text="{{ txn.particular.name }}"></Label>
+                                    <ng-template #compoundED>
+                                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}"
+                                               (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
+                                    </ng-template>
+                                </FlexboxLayout>
+                                <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+                                    <FlexboxLayout justifyContent="space-between">
+                                        <Label text="{{ txn.amount | number: '1.0-2' }}"
+                                               horizontalAlignment="left"></Label>
+
+                                        <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
+                                                     (tap)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
+                                                     matTooltip="Download file : {{txn.attachedFileName}}">
+                                            <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
+                                                   marginTop="5"></Label>
+                                            <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
+                                        </StackLayout>
+                                        <StackLayout *ngIf="txn.voucherGenerated"
+                                                     (tap)="downloadInvoice(txn.voucherNumber, $event)"
+                                                     matTooltip="Download Invoice : {{txn.voucherNumber}}">
+                                            <Label text="&#xf019;" fontFamily="FontAwesome" marginTop="5"
+                                                   fontSize="14"></Label>
+                                        </StackLayout>
+                                    </FlexboxLayout>
+
                                 </StackLayout>
-                            </FlexboxLayout>
+                            </GridLayout>
+                        </ng-template>
+                    </ListView>
+                </ng-container>
 
-                        </StackLayout>
-                    </GridLayout>
-                </ng-template>
-            </ListView>
-        </ng-container>
-
-        <!--credit transactions-->
-        <ng-container *ngIf="activeTab === 'credit'">
-            <ListView [items]="(transactionData$ | async)?.creditTransactions" class="list-group">
-                <ng-template let-txn="item">
-                    <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderLeftWidth="1"
-                                borderRightWidth="1" borderColor="#D2D2D4"
-                                class="font-18">
-                        <StackLayout col="0" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                            <Label text="{{ txn.entryDate | date: 'dd-MM-yy' }}"></Label>
-                        </StackLayout>
-                        <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                            <Label *ngIf="!txn.isCompoundEntry; else compoundEC"
-                                   text="{{ txn.particular.name }}"></Label>
-                            <ng-template #compoundEC>
-                                <Label borderBottomWidth="1" text="{{ txn.particular.name }}"
-                                       (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
-                            </ng-template>
-                        </FlexboxLayout>
-                        <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
-                            <FlexboxLayout justifyContent="space-between">
-                                <Label text="{{ txn.amount | number: '1.0-2' }}"></Label>
-
-                                <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
-                                             (tap)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
-                                             matTooltip="Download file : {{txn.attachedFileName}}">
-                                    <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
-                                           marginTop="5"></Label>
-                                    <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
+                <!--credit transactions-->
+                <ng-container *ngIf="activeTab === 'credit'">
+                    <ListView [items]="(transactionData$ | async)?.creditTransactions" class="list-group"
+                              [height]="creditTrxHeight" (loadMoreItems)="loadMore()">
+                        <ng-template let-txn="item">
+                            <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderLeftWidth="1"
+                                        borderRightWidth="1" borderColor="#D2D2D4"
+                                        class="font-18">
+                                <StackLayout col="0" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+                                    <Label text="{{ txn.entryDate | date: 'dd-MM-yy' }}"></Label>
                                 </StackLayout>
-                                <StackLayout *ngIf="txn.voucherGenerated"
-                                             (tap)="downloadInvoice(txn.voucherNumber, $event)"
-                                             matTooltip="Download Invoice : {{txn.voucherNumber}}">
-                                    <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
-                                           marginTop="5"></Label>
+                                <FlexboxLayout col="1" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+                                    <Label *ngIf="!txn.isCompoundEntry; else compoundEC"
+                                           text="{{ txn.particular.name }}"></Label>
+                                    <ng-template #compoundEC>
+                                        <Label borderBottomWidth="1" text="{{ txn.particular.name }}"
+                                               (tap)="openCompoundEntry(txn.entryUniqueName)"></Label>
+                                    </ng-template>
+                                </FlexboxLayout>
+                                <StackLayout col="2" padding="10" borderRightWidth="1" borderColor="#D2D2D4">
+                                    <FlexboxLayout justifyContent="space-between">
+                                        <Label text="{{ txn.amount | number: '1.0-2' }}"></Label>
+
+                                        <StackLayout *ngIf="txn.attachedFileUniqueName.length > 0"
+                                                     (tap)="downloadAttachedFile(txn.attachedFileUniqueName , $event)"
+                                                     matTooltip="Download file : {{txn.attachedFileName}}">
+                                            <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
+                                                   marginTop="5"></Label>
+                                            <!--<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;"></i>-->
+                                        </StackLayout>
+                                        <StackLayout *ngIf="txn.voucherGenerated"
+                                                     (tap)="downloadInvoice(txn.voucherNumber, $event)"
+                                                     matTooltip="Download Invoice : {{txn.voucherNumber}}">
+                                            <Label text="&#xf019;" fontFamily="FontAwesome" fontSize="14"
+                                                   marginTop="5"></Label>
+                                        </StackLayout>
+                                    </FlexboxLayout>
+
                                 </StackLayout>
-                            </FlexboxLayout>
+                            </GridLayout>
+                        </ng-template>
+                    </ListView>
+                </ng-container>
 
-                        </StackLayout>
-                    </GridLayout>
-                </ng-template>
-            </ListView>
-        </ng-container>
+            </FlexboxLayout>
+            <!--credit cf balance-->
+            <GridLayout rows="auto" columns="*,2*,*" row="7" borderBottomWidth="1" borderTopWidth="1"
+                        borderLeftWidth="1"
+                        borderRightWidth="1" *ngIf="activeTab === 'credit'"
+                        borderColor="#D2D2D4" class="font-18" flexGrow="1" flexShrink="0">
+                <StackLayout padding="10" row="0" col="0">
+                    <Label></Label>
+                </StackLayout>
+                <StackLayout padding="10" row="0" col="1">
+                    <Label text="C/F" marginRight="20" class="pull-right"></Label>
+                </StackLayout>
+                <StackLayout padding="10" row="0" col="2">
+                    <Label text="{{ (transactionData$ | async)?.closingBalance.amount | number: '1.0-2'}}"></Label>
+                </StackLayout>
+            </GridLayout>
 
-    </FlexboxLayout>
-    <!--credit cf balance-->
-    <GridLayout rows="auto" columns="*,2*,*" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1"
-                borderRightWidth="1" *ngIf="activeTab === 'credit'"
-                borderColor="#D2D2D4" class="font-18" flexGrow="1" flexShrink="0">
-        <StackLayout padding="10" row="0" col="0">
-            <Label></Label>
-        </StackLayout>
-        <StackLayout padding="10" row="0" col="1">
-            <Label text="C/F" marginRight="20" class="pull-right"></Label>
-        </StackLayout>
-        <StackLayout padding="10" row="0" col="2">
-            <Label text="{{ (transactionData$ | async)?.closingBalance.amount | number: '1.0-2'}}"></Label>
-        </StackLayout>
-    </GridLayout>
+            <!--debit total-->
+            <GridLayout rows="auto" columns="*,*" borderBottomWidth="1" row="8" borderTopWidth="1" borderLeftWidth="1"
+                        borderRightWidth="1"
+                        borderColor="#D2D2D4" class="font-18" *ngIf="activeTab === 'debit'">
 
-    <!--debit total-->
-    <GridLayout rows="auto" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1"
-                borderColor="#D2D2D4" class="font-18" *ngIf="activeTab === 'debit'">
-        <StackLayout row="1" padding="10" flexGrow="1" flexShrink="0">
-            <Label text="{{ (transactionData$ | async)?.debitTotal | number: '1.0-2' }}" borderBottomWidth="2"
-                   class="pull-right"></Label>
-        </StackLayout>
-    </GridLayout>
+                <!--load more button-->
+                <FlexboxLayout row="1" col="0" alignItems="center">
+                    <Button class="btn btn-primary" id="button" text="Load More" (tap)="loadMore()"
+                            [isEnabled]="request.page !== totalPages && totalPages !== 0"></Button>
+                </FlexboxLayout>
+                <StackLayout row="1" padding="10" col="1">
+                    <Label text="{{ (transactionData$ | async)?.debitTotal | number: '1.0-2' }}" borderBottomWidth="2"
+                           class="pull-right"></Label>
+                </StackLayout>
+            </GridLayout>
 
-    <!--credit total-->
-    <GridLayout rows="auto" borderBottomWidth="1" borderTopWidth="1" borderLeftWidth="1" borderRightWidth="1"
-                borderColor="#D2D2D4" class="font-18" *ngIf="activeTab === 'credit'" flexGrow="1" flexShrink="0">
-        <StackLayout row="1" padding="10">
-            <Label text="{{ (transactionData$ | async)?.creditTotal | number: '1.0-2' }}" borderBottomWidth="2"
-                   class="pull-right"></Label>
-        </StackLayout>
-    </GridLayout>
+            <!--credit total-->
+            <GridLayout rows="auto" columns="*,*" borderBottomWidth="1" row="8" borderTopWidth="1" borderLeftWidth="1"
+                        borderRightWidth="1"
+                        borderColor="#D2D2D4" class="font-18" *ngIf="activeTab === 'credit'">
 
-    <!--load more button-->
-    <GridLayout rows="auto" flexGrow="1" flexShrink="0">
-        <FlexboxLayout row="0" justifyContent="center" alignItems="center">
-            <Button class="btn btn-primary" id="button" text="Load More" (tap)="loadMore()"
-                    [isEnabled]="request.page !== totalPages && totalPages !== 0"></Button>
-        </FlexboxLayout>
-    </GridLayout>
+                <FlexboxLayout row="1" col="0" alignItems="center">
+                    <Button class="btn btn-primary" id="button" text="Load More" (tap)="loadMore()"
+                            [isEnabled]="request.page !== totalPages && totalPages !== 0"></Button>
+                </FlexboxLayout>
+                <StackLayout row="1" col="1" padding="10">
+                    <Label text="{{ (transactionData$ | async)?.creditTotal | number: '1.0-2' }}" borderBottomWidth="2"
+                           class="pull-right"></Label>
+                </StackLayout>
+            </GridLayout>
 
-    <GridLayout rows="auto" flexGrow="1" flexShrink="0">
-        <ActivityIndicator row="0" [busy]="isBusy" width="100" height="100"
-                           class="activity-indicator"></ActivityIndicator>
-    </GridLayout>
-</FlexboxLayout>
-
-
+            <!--loader-->
+            <GridLayout rows="auto" row="9" *ngIf="isBusy">
+                <ActivityIndicator row="0" [busy]="isBusy" width="100" height="100"
+                                   class="activity-indicator"></ActivityIndicator>
+            </GridLayout>
+        </GridLayout>
+    </ScrollView>
+</StackLayout>
