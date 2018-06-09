@@ -20,12 +20,12 @@ import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntry
 import {ITransactionItem} from '../../models/interfaces/ledger.interface';
 import {isIOS} from '../../common/utils/environment';
 import * as permissions from 'nativescript-permissions';
+import {of} from 'rxjs/observable/of';
 
 declare var java;
 declare var NSUTF8StringEncoding;
 declare var NSString;
 const fileSystemModule = require('tns-core-modules/file-system');
-const applicationModule = require('tns-core-modules/application');
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -49,6 +49,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     public isTransactionRequestInProcess$: Observable<boolean>;
     public isBusy: boolean = false;
     public activeTab: 'credit' | 'debit' = 'debit';
+    public activeTransaction$: Observable<ITransactionItem[]>;
     public totalPages: number = 1;
     public diffTotal: number = 0;
     public activeAccount$: Observable<AccountResponse>;
@@ -72,7 +73,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
                 private _cdRef: ChangeDetectorRef, private modalService: ModalDialogService, private viewContainerRef: ViewContainerRef) {
         this.request = new TransactionsRequest();
         this.request.page = 0;
-        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$).shareReplay();
+        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
         this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
         this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
         this.activeAccount$ = this.store.select(p => p.tlPl.accountDetails).takeUntil(this.destroyed$);
@@ -88,10 +89,11 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
         this.transactionData$.subscribe(t => {
             if (t) {
+                this.activeTransaction$ = this.activeTab === 'debit' ? of(t.debitTransactions) : of(t.creditTransactions);
                 this.totalPages = t.totalPages;
                 this.diffTotal = (t.closingBalance.amount - t.forwardedBalance.amount);
-                this.debitTrxHeight = Math.min((t.debitTransactions.length) * 40, (40 * 30));
-                this.creditTrxHeight = Math.min((t.creditTransactions.length) * 40, (40 * 30));
+                // this.debitTrxHeight = Math.min((t.debitTransactions.length) * 40, (40 * 30));
+                // this.creditTrxHeight = Math.min((t.creditTransactions.length) * 40, (40 * 30));
                 this.detectChanges();
             }
         });
@@ -252,6 +254,9 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         } else {
             this.activeTab = 'credit';
         }
+        this.transactionData$.take(1).subscribe(s => {
+            this.activeTransaction$ = this.activeTab === 'debit' ? of(s.debitTransactions) : of(s.creditTransactions);
+        });
         this.detectChanges();
     }
 

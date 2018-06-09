@@ -2,6 +2,7 @@ import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { NativeScriptUISideDrawerModule } from "nativescript-ui-sidedrawer/angular";
 import { NativeScriptUIGaugeModule } from "nativescript-ui-gauge/angular";
+import { NativeScriptUIListViewModule } from "nativescript-ui-listview/angular";
 
 import { MyDrawerItemComponent } from "./my-drawer-item/my-drawer-item.component";
 import { MyDrawerComponent } from "./my-drawer/my-drawer.component";
@@ -22,6 +23,7 @@ import {VsForDirective} from './ng2-vs-for/ng2-vs-for';
         NativeScriptRouterModule,
         NativeScriptUISideDrawerModule,
         NativeScriptUIGaugeModule,
+        NativeScriptUIListViewModule,
         DropDownModule,
         TNSCheckBoxModule,
         TNSFontIconModule.forRoot({
@@ -36,7 +38,7 @@ import {VsForDirective} from './ng2-vs-for/ng2-vs-for';
         PieChartComponent,
         MyChipsComponent,
         MyHeaderComponent,
-        // VsForDirective
+        VsForDirective
     ],
     exports: [
         NativeScriptRouterModule,
@@ -47,6 +49,7 @@ import {VsForDirective} from './ng2-vs-for/ng2-vs-for';
         PieChartComponent,
         NativeScriptUISideDrawerModule,
         NativeScriptUIGaugeModule,
+        NativeScriptUIListViewModule,
         TNSCheckBoxModule,
         DropDownModule,
         TNSFontIconModule

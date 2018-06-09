@@ -54,6 +54,7 @@
     "nativescript-ui-autocomplete": "^3.7.0",
     "nativescript-ui-chart": "^3.6.0",
     "nativescript-ui-gauge": "^3.6.0",
+    "nativescript-ui-listview": "^3.5.7",
     "nativescript-ui-sidedrawer": "^4.1.0",
     "nativescript-webview-interface": "^1.4.2",
     "ngrx-store-logger": "0.2.0",
