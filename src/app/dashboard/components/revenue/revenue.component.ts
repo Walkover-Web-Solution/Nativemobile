@@ -1,4 +1,3 @@
-
 import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
@@ -50,9 +49,10 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public lastYearAccountsRanks: number[];
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef, public dialog: MatDialog) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).pipe(takeUntil(this.destroyed$));
-        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).pipe(distinctUntilChanged(), takeUntil(this.destroyed$), );
+        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).pipe(distinctUntilChanged(), takeUntil(this.destroyed$));
         const that = this;
         this.options = {
             chart: {
@@ -236,7 +236,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public generateActiveYearString(): INameUniqueName[] {
         const activeStrings: INameUniqueName[] = [];
         this.activeYearAccounts.map(acc => {
-            activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+            activeStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
         });
         return activeStrings;
     }
@@ -244,7 +244,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public generateLastYearString(): INameUniqueName[] {
         const lastStrings: INameUniqueName[] = [];
         this.lastYearAccounts.map(acc => {
-            lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+            lastStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
         });
         return lastStrings;
     }
@@ -286,8 +286,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
         const seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+            {name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4'} as any,
+            {name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C'}
         ];
         this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
@@ -331,9 +331,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public renderPieChart(type = 'current', per) {
         if (type === 'current') {
             if (per === 0) {
-                this.pieSeries = [{ y: 100, color: '#ECECED' }];
+                this.pieSeries = [{y: 100, color: '#ECECED'}];
             } else {
-                this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+                this.pieSeries = [{y: per, color: '#5AC4C4'}, {y: 100 - per, color: '#ECECED'}];
             }
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
@@ -346,9 +346,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             });
         } else {
             if (per === 0) {
-                this.previousPieSeries = [{ y: 100, color: '#ECECED' }];
+                this.previousPieSeries = [{y: 100, color: '#ECECED'}];
             } else {
-                this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+                this.previousPieSeries = [{y: per, color: '#1F989C'}, {y: 100 - per, color: '#ECECED'}];
             }
             // this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
@@ -386,7 +386,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public openFilter() {
         const dialog = this.dialog.open(DashboardFilterComponent, {
-            data: { chartType: ChartType.Revenue }
+            data: {chartType: ChartType.Revenue}
         });
     }
 

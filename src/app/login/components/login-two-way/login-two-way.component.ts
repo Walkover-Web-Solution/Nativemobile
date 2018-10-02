@@ -1,15 +1,14 @@
-
 import {take} from 'rxjs/operators';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { Observable } from 'rxjs';
-import { LoginActions } from '../../../actions/login/login.action';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { VerifyEmailModel, VerifyEmailResponseModel, VerifyMobileModel } from '../../../models/api-models/loginModels';
-import { Color, Page, AnimationCurve } from '../../../common/utils/environment';
-import { RouterService } from '../../../services/router.service';
-import { Config } from '../../../common';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {Observable} from 'rxjs';
+import {LoginActions} from '../../../actions/login/login.action';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {VerifyEmailModel, VerifyEmailResponseModel, VerifyMobileModel} from '../../../models/api-models/loginModels';
+import {Color, Page, AnimationCurve} from '../../../common/utils/environment';
+import {RouterService} from '../../../services/router.service';
+import {Config} from '../../../common';
 
 @Component({
     selector: 'ns-login-two-way',
@@ -22,6 +21,7 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
     public isTwoWayAuthInProcess$: Observable<boolean>;
     public userDetails$: Observable<VerifyEmailResponseModel>;
     public twoWayOthForm: FormGroup;
+
     constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService, private page: Page) {
         this.isTwoWayAuthSuccess$ = this.store.select(s => s.login.isTwoWayAuthSuccess);
         this.userDetails$ = this.store.select(p => p.session.user);
@@ -42,10 +42,11 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
 
         this.isTwoWayAuthSuccess$.subscribe(s => {
             if (s) {
-                (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
+                (this.routerExtensions.router as any).navigate(['/home'], {clearHistory: true});
             }
         })
     }
+
     public ngOnDestroy(): void {
         // this.lo
     }
@@ -59,6 +60,7 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
         data.oneTimePassword = this.twoWayOthForm.value.otp;
         // this.store.dispatch(this._loginActions.VerifyTwoWayAuthRequest(data));
     }
+
     public backToLogin() {
         (this.routerExtensions.router as any).navigate(['/login'], {
             clearHistory: true, animated: true,

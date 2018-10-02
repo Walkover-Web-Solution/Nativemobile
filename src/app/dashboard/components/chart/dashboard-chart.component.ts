@@ -1,14 +1,13 @@
-
 import {map} from 'rxjs/operators';
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
+import {Observable} from 'rxjs';
 
-import { Store } from '@ngrx/store';
-import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
-import { AppState } from '../../../store';
-import { RouterService } from '../../../services/router.service';
-import { MyDrawerComponent } from '../../../shared/my-drawer/my-drawer.component';
-import { DashboardActions } from '../../../actions/dashboard/dashboard.action';
+import {Store} from '@ngrx/store';
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {AppState} from '../../../store';
+import {RouterService} from '../../../services/router.service';
+import {MyDrawerComponent} from '../../../shared/my-drawer/my-drawer.component';
+import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
 
 @Component({
     selector: 'ns-dashboard-chart',
@@ -19,6 +18,7 @@ export class DashboardChartComponent implements OnInit, OnDestroy {
 
     public navItemObj$: Observable<MyDrawerItem[]>;
     @ViewChild('myDrawer') public myDrawer: MyDrawerComponent;
+
     constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _dashboardActions: DashboardActions) {
         this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
@@ -38,6 +38,7 @@ export class DashboardChartComponent implements OnInit, OnDestroy {
         // this.store.dispatch(this._dashboardActions.getExpensesChartData());
         // this.store.dispatch(this._dashboardActions.getRevenueChartData());
     }
+
     public toggleDrawer() {
         this.myDrawer.toggle();
     }

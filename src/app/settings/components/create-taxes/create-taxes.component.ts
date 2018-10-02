@@ -113,14 +113,14 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.isCreateTaxSuccess$.subscribe(s => {
             if (s) {
-                this.routerExtensions.router.navigate(['/settings', 'taxes']);
+                (this.routerExtensions.router as any).navigate(['/settings', 'taxes']);
                 this.store.dispatch(this._settingsTaxesActions.ResetCreateTaxUi());
             }
         });
         this.isUpdateTaxSuccess$.subscribe(s => {
             if (s) {
                 this.selectedTaxObj = null;
-                this.routerExtensions.router.navigate(['/settings', 'taxes']);
+                (this.routerExtensions.router as any).navigate(['/settings', 'taxes']);
                 this.store.dispatch(this._settingsTaxesActions.ResetUpdateTaxUi());
             }
         });

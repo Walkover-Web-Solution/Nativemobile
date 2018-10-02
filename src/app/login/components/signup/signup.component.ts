@@ -1,12 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { Observable } from 'rxjs';
-import { LoginActions } from '../../../actions/login/login.action';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { RouterService } from '../../../services/router.service';
-import { Page, Color, AnimationCurve } from '../../../common/utils/environment';
-import { Config } from '../../../common';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {Observable} from 'rxjs';
+import {LoginActions} from '../../../actions/login/login.action';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {RouterService} from '../../../services/router.service';
+import {Page, Color, AnimationCurve} from '../../../common/utils/environment';
+import {Config} from '../../../common';
 
 @Component({
     selector: 'ns-signup',
@@ -18,6 +18,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
     public signUpProcess$: Observable<boolean>;
     public signupSuccess$: Observable<boolean>;
     public signupWithPasswordForm: FormGroup;
+
     constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService, private page: Page) {
         this.signUpProcess$ = this.store.select(s => s.login.isSignupInProcess);
         this.signupSuccess$ = this.store.select(s => s.login.isSignUpSuccess);
@@ -38,13 +39,15 @@ export class SignUpComponent implements OnInit, OnDestroy {
         }
         this.signupSuccess$.subscribe(s => {
             if (s) {
-                (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
+                (this.routerExtensions.router as any).navigate(['/home'], {clearHistory: true});
             }
         })
     }
+
     public ngOnDestroy(): void {
         // this.lo
     }
+
     public backToLogin() {
         (this.routerExtensions.router as any).navigate(['/login'], {
             clearHistory: true, animated: true,
@@ -55,6 +58,7 @@ export class SignUpComponent implements OnInit, OnDestroy {
         });
         // this.routerExtensions.backToPreviousPage();
     }
+
     public signUp() {
         this.store.dispatch(this._loginActions.signUp(this.signupWithPasswordForm.value));
     }

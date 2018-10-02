@@ -1,4 +1,3 @@
-
 import {takeUntil} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit, Optional} from '@angular/core';
 import {Store} from '@ngrx/store';
@@ -26,6 +25,7 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
     public emailVerifyForm: FormGroup;
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService, @Optional() private page: Page) {
         this.isLoginWithEmailInProcess$ = this.store.select(s => s.login.isLoginWithEmailInProcess).pipe(takeUntil(this.destroyed$));
         this.isVerifyEmailInProcess$ = this.store.select(s => s.login.isVerifyEmailInProcess).pipe(takeUntil(this.destroyed$));
@@ -69,13 +69,14 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
         this.isVerifyEmailSuccess$.subscribe(s => {
             if (s) {
                 if (Config.IS_MOBILE_NATIVE) {
-                    (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
+                    (this.routerExtensions.router as any).navigate(['/home'], {clearHistory: true});
                 } else {
-                    this.routerExtensions.router.navigate(['/home']);
+                    (this.routerExtensions.router as any).navigate(['/home']);
                 }
             }
         })
     }
+
     public ngOnDestroy(): void {
         // console.log('login with email destroyed');
         this.store.dispatch(this._loginActions.resetLoginWithEmailFlags());
@@ -106,7 +107,7 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.routerExtensions.router.navigate(['/login']);
+            (this.routerExtensions.router as any).navigate(['/login']);
         }
     }
 }

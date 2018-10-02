@@ -1,4 +1,3 @@
-
 import {map, switchMap} from 'rxjs/operators';
 import {Inject, Injectable, Optional} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
@@ -28,185 +27,185 @@ export class LoginActions {
     @Effect()
     public signUp$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.SIGNUP_REQUEST).pipe(
-        switchMap((action: CustomActions) =>
-            this._authService.SignupWithPassword(action.payload)),
-        map(response => {
-            const res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = response;
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            } else {
-                this._toaster.successToast('Login Success');
-            }
-            return this.signUpResponse(res);
-        }), );
+            switchMap((action: CustomActions) =>
+                this._authService.SignupWithPassword(action.payload)),
+            map(response => {
+                const res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = response;
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                } else {
+                    this._toaster.successToast('Login Success');
+                }
+                return this.signUpResponse(res);
+            }));
 
     @Effect()
     public loginWithPassword$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.LOGIN_WITH_PASSWORD_REQUEST).pipe(
-        switchMap((action: CustomActions) =>
-            this._authService.LoginWithPassword(action.payload)),
-        map(response => {
-            const res: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = response;
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            } else {
-                this._toaster.successToast('Login Success');
-            }
-            return this.loginWithPasswordResponse(res);
-        }), );
+            switchMap((action: CustomActions) =>
+                this._authService.LoginWithPassword(action.payload)),
+            map(response => {
+                const res: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = response;
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                } else {
+                    this._toaster.successToast('Login Success');
+                }
+                return this.loginWithPasswordResponse(res);
+            }));
 
     @Effect()
     public signupWithMobile$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.SIGNUP_WITH_MOBILE_REQUEST).pipe(
-        switchMap((action: CustomActions) => this._authService.SignupWithMobile(action.payload)),
-        map(response => {
-            console.log('Status', response.status);
-            if (response.status !== 'success') {
-                this._toaster.errorToast(response.message);
-            }
-            return this.signupWithMobileResponce(response);
-        }), );
+            switchMap((action: CustomActions) => this._authService.SignupWithMobile(action.payload)),
+            map(response => {
+                console.log('Status', response.status);
+                if (response.status !== 'success') {
+                    this._toaster.errorToast(response.message);
+                }
+                return this.signupWithMobileResponce(response);
+            }));
 
     @Effect()
     public verifyMobile$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.VERIFY_MOBILE_REQUEST).pipe(
-        switchMap((action: CustomActions) =>
-            this._authService.VerifyOTP(action.payload as VerifyMobileModel)
-        ),
-        map(response => {
-            const res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            }
-            return this.verifyMobileResponce(res);
-        }), );
+            switchMap((action: CustomActions) =>
+                this._authService.VerifyOTP(action.payload as VerifyMobileModel)
+            ),
+            map(response => {
+                const res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                }
+                return this.verifyMobileResponce(res);
+            }));
 
 
     @Effect()
     public signupWithEmail$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.SIGNUP_WITH_EMAIL_REQUEST).pipe(
-        switchMap((action: CustomActions) => this._authService.SignupWithEmail(action.payload)),
-        map(response => {
-            if (response.status !== 'success') {
-                this._toaster.errorToast(response.message);
-            }
+            switchMap((action: CustomActions) => this._authService.SignupWithEmail(action.payload)),
+            map(response => {
+                if (response.status !== 'success') {
+                    this._toaster.errorToast(response.message);
+                }
 
-            return this.signupWithEmailResponce(response);
+                return this.signupWithEmailResponce(response);
 
-        }), );
+            }));
 
     @Effect()
     public verifyEmail$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.VERIFY_EMAIL_REQUEST).pipe(
-        switchMap((action: CustomActions) =>
-            this._authService.VerifyEmail(action.payload as VerifyEmailModel)
-        ),
-        map(response => {
-            const res: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = response;
-            if (response.status !== 'success') {
-                this._toaster.errorToast(response.message);
-            }
-            return this.verifyEmailResponce(res);
-        }), );
+            switchMap((action: CustomActions) =>
+                this._authService.VerifyEmail(action.payload as VerifyEmailModel)
+            ),
+            map(response => {
+                const res: BaseResponse<VerifyEmailResponseModel, VerifyEmailModel> = response;
+                if (response.status !== 'success') {
+                    this._toaster.errorToast(response.message);
+                }
+                return this.verifyEmailResponce(res);
+            }));
 
     @Effect()
     public verifyTwoWayAuth$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.VERIFY_TWOWAYAUTH_REQUEST).pipe(
-        switchMap((action: CustomActions) =>
-            this._authService.VerifyOTP(action.payload as VerifyMobileModel)
-        ),
-        map(response => {
-            const res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
-            if (response.status !== 'success') {
-                this._toaster.errorToast(response.message);
-            }
-            return this.verifyTwoWayAuthResponse(res);
-        }), );
+            switchMap((action: CustomActions) =>
+                this._authService.VerifyOTP(action.payload as VerifyMobileModel)
+            ),
+            map(response => {
+                const res: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = response;
+                if (response.status !== 'success') {
+                    this._toaster.errorToast(response.message);
+                }
+                return this.verifyTwoWayAuthResponse(res);
+            }));
 
     @Effect()
     public signupWithGoogle$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE).pipe(
-        map((action: CustomActions) => {
-            const res: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
-            console.log('giddh_app: ', res.status);
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            }
-            return {
-                type: 'EmptyAction'
-            }
-        }));
+            map((action: CustomActions) => {
+                const res: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
+                console.log('giddh_app: ', res.status);
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                }
+                return {
+                    type: 'EmptyAction'
+                }
+            }));
 
     @Effect()
     public signupWithLinkedIn$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.SIGNUP_WITH_LINKEDIN_RESPONSE).pipe(
-        map((action: CustomActions) => {
-            const res: BaseResponse<VerifyEmailResponseModel, LinkedInRequestModel> = action.payload;
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            }
-            return {
-                type: 'EmptyAction'
-            }
-        }));
+            map((action: CustomActions) => {
+                const res: BaseResponse<VerifyEmailResponseModel, LinkedInRequestModel> = action.payload;
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                }
+                return {
+                    type: 'EmptyAction'
+                }
+            }));
 
     @Effect()
     public forgotPassword$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.FORGOT_PASSWORD_REQUEST).pipe(
-        switchMap((action: CustomActions) =>
-            this._authService.ForgotPassword(action.payload)),
-        map(response => {
-            const res: BaseResponse<string, string> = response;
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-                // return { type: '' }
-            }
-            return this.forgotPasswordResponse(res);
+            switchMap((action: CustomActions) =>
+                this._authService.ForgotPassword(action.payload)),
+            map(response => {
+                const res: BaseResponse<string, string> = response;
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                    // return { type: '' }
+                }
+                return this.forgotPasswordResponse(res);
 
-        }), );
+            }));
 
     @Effect()
     public resetPasswordV2$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.RESET_PASSWORD_V2_REQUEST).pipe(
-        switchMap((action: CustomActions) =>
-            this._authService.ResetPasswordV2(action.payload)),
-        map(response => {
-            const res: BaseResponse<string, ResetPasswordV2> = response;
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-                // return { type: '' }
-            }
-            return this.resetPasswordV2Response(res);
+            switchMap((action: CustomActions) =>
+                this._authService.ResetPasswordV2(action.payload)),
+            map(response => {
+                const res: BaseResponse<string, ResetPasswordV2> = response;
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                    // return { type: '' }
+                }
+                return this.resetPasswordV2Response(res);
 
-        }), );
+            }));
 
     @Effect()
     public LinkedInElectronLogin$: Observable<CustomActions> = this.actions$
         .ofType(LoginConstants.LinkedInLoginElectron).pipe(
-        switchMap((action: CustomActions) => {
+            switchMap((action: CustomActions) => {
 
-            const args: any = { headers: {} };
-            args.headers['cache-control'] = 'no-cache';
-            args.headers['Content-Type'] = 'application/json';
-            args.headers['Accept'] = 'application/json';
-            args.headers['Access-Token'] = action.payload;
-            args.headers = new HttpHeaders(args.headers);
-            return this.http.get(this.config.apiUrl + 'v2/login-with-linkedIn', {
-                headers: args.headers,
-                responseType: 'json'
-            }).pipe(map(p => p as BaseResponse<VerifyEmailResponseModel, string>));
-        }),
-        map((data) => {
-            // console.log(JSON.stringify(data));
-            if (data.status === 'error') {
-                return { type: 'EmptyAction' };
-            }
-            // return this.LoginSuccess();
-            return this.signupWithGoogleResponse(data);
-        }), );
+                const args: any = {headers: {}};
+                args.headers['cache-control'] = 'no-cache';
+                args.headers['Content-Type'] = 'application/json';
+                args.headers['Accept'] = 'application/json';
+                args.headers['Access-Token'] = action.payload;
+                args.headers = new HttpHeaders(args.headers);
+                return this.http.get(this.config.apiUrl + 'v2/login-with-linkedIn', {
+                    headers: args.headers,
+                    responseType: 'json'
+                }).pipe(map(p => p as BaseResponse<VerifyEmailResponseModel, string>));
+            }),
+            map((data) => {
+                // console.log(JSON.stringify(data));
+                if (data.status === 'error') {
+                    return {type: 'EmptyAction'};
+                }
+                // return this.LoginSuccess();
+                return this.signupWithGoogleResponse(data);
+            }));
 
     constructor(private actions$: Actions, private _authService: AuthenticationService, public http: HttpClient,
-        private _toaster: ToasterService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
+                private _toaster: ToasterService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
 
     }
 
@@ -388,6 +387,7 @@ export class LoginActions {
             type: LoginConstants.LOGOUT
         }
     }
+
     public LinkedInElectronLogin(value: any): CustomActions {
         return {
             type: LoginConstants.LinkedInLoginElectron,
@@ -409,7 +409,7 @@ export class LoginActions {
 
     private validateResponse<TResponse, TRequest>(response: BaseResponse<TResponse, TRequest>,
                                                   successAction: CustomActions, showToast: boolean = false,
-                                                  errorAction: CustomActions = { type: 'EmptyAction' }): CustomActions {
+                                                  errorAction: CustomActions = {type: 'EmptyAction'}): CustomActions {
         if (response.status === 'error') {
             if (showToast) {
                 this._toaster.errorToast(response.message);

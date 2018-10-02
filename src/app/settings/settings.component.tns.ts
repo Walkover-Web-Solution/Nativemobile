@@ -47,7 +47,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.routerExtensions.router.navigate(['/settings', item.path]);
+            (this.routerExtensions.router as any).navigate(['/settings', item.path]);
         }
     }
 
@@ -55,7 +55,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         if (Config.IS_MOBILE_NATIVE) {
             (this.routerExtensions.router as any).back()
         } else {
-            this.routerExtensions.router.navigate(['/home']);
+            (this.routerExtensions.router as any).navigate(['/home']);
         }
     }
 

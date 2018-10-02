@@ -1,4 +1,3 @@
-
 import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ReplaySubject, Observable} from 'rxjs';
@@ -25,11 +24,11 @@ const webViewInterfaceModule = require('nativescript-webview-interface');
     selector: 'ns-expenses-chart,[ns-expenses-chart]',
     moduleId: module.id,
     templateUrl: './expenses.component.html',
-    styleUrls: ["./expenses.component.scss"]
+    styleUrls: ['./expenses.component.scss']
 })
 export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit {
-    @ViewChild("myWebView") webViewRef: ElementRef;
-    public webViewSRC = "~/www/expensesChart.html";
+    @ViewChild('myWebView') webViewRef: ElementRef;
+    public webViewSRC = '~/www/expensesChart.html';
     public chartType = ChartType.Expense;
     public lastPieChartAmount: number;
     public lastYearGrandAmount: any;
@@ -37,7 +36,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     public activeYearGrandAmount: any;
     public activeYearLabel: string;
     public lastYearLabel: string;
-    public chartFilterTitle: string = '';
+    public chartFilterTitle = '';
     public categories: string[] = [];
     public series: Array<{ name: string, data: number[] }>;
     public options: any;
@@ -60,7 +59,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
 
     constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
         this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).pipe(takeUntil(this.destroyed$));
-        this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).pipe(distinctUntilChanged(),takeUntil(this.destroyed$),);
+        this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).pipe(distinctUntilChanged(), takeUntil(this.destroyed$));
         this.options = {
             chart: {
                 type: 'column',
@@ -213,7 +212,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     private setupWebViewInterface() {
-        let webView: WebView = this.webViewRef.nativeElement;
+        const webView: WebView = this.webViewRef.nativeElement;
 
         this.oLangWebViewInterface = new webViewInterfaceModule.WebViewInterface(webView, this.webViewSRC);
         this.oLangWebViewInterface.on('seriesSelected', this.seriesSeleted.bind(this));
@@ -231,18 +230,18 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                 this.expensesChartData$.subscribe(exp => {
                     // if (exp) {
                     if (exp && exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
-                        let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
-                        let operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
-                        let accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+                        const indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
+                        const operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
+                        const accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
                         this.activeYearAccounts = accounts;
                     } else {
                         // this.resetActiveYearChartData();
                     }
 
                     if (exp && exp.operatingcostLastyear && exp.indirectexpensesLastyear) {
-                        let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
-                        let operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
-                        let lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+                        const indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
+                        const operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
+                        const lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
                         this.lastYearAccounts = lastAccounts;
                     } else {
                         // this.resetLastYearChartData();
@@ -273,17 +272,17 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     public generateActiveYearString(): INameUniqueName[] {
-        let activeStrings: INameUniqueName[] = [];
+        const activeStrings: INameUniqueName[] = [];
         this.activeYearAccounts.map(acc => {
-            activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+            activeStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
         });
         return activeStrings;
     }
 
     public generateLastYearString(): INameUniqueName[] {
-        let lastStrings: INameUniqueName[] = [];
+        const lastStrings: INameUniqueName[] = [];
         this.lastYearAccounts.map(acc => {
-            lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+            lastStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
         });
         return lastStrings;
     }
@@ -305,9 +304,9 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             }
         });
 
-        let activeAccounts = [];
-        let lastAccounts = [];
-        let categories = [];
+        const activeAccounts = [];
+        const lastAccounts = [];
+        const categories = [];
 
         this.accountStrings.forEach(p => {
             activeAccounts.push(p.activeYear);
@@ -323,10 +322,10 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
         this.lastYearAccountsRanks = lastAccounts;
         this.categories = categories;
 
-        let seriesName = this.genSeriesName(this.selectedFilterType);
+        const seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+            {name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4'} as any,
+            {name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C'}
         ];
         this.lastYearGrandAmount = Number(_.sum(lastAccounts).toFixed(2)) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
@@ -371,9 +370,9 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     public renderPieChart(type = 'current', per) {
         if (type === 'current') {
             if (per === 0) {
-                this.pieSeries = [{ y: 100, color: '#ECECED' }];
+                this.pieSeries = [{y: 100, color: '#ECECED'}];
             } else {
-                this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+                this.pieSeries = [{y: per, color: '#5AC4C4'}, {y: 100 - per, color: '#ECECED'}];
             }
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
@@ -392,9 +391,9 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             });
         } else {
             if (per === 0) {
-                this.previousPieSeries = [{ y: 100, color: '#ECECED' }];
+                this.previousPieSeries = [{y: 100, color: '#ECECED'}];
             } else {
-                this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+                this.previousPieSeries = [{y: per, color: '#1F989C'}, {y: 100 - per, color: '#ECECED'}];
             }
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 title: Object.assign({}, this.previousPieChartOptions.title, {
@@ -418,8 +417,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     public seriesSeleted(points) {
         let activePer = 0;
         let lastPer = 0;
-        let activePoint = points.current;
-        let lastPoint = points.last;
+        const activePoint = points.current;
+        const lastPoint = points.last;
 
         activePer = Number(((activePoint * 100) / this.activeYearGrandAmount).toFixed(2));
         lastPer = Number(((lastPoint * 100) / this.lastYearGrandAmount).toFixed(2));

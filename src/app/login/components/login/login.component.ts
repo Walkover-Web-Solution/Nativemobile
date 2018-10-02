@@ -1,17 +1,16 @@
-
 import {takeUntil} from 'rxjs/operators';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Observable ,  ReplaySubject } from 'rxjs';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { LoginActions } from '../../../actions/login/login.action';
-import { RouterService } from '../../../services/router.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { ToasterService } from '../../../services/toaster.service';
-import { AuthService, GoogleLoginProvider, LinkedinLoginProvider } from 'ng4-social-login';
-import { SocialUser } from 'ng4-social-login';
-import { LinkedInRequestModel } from '../../../models/api-models/loginModels';
-import { AuthenticationService } from '../../../services/authentication.service';
+import {Component, OnInit, OnDestroy, AfterViewInit} from '@angular/core';
+import {Observable, ReplaySubject} from 'rxjs';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {LoginActions} from '../../../actions/login/login.action';
+import {RouterService} from '../../../services/router.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {ToasterService} from '../../../services/toaster.service';
+import {AuthService, GoogleLoginProvider, LinkedinLoginProvider} from 'ng4-social-login';
+import {SocialUser} from 'ng4-social-login';
+import {LinkedInRequestModel} from '../../../models/api-models/loginModels';
+import {AuthenticationService} from '../../../services/authentication.service';
 
 @Component({
     selector: 'ns-login',
@@ -29,8 +28,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     public signupWithLinkedInSuccess$: Observable<boolean>;
     public isSocialLogoutAttempted$: Observable<boolean>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService,
-        private _toaster: ToasterService, private socialAuthService: AuthService, private authServiceLocal: AuthenticationService) {
+                private _toaster: ToasterService, private socialAuthService: AuthService, private authServiceLocal: AuthenticationService) {
         this.loginProcess$ = this.store.select(s => s.login.isLoginWithPasswordInProcess).pipe(takeUntil(this.destroyed$));
         this.loginSuccess$ = this.store.select(s => s.login.isLoginWithPasswordSuccess).pipe(takeUntil(this.destroyed$));
         this.signupWithGoogleInProcess$ = this.store.select(s => s.login.isSignupWithGoogleInProcess).pipe(takeUntil(this.destroyed$));

@@ -26,7 +26,7 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
     @ViewChild('myDrawer') public myDrawer: MyDrawerComponent;
     public selectedCompany$: Observable<CompanyResponse>;
     public companyProfileForm: FormGroup;
-    public countrySourceStream$: Observable<IContriesWithCodes[]>
+    public countrySourceStream$: Observable<IContriesWithCodes[]>;
     public isUpdateCompanyProfileInProcess$: Observable<boolean>;
     public isUpdateCompanyProfileSuccess$: Observable<boolean>;
     public stateStream$: Observable<States[]>;
@@ -96,7 +96,7 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
         this.isUpdateCompanyProfileSuccess$.subscribe(ss => {
             if (ss) {
                 this.store.dispatch(this._settingsProfileActions.ResetUpdateProfileFlag());
-                this.routerExtensions.router.navigate(['/settings']);
+                (this.routerExtensions.router as any).navigate(['/settings']);
             }
         });
 

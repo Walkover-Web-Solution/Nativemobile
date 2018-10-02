@@ -1,4 +1,3 @@
-
 import {switchMap, take, map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';

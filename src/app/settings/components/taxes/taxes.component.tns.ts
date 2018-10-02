@@ -68,7 +68,7 @@ export class TaxesComponent implements OnInit {
     }
 
     public createCurrencies() {
-        this.routerExtensions.router.navigate(['/settings', 'create-taxes']);
+        (this.routerExtensions.router as any).navigate(['/settings', 'create-taxes']);
     }
 
     public ngOnDestroy() {
@@ -77,6 +77,6 @@ export class TaxesComponent implements OnInit {
     }
 
     public editTax(uniqueName: string) {
-        this.routerExtensions.router.navigate(['/settings', 'create-taxes', uniqueName]);
+        (this.routerExtensions.router as any).navigate(['/settings', 'create-taxes', uniqueName]);
     }
 }

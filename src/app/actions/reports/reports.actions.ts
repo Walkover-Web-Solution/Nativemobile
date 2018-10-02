@@ -1,4 +1,3 @@
-
 import {take, map, switchMap} from 'rxjs/operators';
 import {Actions, Effect} from '@ngrx/effects';
 import {DashboardService} from '../../services/dashboard.service';
@@ -31,271 +30,271 @@ export class ReportsActions {
     @Effect()
     public getIncomeData$: Observable<CustomActions> = this.actions$
         .ofType(ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_REQUEST).pipe(
-        switchMap((action: CustomActions) => {
-            let filterType: ChartFilterType;
-            let activeFinancialYear: ActiveFinancialYear;
-            let lastFinancialYear: ActiveFinancialYear;
-            let customFilterObj: ChartCustomFilter;
-            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
-            this.store.select(s => s.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies,
-                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-                return { companies, uniqueName };
-            })).pipe(take(1)).subscribe(res => {
-                if (!res.companies) {
-                    return;
-                }
-                let financialYears = [];
-                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
-                if (activeCmp) {
-                    activeFinancialYear = activeCmp.activeFinancialYear;
-
-                    if (activeCmp.financialYears.length > 1) {
-                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
-                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
-
-                            return b.diff(a, 'days') < 0;
-                        });
-                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
-                            return b.diff(a, 'days');
-                        }, 'desc');
-                        lastFinancialYear = financialYears[0];
+            switchMap((action: CustomActions) => {
+                let filterType: ChartFilterType;
+                let activeFinancialYear: ActiveFinancialYear;
+                let lastFinancialYear: ActiveFinancialYear;
+                let customFilterObj: ChartCustomFilter;
+                this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+                this.store.select(s => s.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+                this.store.select(createSelector([(state: AppState) => state.session.companies,
+                    (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+                    return {companies, uniqueName};
+                })).pipe(take(1)).subscribe(res => {
+                    if (!res.companies) {
+                        return;
                     }
+                    let financialYears = [];
+                    const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                    if (activeCmp) {
+                        activeFinancialYear = activeCmp.activeFinancialYear;
+
+                        if (activeCmp.financialYears.length > 1) {
+                            financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                            financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+
+                                return b.diff(a, 'days') < 0;
+                            });
+                            financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                                return b.diff(a, 'days');
+                            }, 'desc');
+                            lastFinancialYear = financialYears[0];
+                        }
+                    }
+                });
+                const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
+                const model: GroupHistoryRequest = {
+                    category: ['income']
+                };
+                const interValType = filterType === ChartFilterType.ThisMonthToDate ||
+                filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
+                return zip(
+                    this._dashboardService.GetCategoryHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
+                    of(op)
+                );
+            }), map((res) => {
+                const config: ChartFilterConfigs = res[1];
+                if (res[0].status === 'success') {
+                    const obj: CategoryHistoryResponse = res[0].body[0];
+                    return {
+                        type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_RESPONSE,
+                        payload: {data: obj, config}
+                    };
+                } else {
+                    // this._toasterService.errorToast(res[0].message);
+                    this.store.dispatch(this._generalAction.setError(res[0].message));
+                    return {
+                        type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR,
+                        payload: {data: null, config}
+                    };
                 }
-            });
-            const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
-            const model: GroupHistoryRequest = {
-                category: ['income']
-            };
-            const interValType = filterType === ChartFilterType.ThisMonthToDate ||
-            filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
-            return zip(
-                this._dashboardService.GetCategoryHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
-                of(op)
-            );
-        }), map((res) => {
-            const config: ChartFilterConfigs = res[1];
-            if (res[0].status === 'success') {
-                const obj: CategoryHistoryResponse = res[0].body[0];
-                return {
-                    type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_RESPONSE,
-                    payload: { data: obj, config }
-                };
-            } else {
-                // this._toasterService.errorToast(res[0].message);
-                this.store.dispatch(this._generalAction.setError(res[0].message));
-                return {
-                    type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR,
-                    payload: {data: null, config}
-                };
-            }
-        }), );
+            }));
 
     @Effect()
     public getExpensesData$: Observable<CustomActions> = this.actions$
         .ofType(ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_REQUEST).pipe(
-        switchMap((action: CustomActions) => {
-            let filterType: ChartFilterType;
-            let activeFinancialYear: ActiveFinancialYear;
-            let lastFinancialYear: ActiveFinancialYear;
-            let customFilterObj: ChartCustomFilter;
-            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
-            this.store.select(s => s.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies,
-                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-                return { companies, uniqueName };
-            })).pipe(take(1)).subscribe(res => {
-                if (!res.companies) {
-                    return;
-                }
-                let financialYears = [];
-                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
-                if (activeCmp) {
-                    activeFinancialYear = activeCmp.activeFinancialYear;
-
-                    if (activeCmp.financialYears.length > 1) {
-                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
-                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
-
-                            return b.diff(a, 'days') < 0;
-                        });
-                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
-                            return b.diff(a, 'days');
-                        }, 'desc');
-                        lastFinancialYear = financialYears[0];
+            switchMap((action: CustomActions) => {
+                let filterType: ChartFilterType;
+                let activeFinancialYear: ActiveFinancialYear;
+                let lastFinancialYear: ActiveFinancialYear;
+                let customFilterObj: ChartCustomFilter;
+                this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+                this.store.select(s => s.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+                this.store.select(createSelector([(state: AppState) => state.session.companies,
+                    (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+                    return {companies, uniqueName};
+                })).pipe(take(1)).subscribe(res => {
+                    if (!res.companies) {
+                        return;
                     }
-                }
-            });
-            const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
-            const model: GroupHistoryRequest = {
-                groups: ['indirectexpenses', 'operatingcost']
-            };
+                    let financialYears = [];
+                    const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                    if (activeCmp) {
+                        activeFinancialYear = activeCmp.activeFinancialYear;
 
-            const interValType = filterType === ChartFilterType.ThisMonthToDate ||
-            filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
-            return zip(
-                this._dashboardService.GetHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
-                of(op)
-            );
-        }), map((res) => {
-            const config: ChartFilterConfigs = res[1];
-            if (res[0].status === 'success') {
-                const obj: GroupHistoryResponse = res[0].body;
-                return {
-                    type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_RESPONSE,
-                    payload: { data: obj, config }
+                        if (activeCmp.financialYears.length > 1) {
+                            financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                            financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+
+                                return b.diff(a, 'days') < 0;
+                            });
+                            financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                                return b.diff(a, 'days');
+                            }, 'desc');
+                            lastFinancialYear = financialYears[0];
+                        }
+                    }
+                });
+                const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
+                const model: GroupHistoryRequest = {
+                    groups: ['indirectexpenses', 'operatingcost']
                 };
-            } else {
-                this.store.dispatch(this._generalAction.setError(res[0].message));
-                return {
-                    type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR,
-                    payload: { data: null, config }
-                };
-            }
-        }), );
+
+                const interValType = filterType === ChartFilterType.ThisMonthToDate ||
+                filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
+                return zip(
+                    this._dashboardService.GetHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
+                    of(op)
+                );
+            }), map((res) => {
+                const config: ChartFilterConfigs = res[1];
+                if (res[0].status === 'success') {
+                    const obj: GroupHistoryResponse = res[0].body;
+                    return {
+                        type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_RESPONSE,
+                        payload: {data: obj, config}
+                    };
+                } else {
+                    this.store.dispatch(this._generalAction.setError(res[0].message));
+                    return {
+                        type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR,
+                        payload: {data: null, config}
+                    };
+                }
+            }));
 
     @Effect() private GetProfitLoss$: Observable<CustomActions> = this.actions$
         .ofType(ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST).pipe(
-        switchMap((action: CustomActions) => {
-            let filterType: ChartFilterType;
-            let fyIndex: number;
-            let activeFinancialYear: ActiveFinancialYear;
-            let lastFinancialYear: ActiveFinancialYear;
-            let customFilterObj: ChartCustomFilter;
-            let activeChartType: string;
-            this.store.select(p => p.report.activeChartType).pipe(take(1)).subscribe(p => activeChartType = p);
-            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
-            this.store.select(p => p.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies,
-                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-                return { companies, uniqueName };
-            })).pipe(take(1)).subscribe(res => {
-                if (!res.companies) {
-                    return;
-                }
-                let financialYears = [];
-                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
-                if (activeCmp) {
-                    activeFinancialYear = activeCmp.activeFinancialYear;
-                    fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
+            switchMap((action: CustomActions) => {
+                let filterType: ChartFilterType;
+                let fyIndex: number;
+                let activeFinancialYear: ActiveFinancialYear;
+                let lastFinancialYear: ActiveFinancialYear;
+                let customFilterObj: ChartCustomFilter;
+                let activeChartType: string;
+                this.store.select(p => p.report.activeChartType).pipe(take(1)).subscribe(p => activeChartType = p);
+                this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+                this.store.select(p => p.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+                this.store.select(createSelector([(state: AppState) => state.session.companies,
+                    (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+                    return {companies, uniqueName};
+                })).pipe(take(1)).subscribe(res => {
+                    if (!res.companies) {
+                        return;
+                    }
+                    let financialYears = [];
+                    const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                    if (activeCmp) {
+                        activeFinancialYear = activeCmp.activeFinancialYear;
+                        fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
 
-                    if (activeCmp.financialYears.length > 1) {
-                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
-                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+                        if (activeCmp.financialYears.length > 1) {
+                            financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                            financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
 
-                            return b.diff(a, 'days') < 0;
-                        });
-                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
-                            return b.diff(a, 'days');
-                        }, 'desc');
-                        lastFinancialYear = financialYears[0];
+                                return b.diff(a, 'days') < 0;
+                            });
+                            financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                                return b.diff(a, 'days');
+                            }, 'desc');
+                            lastFinancialYear = financialYears[0];
+                        }
+                    }
+                });
+                const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
+                const request: ProfitLossRequest = {
+                    refresh: action.payload,
+                    from: activeChartType === 'current' ? op.activeYear.startDate : op.lastYear.startDate,
+                    to: activeChartType === 'current' ? op.activeYear.endDate : op.lastYear.endDate,
+                    fy: fyIndex === 0 ? 0 : fyIndex * -1,
+                    tax: 0
+                };
+                return zip(this._tlPlService.GetProfitLoss(request), of(op));
+            }),
+            map(response => {
+                // console.log(JSON.stringify(response[0]));
+                if (response[0].status === 'success') {
+                    return {
+                        type: ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE,
+                        payload: response[0]
+                    };
+                } else {
+                    return {
+                        type: 'EmptyActions'
                     }
                 }
-            });
-            const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
-            const request: ProfitLossRequest = {
-                refresh: action.payload,
-                from: activeChartType === 'current' ? op.activeYear.startDate : op.lastYear.startDate,
-                to: activeChartType === 'current' ? op.activeYear.endDate : op.lastYear.endDate,
-                fy: fyIndex === 0 ? 0 : fyIndex * -1,
-                tax: 0
-            };
-            return zip(this._tlPlService.GetProfitLoss(request), of(op));
-        }),
-        map(response => {
-            // console.log(JSON.stringify(response[0]));
-            if (response[0].status === 'success') {
-                return {
-                    type: ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_RESPONSE,
-                    payload: response[0]
-                };
-            } else {
-                return {
-                    type: 'EmptyActions'
-                }
-            }
-        }), );
+            }));
 
     @Effect() private GetBalanceSheet$: Observable<CustomActions> = this.actions$
         .ofType(ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST).pipe(
-        switchMap((action: CustomActions) => {
-            let filterType: ChartFilterType;
-            let fyIndex: number;
-            let activeFinancialYear: ActiveFinancialYear;
-            let lastFinancialYear: ActiveFinancialYear;
-            let customFilterObj: ChartCustomFilter;
-            let activeChartType: string;
-            this.store.select(p => p.report.activeChartType).pipe(take(1)).subscribe(p => activeChartType = p);
-            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
-            this.store.select(p => p.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies,
-                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-                return { companies, uniqueName };
-            })).pipe(take(1)).subscribe(res => {
-                if (!res.companies) {
-                    return;
-                }
-                let financialYears = [];
-                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
-                if (activeCmp) {
-                    activeFinancialYear = activeCmp.activeFinancialYear;
-                    fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
+            switchMap((action: CustomActions) => {
+                let filterType: ChartFilterType;
+                let fyIndex: number;
+                let activeFinancialYear: ActiveFinancialYear;
+                let lastFinancialYear: ActiveFinancialYear;
+                let customFilterObj: ChartCustomFilter;
+                let activeChartType: string;
+                this.store.select(p => p.report.activeChartType).pipe(take(1)).subscribe(p => activeChartType = p);
+                this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+                this.store.select(p => p.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+                this.store.select(createSelector([(state: AppState) => state.session.companies,
+                    (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+                    return {companies, uniqueName};
+                })).pipe(take(1)).subscribe(res => {
+                    if (!res.companies) {
+                        return;
+                    }
+                    let financialYears = [];
+                    const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                    if (activeCmp) {
+                        activeFinancialYear = activeCmp.activeFinancialYear;
+                        fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
 
-                    if (activeCmp.financialYears.length > 1) {
-                        financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
-                        financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+                        if (activeCmp.financialYears.length > 1) {
+                            financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
+                            financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
 
-                            return b.diff(a, 'days') < 0;
-                        });
-                        financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
-                            return b.diff(a, 'days');
-                        }, 'desc');
-                        lastFinancialYear = financialYears[0];
+                                return b.diff(a, 'days') < 0;
+                            });
+                            financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
+                                const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                                const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                                return b.diff(a, 'days');
+                            }, 'desc');
+                            lastFinancialYear = financialYears[0];
+                        }
+                    }
+                });
+                const op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
+                const request: BalanceSheetRequest = {
+                    refresh: action.payload,
+                    from: op.activeYear.startDate,
+                    to: op.activeYear.endDate,
+                    fy: fyIndex === 0 ? 0 : fyIndex * -1
+                };
+                return zip(this._tlPlService.GetBalanceSheet(request), of(op));
+            }),
+            map(response => {
+                if (response[0].status === 'success') {
+                    return {
+                        type: ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE,
+                        payload: response[0]
+                    };
+                } else {
+                    // this._toasterService.errorToast(response[0].message);
+                    this.store.dispatch(this._generalAction.setError(response[0].message));
+                    return {
+                        type: 'EmptyActions'
                     }
                 }
-            });
-            const op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
-            const request: BalanceSheetRequest = {
-                refresh: action.payload,
-                from: op.activeYear.startDate,
-                to: op.activeYear.endDate,
-                fy: fyIndex === 0 ? 0 : fyIndex * -1
-            };
-            return zip(this._tlPlService.GetBalanceSheet(request), of(op));
-        }),
-        map(response => {
-            if (response[0].status === 'success') {
-                return {
-                    type: ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE,
-                    payload: response[0]
-                };
-            } else {
-                // this._toasterService.errorToast(response[0].message);
-                this.store.dispatch(this._generalAction.setError(response[0].message));
-                return {
-                    type: 'EmptyActions'
-                }
-            }
-        }), );
+            }));
 
     constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
-        private _toasterService: ToasterService, private _tlPlService: TlPlService, private _generalAction: GeneralActions) {
+                private _toasterService: ToasterService, private _tlPlService: TlPlService, private _generalAction: GeneralActions) {
 
     }
 
@@ -312,10 +311,10 @@ export class ReportsActions {
     }
 
     public setFilterType(filterObj: { filterTitle: string, filterType: ChartFilterType }
-    , customFilterObj: ChartCustomFilter): CustomActions {
+        , customFilterObj: ChartCustomFilter): CustomActions {
         return {
             type: ReportConst.SET_REPORT_FILTER_TYPE,
-            payload: { filterObj, customFilterObj }
+            payload: {filterObj, customFilterObj}
         }
     }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 
 @Component({
     selector: 'ns-linkedin-login',
@@ -16,12 +16,15 @@ export class LinkedInLoginComponent implements OnInit, OnDestroy, AfterViewInit 
     ngOnInit(): void {
         //
     }
+
     ngOnDestroy(): void {
 
     }
+
     ngAfterViewInit() {
 
     }
+
     backToLogin() {
 
     }

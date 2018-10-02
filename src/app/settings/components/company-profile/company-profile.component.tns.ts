@@ -1,25 +1,24 @@
-
 import {takeUntil, map} from 'rxjs/operators';
-import { Component, ViewChild } from '@angular/core';
-import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
-import { Observable ,  ReplaySubject } from 'rxjs';
-import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
-import { AppState } from '../../../store';
-import { Store } from '@ngrx/store';
-import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
-import { CompanyResponse, States } from '../../../models/api-models/Company';
-import { createSelector } from 'reselect';
-import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ValueList } from 'nativescript-drop-down';
-import { NsDropDownOptions } from '../../../models/other-models/HelperModels';
-import { IContriesWithCodes } from '../../../shared/static-data/countryWithCodes';
-import { SettingsProfileActions } from '../../../actions/settings/profile/settings.profile.action';
+import {Component, ViewChild} from '@angular/core';
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {Observable, ReplaySubject} from 'rxjs';
+import {RadSideDrawerComponent} from 'nativescript-ui-sidedrawer/angular';
+import {AppState} from '../../../store';
+import {Store} from '@ngrx/store';
+import {DrawerTransitionBase} from 'nativescript-ui-sidedrawer';
+import {CompanyResponse, States} from '../../../models/api-models/Company';
+import {createSelector} from 'reselect';
+import {OnInit} from '@angular/core/src/metadata/lifecycle_hooks';
+import {FormBuilder, Validators, FormGroup} from '@angular/forms';
+import {ValueList} from 'nativescript-drop-down';
+import {NsDropDownOptions} from '../../../models/other-models/HelperModels';
+import {IContriesWithCodes} from '../../../shared/static-data/countryWithCodes';
+import {SettingsProfileActions} from '../../../actions/settings/profile/settings.profile.action';
 import * as _ from 'lodash';
-import { LoaderService } from '../../../services/loader.service';
-import { RouterService } from '../../../services/router.service';
-import { Page } from '../../../common/utils/environment';
-import { Config } from '../../../common';
+import {LoaderService} from '../../../services/loader.service';
+import {RouterService} from '../../../services/router.service';
+import {Page} from '../../../common/utils/environment';
+import {Config} from '../../../common';
 
 @Component({
     selector: 'ns-company-profile',
@@ -43,8 +42,9 @@ export class CompanyProfileComponent implements OnInit {
     public currenciesSource: ValueList<string>;
     private _sideDrawerTransition: DrawerTransitionBase;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page, private _settingsProfileActions: SettingsProfileActions,
-        private _loaderService: LoaderService, private routerExtensions: RouterService) {
+                private _loaderService: LoaderService, private routerExtensions: RouterService) {
         this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
@@ -92,7 +92,7 @@ export class CompanyProfileComponent implements OnInit {
             const statesArray: NsDropDownOptions[] = [];
             if (states) {
                 states.forEach(stt => {
-                    statesArray.push({ display: `${stt.code} - ${stt.name}`, value: stt.code });
+                    statesArray.push({display: `${stt.code} - ${stt.name}`, value: stt.code});
                 });
             }
             this.stateSource = new ValueList(statesArray);
@@ -102,7 +102,7 @@ export class CompanyProfileComponent implements OnInit {
             const currenciesArray: NsDropDownOptions[] = [];
             if (curr) {
                 curr.forEach(stt => {
-                    currenciesArray.push({ display: stt, value: stt });
+                    currenciesArray.push({display: stt, value: stt});
                 });
             }
             this.currenciesSource = new ValueList(currenciesArray);

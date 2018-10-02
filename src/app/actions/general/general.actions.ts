@@ -1,4 +1,3 @@
-
 import {map, switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {CustomActions} from '../../store/customActions';
@@ -18,18 +17,18 @@ export class GeneralActions {
     @Effect()
     public getAllState$: Observable<CustomActions> = this.action$
         .ofType(GeneralConst.GET_ALL_STATES).pipe(
-        switchMap(() => this._companyService.getAllStates()),
-        map(resp => this.setStatesData(resp)), );
+            switchMap(() => this._companyService.getAllStates()),
+            map(resp => this.setStatesData(resp)));
 
     @Effect()
     public getFlattenAccounts$: Observable<CustomActions> = this.action$
         .ofType(GeneralConst.GET_FLATTEN_ACCOUNTS).pipe(
-        switchMap((action: CustomActions) =>
-            this._accountService.GetFlattenAccounts(action.payload)
-        ),
-        map(response => {
-            return this.getFlattenAccountResponse(response);
-        }), );
+            switchMap((action: CustomActions) =>
+                this._accountService.GetFlattenAccounts(action.payload)
+            ),
+            map(response => {
+                return this.getFlattenAccountResponse(response);
+            }));
 
 
     constructor(private action$: Actions, private _companyService: CompanyService, private _accountService: AccountService) {

@@ -52,7 +52,7 @@ export class ReportsFilterComponent implements OnDestroy {
             {val: ChartFilterType.LastYear, text: 'Last Year'},
             {val: ChartFilterType.Custom, text: 'Custom'},
         ];
-        this.store.select(s => s.report).pipe(distinctUntilKeyChanged('profitLossChartFilter'), takeUntil(this.destroyed$),).subscribe(fl => {
+        this.store.select(s => s.report).pipe(distinctUntilKeyChanged('profitLossChartFilter'), takeUntil(this.destroyed$)).subscribe(fl => {
             this.selectedFilter = fl.profitLossChartFilter;
             this.showCustomFilterInputs = fl.profitLossChartFilter === ChartFilterType.Custom;
             // if (this.showCustomFilterInputs) {

@@ -1,4 +1,3 @@
-
 import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ObservableArray} from 'tns-core-modules/data/observable-array/observable-array';
@@ -44,7 +43,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public pieLable = '';
     public previousPieLable = '';
     public selectedFilter$: Observable<ChartFilterType>;
-    public secondWebViewSRC = '~/www/profitLossChart.html'
+    public secondWebViewSRC = '~/www/profitLossChart.html';
     private oLangWebViewInterface;
 
 
@@ -258,6 +257,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.previousPieSeries = [];
         this.renderOptions(this.series);
     }
+
     public genSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
         const incomeSeries = [];
         const indirectexpensesSeries = [];
@@ -279,8 +279,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
-        this.series = [{ name: 'income', data: incomeSeries, stack: 'income' }, { name: 'indirectexpenses', data: indirectexpensesSeries, stack: 'expenses' },
-        { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
+        this.series = [{name: 'income', data: incomeSeries, stack: 'income'}, {
+            name: 'indirectexpenses',
+            data: indirectexpensesSeries,
+            stack: 'expenses'
+        },
+            {name: 'operatingcost', data: operatingcostSeries, stack: 'expenses'}];
         this.categories = legendData;
 
         this.renderOptions(this.series);
@@ -323,8 +327,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
-        this.previousSeries = [{ name: 'income', data: incomeSeries, stack: 'income' }, { name: 'indirectexpenses', data: indirectexpensesSeries, stack: 'expenses' },
-        { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
+        this.previousSeries = [{name: 'income', data: incomeSeries, stack: 'income'}, {
+            name: 'indirectexpenses',
+            data: indirectexpensesSeries,
+            stack: 'expenses'
+        },
+            {name: 'operatingcost', data: operatingcostSeries, stack: 'expenses'}];
         this.categories = legendData;
 
         // this.renderOptions(this.previousSeries);
@@ -347,8 +355,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.pieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
+            this.pieSeries = [{name: 'revenue', y: incomeTotal, color: '#58C5C4'}, {
+                name: 'operatingcost',
+                y: operatingcost,
+                color: '#17989C'
+            },
+                {name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7'}];
             this.pieTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
             this.renderPieOptions('current');
         } else {
@@ -365,8 +377,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.previousPieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
+            this.previousPieSeries = [{name: 'revenue', y: incomeTotal, color: '#58C5C4'}, {
+                name: 'operatingcost',
+                y: operatingcost,
+                color: '#17989C'
+            },
+                {name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7'}];
             this.previousPieTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
             this.renderPieOptions('previous');
         }
@@ -403,7 +419,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.previousPieSeries
+                    s.data = this.previousPieSeries;
                     return s;
                 }),
                 title: Object.assign({}, this.previousPieChartOptions.title, {

@@ -1,4 +1,3 @@
-
 import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {
     AfterViewInit,
@@ -33,12 +32,12 @@ const webViewInterfaceModule = require('nativescript-webview-interface');
     selector: 'ns-revenue-chart,[ns-revenue-chart]',
     moduleId: module.id,
     templateUrl: './revenue.component.html',
-    styleUrls: ["./revenue.component.scss"],
+    styleUrls: ['./revenue.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
-    @ViewChild("myWebView") webViewRef: ElementRef;
-    public webViewSRC = "~/www/revenueChart.html";
+    @ViewChild('myWebView') webViewRef: ElementRef;
+    public webViewSRC = '~/www/revenueChart.html';
     public chartType = ChartType.Revenue;
     public options: any;
     public pieChartOptions: any;
@@ -61,18 +60,17 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public activeYearLabel: string;
     public lastYearLabel: string;
     public categories: string[] = [];
-    public chartFilterTitle: string = '';
+    public chartFilterTitle = '';
     private oLangWebViewInterface;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).pipe(takeUntil(this.destroyed$));
-        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).pipe(distinctUntilChanged(),takeUntil(this.destroyed$),);
+        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).pipe(distinctUntilChanged(), takeUntil(this.destroyed$));
         this.options = {
             chart: {
                 type: 'column',
-                events: {
-
-                }
+                events: {}
             },
             title: {
                 text: ''
@@ -226,7 +224,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private setupWebViewInterface() {
-        let webView: WebView = this.webViewRef.nativeElement;
+        const webView: WebView = this.webViewRef.nativeElement;
 
         this.oLangWebViewInterface = new webViewInterfaceModule.WebViewInterface(webView, this.webViewSRC);
         this.oLangWebViewInterface.on('seriesSelected', this.seriesSeleted.bind(this));
@@ -244,18 +242,18 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.revenueChartData$.subscribe(rvn => {
                     // if (rvn) {
                     if (rvn && rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
-                        let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
-                        let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
-                        let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
+                        const revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
+                        const otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
+                        const groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
                         this.activeYearAccounts = groups;
                     } else {
                         // this.resetActiveYearChartData();
                     }
 
                     if (rvn && rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
-                        let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
-                        let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
-                        let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
+                        const revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
+                        const otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
+                        const lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
                         this.lastYearAccounts = lastAccounts;
                     } else {
                         // this.resetLastYearChartData();
@@ -281,17 +279,17 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public generateActiveYearString(): INameUniqueName[] {
-        let activeStrings: INameUniqueName[] = [];
+        const activeStrings: INameUniqueName[] = [];
         this.activeYearAccounts.map(acc => {
-            activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+            activeStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
         });
         return activeStrings;
     }
 
     public generateLastYearString(): INameUniqueName[] {
-        let lastStrings: INameUniqueName[] = [];
+        const lastStrings: INameUniqueName[] = [];
         this.lastYearAccounts.map(acc => {
-            lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
+            lastStrings.push({uniqueName: acc.uniqueName, name: acc.groupName});
         });
         return lastStrings;
     }
@@ -313,9 +311,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         });
 
-        let activeAccounts = [];
-        let lastAccounts = [];
-        let categories = [];
+        const activeAccounts = [];
+        const lastAccounts = [];
+        const categories = [];
 
         this.accountStrings.forEach(p => {
             activeAccounts.push(p.activeYear);
@@ -331,10 +329,10 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.lastYearAccountsRanks = lastAccounts;
         this.categories = categories;
 
-        let seriesName = this.genSeriesName(this.selectedFilterType);
+        const seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+            {name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4'} as any,
+            {name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C'}
         ];
         this.lastYearGrandAmount = Number(_.sum(lastAccounts).toFixed(2)) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
@@ -379,9 +377,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public renderPieChart(type = 'current', per) {
         if (type === 'current') {
             if (per === 0) {
-                this.pieSeries = [{ y: 100, color: '#ECECED' }];
+                this.pieSeries = [{y: 100, color: '#ECECED'}];
             } else {
-                this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+                this.pieSeries = [{y: per, color: '#5AC4C4'}, {y: 100 - per, color: '#ECECED'}];
             }
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
@@ -400,9 +398,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         } else {
             if (per === 0) {
-                this.previousPieSeries = [{ y: 100, color: '#ECECED' }];
+                this.previousPieSeries = [{y: 100, color: '#ECECED'}];
             } else {
-                this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+                this.previousPieSeries = [{y: per, color: '#1F989C'}, {y: 100 - per, color: '#ECECED'}];
             }
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 title: Object.assign({}, this.previousPieChartOptions.title, {
@@ -427,8 +425,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public seriesSeleted(points) {
         let activePer = 0;
         let lastPer = 0;
-        let activePoint = points.current;
-        let lastPoint = points.last;
+        const activePoint = points.current;
+        const lastPoint = points.last;
 
         activePer = Number(((activePoint * 100) / this.activeYearGrandAmount).toFixed(2));
         lastPer = Number(((lastPoint * 100) / this.lastYearGrandAmount).toFixed(2));

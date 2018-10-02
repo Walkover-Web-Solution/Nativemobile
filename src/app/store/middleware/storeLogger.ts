@@ -207,7 +207,7 @@ export interface LoggerOptions {
      */
     actionTransformer?: (actn: Object) => Object;
     colors?: LoggerColorsOption;
-};
+}
 
 export interface LoggerFilterOption {
     /**

@@ -1,15 +1,23 @@
-import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NativeScriptRouterModule } from 'nativescript-angular/router';
+import {NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {NativeScriptRouterModule} from 'nativescript-angular/router';
 
 // nativescript
-import { NativeScriptCommonModule } from 'nativescript-angular/common';
-import { NativeScriptFormsModule } from 'nativescript-angular/forms';
+import {NativeScriptCommonModule} from 'nativescript-angular/common';
+import {NativeScriptFormsModule} from 'nativescript-angular/forms';
 
 // app
-import { COMPONENTS, LoginComponent, LoginWithOtpComponent, LoginWithEmailComponent, ForgotComponent, SignUpComponent, LoginTwoWayComponent } from './components';
-import { SharedModule } from '../shared/shared.module';
-import { LoginRoutes } from './login.routes';
+import {
+    COMPONENTS,
+    LoginComponent,
+    LoginWithOtpComponent,
+    LoginWithEmailComponent,
+    ForgotComponent,
+    SignUpComponent,
+    LoginTwoWayComponent
+} from './components';
+import {SharedModule} from '../shared/shared.module';
+import {LoginRoutes} from './login.routes';
 
 @NgModule({
     imports: [
@@ -26,4 +34,5 @@ import { LoginRoutes } from './login.routes';
         NO_ERRORS_SCHEMA
     ]
 })
-export class LoginModule { }
+export class LoginModule {
+}

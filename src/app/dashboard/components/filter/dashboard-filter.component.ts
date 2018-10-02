@@ -1,4 +1,3 @@
-
 import {take, distinctUntilKeyChanged} from 'rxjs/operators';
 import {Component, Inject, OnDestroy} from '@angular/core';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
@@ -30,8 +29,8 @@ const MY_FORMATS = {
     templateUrl: './dashboard-filter.component.html',
     styleUrls: ['./dashboard-filter.component.scss'],
     providers: [
-        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-        { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+        {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+        {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
     ]
 })
 export class DashboardFilterComponent implements OnDestroy {
@@ -40,22 +39,23 @@ export class DashboardFilterComponent implements OnDestroy {
     public showCustomFilterInputs = false;
     public customFilterObj: ChartCustomFilter;
     public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(public dialogRef: MatDialogRef<ReportsFilterComponent>, public store: Store<AppState>,
-        public _dashboardAction: DashboardActions, @Inject(MAT_DIALOG_DATA) public dialogData: any) {
+                public _dashboardAction: DashboardActions, @Inject(MAT_DIALOG_DATA) public dialogData: any) {
         this.items = [
-            { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date' },
-            { val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date' },
-            { val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date' },
-            { val: ChartFilterType.ThisYearToDate, text: 'This Year to Date' },
-            { val: ChartFilterType.LastMonth, text: 'Last Month' },
-            { val: ChartFilterType.LastQuater, text: 'Last Quater' },
-            { val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year' },
-            { val: ChartFilterType.LastYear, text: 'Last Year' },
-            { val: ChartFilterType.Custom, text: 'Custom' },
+            {val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date'},
+            {val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date'},
+            {val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date'},
+            {val: ChartFilterType.ThisYearToDate, text: 'This Year to Date'},
+            {val: ChartFilterType.LastMonth, text: 'Last Month'},
+            {val: ChartFilterType.LastQuater, text: 'Last Quater'},
+            {val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year'},
+            {val: ChartFilterType.LastYear, text: 'Last Year'},
+            {val: ChartFilterType.Custom, text: 'Custom'},
         ];
 
         if (this.dialogData.chartType === ChartType.Revenue) {
-            this.store.select(s => s.dashboard).pipe(distinctUntilKeyChanged('revenueChartFilter'), take(1), ).subscribe(s => {
+            this.store.select(s => s.dashboard).pipe(distinctUntilKeyChanged('revenueChartFilter'), take(1)).subscribe(s => {
                 this.selectedFilter = s.revenueChartFilter;
                 this.showCustomFilterInputs = s.revenueChartFilter === ChartFilterType.Custom;
 
@@ -68,7 +68,7 @@ export class DashboardFilterComponent implements OnDestroy {
                 // }
             });
         } else {
-            this.store.select(s => s.dashboard).pipe(distinctUntilKeyChanged('expensesChartFilter'), take(1), ).subscribe(s => {
+            this.store.select(s => s.dashboard).pipe(distinctUntilKeyChanged('expensesChartFilter'), take(1)).subscribe(s => {
                 this.selectedFilter = s.expensesChartFilter;
                 this.showCustomFilterInputs = s.expensesChartFilter === ChartFilterType.Custom;
 

@@ -1,4 +1,3 @@
-
 import {takeUntil} from 'rxjs/operators';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Observable, ReplaySubject} from 'rxjs';
@@ -24,7 +23,7 @@ import {Page} from '../common/utils/environment';
 })
 export class HomeComponent implements OnInit, OnDestroy {
     public logoutIcon: string = String.fromCharCode(0xf073);
-    @ViewChild("drawer") drawerComponent: any;
+    @ViewChild('drawer') drawerComponent: any;
     private _sideDrawerTransition: any;
     public userStream$: Observable<VerifyEmailResponseModel>;
     public isLoggedInWithSocialAccount$: Observable<boolean>;
@@ -33,11 +32,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>;
     public companies: MyDrawerItem[] = [];
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _loginActions: LoginActions,
-        private _companyActions: CompanyActions, private _toaster: ToasterService, private _cdRef: ChangeDetectorRef, private page: Page) {
+                private _companyActions: CompanyActions, private _toaster: ToasterService, private _cdRef: ChangeDetectorRef, private page: Page) {
         this.userStream$ = this.store.select(s => s.session.user);
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-            return { companies, uniqueName };
+            return {companies, uniqueName};
         }));
         this.isLoggedInWithSocialAccount$ = this.store.select(p => p.login.isLoggedInWithSocialAccount).pipe(takeUntil(this.destroyed$));
         (this.page as any).on((Page as any).unloadedEvent, (ev) => {
@@ -57,9 +57,9 @@ export class HomeComponent implements OnInit, OnDestroy {
             if (!res.companies) {
                 return;
             }
-            let allCmps: MyDrawerItem[] = [];
+            const allCmps: MyDrawerItem[] = [];
             res.companies.forEach(cmp => {
-                let item = new MyDrawerItem();
+                const item = new MyDrawerItem();
                 item.title = cmp.name;
                 item.needTopHr = true;
                 item.fontFamily = 'FontAwesome';
@@ -81,10 +81,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this.userStream$.subscribe(u => {
             if (u && u.user) {
-                let userEmail = u.user.email;
+                const userEmail = u.user.email;
                 if (u.user.name.match(/\s/g)) {
-                    let name = u.user.name;
-                    let tmpName = name.split(' ');
+                    const name = u.user.name;
+                    const tmpName = name.split(' ');
                     this.userName = tmpName[0][0] + tmpName[1][0];
                 } else {
                     this.userName = u.user.name[0] + u.user.name[1];
@@ -92,6 +92,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             }
         })
     }
+
     public get sideDrawerTransition(): any {
         return this._sideDrawerTransition;
     }
@@ -122,10 +123,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             cancelButtonText: 'No'
         }).then(r => {
             if (r) {
-                let SocialLogin = require('nativescript-social-login');
+                const SocialLogin = require('nativescript-social-login');
                 debugger;
                 this.store.dispatch(this._loginActions.logout());
-                (this.routerExtensions.router as any).navigateByUrl('/login', { clearHistory: true });
+                (this.routerExtensions.router as any).navigateByUrl('/login', {clearHistory: true});
             }
         });
     }

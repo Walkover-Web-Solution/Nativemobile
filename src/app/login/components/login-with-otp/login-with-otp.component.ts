@@ -1,14 +1,15 @@
-import { Component, OnInit, OnDestroy, AfterViewInit, Inject, Optional } from '@angular/core';
-import { SignupWithMobile, VerifyMobileModel } from '../../../models/api-models/loginModels';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable ,  ReplaySubject } from 'rxjs';
-import { LoginActions } from '../../../actions/login/login.action';
-import { NavigationStart } from '@angular/router';
-import { RouterService } from '../../../services/router.service';
-import { Page, Color, AnimationCurve } from '../../../common/utils/environment';
-import { Config } from '../../../common';
+import {Component, OnInit, OnDestroy, AfterViewInit, Optional} from '@angular/core';
+import {SignupWithMobile, VerifyMobileModel} from '../../../models/api-models/loginModels';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {Observable, ReplaySubject} from 'rxjs';
+import {LoginActions} from '../../../actions/login/login.action';
+import {NavigationStart} from '@angular/router';
+import {RouterService} from '../../../services/router.service';
+import {Page, Color, AnimationCurve} from '../../../common/utils/environment';
+import {Config} from '../../../common';
+
 // import { Color } from 'tns-core-modules/ui/page/page';
 @Component({
     selector: 'ns-login-with-otp',
@@ -23,8 +24,9 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     public isLoginWithMobileInProcess$: Observable<boolean>;
     public isVerifyMobileInProcess$: Observable<boolean>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private routerExtensions: RouterService, @Optional() private page: Page, private store: Store<AppState>,
-        private _fb: FormBuilder, private _loginActions: LoginActions) {
+                private _fb: FormBuilder, private _loginActions: LoginActions) {
         this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
         this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
         this.isLoginWithMobileInProcess$ = this.store.select(s => s.login.isLoginWithMobileInProcess);
@@ -48,6 +50,7 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
             otp: ['', [Validators.required]],
         });
     }
+
     ngAfterViewInit() {
         // this.items = this.itemService.getItems();
         if (Config.IS_MOBILE_NATIVE) {
@@ -59,18 +62,20 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
         this.isVerifyMobileSuccess$.subscribe(s => {
             if (s) {
                 if (Config.IS_MOBILE_NATIVE) {
-                    (this.routerExtensions.router as any).navigate(['/home'], { clearHistory: true });
+                    (this.routerExtensions.router as any).navigate(['/home'], {clearHistory: true});
                 } else {
-                    this.routerExtensions.router.navigate(['/home']);
+                    (this.routerExtensions.router as any).navigate(['/home']);
                 }
             }
         });
     }
+
     ngOnDestroy(): void {
         this.store.dispatch(this._loginActions.resetLoginOtpFlags());
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
+
     backToLogin() {
         if (Config.IS_MOBILE_NATIVE) {
             (this.routerExtensions.router as any).navigate(['/login'], {
@@ -81,7 +86,7 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
         } else {
-            this.routerExtensions.router.navigate(['/login']);
+            (this.routerExtensions.router as any).navigate(['/login']);
         }
     }
 
@@ -97,8 +102,8 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
         const data = new VerifyMobileModel();
         const mobileVerifyForm = this.mobileVerifyForm.value;
         data.countryCode = Number(mobileVerifyForm.country);
-        data.mobileNumber = mobileVerifyForm.mobileNumber; ;
-        data.oneTimePassword = mobileVerifyForm.otp; ;
+        data.mobileNumber = mobileVerifyForm.mobileNumber;
+        data.oneTimePassword = mobileVerifyForm.otp;
         this.store.dispatch(this._loginActions.verifyMobileRequest(data));
     }
 }

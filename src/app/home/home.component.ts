@@ -1,20 +1,19 @@
-
 import {take, takeUntil} from 'rxjs/operators';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Observable ,  ReplaySubject } from 'rxjs';
-import { VerifyEmailResponseModel } from '../models/api-models/loginModels';
-import { AppState } from '../store';
-import { Store } from '@ngrx/store';
-import { LoginActions } from '../actions/login/login.action';
-import { Router } from '@angular/router';
-import { CompanyActions } from '../actions/company/company.action';
-import { CompanyResponse } from '../models/api-models/Company';
-import { MyDrawerItem } from '../shared/my-drawer-item/my-drawer-item';
-import { createSelector } from 'reselect';
-import { RouterService } from '../services/router.service';
-import { ToasterService } from '../services/toaster.service';
-import { Config } from '../common';
-import { AuthService } from 'ng4-social-login';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Observable, ReplaySubject} from 'rxjs';
+import {VerifyEmailResponseModel} from '../models/api-models/loginModels';
+import {AppState} from '../store';
+import {Store} from '@ngrx/store';
+import {LoginActions} from '../actions/login/login.action';
+import {Router} from '@angular/router';
+import {CompanyActions} from '../actions/company/company.action';
+import {CompanyResponse} from '../models/api-models/Company';
+import {MyDrawerItem} from '../shared/my-drawer-item/my-drawer-item';
+import {createSelector} from 'reselect';
+import {RouterService} from '../services/router.service';
+import {ToasterService} from '../services/toaster.service';
+import {Config} from '../common';
+import {AuthService} from 'ng4-social-login';
 
 @Component({
     selector: 'ns-home',
@@ -33,11 +32,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     public companyData$: Observable<{ companies: CompanyResponse[], uniqueName: string }>
     public companies: MyDrawerItem[] = [];
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _loginActions: LoginActions,
-        private _companyActions: CompanyActions, private _toaster: ToasterService, private socialAuthService: AuthService) {
+                private _companyActions: CompanyActions, private _toaster: ToasterService, private socialAuthService: AuthService) {
         this.userStream$ = this.store.select(s => s.session.user);
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
-            return { companies, uniqueName };
+            return {companies, uniqueName};
         }));
         this.isLoggedInWithSocialAccount$ = this.store.select(p => p.login.isLoggedInWithSocialAccount).pipe(takeUntil(this.destroyed$));
     }
@@ -84,6 +84,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             }
         })
     }
+
     public get sideDrawerTransition(): any {
         return this._sideDrawerTransition;
     }
@@ -127,7 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy {
                         this.store.dispatch(this._loginActions.logout());
                     }
                 });
-                (this.routerExtensions.router as any).navigateByUrl('/login', { clearHistory: true });
+                (this.routerExtensions.router as any).navigateByUrl('/login', {clearHistory: true});
             }
         });
     }

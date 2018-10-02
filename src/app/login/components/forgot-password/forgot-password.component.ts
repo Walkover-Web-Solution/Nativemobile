@@ -1,17 +1,16 @@
-
 import {takeUntil} from 'rxjs/operators';
-import { Component, OnInit, OnDestroy, Optional } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { LoginActions } from '../../../actions/login/login.action';
-import { ResetPasswordV2 } from '../../../models/api-models/Login';
-import { Observable ,  ReplaySubject } from 'rxjs';
-import { NavigationStart } from '@angular/router';
-import { ToasterService } from '../../../services/toaster.service';
-import { RouterService } from '../../../services/router.service';
-import { Config } from '../../../common';
-import { Page, Color, AnimationCurve } from '../../../common/utils/environment';
+import {Component, OnInit, OnDestroy, Optional} from '@angular/core';
+import {FormBuilder, FormGroup, Validators, AbstractControl} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {LoginActions} from '../../../actions/login/login.action';
+import {ResetPasswordV2} from '../../../models/api-models/Login';
+import {Observable, ReplaySubject} from 'rxjs';
+import {NavigationStart} from '@angular/router';
+import {ToasterService} from '../../../services/toaster.service';
+import {RouterService} from '../../../services/router.service';
+import {Config} from '../../../common';
+import {Page, Color, AnimationCurve} from '../../../common/utils/environment';
 
 
 @Component({
@@ -31,7 +30,7 @@ export class ForgotComponent implements OnInit, OnDestroy {
 
     // private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private routerExtensions: RouterService, @Optional() private page: Page, private _fb: FormBuilder,
-        private store: Store<AppState>, private _loginActions: LoginActions, private _toaster: ToasterService) {
+                private store: Store<AppState>, private _loginActions: LoginActions, private _toaster: ToasterService) {
         this.isForgotPasswordSuccess$ = this.store.select(s => s.login.isForgotPasswordSuccess).pipe(takeUntil(this.destroyed$));
         this.isResetPasswordSuccess$ = this.store.select(s => s.login.isResetPasswordSuccess).pipe(takeUntil(this.destroyed$));
         this.isForgotPasswordInProcess$ = this.store.select(s => s.login.isForgotPasswordInProcess).pipe(takeUntil(this.destroyed$));
@@ -52,7 +51,7 @@ export class ForgotComponent implements OnInit, OnDestroy {
             verificationCode: ['', Validators.required],
             newPassword: ['', Validators.required],
             confirmPassword: ['', Validators.required]
-        }, { updateOn: 'submit' });
+        }, {updateOn: 'submit'});
         // this.items = this.itemService.getItems();
         if (Config.IS_MOBILE_NATIVE) {
             this.page.backgroundColor = new Color(1, 0, 169, 157);
@@ -66,12 +65,14 @@ export class ForgotComponent implements OnInit, OnDestroy {
             }
         })
     }
+
     ngOnDestroy(): void {
         this.store.dispatch(this._loginActions.resetForgotPasswordFlags());
         this.store.dispatch(this._loginActions.resetResetPasswordV2Flags());
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
+
     backToLogin() {
         if (Config.IS_MOBILE_NATIVE) {
             (this.routerExtensions.router as any).navigate(['/login'], {

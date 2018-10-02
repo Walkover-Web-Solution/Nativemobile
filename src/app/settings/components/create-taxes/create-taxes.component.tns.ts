@@ -142,14 +142,14 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
 
         this.isCreateTaxSuccess$.subscribe(s => {
             if (s) {
-                this.routerExtensions.router.navigate(['taxes']);
+                (this.routerExtensions.router as any).navigate(['taxes']);
                 this.store.dispatch(this._settingsTaxesActions.ResetCreateTaxUi());
             }
         });
         this.isUpdateTaxSuccess$.subscribe(s => {
             if (s) {
                 this.selectedTaxObj = null;
-                this.routerExtensions.router.navigate(['taxes']);
+                (this.routerExtensions.router as any).navigate(['taxes']);
                 this.store.dispatch(this._settingsTaxesActions.ResetUpdateTaxUi());
             }
         });
@@ -227,7 +227,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit {
             maxDate: new Date(new Date().getFullYear(), 11, 31),
             startingDate: this.selectedTaxObj && this.selectedTaxObj.date ? moment(this.selectedTaxObj.date, 'DD-MM-YYYY').toDate() : moment().toDate()
         }).then((result) => {
-            const date = `${result.day}-${result.month}-${result.year}`
+            const date = `${result.day}-${result.month}-${result.year}`;
             this.taxForm.get('date').patchValue(date);
         }).catch((error) => {
             // console.log("Error: " + JSON.stringify(error));

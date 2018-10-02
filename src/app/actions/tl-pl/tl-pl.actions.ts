@@ -1,4 +1,3 @@
-
 import {map, switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {Actions, Effect} from '@ngrx/effects';
@@ -22,82 +21,82 @@ export class TBPlBsActions {
     @Effect()
     private GetTrialBalance$: Observable<CustomActions> = this.action$
         .ofType(TlPlConst.GET_TRIAL_BALANCE_REQUEST).pipe(
-        switchMap((action: CustomActions) => {
-            console.log(JSON.stringify('calling Searvice'));
-            return this._tlPlService.GetTrailBalance(action.payload).pipe(
-                map((r: BaseResponse<AccountDetails, TrialBalanceRequest>) => {
-                    if (r.status !== 'success') {
-                        this._toaster.errorToast(r.message);
-                    }
-                    console.log(JSON.stringify('hurrye I got tb pl data'));
-                    return {
-                        type: TlPlConst.GET_TRIAL_BALANCE_RESPONSE,
-                        payload: r.status === 'success' ? r.body : null
-                    };
-                }));
-        }));
+            switchMap((action: CustomActions) => {
+                console.log(JSON.stringify('calling Searvice'));
+                return this._tlPlService.GetTrailBalance(action.payload).pipe(
+                    map((r: BaseResponse<AccountDetails, TrialBalanceRequest>) => {
+                        if (r.status !== 'success') {
+                            this._toaster.errorToast(r.message);
+                        }
+                        console.log(JSON.stringify('hurrye I got tb pl data'));
+                        return {
+                            type: TlPlConst.GET_TRIAL_BALANCE_RESPONSE,
+                            payload: r.status === 'success' ? r.body : null
+                        };
+                    }));
+            }));
 
     @Effect()
     private Search$: Observable<Action> = this.action$
         .ofType(TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST).pipe(
-        switchMap((action: CustomActions) => {
-            return this._groupService.GetFlattenGroupsAccounts(action.payload.q, action.payload.page, action.payload.count, action.payload.showEmptyGroups).pipe(
-                map((r: BaseResponse<FlattenGroupsAccountsResponse, string>) => {
-                    if (r.status !== 'success') {
-                        this._toaster.errorToast(r.message);
-                    }
-                    return {
-                        type: TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE,
-                        payload: r.status === 'success' ? r.body : []
-                    }
-                }));
-        }));
+            switchMap((action: CustomActions) => {
+                return this._groupService.GetFlattenGroupsAccounts(action.payload.q, action.payload.page, action.payload.count, action.payload.showEmptyGroups).pipe(
+                    map((r: BaseResponse<FlattenGroupsAccountsResponse, string>) => {
+                        if (r.status !== 'success') {
+                            this._toaster.errorToast(r.message);
+                        }
+                        return {
+                            type: TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE,
+                            payload: r.status === 'success' ? r.body : []
+                        }
+                    }));
+            }));
 
     @Effect()
     public GetTransactions$: Observable<Action> = this.action$
         .ofType(TlPlConst.GET_ACC_TRANSACTION).pipe(
-        switchMap((action: CustomActions) => {
-            const req: TransactionsRequest = action.payload as TransactionsRequest;
-            return this._ledgerService.GetLedgerTranscations(req.q, req.page, req.count, req.accountUniqueName, req.from, req.to, req.sort, req.reversePage);
-        }), map(res => {
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            }
-            return {
-                type: TlPlConst.GET_ACC_TRANSACTION_RESPONSE,
-                payload: res.status === 'success' ? res.body : null
-            }
-        }), );
+            switchMap((action: CustomActions) => {
+                const req: TransactionsRequest = action.payload as TransactionsRequest;
+                return this._ledgerService.GetLedgerTranscations(req.q, req.page, req.count, req.accountUniqueName, req.from, req.to, req.sort, req.reversePage);
+            }), map(res => {
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                }
+                return {
+                    type: TlPlConst.GET_ACC_TRANSACTION_RESPONSE,
+                    payload: res.status === 'success' ? res.body : null
+                }
+            }));
 
     @Effect()
     public GetAccountDetails$: Observable<Action> = this.action$
         .ofType(TlPlConst.GET_LEDGER_ACCOUNT).pipe(
-        switchMap((action: CustomActions) => this._accountService.GetAccountDetails(action.payload)),
-        map(res => {
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            }
-            return {
-                type: TlPlConst.GET_LEDGER_ACCOUNT_RESPONSE,
-                payload: res.status === 'success' ? res.body : null
-            }
-        }), );
+            switchMap((action: CustomActions) => this._accountService.GetAccountDetails(action.payload)),
+            map(res => {
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                }
+                return {
+                    type: TlPlConst.GET_LEDGER_ACCOUNT_RESPONSE,
+                    payload: res.status === 'success' ? res.body : null
+                }
+            }));
 
     @Effect()
     public GetMoreTransactions$: Observable<Action> = this.action$
         .ofType(TlPlConst.GET_MORE_ACC_TRANSACTION).pipe(
-        switchMap((action: CustomActions) => {
-            const req: TransactionsRequest = action.payload as TransactionsRequest;
-            return this._ledgerService.GetLedgerTranscations(req.q, req.page, req.count, req.accountUniqueName, req.from, req.to, req.sort, req.reversePage);
-        }), map(res => {
-            if (res.status !== 'success') {
-                this._toaster.errorToast(res.message);
-            }
-            return {
-                type: TlPlConst.GET_MORE_ACC_TRANSACTION_RESPONSE,
-                payload: res.status === 'success' ? res.body : null
-            }
-        }), );
+            switchMap((action: CustomActions) => {
+                const req: TransactionsRequest = action.payload as TransactionsRequest;
+                return this._ledgerService.GetLedgerTranscations(req.q, req.page, req.count, req.accountUniqueName, req.from, req.to, req.sort, req.reversePage);
+            }), map(res => {
+                if (res.status !== 'success') {
+                    this._toaster.errorToast(res.message);
+                }
+                return {
+                    type: TlPlConst.GET_MORE_ACC_TRANSACTION_RESPONSE,
+                    payload: res.status === 'success' ? res.body : null
+                }
+            }));
 
     constructor(private action$: Actions, private _tlPlService: TlPlService, private _groupService: GroupService, private _ledgerService: LedgerService,
                 private _accountService: AccountService, private _toaster: ToasterService) {

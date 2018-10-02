@@ -82,8 +82,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             },
             tooltip: {
                 formatter: function () {
-                    return '<b>' + this.x + '</b><br/>' +
-                        this.series.name + ': ' + this.y + '<br/>' +
+                    return '<b>' + this.x + '</b><br/>' + this.series.name + ': ' + this.y + '<br/>' +
                         'Total: ' + this.point.stackTotal;
                 }
             },
@@ -389,7 +388,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         } else {
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.previousPieSeries
+                    s.data = this.previousPieSeries;
                     return s;
                 }),
                 title: Object.assign({}, this.previousPieChartOptions.title, {

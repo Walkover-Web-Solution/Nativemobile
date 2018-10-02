@@ -1,9 +1,9 @@
-import { AppState } from '../store';
-import { CanActivate, Router } from '@angular/router';
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { userLoginStateEnum } from '../models/other-models/HelperModels';
-import { createSelector } from 'reselect';
+import {AppState} from '../store';
+import {CanActivate, Router} from '@angular/router';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {userLoginStateEnum} from '../models/other-models/HelperModels';
+import {createSelector} from 'reselect';
 
 
 @Injectable()

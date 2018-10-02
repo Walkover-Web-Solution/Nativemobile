@@ -56,7 +56,7 @@ export class CurrenciesComponent implements OnInit {
     }
 
     public createCurrencies() {
-        this.routerExtensions.router.navigate(['/create-currencies']);
+        (this.routerExtensions.router as any).navigate(['/create-currencies']);
     }
 
     public ngOnDestroy() {

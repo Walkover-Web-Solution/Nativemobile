@@ -1,4 +1,3 @@
-
 import {take} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
@@ -20,22 +19,22 @@ import {ReportsActions} from '../../../actions/reports/reports.actions';
 export class DashboardFilterComponent implements OnInit {
     public chartType: ChartType;
     public items: Array<{ text: string, selected: boolean, val: ChartFilterType }>;
-    public showCustomFilterInputs: boolean = false;
+    public showCustomFilterInputs = false;
     public customFilterObj: ChartCustomFilter;
 
     constructor(private routerExtensions: RouterService, private store: Store<AppState>,
-        private _dashboardActions: DashboardActions, private _reportsActions: ReportsActions, private activatedRouter: ActivatedRoute) {
+                private _dashboardActions: DashboardActions, private _reportsActions: ReportsActions, private activatedRouter: ActivatedRoute) {
 
         this.items = [
-            { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date', selected: false },
-            { val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date', selected: false },
-            { val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date', selected: false },
-            { val: ChartFilterType.ThisYearToDate, text: 'This Year to Date', selected: false },
-            { val: ChartFilterType.LastMonth, text: 'Last Month', selected: false },
-            { val: ChartFilterType.LastQuater, text: 'Last Quater', selected: false },
-            { val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year', selected: false },
-            { val: ChartFilterType.LastYear, text: 'Last Year', selected: false },
-            { val: ChartFilterType.Custom, text: 'Custom', selected: false },
+            {val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date', selected: false},
+            {val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date', selected: false},
+            {val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date', selected: false},
+            {val: ChartFilterType.ThisYearToDate, text: 'This Year to Date', selected: false},
+            {val: ChartFilterType.LastMonth, text: 'Last Month', selected: false},
+            {val: ChartFilterType.LastQuater, text: 'Last Quater', selected: false},
+            {val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year', selected: false},
+            {val: ChartFilterType.LastYear, text: 'Last Year', selected: false},
+            {val: ChartFilterType.Custom, text: 'Custom', selected: false},
         ];
 
         this.customFilterObj = new ChartCustomFilter();
@@ -75,7 +74,7 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     saveAndClose() {
-        let item = this.items.find(f => f.selected);
+        const item = this.items.find(f => f.selected);
         let url: string;
         let customFilterObj: any = this.customFilterObj;
 
@@ -91,14 +90,14 @@ export class DashboardFilterComponent implements OnInit {
 
         if (this.chartType === ChartType.ProfitLoss) {
             url = '/reports';
-            this.store.dispatch(this._reportsActions.setFilterType({ filterTitle: item.text, filterType: item.val }, this.customFilterObj));
+            this.store.dispatch(this._reportsActions.setFilterType({filterTitle: item.text, filterType: item.val}, this.customFilterObj));
             // this.store.dispatch(this._reportsActions.setProfitLossChartFilter(item.val, customFilterObj));
         } else {
             url = '/dashboard';
             this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val, customFilterObj));
         }
         this.customFilterObj = new ChartCustomFilter();
-        Config.IS_MOBILE_NATIVE && (this.routerExtensions.router as any).navigateByUrl(url, { clearHistory: true });
+        Config.IS_MOBILE_NATIVE && (this.routerExtensions.router as any).navigateByUrl(url, {clearHistory: true});
     }
 
     setSelectedItem(selVal) {
@@ -111,15 +110,15 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     public openFromDatePicker(year: string = 'activeYear') {
-        let ModalPicker = require("nativescript-modal-datetimepicker").ModalDatetimepicker;
+        const ModalPicker = require('nativescript-modal-datetimepicker').ModalDatetimepicker;
         const picker = new ModalPicker();
         picker.pickDate({
-            title: "Select From Date",
-            theme: "dark",
+            title: 'Select From Date',
+            theme: 'dark',
             maxDate: new Date(new Date().getFullYear(), 11, 31),
             startingDate: moment(this.customFilterObj[year].startDate, 'DD-MM-YYYY').toDate()
         }).then((result) => {
-            let date = `${result.day}-${result.month}-${result.year}`
+            const date = `${result.day}-${result.month}-${result.year}`
             this.customFilterObj[year].startDate = moment(date, 'DD-MM-YYYY').toDate();
         }).catch((error) => {
             // console.log("Error: " + JSON.stringify(error));
@@ -127,15 +126,15 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     public openToDatePicker(year: string = 'activeYear') {
-        let ModalPicker = require("nativescript-modal-datetimepicker").ModalDatetimepicker;
+        const ModalPicker = require('nativescript-modal-datetimepicker').ModalDatetimepicker;
         const picker = new ModalPicker();
         picker.pickDate({
-            title: "Select To Date",
-            theme: "dark",
+            title: 'Select To Date',
+            theme: 'dark',
             maxDate: new Date(new Date().getFullYear(), 11, 31),
             startingDate: moment(this.customFilterObj[year].endDate, 'DD-MM-YYYY').toDate()
         }).then((result) => {
-            let date = `${result.day}-${result.month}-${result.year}`
+            const date = `${result.day}-${result.month}-${result.year}`
             this.customFilterObj[year].endDate = moment(date, 'DD-MM-YYYY').toDate();
         }).catch((error) => {
             // console.log("Error: " + JSON.stringify(error));

@@ -1,4 +1,3 @@
-
 import {mergeMap} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
@@ -167,7 +166,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public googleLogin() {
-        setTimeout(()  => {
+        setTimeout(() => {
             this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Logging With Google...'}));
         }, 300);
         const SocialLogin = require('nativescript-social-login');

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RouterService} from '../services/router.service';
 import {ChartType} from '../models/interfaces/dashboard.interface';
 import {Config} from '../common/utils';
@@ -33,7 +33,7 @@ export class ReportsComponent implements OnInit {
     }
 
     goBack() {
-        this._routerExtension.router.navigate(['/home']);
+        (this._routerExtension.router as any).navigate(['/home']);
     }
 
     pageChanged(args) {
