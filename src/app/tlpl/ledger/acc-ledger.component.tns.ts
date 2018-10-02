@@ -284,7 +284,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             startingDate: this.request['type'] ? moment(this.request['type'], 'DD-MM-YYYY').format('DD-MM-YYYY') : new Date(new Date().getFullYear(), 11, 31),
         }).then((result) => {
             const date = `${result.day}-${result.month}-${result.year}`;
-            this.request[type] = moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY')
+            this.request[type] = moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY');
             this.request.page = 1;
             this.getTrxData();
         }).catch((error) => {

@@ -118,7 +118,7 @@ export class DashboardFilterComponent implements OnInit {
             maxDate: new Date(new Date().getFullYear(), 11, 31),
             startingDate: moment(this.customFilterObj[year].startDate, 'DD-MM-YYYY').toDate()
         }).then((result) => {
-            const date = `${result.day}-${result.month}-${result.year}`
+            const date = `${result.day}-${result.month}-${result.year}`;
             this.customFilterObj[year].startDate = moment(date, 'DD-MM-YYYY').toDate();
         }).catch((error) => {
             // console.log("Error: " + JSON.stringify(error));
@@ -134,7 +134,7 @@ export class DashboardFilterComponent implements OnInit {
             maxDate: new Date(new Date().getFullYear(), 11, 31),
             startingDate: moment(this.customFilterObj[year].endDate, 'DD-MM-YYYY').toDate()
         }).then((result) => {
-            const date = `${result.day}-${result.month}-${result.year}`
+            const date = `${result.day}-${result.month}-${result.year}`;
             this.customFilterObj[year].endDate = moment(date, 'DD-MM-YYYY').toDate();
         }).catch((error) => {
             // console.log("Error: " + JSON.stringify(error));

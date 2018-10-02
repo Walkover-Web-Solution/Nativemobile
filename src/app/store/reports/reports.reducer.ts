@@ -176,7 +176,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                     } else {
                         currentIncomeData.intervalBalances.push(co);
                     }
-                })
+                });
 
                 previousObj.forEach((co, ind) => {
                     if (!co) {
@@ -516,7 +516,7 @@ const getDate = (start, end, key, arr = [start.startOf(key)]) => {
     }
 
     return getDate(next, end, key, arr.concat(next));
-}
+};
 const getDateRange = (start, end, key, arr = [{
     rangeStart: moment(start),
     rangeEnd: moment(start).endOf(key)
@@ -537,10 +537,8 @@ const getDateRange = (start, end, key, arr = [{
             return arr;
         }
     }
-    ;
-
     return getDateRange(rangeEnd, end, key, arr.concat(range));
-}
+};
 // region Prepare Balance Sheet
 const prepareBalanceSheetData = (data) => {
     const bsData: BalanceSheetData = filterBalanceSheetData(data.groupDetails);

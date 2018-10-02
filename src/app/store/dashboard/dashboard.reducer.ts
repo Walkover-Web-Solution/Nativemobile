@@ -50,7 +50,7 @@ const initialState: DashboardState = {
             startDate: '', endDate: ''
         },
     }
-}
+};
 
 export function DashboardReducer(state: DashboardState = initialState, action: CustomActions): DashboardState {
     switch (action.type) {

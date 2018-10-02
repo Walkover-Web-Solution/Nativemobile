@@ -89,7 +89,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
                                 if (err) {
                                     this._toaster.errorToast('Something Went Wrong! Please Try Again');
                                 }
-                            })
+                            });
                             break;
                         }
                         default: {

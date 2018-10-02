@@ -432,7 +432,7 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
             config.ChartTitle = 'Last Month';
             config.activeYear.startDate = moment().startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
             config.activeYear.endDate = moment().endOf('month').subtract(1, 'month').format('DD-MM-YYYY');
-            config.activeYear.lable = moment().startOf('month').subtract(1, 'month').format('MMMM')
+            config.activeYear.lable = moment().startOf('month').subtract(1, 'month').format('MMMM');
 
             config.lastYear.startDate = moment(config.activeYear.startDate, 'DD-MM-YYYY').startOf('month').subtract(1, 'month').format('DD-MM-YYYY');
             config.lastYear.endDate = moment(config.activeYear.endDate, 'DD-MM-YYYY').endOf('month').subtract(1, 'month').format('DD-MM-YYYY');

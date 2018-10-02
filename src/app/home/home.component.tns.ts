@@ -124,7 +124,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         }).then(r => {
             if (r) {
                 const SocialLogin = require('nativescript-social-login');
-                debugger;
                 this.store.dispatch(this._loginActions.logout());
                 (this.routerExtensions.router as any).navigateByUrl('/login', {clearHistory: true});
             }

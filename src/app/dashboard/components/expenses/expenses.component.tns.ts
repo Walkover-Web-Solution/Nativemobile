@@ -379,7 +379,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                     text: `${per}%`
                 }),
                 series: this.pieChartOptions.series.map(s => {
-                    s.data = this.pieSeries
+                    s.data = this.pieSeries;
                     return s;
                 }),
             });
@@ -400,7 +400,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                     text: `${per}%`
                 }),
                 series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.pieSeries
+                    s.data = this.pieSeries;
                     return s;
                 }),
             });

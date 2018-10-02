@@ -72,7 +72,7 @@ export default (config, webview: WebView, routerExtension) => {
                         }
                     });
                 }
-            }
+            };
 
             authWindow.on('loadStarted', (event: LoadEventData) => {
                 // console.log()
@@ -83,7 +83,7 @@ export default (config, webview: WebView, routerExtension) => {
             //   onCallback(event.url);
             // });
         });
-    }
+    };
 
     const tokenRequest = (data) => {
         const header: any = {
@@ -108,7 +108,7 @@ export default (config, webview: WebView, routerExtension) => {
         }).then(function (res) {
             return res.json();
         });
-    }
+    };
 
     const getAccessToken = (opts) => {
         return getAuthorizationCode(opts)
@@ -121,7 +121,7 @@ export default (config, webview: WebView, routerExtension) => {
                 tokenRequestData = Object.assign(tokenRequestData, opts.additionalTokenRequestData);
                 return tokenRequest(tokenRequestData);
             });
-    }
+    };
 
     const refreshToken = (refreshToken) => {
         return tokenRequest({
@@ -129,7 +129,7 @@ export default (config, webview: WebView, routerExtension) => {
             grant_type: 'refresh_token',
             redirect_uri: config.redirectUri
         });
-    }
+    };
 
     return {
         getAuthorizationCode: getAuthorizationCode,

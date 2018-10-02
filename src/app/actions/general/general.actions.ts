@@ -30,7 +30,6 @@ export class GeneralActions {
                 return this.getFlattenAccountResponse(response);
             }));
 
-
     constructor(private action$: Actions, private _companyService: CompanyService, private _accountService: AccountService) {
         //
     }

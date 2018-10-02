@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     @ViewChild('myWebView') webViewRef: ElementRef;
     public loginProcess$: Observable<boolean>;
     public loginSuccess$: Observable<boolean>;
-    public secondWebViewSRC = '~/www/chart.html'
+    public secondWebViewSRC = '~/www/chart.html';
     public signupWithGoogleInProcess$: Observable<boolean>;
     public signupWithGoogleSuccess$: Observable<boolean>;
 

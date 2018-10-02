@@ -21,4 +21,4 @@ export const CompanyConstants = {
 
   GET_COMPANY_TAX : 'GET_COMPANY_TAX',
   GET_COMPANY_TAX_RESPONSE : 'GET_COMPANY_TAX_RESPONSE'
-}
+};

@@ -61,7 +61,7 @@ export class ForgotComponent implements OnInit, OnDestroy {
 
         this.isResetPasswordSuccess$.subscribe(s => {
             if (s) {
-                this.routerExtensions.router.navigate(['/login']);
+                (this.routerExtensions.router as any).navigate(['/login']);
             }
         })
     }
@@ -83,7 +83,7 @@ export class ForgotComponent implements OnInit, OnDestroy {
                 }
             });
         } else {
-            this.routerExtensions.router.navigate(['/login']);
+            (this.routerExtensions.router as any).navigate(['/login']);
         }
     }
 

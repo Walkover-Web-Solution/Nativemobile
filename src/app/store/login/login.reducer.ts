@@ -1,8 +1,13 @@
-import { CustomActions } from '../customActions';
-import { LoginConstants } from '../../actions/login/login.const';
-import { VerifyEmailResponseModel, VerifyMobileResponseModel, VerifyMobileModel, LinkedInRequestModel } from '../../models/api-models/loginModels';
-import { LoginWithPassword, SignUpWithPassword } from '../../models/api-models/Login';
-import { BaseResponse } from '../../models/api-models/BaseResponse';
+import {CustomActions} from '../customActions';
+import {LoginConstants} from '../../actions/login/login.const';
+import {
+    VerifyEmailResponseModel,
+    VerifyMobileResponseModel,
+    VerifyMobileModel,
+    LinkedInRequestModel
+} from '../../models/api-models/loginModels';
+import {LoginWithPassword, SignUpWithPassword} from '../../models/api-models/Login';
+import {BaseResponse} from '../../models/api-models/BaseResponse';
 
 export interface LoginState {
     isSignupInProcess: boolean;
@@ -58,7 +63,7 @@ const initialState: LoginState = {
     isLoggedInWithSocialAccount: false,
     isSignupWithLinkedInInProcess: false,
     isSignupWithLinkedInSuccess: false
-}
+};
 
 export function LoginReducer(state: LoginState = initialState, action: CustomActions): LoginState {
     switch (action.type) {
@@ -86,7 +91,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
         case LoginConstants.SIGNUP_REQUEST:
             return Object.assign({}, state, {
                 isSignupInProcess: true
-            })
+            });
         case LoginConstants.SIGNUP_RESPONSE: {
             const res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = action.payload;
             if (action.payload.status === 'success') {
@@ -140,7 +145,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
         case LoginConstants.SIGNUP_WITH_GOOGLE_REQUEST:
             return Object.assign({}, state, {
                 isSignupWithGoogleInProcess: true
-            })
+            });
 
         case LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE: {
             const data: BaseResponse<VerifyEmailResponseModel, string> = action.payload;

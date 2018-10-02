@@ -244,4 +244,4 @@ const getUnderstandingText = (category: string, balanceType: string, name: strin
             return cateData.balanceText.cr.replace('<accountName>', name);
         }
     }
-}
+};
