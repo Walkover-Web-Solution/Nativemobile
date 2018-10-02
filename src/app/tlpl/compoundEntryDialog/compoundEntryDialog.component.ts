@@ -8,14 +8,15 @@ import {ITransactionItem} from '../../models/interfaces/ledger.interface';
 })
 
 export class CompoundEntryDialogComponent implements OnInit {
-    entryTotal: number = 0;
+    entryTotal = 0;
+
     constructor(public dialogRef: MatDialogRef<CompoundEntryDialogComponent>,
                 @Inject(MAT_DIALOG_DATA) public dialogData: { compoundEntries: ITransactionItem[], entryDate: string | Date }) {
     }
 
     ngOnInit() {
         this.entryTotal = this.dialogData.compoundEntries.reduce((ac, cv) => {
-           return ac + cv.amount
+            return ac + cv.amount
         }, 0);
     }
 

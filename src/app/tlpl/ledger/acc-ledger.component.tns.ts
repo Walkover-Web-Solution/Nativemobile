@@ -1,4 +1,3 @@
-
 import {takeUntil, take} from 'rxjs/operators';
 import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewContainerRef} from '@angular/core';
 import {ModalDialogOptions, ModalDialogService} from 'nativescript-angular/modal-dialog';
@@ -47,11 +46,11 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     public transactionData$: Observable<TransactionsResponse>;
     public transactionDataWithOutShare$: Observable<TransactionsResponse>;
     public isTransactionRequestInProcess$: Observable<boolean>;
-    public isBusy: boolean = false;
+    public isBusy = false;
     public activeTab: 'credit' | 'debit' = 'debit';
     public activeTransaction$: Observable<ITransactionItem[]>;
-    public totalPages: number = 1;
-    public diffTotal: number = 0;
+    public totalPages = 1;
+    public diffTotal = 0;
     public activeAccount$: Observable<AccountResponse>;
     public accountDetailsInProgress$: Observable<boolean>;
     public ledgerUnderStandingObj = {
@@ -65,8 +64,8 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             dr: ''
         }
     };
-    public debitTrxHeight: number = 0;
-    public creditTrxHeight: number = 0;
+    public debitTrxHeight = 0;
+    public creditTrxHeight = 0;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
@@ -128,18 +127,18 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     downloadAttachedFile(fileName: string, e: Event) {
-        let that = this;
+        const that = this;
         this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
             if (d.status === 'success') {
-                permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
+                permissions.requestPermission((global as any).android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
                     .then(function () {
                         console.log('Woo Hoo, I have the power!');
                         if (isIOS) {
                             const documents = fileSystemModule.knownFolders.documents();
                             const file = documents.getFile(`${d.body.name}`);
                             const text = NSString.stringWithString(d.body.uploadedFile);
-                            let byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
-                            let isFileSaved = true;
+                            const byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
+                            const isFileSaved = true;
                             file.writeSync(byteCharacters, (e) => {
                                 that._toaster.errorToast(`There's an error while saving file..`);
                                 console.log('error in saving file');
@@ -148,12 +147,12 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
                                 that._toaster.successToast(`File saved Successfully To Downloads Folder`);
                             }
                         } else {
-                            let directoryDestiny: string = global.android.os.Environment.DIRECTORY_DOWNLOADS;
-                            let androidDownloadsPath: any = global.android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
+                            const directoryDestiny: string = (global as any).android.os.Environment.DIRECTORY_DOWNLOADS;
+                            const androidDownloadsPath: any = (global as any).android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
                             const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath);
                             const file = documents.getFile(`${d.body.name}`);
                             const text = new java.lang.String(d.body.uploadedFile);
-                            let byteEncoded = global.android.util.Base64.decode(text, global.android.util.Base64.DEFAULT);
+                            const byteEncoded = (global as any).android.util.Base64.decode(text, (global as any).android.util.Base64.DEFAULT);
                             let isFileSaved = true;
                             file.writeSync(byteEncoded, (e) => {
                                 isFileSaved = false;
@@ -176,25 +175,25 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     downloadInvoice(invoiceName: string, e: Event) {
-        let that = this;
+        const that = this;
         // e.stopPropagation();
         let activeAccount = null;
         this.activeAccount$.pipe(take(1)).subscribe(p => activeAccount = p);
-        let downloadRequest = new DownloadLedgerRequest();
+        const downloadRequest = new DownloadLedgerRequest();
         downloadRequest.invoiceNumber = [invoiceName];
 
         this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
             if (d.status === 'success') {
                 // let blob = base64ToBlob(d.body, 'application/pdf', 512);
-                permissions.requestPermission(global.android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
+                permissions.requestPermission((global as any).android.Manifest.permission.WRITE_EXTERNAL_STORAGE, 'I need these permissions because I\'m cool')
                     .then(function () {
                         console.log('Woo Hoo, I have the power!');
                         if (isIOS) {
                             const documents = fileSystemModule.knownFolders.documents();
                             const file = documents.getFile(`${activeAccount.name} - ${invoiceName}.pdf`);
                             const text = NSString.stringWithString(d.body);
-                            let byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
-                            let isFileSaved = true;
+                            const byteCharacters = text.dataUsingEncoding(NSUTF8StringEncoding);
+                            const isFileSaved = true;
                             file.writeSync(byteCharacters, (e) => {
                                 that._toaster.errorToast(`There's an error while saving file..`);
                                 console.log('error in saving file');
@@ -211,13 +210,13 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
                             //     console.log("error in saving file");
                             // });
                         } else {
-                            let directoryDestiny: string = global.android.os.Environment.DIRECTORY_DOWNLOADS;
-                            let androidDownloadsPath: any = global.android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
+                            const directoryDestiny: string = (global as any).android.os.Environment.DIRECTORY_DOWNLOADS;
+                            const androidDownloadsPath: any = (global as any).android.os.Environment.getExternalStoragePublicDirectory(directoryDestiny).toString();
                             const documents = fileSystemModule.Folder.fromPath(androidDownloadsPath);
                             const file = documents.getFile(`${activeAccount.name} - ${invoiceName}.pdf`);
                             const text = new java.lang.String(d.body);
-                            let byteEncoded = global.android.util.Base64.decode(text, global.android.util.Base64.DEFAULT);
-                            let isFileSaved = true;
+                            const byteEncoded = (global as any).android.util.Base64.decode(text, (global as any).android.util.Base64.DEFAULT);
+                            const isFileSaved = true;
                             file.writeSync(byteEncoded, (e) => {
                                 that._toaster.errorToast(`There's an error while saving file..`);
                                 console.log('error in saving file');
@@ -237,7 +236,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onDateRangeChanged(event: IMyDateRangeModel) {
-        let formatted = event.formatted.split(' - ');
+        const formatted = event.formatted.split(' - ');
         this.request.from = formatted[0];
         this.request.to = formatted[1];
         this.request.page = 1;
@@ -261,7 +260,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     getUnderstandingText(selectedLedgerAccountType, accountName) {
-        let data = _.cloneDeep(underStandingTextData.find(p => p.accountType === selectedLedgerAccountType));
+        const data = _.cloneDeep(underStandingTextData.find(p => p.accountType === selectedLedgerAccountType));
         if (data) {
             data.balanceText.cr = data.balanceText.cr.replace('<accountName>', accountName);
             data.balanceText.dr = data.balanceText.dr.replace('<accountName>', accountName);
@@ -273,8 +272,10 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     openFromDatePicker(type: string = 'from') {
-        if (!Config.IS_MOBILE_NATIVE) return;
-        let ModalPicker = require('nativescript-modal-datetimepicker').ModalDatetimepicker;
+        if (!Config.IS_MOBILE_NATIVE) {
+            return;
+        }
+        const ModalPicker = require('nativescript-modal-datetimepicker').ModalDatetimepicker;
         const picker = new ModalPicker();
         picker.pickDate({
             title: 'Select From Date',
@@ -282,17 +283,17 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             maxDate: new Date(new Date().getFullYear(), 11, 31),
             startingDate: this.request['type'] ? moment(this.request['type'], 'DD-MM-YYYY').format('DD-MM-YYYY') : new Date(new Date().getFullYear(), 11, 31),
         }).then((result) => {
-            let date = `${result.day}-${result.month}-${result.year}`;
+            const date = `${result.day}-${result.month}-${result.year}`;
             this.request[type] = moment(date, 'DD-MM-YYYY').format('DD-MM-YYYY')
             this.request.page = 1;
             this.getTrxData();
         }).catch((error) => {
-            //console.log('Error: ' + JSON.stringify(error));
+            // console.log('Error: ' + JSON.stringify(error));
         });
     }
 
     openCompoundEntry(txnUniqueName: string) {
-        let allItems: ITransactionItem[] = [];
+        const allItems: ITransactionItem[] = [];
 
         this.transactionDataWithOutShare$.pipe(take(1)).subscribe(t => {
             if (t) {
@@ -307,7 +308,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
             }
         });
 
-        let options: ModalDialogOptions = {
+        const options: ModalDialogOptions = {
             viewContainerRef: this.viewContainerRef,
             context: {data: {compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : ''}},
             fullscreen: true,

@@ -1,4 +1,3 @@
-
 import {take, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
@@ -43,12 +42,12 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterdData: ChildGroup[] = [];
     public breadCrumb: INameUniqueName[] = [];
     public activeGrp: ChildGroup = null;
-    public activeAcc: string = '';
+    public activeAcc = '';
     public flattenGrpDetails: any[] = [];
     public searchedFlattenGrpDetails: any[] = [];
     public searchedFlattenGrpDetails$: BehaviorSubject<any []> = new BehaviorSubject([]);
-    public isSearchEnabled: boolean = false;
-    public showLedgerScreen: boolean = false;
+    public isSearchEnabled = false;
+    public showLedgerScreen = false;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     private loaderSubcriber$: Subscription;
 
@@ -95,7 +94,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.data$.subscribe(p => {
-            let d = _.cloneDeep(p) as AccountDetails;
+            const d = _.cloneDeep(p) as AccountDetails;
             if (d) {
                 this.InitData(d.groupDetails);
                 d.groupDetails.forEach(g => {
@@ -174,7 +173,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     resetNavigation() {
         this.breadCrumb = [];
         this.data$.subscribe(p => {
-            let d = _.cloneDeep(p) as AccountDetails;
+            const d = _.cloneDeep(p) as AccountDetails;
             if (d) {
                 this.InitData(d.groupDetails);
                 d.groupDetails.forEach(g => {
@@ -195,15 +194,15 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     navigateTo(uniqueName: string) {
         this.activeAcc = '';
         this.data$.pipe(take(1)).subscribe(p => {
-            let d = _.cloneDeep(p) as AccountDetails;
-            let result = this.loopOver(d.groupDetails, uniqueName, null);
+            const d = _.cloneDeep(p) as AccountDetails;
+            const result = this.loopOver(d.groupDetails, uniqueName, null);
             this.activeGrp = result;
             // this.activeGrpAccount$.next(_.cloneDeep(this.activeGrp.accounts));
             this.filterdData = result.childGroups;
             // this.filterdData$.next(_.cloneDeep(this.filterdData));
             this.mergeGroupAndAccount();
         });
-        let index = this.breadCrumb.findIndex(f => f.uniqueName === uniqueName);
+        const index = this.breadCrumb.findIndex(f => f.uniqueName === uniqueName);
         this.breadCrumb = this.breadCrumb.filter((f, i) => {
             return i <= index;
         });
@@ -314,11 +313,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.breadCrumb = [];
 
         if (res.parentGrpUniqueName) {
-            let r = this.genBreadcrumb(res.parentGrpUniqueName, []);
+            const r = this.genBreadcrumb(res.parentGrpUniqueName, []);
             if (r && r.length) {
                 this.data$.pipe(take(1)).subscribe(p => {
-                    let d = _.cloneDeep(p) as AccountDetails;
-                    let result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
+                    const d = _.cloneDeep(p) as AccountDetails;
+                    const result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
                     this.filterdData = result.childGroups;
                     this.mergeGroupAndAccount();
                     // this.filterdData$.next(_.cloneDeep(this.filterdData));
@@ -368,9 +367,9 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (isAndroid) {
             try {
-                let activity = app.android.foregroundActivity;
-                let Context = app.android.currentContext;
-                let inputManager = Context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+                const activity = app.android.foregroundActivity;
+                const Context = app.android.currentContext;
+                const inputManager = Context.getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
 
                 if (activity.getCurrentFocus()) {
                     inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), android.view.inputmethod.InputMethodManager.HIDE_NOT_ALWAYS);

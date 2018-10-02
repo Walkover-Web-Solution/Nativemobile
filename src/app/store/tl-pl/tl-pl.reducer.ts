@@ -50,31 +50,31 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
     switch (action.type) {
         case TlPlConst.GET_TRIAL_BALANCE_RESPONSE: {
             // no payload means error from server
-            console.log(JSON.stringify("I am updating store"));
+            console.log(JSON.stringify('I am updating store'));
             if (action.payload) {
-                let data: AccountDetails = _.cloneDeep(action.payload) as AccountDetails;
+                const data: AccountDetails = _.cloneDeep(action.payload) as AccountDetails;
                 data.groupDetails = removeZeroAmountAccount((data.groupDetails));
                 let noData = false;
-                let showLoader = false;
+                const showLoader = false;
                 if (data.closingBalance.amount === 0 && data.creditTotal === 0 && data.debitTotal === 0 && data.forwardedBalance.amount === 0) {
                     noData = true;
                 }
                 return Object.assign({}, state, {
-                    tb: Object.assign({}, state.tb, { data, noData, showLoader, exportData: data.groupDetails })
+                    tb: Object.assign({}, state.tb, {data, noData, showLoader, exportData: data.groupDetails})
                 });
             } else {
                 return Object.assign({}, state,
-                    { tb: Object.assign({}, state.tb, { showLoader: false, exportData: [], data: null, noData: true }) });
+                    {tb: Object.assign({}, state.tb, {showLoader: false, exportData: [], data: null, noData: true})});
             }
         }
         case TlPlConst.GET_TRIAL_BALANCE_REQUEST: {
-            return Object.assign({}, initialState, { tb: Object.assign({}, initialState.tb, { showLoader: true }) });
+            return Object.assign({}, initialState, {tb: Object.assign({}, initialState.tb, {showLoader: true})});
         }
-        case TlPlConst.RESET_LOADER:{
+        case TlPlConst.RESET_LOADER: {
             return Object.assign({}, initialState);
         }
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
-            return Object.assign({}, state, { isFlyAccountInProcess: true });
+            return Object.assign({}, state, {isFlyAccountInProcess: true});
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_RESPONSE:
             return Object.assign({}, state, {
                 isFlyAccountInProcess: false,
@@ -98,7 +98,7 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             });
         }
         case TlPlConst.GET_MORE_ACC_TRANSACTION_RESPONSE: {
-            let response: TransactionsResponse = prepareTlEntryDate(action.payload);
+            const response: TransactionsResponse = prepareTlEntryDate(action.payload);
             if (response) {
                 return Object.assign({}, state, {
                     transactionInProgress: false,
@@ -149,7 +149,7 @@ const removeZeroAmountAccount = (grpList: ChildGroup[], category?: string) => {
     _.each(grpList, (grp) => {
 
         let count = 0;
-        let tempAcc = [];
+        const tempAcc = [];
         if (!grp.category) {
             grp.category = category;
         }
@@ -194,10 +194,10 @@ const prepare = (data: IFlattenGroupsAccountsDetail[]) => {
     }
 };
 
-//lb date prepare
+// lb date prepare
 const prepareTlEntryDate = (transactionsResponse: TransactionsResponse): TransactionsResponse => {
     if (transactionsResponse) {
-        let update: TransactionsResponse = _.cloneDeep(transactionsResponse);
+        const update: TransactionsResponse = _.cloneDeep(transactionsResponse);
         update.debitTransactions = update.debitTransactions.map(db => {
             db.entryDate = moment(db.entryDate, 'DD-MM-YYYY').toDate();
             return db;
@@ -234,7 +234,7 @@ const getUnderstandingText = (category: string, balanceType: string, name: strin
             break;
     }
 
-    let cateData = _.cloneDeep(underStandingTextData.find(p => p.accountType === accountType));
+    const cateData = _.cloneDeep(underStandingTextData.find(p => p.accountType === accountType));
     if (!cateData) {
         return 'dummy category';
     } else {

@@ -31,7 +31,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-    return localStorageSync({ keys: ['session'], rehydrate: true })(reducer);
+    return localStorageSync({keys: ['session'], rehydrate: true})(reducer);
 }
 
 export function logger(reducer: ActionReducer<AppState>): any {
@@ -39,13 +39,13 @@ export function logger(reducer: ActionReducer<AppState>): any {
     return storeLogger()(reducer);
 }
 
-let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
+const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer];
 
-elementRegistryModule.registerElement("CardView", () => require("nativescript-cardview").CardView);
-elementRegistryModule.registerElement("Fab", () => Fab);
-elementRegistryModule.registerElement("Carousel", () => require("nativescript-carousel").Carousel);
-elementRegistryModule.registerElement("CarouselItem", () => require("nativescript-carousel").CarouselItem);
-elementRegistryModule.registerElement("FilterSelect", () => require("nativescript-filter-select").FilterSelect);
+elementRegistryModule.registerElement('CardView', () => require('nativescript-cardview').CardView);
+elementRegistryModule.registerElement('Fab', () => Fab);
+elementRegistryModule.registerElement('Carousel', () => require('nativescript-carousel').Carousel);
+elementRegistryModule.registerElement('CarouselItem', () => require('nativescript-carousel').CarouselItem);
+elementRegistryModule.registerElement('FilterSelect', () => require('nativescript-filter-select').FilterSelect);
 
 @NgModule({
     bootstrap: [
@@ -56,8 +56,8 @@ elementRegistryModule.registerElement("FilterSelect", () => require("nativescrip
         NativeScriptHttpClientModule,
         NativeScriptFormsModule,
         NativeScriptRouterModule,
-        NativeScriptRouterModule.forRoot(AppRoutes, { enableTracing: false }),
-        StoreModule.forRoot(reducers, { metaReducers }),
+        NativeScriptRouterModule.forRoot(AppRoutes, {enableTracing: false}),
+        StoreModule.forRoot(reducers, {metaReducers}),
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
         }),
@@ -72,7 +72,7 @@ elementRegistryModule.registerElement("FilterSelect", () => require("nativescrip
         NeedsAuthentication,
         {
             provide: ServiceConfig,
-            useValue: { apiUrl: 'https://api.giddh.com/', appUrl: 'http://apitest.giddh.com/' }
+            useValue: {apiUrl: 'https://api.giddh.com/', appUrl: 'http://apitest.giddh.com/'}
         },
     ],
     exports: [NativeScriptRouterModule],
@@ -80,4 +80,5 @@ elementRegistryModule.registerElement("FilterSelect", () => require("nativescrip
         NO_ERRORS_SCHEMA
     ]
 })
-export class AppModule { }
+export class AppModule {
+}

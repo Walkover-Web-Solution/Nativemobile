@@ -76,8 +76,8 @@ const initialState: ReportsState = {
     activeChartType: 'current'
 };
 
-let isErrorInIncomeData: boolean = false;
-let isErrorInExpenseData: boolean = false;
+let isErrorInIncomeData = false;
+let isErrorInExpenseData = false;
 
 export function ReportsReducer(state: ReportsState = initialState, action: CustomActions): ReportsState {
     switch (action.type) {
@@ -88,22 +88,22 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         }
         case ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_RESPONSE: {
             isErrorInIncomeData = false;
-            let payload: { data: CategoryHistoryResponse, config: ChartFilterConfigs } = action.payload;
-            let config: ChartFilterConfigs = _.cloneDeep(payload.config);
-            let filterType = _.cloneDeep(state.profitLossChartFilter);
+            const payload: { data: CategoryHistoryResponse, config: ChartFilterConfigs } = action.payload;
+            const config: ChartFilterConfigs = _.cloneDeep(payload.config);
+            const filterType = _.cloneDeep(state.profitLossChartFilter);
 
-            let isWeekly = filterType === ChartFilterType.LastMonth || filterType === ChartFilterType.ThisMonthToDate;
+            const isWeekly = filterType === ChartFilterType.LastMonth || filterType === ChartFilterType.ThisMonthToDate;
 
-            let keyType = isWeekly ? 'week' : 'month';
-            let currentRange = getDateRange(moment(config.activeYear.startDate, 'DD-MM-YYYY'), moment(config.activeYear.endDate, 'DD-MM-YYYY'), keyType);
-            let previousRange = getDateRange(moment(config.lastYear.startDate, 'DD-MM-YYYY'), moment(config.lastYear.endDate, 'DD-MM-YYYY'), keyType);
-            let currentIncomeData = _.cloneDeep(payload.data);
-            let previousIncomeData = _.cloneDeep(payload.data);
+            const keyType = isWeekly ? 'week' : 'month';
+            const currentRange = getDateRange(moment(config.activeYear.startDate, 'DD-MM-YYYY'), moment(config.activeYear.endDate, 'DD-MM-YYYY'), keyType);
+            const previousRange = getDateRange(moment(config.lastYear.startDate, 'DD-MM-YYYY'), moment(config.lastYear.endDate, 'DD-MM-YYYY'), keyType);
+            const currentIncomeData = _.cloneDeep(payload.data);
+            const previousIncomeData = _.cloneDeep(payload.data);
             let currentLegend = config.legend;
             let previousLegend = config.legend;
 
-            let currentObj = [];
-            let previousObj = [];
+            const currentObj = [];
+            const previousObj = [];
 
             if (isWeekly) {
                 currentLegend = [];
@@ -117,7 +117,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                 });
                 currentIncomeData.intervalBalances = [];
                 currentObj.forEach(co => {
-                    let newCObj: IIntervalBalancesItem = {
+                    const newCObj: IIntervalBalancesItem = {
                         creditTotal: _.sumBy(co, 'creditTotal'),
                         debitTotal: _.sumBy(co, 'debitTotal'),
                         from: co[0].from,
@@ -136,7 +136,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                 });
                 previousIncomeData.intervalBalances = [];
                 previousObj.forEach((po, ind) => {
-                    let newCObj: IIntervalBalancesItem = {
+                    const newCObj: IIntervalBalancesItem = {
                         creditTotal: _.sumBy(po, 'creditTotal'),
                         debitTotal: _.sumBy(po, 'debitTotal'),
                         from: po[0].from,
@@ -164,13 +164,13 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
 
                 currentObj.forEach((co, ind) => {
                     if (!co) {
-                        let newCObj: IIntervalBalancesItem = {
+                        const newCObj: IIntervalBalancesItem = {
                             creditTotal: 0,
                             debitTotal: 0,
                             from: currentRange[ind].rangeStart.format('DD-MM-YYYY'),
                             to: currentRange[ind].rangeEnd.format('DD-MM-YYYY'),
-                            openingBalance: { amount: 0, description: '', type: '' },
-                            closingBalance: { amount: 0, type: '' },
+                            openingBalance: {amount: 0, description: '', type: ''},
+                            closingBalance: {amount: 0, type: ''},
                         };
                         currentIncomeData.intervalBalances.push(newCObj);
                     } else {
@@ -180,13 +180,13 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
 
                 previousObj.forEach((co, ind) => {
                     if (!co) {
-                        let newCObj: IIntervalBalancesItem = {
+                        const newCObj: IIntervalBalancesItem = {
                             creditTotal: 0,
                             debitTotal: 0,
                             from: previousRange[ind].rangeStart.format('DD-MM-YYYY'),
                             to: previousRange[ind].rangeEnd.format('DD-MM-YYYY'),
-                            openingBalance: { amount: 0, description: '', type: '' },
-                            closingBalance: { amount: 0, type: '' },
+                            openingBalance: {amount: 0, description: '', type: ''},
+                            closingBalance: {amount: 0, type: ''},
                         };
                         previousIncomeData.intervalBalances.push(newCObj);
                     } else {
@@ -212,7 +212,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             });
         }
         case ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_ERROR: {
-            let config: ChartFilterConfigs = _.cloneDeep(action.payload.config);
+            const config: ChartFilterConfigs = _.cloneDeep(action.payload.config);
             isErrorInIncomeData = true;
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
@@ -242,22 +242,22 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         }
         case ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_RESPONSE: {
             isErrorInExpenseData = false;
-            let payload: { data: GroupHistoryResponse, config: ChartFilterConfigs } = action.payload;
-            let config: ChartFilterConfigs = _.cloneDeep(payload.config);
-            let filterType = _.cloneDeep(state.profitLossChartFilter);
+            const payload: { data: GroupHistoryResponse, config: ChartFilterConfigs } = action.payload;
+            const config: ChartFilterConfigs = _.cloneDeep(payload.config);
+            const filterType = _.cloneDeep(state.profitLossChartFilter);
 
-            let isWeekly = filterType === ChartFilterType.LastMonth || filterType === ChartFilterType.ThisMonthToDate;
+            const isWeekly = filterType === ChartFilterType.LastMonth || filterType === ChartFilterType.ThisMonthToDate;
 
-            let keyType = isWeekly ? 'week' : 'month';
-            let currentRange = getDateRange(moment(config.activeYear.startDate, 'DD-MM-YYYY'), moment(config.activeYear.endDate, 'DD-MM-YYYY'), keyType);
-            let previousRange = getDateRange(moment(config.lastYear.startDate, 'DD-MM-YYYY'), moment(config.lastYear.endDate, 'DD-MM-YYYY'), keyType);
-            let currentExpenseData = _.cloneDeep(payload.data);
-            let previousExpenseData = _.cloneDeep(payload.data);
+            const keyType = isWeekly ? 'week' : 'month';
+            const currentRange = getDateRange(moment(config.activeYear.startDate, 'DD-MM-YYYY'), moment(config.activeYear.endDate, 'DD-MM-YYYY'), keyType);
+            const previousRange = getDateRange(moment(config.lastYear.startDate, 'DD-MM-YYYY'), moment(config.lastYear.endDate, 'DD-MM-YYYY'), keyType);
+            const currentExpenseData = _.cloneDeep(payload.data);
+            const previousExpenseData = _.cloneDeep(payload.data);
             let currentLegend = config.legend;
             let previousLegend = config.legend;
 
-            let currentObj = [];
-            let previousObj = [];
+            const currentObj = [];
+            const previousObj = [];
 
             if (isWeekly) {
                 currentLegend = [];
@@ -265,26 +265,26 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
 
                 currentExpenseData.groups.forEach(grp => {
                     currentRange.forEach((cr, ind) => {
-                        let data = grp.intervalBalances.filter(ic => {
+                        const data = grp.intervalBalances.filter(ic => {
                             return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
                         });
-                        currentObj.push({ intervalBalances: data, grp: grp.uniqueName });
+                        currentObj.push({intervalBalances: data, grp: grp.uniqueName});
                     });
                     grp.intervalBalances = [];
                 });
 
                 previousExpenseData.groups.forEach(grp => {
                     previousRange.forEach((cr, ind) => {
-                        let data = grp.intervalBalances.filter(ic => {
+                        const data = grp.intervalBalances.filter(ic => {
                             return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
                         });
-                        previousObj.push({ intervalBalances: data, grp: grp.uniqueName });
+                        previousObj.push({intervalBalances: data, grp: grp.uniqueName});
                     });
                     grp.intervalBalances = [];
                 });
 
                 currentObj.forEach(co => {
-                    let newCObj: IIntervalBalancesItem = {
+                    const newCObj: IIntervalBalancesItem = {
                         creditTotal: _.sumBy(co.intervalBalances, 'creditTotal'),
                         debitTotal: _.sumBy(co.intervalBalances, 'debitTotal'),
                         from: co.intervalBalances[0].from,
@@ -302,7 +302,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
                 });
 
                 previousObj.forEach(co => {
-                    let newCObj: IIntervalBalancesItem = {
+                    const newCObj: IIntervalBalancesItem = {
                         creditTotal: _.sumBy(co.intervalBalances, 'creditTotal'),
                         debitTotal: _.sumBy(co.intervalBalances, 'debitTotal'),
                         from: co.intervalBalances[0].from,
@@ -321,33 +321,33 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             } else {
                 currentExpenseData.groups.forEach(grp => {
                     currentRange.forEach((cr, ind) => {
-                        let data = grp.intervalBalances.find(ic => {
+                        const data = grp.intervalBalances.find(ic => {
                             return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
                         });
-                        currentObj.push({ intervalBalances: data, grp: grp.uniqueName });
+                        currentObj.push({intervalBalances: data, grp: grp.uniqueName});
                     });
                     grp.intervalBalances = [];
                 });
 
                 previousExpenseData.groups.forEach(grp => {
                     previousRange.forEach((cr, ind) => {
-                        let data = grp.intervalBalances.find(ic => {
+                        const data = grp.intervalBalances.find(ic => {
                             return moment(ic.from, 'YYYY-MM-DD').isBetween(moment(cr.rangeStart, 'DD-MM-YYYY'), moment(cr.rangeEnd, 'DD-MM-YYYY'), null, '[]');
                         });
-                        previousObj.push({ intervalBalances: data, grp: grp.uniqueName });
+                        previousObj.push({intervalBalances: data, grp: grp.uniqueName});
                     });
                     grp.intervalBalances = [];
                 });
 
                 currentObj.forEach((co, ind) => {
                     if (!co.intervalBalances) {
-                        let newCObj: IIntervalBalancesItem = {
+                        const newCObj: IIntervalBalancesItem = {
                             creditTotal: 0,
                             debitTotal: 0,
                             from: currentRange[ind] ? currentRange[ind].rangeStart.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
                             to: currentRange[ind] ? currentRange[ind].rangeEnd.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
-                            openingBalance: { amount: 0, description: '', type: '' },
-                            closingBalance: { amount: 0, type: '' },
+                            openingBalance: {amount: 0, description: '', type: ''},
+                            closingBalance: {amount: 0, type: ''},
                         };
                         currentExpenseData.groups.map(grps => {
                             if (grps.uniqueName === co.grp) {
@@ -367,13 +367,13 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
 
                 previousObj.forEach((co, ind) => {
                     if (!co.intervalBalances) {
-                        let newCObj: IIntervalBalancesItem = {
+                        const newCObj: IIntervalBalancesItem = {
                             creditTotal: 0,
                             debitTotal: 0,
                             from: previousRange[ind] ? previousRange[ind].rangeStart.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
                             to: previousRange[ind] ? previousRange[ind].rangeEnd.format('DD-MM-YYYY') : moment().format('DD-MM-YYYY'),
-                            openingBalance: { amount: 0, description: '', type: '' },
-                            closingBalance: { amount: 0, type: '' },
+                            openingBalance: {amount: 0, description: '', type: ''},
+                            closingBalance: {amount: 0, type: ''},
                         };
                         previousExpenseData.groups.map(grps => {
                             if (grps.uniqueName === co.grp) {
@@ -411,7 +411,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
         }
 
         case ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR: {
-            let config: ChartFilterConfigs = _.cloneDeep(action.payload.config);
+            const config: ChartFilterConfigs = _.cloneDeep(action.payload.config);
             isErrorInExpenseData = true;
             return Object.assign({}, state, {
                 currentData: Object.assign({}, state.currentData, {
@@ -491,7 +491,7 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
             });
         }
         case ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE: {
-            let data: BalanceSheetData = prepareBalanceSheetData(_.cloneDeep(action.payload.body));
+            const data: BalanceSheetData = prepareBalanceSheetData(_.cloneDeep(action.payload.body));
             return Object.assign({}, state, {
                 balanceSheet: Object.assign({}, state.balanceSheet, {
                     showLoader: false,
@@ -507,37 +507,45 @@ export function ReportsReducer(state: ReportsState = initialState, action: Custo
 }
 
 const getDate = (start, end, key, arr = [start.startOf(key)]) => {
-    if (start.isAfter(end)) throw new Error('start must precede end')
+    if (start.isAfter(end)) {
+        throw new Error('start must precede end')
+    }
     const next = moment(start).add(1, key).startOf(key);
-    if (next.isAfter(end, key)) return arr;
+    if (next.isAfter(end, key)) {
+        return arr;
+    }
 
     return getDate(next, end, key, arr.concat(next));
 }
 
-const getDateRange = (start, end, key, arr = [{ rangeStart: moment(start), rangeEnd: moment(start).endOf(key) }]): Array<{ rangeStart: moment.Moment, rangeEnd: moment.Moment }> => {
+const getDateRange = (start, end, key, arr = [{
+    rangeStart: moment(start),
+    rangeEnd: moment(start).endOf(key)
+}]): Array<{ rangeStart: moment.Moment, rangeEnd: moment.Moment }> => {
     if (start.isAfter(end)) {
         // console.log('start must precede end');
     }
 
-    let rangeStart = moment(moment(start).add(1, key).startOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');
-    let rangeEnd = moment(moment(rangeStart).endOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');
-    let range = { rangeStart, rangeEnd };
+    const rangeStart = moment(moment(start).add(1, key).startOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');
+    const rangeEnd = moment(moment(rangeStart).endOf(key).format('DD-MM-YYYY'), 'DD-MM-YYYY');
+    const range = {rangeStart, rangeEnd};
 
     if (rangeEnd.isAfter(end)) {
         if (rangeStart.isAfter(end)) {
             return arr;
         } else {
-            arr = arr.concat({ rangeStart, rangeEnd: end });
+            arr = arr.concat({rangeStart, rangeEnd: end});
             return arr;
         }
-    };
+    }
+    ;
 
     return getDateRange(rangeEnd, end, key, arr.concat(range));
 }
 
-//region Prepare Balance Sheet
+// region Prepare Balance Sheet
 const prepareBalanceSheetData = (data) => {
-    let bsData: BalanceSheetData = filterBalanceSheetData(data.groupDetails);
+    const bsData: BalanceSheetData = filterBalanceSheetData(data.groupDetails);
     bsData.assetTotal = calCulateTotalAssets(bsData.assets);
     bsData.assetTotalEnd = calCulateTotalAssetsEnd(bsData.assets);
     bsData.liabTotal = calCulateTotalLiab(bsData.liabilities);
@@ -545,7 +553,7 @@ const prepareBalanceSheetData = (data) => {
     return bsData;
 };
 const filterBalanceSheetData = data => {
-    let filterPlData: BalanceSheetData = {};
+    const filterPlData: BalanceSheetData = {};
     filterPlData.assets = [];
     filterPlData.liabilities = [];
     filterPlData.othArr = [];

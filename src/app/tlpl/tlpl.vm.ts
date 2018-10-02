@@ -1,17 +1,18 @@
-import { IFlattenGroupsAccountsDetail } from "../models/interfaces/flattenGroupsAccountsDetail.interface";
+import {IFlattenGroupsAccountsDetail} from '../models/interfaces/flattenGroupsAccountsDetail.interface';
 
 export class TlPlFlGWAList {
     constructor(public name: string, public uniqueName: string, public isGroup: boolean = true, public parentGrpUniqueName?: string) {
 
     }
 }
+
 export class TlPlVM {
     constructor() {
 
     }
 
     prepareFlGWAList(flattenGroupsAccounts: IFlattenGroupsAccountsDetail[]): TlPlFlGWAList[] {
-        let flGWAList: TlPlFlGWAList[] = [];
+        const flGWAList: TlPlFlGWAList[] = [];
 
         flattenGroupsAccounts.map(fl => {
             if (fl.accountDetails) {

@@ -1,24 +1,22 @@
-
 import {takeUntil, take} from 'rxjs/operators';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { TBPlBsActions } from '../../actions/tl-pl/tl-pl.actions';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../store';
-import { DownloadLedgerRequest, TransactionsRequest, TransactionsResponse } from '../../models/api-models/Ledger';
-import { IMyDateRangeModel, IMyDrpOptions } from 'mydaterangepicker';
-import { Observable ,  ReplaySubject } from 'rxjs';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {TBPlBsActions} from '../../actions/tl-pl/tl-pl.actions';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {DownloadLedgerRequest, TransactionsRequest, TransactionsResponse} from '../../models/api-models/Ledger';
+import {IMyDateRangeModel, IMyDrpOptions} from 'mydaterangepicker';
+import {Observable, ReplaySubject} from 'rxjs';
 
 
-
-import { AccountResponse } from '../../models/api-models/Account';
-import { underStandingTextData } from './underStandingTextData';
+import {AccountResponse} from '../../models/api-models/Account';
+import {underStandingTextData} from './underStandingTextData';
 import * as _ from 'lodash';
-import { LedgerService } from '../../services/ledger.service';
-import { saveAs } from 'file-saver';
-import { ToasterService } from '../../services/toaster.service';
-import { MatDialog } from '@angular/material';
-import { CompoundEntryDialogComponent } from '../compoundEntryDialog/compoundEntryDialog.component';
-import { ITransactionItem } from '../../models/interfaces/ledger.interface';
+import {LedgerService} from '../../services/ledger.service';
+import {saveAs} from 'file-saver';
+import {ToasterService} from '../../services/toaster.service';
+import {MatDialog} from '@angular/material';
+import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntryDialog.component';
+import {ITransactionItem} from '../../models/interfaces/ledger.interface';
 
 @Component({
     selector: 'ns-acc-ledger',
@@ -34,15 +32,15 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         dateFormat: 'dd-mm-yyyy',
     };
     public dateModel: any = {
-        beginDate: { year: 2018, month: 10, day: 9 },
-        endDate: { year: 2018, month: 10, day: 19 }
+        beginDate: {year: 2018, month: 10, day: 9},
+        endDate: {year: 2018, month: 10, day: 19}
     };
     public transactionData$: Observable<TransactionsResponse>;
     public transactionDataWithOutShare$: Observable<TransactionsResponse>;
     public isTransactionRequestInProcess$: Observable<boolean>;
     public activeTab: 'credit' | 'debit' = 'debit';
-    public totalPages: number = 1;
-    public diffTotal: number = 0;
+    public totalPages = 1;
+    public diffTotal = 0;
     public activeAccount$: Observable<AccountResponse>;
     public accountDetailsInProgress$: Observable<boolean>;
     public ledgerUnderStandingObj = {
@@ -59,7 +57,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(public _tlPlActions: TBPlBsActions, private store: Store<AppState>, private _ledgerService: LedgerService, private _toaster: ToasterService,
-        private _cdRef: ChangeDetectorRef, private dialog: MatDialog) {
+                private _cdRef: ChangeDetectorRef, private dialog: MatDialog) {
         this.request = new TransactionsRequest();
         this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).pipe(takeUntil(this.destroyed$));
         this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).pipe(takeUntil(this.destroyed$));
@@ -106,7 +104,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         e.stopPropagation();
         this._ledgerService.DownloadAttachement(fileName).subscribe(d => {
             if (d.status === 'success') {
-                let blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
+                const blob = base64ToBlob(d.body.uploadedFile, `image/${d.body.fileType}`, 512);
                 return saveAs(blob, d.body.name);
             } else {
                 this._toaster.errorToast(d.message);
@@ -118,12 +116,12 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         e.stopPropagation();
         let activeAccount = null;
         this.activeAccount$.pipe(take(1)).subscribe(p => activeAccount = p);
-        let downloadRequest = new DownloadLedgerRequest();
+        const downloadRequest = new DownloadLedgerRequest();
         downloadRequest.invoiceNumber = [invoiceName];
 
         this._ledgerService.DownloadInvoice(downloadRequest, activeAccount.uniqueName).subscribe(d => {
             if (d.status === 'success') {
-                let blob = base64ToBlob(d.body, 'application/pdf', 512);
+                const blob = base64ToBlob(d.body, 'application/pdf', 512);
                 return saveAs(blob, `${activeAccount.name} - ${invoiceName}.pdf`);
             } else {
                 this._toaster.errorToast(d.message);
@@ -132,7 +130,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     onDateRangeChanged(event: IMyDateRangeModel) {
-        let formatted = event.formatted.split(' - ');
+        const formatted = event.formatted.split(' - ');
         this.request.from = formatted[0];
         this.request.to = formatted[1];
         this.request.page = 1;
@@ -153,7 +151,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     getUnderstandingText(selectedLedgerAccountType, accountName) {
-        let data = _.cloneDeep(underStandingTextData.find(p => p.accountType === selectedLedgerAccountType));
+        const data = _.cloneDeep(underStandingTextData.find(p => p.accountType === selectedLedgerAccountType));
         if (data) {
             data.balanceText.cr = data.balanceText.cr.replace('<accountName>', accountName);
             data.balanceText.dr = data.balanceText.dr.replace('<accountName>', accountName);
@@ -166,7 +164,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 
     openCompoundEntry(txnUniqueName: string) {
 
-        let allItems: ITransactionItem[] = [];
+        const allItems: ITransactionItem[] = [];
 
         this.transactionDataWithOutShare$.pipe(take(1)).subscribe(t => {
             if (t) {
@@ -176,7 +174,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this.dialog.open(CompoundEntryDialogComponent, {
-            data: { compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : '' },
+            data: {compoundEntries: allItems, entryDate: allItems[0] ? allItems[0].entryDate : ''},
             width: '340px',
         });
     }
@@ -196,20 +194,20 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
 const base64ToBlob = (b64Data, contentType, sliceSize) => {
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
-    let byteCharacters = atob(b64Data);
-    let byteArrays = [];
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
     let offset = 0;
     while (offset < byteCharacters.length) {
-        let slice = byteCharacters.slice(offset, offset + sliceSize);
-        let byteNumbers = new Array(slice.length);
+        const slice = byteCharacters.slice(offset, offset + sliceSize);
+        const byteNumbers = new Array(slice.length);
         let i = 0;
         while (i < slice.length) {
             byteNumbers[i] = slice.charCodeAt(i);
             i++;
         }
-        let byteArray = new Uint8Array(byteNumbers);
+        const byteArray = new Uint8Array(byteNumbers);
         byteArrays.push(byteArray);
         offset += sliceSize;
     }
-    return new Blob(byteArrays, { type: contentType });
+    return new Blob(byteArrays, {type: contentType});
 };

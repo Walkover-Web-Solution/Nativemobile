@@ -10,7 +10,7 @@ import {ModalDialogParams} from 'nativescript-angular/modal-dialog';
 })
 
 export class CompoundEntryDialogComponent implements OnInit, AfterViewInit {
-    entryTotal: number = 0;
+    entryTotal = 0;
     dialogData: { compoundEntries: ITransactionItem[], entryDate: string | Date };
 
     constructor(private params: ModalDialogParams, private _cdRef: ChangeDetectorRef) {

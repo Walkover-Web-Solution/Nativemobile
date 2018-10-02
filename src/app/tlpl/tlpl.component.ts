@@ -1,4 +1,3 @@
-
 import {takeUntil, take} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
@@ -32,13 +31,13 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     public filterdData: ChildGroup[] = [];
     public breadCrumb: INameUniqueName[] = [];
     public activeGrp: ChildGroup = null;
-    public activeAcc: string = '';
+    public activeAcc = '';
     public flattenGrpDetails: any[] = [];
     public searchedFlattenGrpDetails: any[] = [];
-    public isSearchEnabled: boolean = false;
-    public showLedgerScreen: boolean = false;
-    public width: number = 0;
-    public parentListHeight: number = 0;
+    public isSearchEnabled = false;
+    public showLedgerScreen = false;
+    public width = 0;
+    public parentListHeight = 0;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
@@ -70,7 +69,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         this.data$.subscribe(p => {
-            let d = _.cloneDeep(p) as AccountDetails;
+            const d = _.cloneDeep(p) as AccountDetails;
             if (d) {
                 this.InitData(d.groupDetails);
                 d.groupDetails.forEach(g => {
@@ -113,7 +112,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     goBack() {
-        this._routerExtension.router.navigate(['/home']);
+        (this._routerExtension.router as any).navigate(['/home']);
     }
 
     getData(request: TrialBalanceRequest) {
@@ -133,7 +132,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     resetNavigation() {
         this.breadCrumb = [];
         this.data$.subscribe(p => {
-            let d = _.cloneDeep(p) as AccountDetails;
+            const d = _.cloneDeep(p) as AccountDetails;
             if (d) {
                 this.InitData(d.groupDetails);
                 d.groupDetails.forEach(g => {
@@ -150,12 +149,12 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
     navigateTo(uniqueName: string) {
         this.activeAcc = '';
         this.data$.pipe(take(1)).subscribe(p => {
-            let d = _.cloneDeep(p) as AccountDetails;
-            let result = this.loopOver(d.groupDetails, uniqueName, null);
+            const d = _.cloneDeep(p) as AccountDetails;
+            const result = this.loopOver(d.groupDetails, uniqueName, null);
             this.activeGrp = result;
             this.filterdData = result.childGroups;
         });
-        let index = this.breadCrumb.findIndex(f => f.uniqueName === uniqueName);
+        const index = this.breadCrumb.findIndex(f => f.uniqueName === uniqueName);
         this.breadCrumb = this.breadCrumb.filter((f, i) => {
             return i <= index;
         });
@@ -246,11 +245,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.breadCrumb = [];
 
         if (res.parentGrpUniqueName) {
-            let r = this.genBreadcrumb(res.parentGrpUniqueName, []);
+            const r = this.genBreadcrumb(res.parentGrpUniqueName, []);
             if (r && r.length) {
                 this.data$.pipe(take(1)).subscribe(p => {
-                    let d = _.cloneDeep(p) as AccountDetails;
-                    let result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
+                    const d = _.cloneDeep(p) as AccountDetails;
+                    const result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
                     this.filterdData = result.childGroups;
                 });
                 r.reverse().forEach(a => {

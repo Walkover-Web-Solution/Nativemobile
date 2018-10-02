@@ -1,7 +1,7 @@
 declare var console;
 
 const logger = console;
-const INIT_ACTION = "@ngrx/store/init";
+const INIT_ACTION = '@ngrx/store/init';
 
 const repeat = (str, times) => (new Array(times + 1)).join(str);
 const pad = (num, maxLength) => repeat(`0`, maxLength - num.toString().length) + num;
@@ -22,9 +22,9 @@ const getLogLevel = (level, action, payload, type) => {
 const printBuffer = options => logBuffer => {
     const {actionTransformer, collapsed, colors, timestamp, duration, level} = options;
     logBuffer.forEach((logEntry, key) => {
-        const { started, startedTime, action, error } = logEntry;
+        const {started, startedTime, action, error} = logEntry;
         const prevState = logEntry.prevState.nextState ? logEntry.prevState.nextState : '(Empty)';
-        let { took, nextState } = logEntry;
+        let {took, nextState} = logEntry;
         const nextEntry = logBuffer[key + 1];
         if (nextEntry) {
             nextState = nextEntry.prevState;
@@ -40,11 +40,17 @@ const printBuffer = options => logBuffer => {
 
         try {
             if (isCollapsed) {
-                if (colors.title) logger.groupCollapsed(`%c ${title}`, titleCSS);
-                else logger.log(title);
+                if (colors.title) {
+                    logger.groupCollapsed(`%c ${title}`, titleCSS);
+                } else {
+                    logger.log(title);
+                }
             } else {
-                if (colors.title) logger.group(`%c ${title}`, titleCSS);
-                else logger.log(title);
+                if (colors.title) {
+                    logger.group(`%c ${title}`, titleCSS);
+                } else {
+                    logger.log(title);
+                }
             }
         } catch (e) {
             logger.log(title);
@@ -61,13 +67,19 @@ const printBuffer = options => logBuffer => {
         }
 
         if (actionLevel) {
-            if (colors.action) logger[actionLevel](`%c action`, `color: ${colors.action(formattedAction)}; font-weight: bold`, formattedAction);
-            else logger[actionLevel](`action`, JSON.stringify(formattedAction));
+            if (colors.action) {
+                logger[actionLevel](`%c action`, `color: ${colors.action(formattedAction)}; font-weight: bold`, formattedAction);
+            } else {
+                logger[actionLevel](`action`, JSON.stringify(formattedAction));
+            }
         }
 
         if (error && errorLevel) {
-            if (colors.error) logger[errorLevel](`%c error`, `color: ${colors.error(error, prevState)}; font-weight: bold`, error);
-            else logger[errorLevel](`error`, JSON.stringify(error));
+            if (colors.error) {
+                logger[errorLevel](`%c error`, `color: ${colors.error(error, prevState)}; font-weight: bold`, error);
+            } else {
+                logger[errorLevel](`error`, JSON.stringify(error));
+            }
         }
 
         if (nextStateLevel) {
@@ -98,7 +110,7 @@ export const storeLogger = (opts: LoggerOptions = {}) => (reducer: Function) => 
     let log = {};
     const ua = typeof window !== 'undefined' && window.navigator.userAgent ? window.navigator.userAgent : '';
     let ms_ie = false;
-    //fix for action display in IE
+    // fix for action display in IE
     const old_ie = ua.indexOf('MSIE ');
     const new_ie = ua.indexOf('Trident/');
 
@@ -144,23 +156,23 @@ export const storeLogger = (opts: LoggerOptions = {}) => (reducer: Function) => 
     const {stateTransformer} = options;
     const buffer = printBuffer(options);
 
-    return function(state, action) {
-        let preLog = {
+    return function (state, action) {
+        const preLog = {
             started: timer.now(),
             startedTime: new Date(),
             prevState: stateTransformer(log),
             action
         };
 
-        let nextState = reducer(state, action);
+        const nextState = reducer(state, action);
 
-        let postLog = {
+        const postLog = {
             took: timer.now() - preLog.started,
             nextState: stateTransformer(nextState)
         };
         log = Object.assign({}, preLog, postLog);
-        //ignore init action fired by store and devtools
-        if(action.type !== INIT_ACTION && isAllowed(action, options.filter)) {
+        // ignore init action fired by store and devtools
+        if (action.type !== INIT_ACTION && isAllowed(action, options.filter)) {
             buffer([log]);
         }
 

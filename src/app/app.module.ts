@@ -1,24 +1,24 @@
-import { NgModule } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import {NgModule} from '@angular/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
 // vendor dependencies
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 // app
-import { Config } from './common/index';
-import { AppComponent } from './app.component';
-import { SHARED_MODULES } from './app.common';
-import { ServiceModule } from './services/service.module';
-import { reducers, AppState } from './store';
-import { StoreModule, ActionReducer, MetaReducer } from '@ngrx/store';
-import { ActionModule } from './actions/actions.module';
-import { ServiceConfig } from './services/service.config';
-import { storeLogger } from './store/middleware/storeLogger';
-import { NeedsAuthentication } from './decorators/needsAuthentication';
-import { ToastrModule } from 'ngx-toastr';
-import { localStorageSync } from 'ngrx-store-localstorage';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from 'environments/environment';
+import {Config} from './common/index';
+import {AppComponent} from './app.component';
+import {SHARED_MODULES} from './app.common';
+import {ServiceModule} from './services/service.module';
+import {reducers, AppState} from './store';
+import {StoreModule, ActionReducer, MetaReducer} from '@ngrx/store';
+import {ActionModule} from './actions/actions.module';
+import {ServiceConfig} from './services/service.config';
+import {storeLogger} from './store/middleware/storeLogger';
+import {NeedsAuthentication} from './decorators/needsAuthentication';
+import {ToastrModule} from 'ngx-toastr';
+import {localStorageSync} from 'ngrx-store-localstorage';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {environment} from 'environments/environment';
 
 
 Config.PLATFORM_TARGET = Config.PLATFORMS.WEB;
@@ -29,7 +29,7 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 export function localStorageSyncReducer(reducer: ActionReducer<any>): ActionReducer<any> {
-    return localStorageSync({ keys: ['session'], rehydrate: true })(reducer);
+    return localStorageSync({keys: ['session'], rehydrate: true})(reducer);
 }
 
 export function logger(reducer: ActionReducer<AppState>): any {
@@ -37,21 +37,21 @@ export function logger(reducer: ActionReducer<AppState>): any {
     return storeLogger()(reducer);
 }
 
-let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logger];
+const metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logger];
 
 @NgModule({
     declarations: [AppComponent],
     imports: [
         BrowserAnimationsModule,
         HttpClientModule,
-        StoreModule.forRoot(reducers, { metaReducers }),
+        StoreModule.forRoot(reducers, {metaReducers}),
         StoreDevtoolsModule.instrument({
             maxAge: 25, // Retains last 25 states
             logOnly: true // Restrict extension to log-only mode
         }),
         ServiceModule.forRoot(),
         ActionModule.forRoot(),
-        ToastrModule.forRoot({ preventDuplicates: true, maxOpened: 3 }),
+        ToastrModule.forRoot({preventDuplicates: true, maxOpened: 3}),
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -65,9 +65,10 @@ let metaReducers: Array<MetaReducer<any, any>> = [localStorageSyncReducer, logge
         NeedsAuthentication,
         {
             provide: ServiceConfig,
-            useValue: { apiUrl: environment.apiUrl, appUrl: environment.appUrl }
+            useValue: {apiUrl: environment.apiUrl, appUrl: environment.appUrl}
         },
     ],
     bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}
