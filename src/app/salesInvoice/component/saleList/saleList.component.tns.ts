@@ -1,3 +1,4 @@
+import {map} from 'rxjs/operators';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AppState} from '../../../store';
 import {Store} from '@ngrx/store';
@@ -5,7 +6,7 @@ import {DrawerTransitionBase} from 'nativescript-ui-sidedrawer';
 import {RadSideDrawerComponent} from 'nativescript-ui-sidedrawer/angular';
 import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
 import {RouterService} from '../../../services/router.service';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'ns-sale-list',
@@ -14,10 +15,11 @@ import {Observable} from 'rxjs/Observable';
 })
 export class SaleListComponent implements OnInit {
     public navItemObj$: Observable<MyDrawerItem[]>;
-    @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
+    @ViewChild('drawer') public drawerComponent: RadSideDrawerComponent;
     private _sideDrawerTransition: DrawerTransitionBase;
+
     constructor(private store: Store<AppState>, private routerExtensions: RouterService) {
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/sale') {
@@ -28,15 +30,17 @@ export class SaleListComponent implements OnInit {
                 }
             }
             return p;
-        });
+        }));
     }
 
     ngOnInit() {
         //
     }
+
     public get sideDrawerTransition(): DrawerTransitionBase {
         return this._sideDrawerTransition;
     }
+
     public onDrawerButtonTap(): void {
         this.drawerComponent.sideDrawer.showDrawer();
     }

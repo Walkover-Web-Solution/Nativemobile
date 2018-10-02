@@ -1,4 +1,4 @@
-import { RazorPayDetailsResponse } from '../api-models/SettingsIntegraion';
+import {RazorPayDetailsResponse} from '../api-models/SettingsIntegraion';
 
 export interface InvoiceSetting {
     invoiceSettings: InvoiceISetting;
@@ -17,6 +17,7 @@ export class InvoiceISetting {
     public emailVerified: boolean;
     public showSeal: boolean;
 }
+
 export interface InvoiceWebhooks {
     entity: string;
     operation?: string;
@@ -26,13 +27,13 @@ export interface InvoiceWebhooks {
 }
 
 export class EmailSettingObjDefinition {
-  public isEmailTabSelected: boolean;
-  public subject?: string = '';
-  public form: string = 'abcd@walkover.in';
-  public body?: string = `Here’s your invoice! We appreciate your prompt payment.
+    public isEmailTabSelected: boolean;
+    public subject = '';
+    public form = 'abcd@walkover.in';
+    public body = `Here’s your invoice! We appreciate your prompt payment.
 Thanks for your business!
 Walkover Test11343`;
-  public useGreeting?: boolean;
-  public greeting?: string;
-  public username?: string;
+    public useGreeting?: boolean;
+    public greeting?: string;
+    public username?: string;
 }

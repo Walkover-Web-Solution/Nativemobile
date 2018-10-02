@@ -1,3 +1,5 @@
+
+import {take} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as moment from 'moment/moment';
@@ -47,15 +49,15 @@ export class DashboardFilterComponent implements OnInit {
             });
 
         if (this.chartType === ChartType.Revenue) {
-            this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(s => {
+            this.store.select(p => p.dashboard.revenueChartFilter).pipe(take(1)).subscribe(s => {
                 this.setSelectedItem(s);
             });
         } else if (this.chartType === ChartType.Expense) {
-            this.store.select(p => p.dashboard.expensesChartFilter).take(1).subscribe(s => {
+            this.store.select(p => p.dashboard.expensesChartFilter).pipe(take(1)).subscribe(s => {
                 this.setSelectedItem(s);
             });
         } else if (this.chartType === ChartType.ProfitLoss) {
-            this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(s => {
+            this.store.select(p => p.report.profitLossChartFilter).pipe(take(1)).subscribe(s => {
                 this.setSelectedItem(s);
             });
         }

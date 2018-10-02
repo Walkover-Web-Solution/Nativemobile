@@ -1,18 +1,18 @@
-import { OnInit, Component, OnDestroy, ViewChild } from "@angular/core";
-import { Observable } from "rxjs/Observable";
-import { MyDrawerItem } from "../../../shared/my-drawer-item/my-drawer-item";
-import { CompanyResponse, States } from "../../../models/api-models/Company";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { IContriesWithCodes } from "../../../shared/static-data/countryWithCodes";
-import { ReplaySubject } from "rxjs";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../store";
-import { SettingsProfileActions } from "../../../actions/settings/profile/settings.profile.action";
-import { LoaderService } from "../../../services/loader.service";
-import { RouterService } from "../../../services/router.service";
-import { createSelector } from "reselect";
+import {takeUntil, map} from 'rxjs/operators';
+import {OnInit, Component, OnDestroy, ViewChild} from '@angular/core';
+import {Observable, ReplaySubject} from 'rxjs';
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {CompanyResponse, States} from '../../../models/api-models/Company';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {IContriesWithCodes} from '../../../shared/static-data/countryWithCodes';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {SettingsProfileActions} from '../../../actions/settings/profile/settings.profile.action';
+import {LoaderService} from '../../../services/loader.service';
+import {RouterService} from '../../../services/router.service';
+import {createSelector} from 'reselect';
 import * as _ from 'lodash';
-import { MyDrawerComponent } from "../../../shared/my-drawer/my-drawer.component";
+import {MyDrawerComponent} from '../../../shared/my-drawer/my-drawer.component';
 
 
 @Component({
@@ -34,8 +34,8 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _fb: FormBuilder, private _settingsProfileActions: SettingsProfileActions,
-        private _loaderService: LoaderService, private routerExtensions: RouterService) {
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+                private _loaderService: LoaderService, private routerExtensions: RouterService) {
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/settings') {
@@ -46,21 +46,22 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
                 }
             }
             return p;
-        });
+        }));
 
-        this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes).takeUntil(this.destroyed$);
-        this.stateStream$ = this.store.select(s => s.general.states).takeUntil(this.destroyed$);
+        this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes).pipe(takeUntil(this.destroyed$));
+        this.stateStream$ = this.store.select(s => s.general.states).pipe(takeUntil(this.destroyed$));
         this.selectedCompany$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             if (!companies) {
                 return;
             }
 
             return companies.find(cmp => cmp.uniqueName === uniqueName);
-        })).takeUntil(this.destroyed$);
-        this.isUpdateCompanyProfileInProcess$ = this.store.select(state => state.session.isUpdateCompanyProfileInProcess).takeUntil(this.destroyed$);
-        this.isUpdateCompanyProfileSuccess$ = this.store.select(state => state.session.isUpdateCompanyProfileSuccess).takeUntil(this.destroyed$);
-        this.currenciesStream$ = this.store.select(state => state.general.currencies).takeUntil(this.destroyed$);
+        })).pipe(takeUntil(this.destroyed$));
+        this.isUpdateCompanyProfileInProcess$ = this.store.select(state => state.session.isUpdateCompanyProfileInProcess).pipe(takeUntil(this.destroyed$));
+        this.isUpdateCompanyProfileSuccess$ = this.store.select(state => state.session.isUpdateCompanyProfileSuccess).pipe(takeUntil(this.destroyed$));
+        this.currenciesStream$ = this.store.select(state => state.general.currencies).pipe(takeUntil(this.destroyed$));
     }
+
     ngOnInit(): void {
         this.companyProfileForm = this._fb.group({
             name: ['', Validators.required],
@@ -78,7 +79,7 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
 
         this.selectedCompany$.subscribe(s => {
             if (s) {
-                let objToFill = _.cloneDeep(s);
+                const objToFill = _.cloneDeep(s);
 
                 this.companyProfileForm.patchValue(objToFill);
             }
@@ -102,7 +103,7 @@ export class CompanyProfileComponent implements OnInit, OnDestroy {
     }
 
     public submit() {
-        let dataToSave = _.cloneDeep(this.companyProfileForm.value);
+        const dataToSave = _.cloneDeep(this.companyProfileForm.value);
         if (dataToSave.email) {
             dataToSave.email = dataToSave.email.toLowerCase();
         }

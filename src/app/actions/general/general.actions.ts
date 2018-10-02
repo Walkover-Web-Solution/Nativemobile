@@ -1,3 +1,5 @@
+
+import {map, switchMap} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
 import {CustomActions} from '../../store/customActions';
 import {GeneralConst} from '../../actions/general/general.const';
@@ -5,7 +7,7 @@ import {contriesWithCodes} from '../../shared/static-data/countryWithCodes';
 import {States} from '../../models/api-models/Company';
 import {BaseResponse} from '../../models/api-models/BaseResponse';
 import {Actions, Effect} from '@ngrx/effects';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {CompanyService} from '../../services/companyService.service';
 import {FlattenAccountsResponse} from '../../models/api-models/Account';
 import {AccountService} from '../../services/account.service';
@@ -15,19 +17,19 @@ export class GeneralActions {
 
     @Effect()
     public getAllState$: Observable<CustomActions> = this.action$
-        .ofType(GeneralConst.GET_ALL_STATES)
-        .switchMap(() => this._companyService.getAllStates())
-        .map(resp => this.setStatesData(resp));
+        .ofType(GeneralConst.GET_ALL_STATES).pipe(
+        switchMap(() => this._companyService.getAllStates()),
+        map(resp => this.setStatesData(resp)), );
 
     @Effect()
     public getFlattenAccounts$: Observable<CustomActions> = this.action$
-        .ofType(GeneralConst.GET_FLATTEN_ACCOUNTS)
-        .switchMap((action: CustomActions) =>
+        .ofType(GeneralConst.GET_FLATTEN_ACCOUNTS).pipe(
+        switchMap((action: CustomActions) =>
             this._accountService.GetFlattenAccounts(action.payload)
-        )
-        .map(response => {
+        ),
+        map(response => {
             return this.getFlattenAccountResponse(response);
-        });
+        }), );
 
 
     constructor(private action$: Actions, private _companyService: CompanyService, private _accountService: AccountService) {

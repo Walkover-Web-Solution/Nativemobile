@@ -1,5 +1,7 @@
+
+import {take, takeUntil} from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  ReplaySubject } from 'rxjs';
 import { VerifyEmailResponseModel } from '../models/api-models/loginModels';
 import { AppState } from '../store';
 import { Store } from '@ngrx/store';
@@ -12,7 +14,6 @@ import { createSelector } from 'reselect';
 import { RouterService } from '../services/router.service';
 import { ToasterService } from '../services/toaster.service';
 import { Config } from '../common';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { AuthService } from 'ng4-social-login';
 
 @Component({
@@ -23,7 +24,7 @@ import { AuthService } from 'ng4-social-login';
 })
 export class HomeComponent implements OnInit, OnDestroy {
     public logoutIcon: string = String.fromCharCode(0xf073);
-    @ViewChild("drawer") drawerComponent: any;
+    @ViewChild('drawer') drawerComponent: any;
     private _sideDrawerTransition: any;
     public userStream$: Observable<VerifyEmailResponseModel>;
     public isLoggedInWithSocialAccount$: Observable<boolean>;
@@ -38,7 +39,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             return { companies, uniqueName };
         }));
-        this.isLoggedInWithSocialAccount$ = this.store.select(p => p.login.isLoggedInWithSocialAccount).takeUntil(this.destroyed$);
+        this.isLoggedInWithSocialAccount$ = this.store.select(p => p.login.isLoggedInWithSocialAccount).pipe(takeUntil(this.destroyed$));
     }
 
     public ngOnInit(): void {
@@ -48,9 +49,9 @@ export class HomeComponent implements OnInit, OnDestroy {
             if (!res.companies) {
                 return;
             }
-            let allCmps: MyDrawerItem[] = [];
+            const allCmps: MyDrawerItem[] = [];
             res.companies.forEach(cmp => {
-                let item = new MyDrawerItem();
+                const item = new MyDrawerItem();
                 item.title = cmp.name;
                 item.needTopHr = true;
                 item.fontFamily = 'FontAwesome';
@@ -72,10 +73,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
         this.userStream$.subscribe(u => {
             if (u && u.user) {
-                let userEmail = u.user.email;
+                const userEmail = u.user.email;
                 if (u.user.name.match(/\s/g)) {
-                    let name = u.user.name;
-                    let tmpName = name.split(' ');
+                    const name = u.user.name;
+                    const tmpName = name.split(' ');
                     this.userName = tmpName[0][0] + tmpName[1][0];
                 } else {
                     this.userName = u.user.name[0] + u.user.name[1];
@@ -113,7 +114,7 @@ export class HomeComponent implements OnInit, OnDestroy {
             cancelButtonText: 'No'
         }).then(r => {
             if (r) {
-                this.isLoggedInWithSocialAccount$.take(1).subscribe((val) => {
+                this.isLoggedInWithSocialAccount$.pipe(take(1)).subscribe((val) => {
                     if (val) {
                         this.socialAuthService.signOut().then(() => {
                             this.store.dispatch(this._loginActions.logout());

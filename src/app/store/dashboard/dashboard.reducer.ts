@@ -56,7 +56,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
     switch (action.type) {
         // region revenue chart
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE: {
-            let data = action.payload as IRevenueChartClosingBalanceResponse;
+            const data = action.payload as IRevenueChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
                     revenuefromoperationsActiveyear: data.revenuefromoperationsActiveyear,
@@ -69,7 +69,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
             });
         }
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE: {
-            let data = action.payload as IRevenueChartClosingBalanceResponse;
+            const data = action.payload as IRevenueChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
                     revenuefromoperationsLastyear: data.revenuefromoperationsLastyear,
@@ -82,7 +82,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
             });
         }
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR: {
-            let data = action.payload as IRevenueChartClosingBalanceResponse;
+            const data = action.payload as IRevenueChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
                     chartTitle: data.chartTitle, otherincomeActiveyear: null,
@@ -95,7 +95,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
             })
         }
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR: {
-            let data = action.payload as IRevenueChartClosingBalanceResponse;
+            const data = action.payload as IRevenueChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
                     chartTitle: data.chartTitle, otherincomeLastyear: null,
@@ -111,7 +111,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
 
         // region expenses chart
         case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_RESPONSE: {
-            let data = action.payload as IExpensesChartClosingBalanceResponse;
+            const data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 expensesChart: Object.assign({}, state.expensesChart, {
                     operatingcostActiveyear: data.operatingcostActiveyear,
@@ -125,7 +125,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         }
 
         case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_RESPONSE: {
-            let data = action.payload as IExpensesChartClosingBalanceResponse;
+            const data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 expensesChart: Object.assign({}, state.expensesChart, {
                     operatingcostLastyear: data.operatingcostLastyear,
@@ -139,7 +139,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         }
 
         case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_ACTIVE_YEAR_ERROR: {
-            let data = action.payload as IExpensesChartClosingBalanceResponse;
+            const data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 expensesChart: Object.assign({}, state.expensesChart, {
                     operatingcostActiveyear: '', indirectexpensesActiveyear: '',
@@ -153,7 +153,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         }
 
         case DashboardConst.EXPENSES_CHART.GET_EXPENSES_CHART_DATA_LAST_YEAR_ERROR: {
-            let data = action.payload as IExpensesChartClosingBalanceResponse;
+            const data = action.payload as IExpensesChartClosingBalanceResponse;
             return Object.assign({}, state, {
                 expensesChart: Object.assign({}, state.expensesChart, {
                     operatingcostLastyear: '', indirectexpensesLastyear: '',

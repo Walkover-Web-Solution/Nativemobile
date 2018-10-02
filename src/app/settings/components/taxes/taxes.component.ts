@@ -1,13 +1,14 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { TaxResponse } from '../../../models/api-models/Company';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../../store';
-import { CompanyActions } from '../../../actions/company/company.action';
-import { LoaderService } from '../../../services/loader.service';
-import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
-import { MyDrawerComponent } from '../../../shared/my-drawer/my-drawer.component';
+import {map, takeUntil} from 'rxjs/operators';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
+import {Observable, ReplaySubject} from 'rxjs';
+import {TaxResponse} from '../../../models/api-models/Company';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {CompanyActions} from '../../../actions/company/company.action';
+import {LoaderService} from '../../../services/loader.service';
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {MyDrawerComponent} from '../../../shared/my-drawer/my-drawer.component';
+
 @Component({
     selector: 'ns-taxes',
     moduleId: module.id,
@@ -22,9 +23,9 @@ export class TaxesComponent implements OnInit, OnDestroy {
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, private _loaderService: LoaderService) {
         this.store.dispatch(this._companyActions.getTax());
-        this.taxList$ = this.store.select(p => p.company.taxes).takeUntil(this.destroyed$);
-        this.isTaxLoading$ = this.store.select(p => p.company.isTaxesLoading).takeUntil(this.destroyed$);
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+        this.taxList$ = this.store.select(p => p.company.taxes).pipe(takeUntil(this.destroyed$));
+        this.isTaxLoading$ = this.store.select(p => p.company.isTaxesLoading).pipe(takeUntil(this.destroyed$));
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/settings') {
@@ -35,7 +36,7 @@ export class TaxesComponent implements OnInit, OnDestroy {
                 }
             }
             return p;
-        }).takeUntil(this.destroyed$);
+        }), takeUntil(this.destroyed$));
     }
 
     public ngOnInit(): void {

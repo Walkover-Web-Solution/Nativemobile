@@ -1,4 +1,5 @@
-import { IApplyTax } from '../interfaces/applyTax.interface';
+import {IApplyTax} from '../interfaces/applyTax.interface';
+
 /**
  * Model for apply tax api request
  * API:: (Apply tax) /company/{{companyname}}/tax/assign
@@ -6,7 +7,7 @@ import { IApplyTax } from '../interfaces/applyTax.interface';
  * This request will take array of ApplyTaxRequest as payload
  */
 export class ApplyTaxRequest implements IApplyTax {
-  public uniqueName: string;
-  public taxes: string[];
-  public isAccount: boolean;
+    public uniqueName: string;
+    public taxes: string[];
+    public isAccount: boolean;
 }

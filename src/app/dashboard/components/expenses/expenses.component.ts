@@ -1,3 +1,5 @@
+
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {
     ChartFilterType,
@@ -6,7 +8,7 @@ import {
     IExpensesChartClosingBalanceResponse
 } from '../../../models/interfaces/dashboard.interface';
 import {AccountChartDataLastCurrentYear} from '../../../models/view-models/AccountChartDataLastCurrentYear';
-import {Observable} from 'rxjs/Observable';
+import {Observable, ReplaySubject} from 'rxjs';
 import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
 import {AppState} from '../../../store';
 import {Store} from '@ngrx/store';
@@ -14,14 +16,13 @@ import {INameUniqueName} from '../../../models/interfaces/nameUniqueName.interfa
 import * as _ from 'lodash';
 import {DashboardFilterComponent} from '../filter/dashboard-filter.component';
 import {MatDialog} from '@angular/material';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 
 @Component({
     selector: 'ns-expenses-chart,[ns-expenses-chart]',
     moduleId: module.id,
     templateUrl: './expenses.component.html',
-    styleUrls: ["./expenses.component.scss"],
+    styleUrls: ['./expenses.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ExpensesChartComponent implements OnInit, OnDestroy {
@@ -31,7 +32,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     public activeYearGrandAmount: any;
     public activeYearLabel: string;
     public lastYearLabel: string;
-    public chartFilterTitle: string = '';
+    public chartFilterTitle = '';
     public categories: string[] = [];
     public series: Array<{ name: string, data: number[] }>;
     public options: any;
@@ -51,9 +52,9 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef,
         public dialog: MatDialog) {
-        this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
-        this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
-        let that = this;
+        this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).pipe(takeUntil(this.destroyed$));
+        this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).pipe(distinctUntilChanged(), takeUntil(this.destroyed$), );
+        const that = this;
         this.options = {
             chart: {
                 type: 'column',
@@ -185,18 +186,18 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
         this.expensesChartData$.subscribe(exp => {
             // if (exp) {
             if (exp && exp.operatingcostActiveyear && exp.indirectexpensesActiveyear) {
-                let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
-                let operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
-                let accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+                const indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesActiveyear.childGroups);
+                const operatingcostGroups = [].concat.apply([], exp.operatingcostActiveyear.childGroups);
+                const accounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
                 this.activeYearAccounts = accounts;
             } else {
                 // this.resetActiveYearChartData();
             }
 
             if (exp && exp.operatingcostLastyear && exp.indirectexpensesLastyear) {
-                let indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
-                let operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
-                let lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
+                const indirectexpensesGroups = [].concat.apply([], exp.indirectexpensesLastyear.childGroups);
+                const operatingcostGroups = [].concat.apply([], exp.operatingcostLastyear.childGroups);
+                const lastAccounts = _.unionBy(indirectexpensesGroups as IChildGroups[], operatingcostGroups as IChildGroups[]) as IChildGroups[];
                 this.lastYearAccounts = lastAccounts;
             } else {
                 // this.resetLastYearChartData();
@@ -234,7 +235,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     }
 
     public generateActiveYearString(): INameUniqueName[] {
-        let activeStrings: INameUniqueName[] = [];
+        const activeStrings: INameUniqueName[] = [];
         this.activeYearAccounts.map(acc => {
             activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
         });
@@ -242,7 +243,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     }
 
     public generateLastYearString(): INameUniqueName[] {
-        let lastStrings: INameUniqueName[] = [];
+        const lastStrings: INameUniqueName[] = [];
         this.lastYearAccounts.map(acc => {
             lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
         });
@@ -266,9 +267,9 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             }
         });
 
-        let activeAccounts = [];
-        let lastAccounts = [];
-        let categories = [];
+        const activeAccounts = [];
+        const lastAccounts = [];
+        const categories = [];
 
         this.accountStrings.forEach(p => {
             activeAccounts.push(p.activeYear);
@@ -284,7 +285,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
         this.lastYearAccountsRanks = lastAccounts;
         this.categories = categories;
 
-        let seriesName = this.genSeriesName(this.selectedFilterType);
+        const seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
             { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
             { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
@@ -364,7 +365,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     }
 
     public seriesSeleted() {
-        let _this: any = this;
+        const _this: any = this;
         let compo: ExpensesChartComponent;
 
         arguments[0].forEach(f => compo = f);
@@ -372,8 +373,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
         if (_this.hoverPoints && _this.hoverPoints.length > 0) {
             let activePer = 0;
             let lastPer = 0;
-            let activePoint = _this.hoverPoints[0].y;
-            let lastPoint = _this.hoverPoints[1].y;
+            const activePoint = _this.hoverPoints[0].y;
+            const lastPoint = _this.hoverPoints[1].y;
 
             activePer = Number(((activePoint * 100) / compo.activeYearGrandAmount).toFixed(2));
             lastPer = Number(((lastPoint * 100) / compo.lastYearGrandAmount).toFixed(2));
@@ -384,7 +385,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     }
 
     public openFilter() {
-        let dialog = this.dialog.open(DashboardFilterComponent, {
+        const dialog = this.dialog.open(DashboardFilterComponent, {
             data: { chartType: ChartType.Expense }
         });
     }

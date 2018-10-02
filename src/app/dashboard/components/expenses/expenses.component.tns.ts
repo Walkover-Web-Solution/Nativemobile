@@ -1,11 +1,12 @@
+
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {ReplaySubject, Observable} from 'rxjs';
 
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store';
 import {Page} from '../../../common/utils/environment';
 import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
-import {Observable} from 'rxjs/Observable';
 import {AccountChartDataLastCurrentYear} from '../../../models/view-models/AccountChartDataLastCurrentYear';
 import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
 import {INameUniqueName} from '../../../models/interfaces/nameUniqueName.interface';
@@ -58,8 +59,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
-        this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
-        this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
+        this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).pipe(takeUntil(this.destroyed$));
+        this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).pipe(distinctUntilChanged(),takeUntil(this.destroyed$),);
         this.options = {
             chart: {
                 type: 'column',

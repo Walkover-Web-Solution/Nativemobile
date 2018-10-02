@@ -67,7 +67,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
                 isLoginWithPasswordInProcess: true
             });
         case LoginConstants.LOGIN_WITH_PASSWORD_RESPONSE: {
-            let res: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = action.payload;
+            const res: BaseResponse<VerifyMobileResponseModel, LoginWithPassword> = action.payload;
             if (action.payload.status === 'success') {
                 return Object.assign({}, state, {
                     user: res.body,
@@ -88,7 +88,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
                 isSignupInProcess: true
             })
         case LoginConstants.SIGNUP_RESPONSE: {
-            let res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = action.payload;
+            const res: BaseResponse<VerifyMobileResponseModel, SignUpWithPassword> = action.payload;
             if (action.payload.status === 'success') {
                 return Object.assign({}, state, {
                     isSignupInProcess: false,
@@ -123,7 +123,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
             });
 
         case LoginConstants.VERIFY_MOBILE_RESPONCE: {
-            let data1: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
+            const data1: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
             if (data1.status === 'success') {
                 return Object.assign({}, state, {
                     isVerifyMobileInProcess: false,
@@ -143,7 +143,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
             })
 
         case LoginConstants.SIGNUP_WITH_GOOGLE_RESPONSE: {
-            let data: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
+            const data: BaseResponse<VerifyEmailResponseModel, string> = action.payload;
             if (data.status === 'success') {
                 return Object.assign({}, state, {
                     isSignupWithGoogleInProcess: false,
@@ -158,7 +158,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
             })
         }
         case LoginConstants.SIGNUP_WITH_LINKEDIN_RESPONSE: {
-            let res: BaseResponse<VerifyEmailResponseModel, LinkedInRequestModel> = action.payload;
+            const res: BaseResponse<VerifyEmailResponseModel, LinkedInRequestModel> = action.payload;
             if (res.status === 'success') {
                 return Object.assign({}, state, {
                     isSignupWithLinkedInInProcess: false,
@@ -266,7 +266,7 @@ export function LoginReducer(state: LoginState = initialState, action: CustomAct
             });
 
         case LoginConstants.VERIFY_EMAIL_RESPONCE:
-            let data1: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
+            const data1: BaseResponse<VerifyMobileResponseModel, VerifyMobileModel> = action.payload;
             if (data1.status === 'success') {
                 return Object.assign({}, state, {
                     isVerifyEmailInProcess: false,

@@ -1,7 +1,9 @@
+
+import {switchMap, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Actions, Effect } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { BaseResponse } from '../../../models/api-models/BaseResponse';
 import { SettingsTaxesService } from '../../../services/settings.taxes.service';
 import { CustomActions } from '../../../store/customActions';
@@ -14,41 +16,41 @@ export class SettingsTaxesActions {
 
     @Effect()
     public CreateTax$: Observable<CustomActions> = this.action$
-        .ofType(SettingsTaxesConstants.CREATE_TAX)
-        .switchMap((action: CustomActions) => this.settingsTaxesService.CreateTax(action.payload))
-        .map(response => this.CreateTaxResponse(response));
+        .ofType(SettingsTaxesConstants.CREATE_TAX).pipe(
+        switchMap((action: CustomActions) => this.settingsTaxesService.CreateTax(action.payload)),
+        map(response => this.CreateTaxResponse(response)), );
 
     @Effect()
     public CreateTaxResponse$: Observable<CustomActions> = this.action$
-        .ofType(SettingsTaxesConstants.CREATE_TAX_RESPONSE)
-        .map((response: CustomActions) => {
-            let data: BaseResponse<any, any> = response.payload;
+        .ofType(SettingsTaxesConstants.CREATE_TAX_RESPONSE).pipe(
+        map((response: CustomActions) => {
+            const data: BaseResponse<any, any> = response.payload;
             if (data.status === 'error') {
                 this._toaster.errorToast(data.message);
             } else {
                 this._toaster.successToast('Tax Created Successfully');
             }
             return { type: 'EmptyAction' };
-        });
+        }));
 
     @Effect()
     public UpdateTax$: Observable<CustomActions> = this.action$
-        .ofType(SettingsTaxesConstants.UPDATE_TAX)
-        .switchMap((action: CustomActions) => this.settingsTaxesService.UpdateTax(action.payload, action.payload.uniqueName))
-        .map(response => this.UpdateTaxResponse(response));
+        .ofType(SettingsTaxesConstants.UPDATE_TAX).pipe(
+        switchMap((action: CustomActions) => this.settingsTaxesService.UpdateTax(action.payload, action.payload.uniqueName)),
+        map(response => this.UpdateTaxResponse(response)), );
 
     @Effect()
     public UpdateTaxResponse$: Observable<CustomActions> = this.action$
-        .ofType(SettingsTaxesConstants.UPDATE_TAX_RESPONSE)
-        .map((response: CustomActions) => {
-            let data: BaseResponse<any, any> = response.payload;
+        .ofType(SettingsTaxesConstants.UPDATE_TAX_RESPONSE).pipe(
+        map((response: CustomActions) => {
+            const data: BaseResponse<any, any> = response.payload;
             if (data.status === 'error') {
                 this._toaster.errorToast(data.message);
             } else {
                 this._toaster.successToast('Tax Updated Successfully');
             }
             return { type: 'EmptyAction' };
-        });
+        }));
 
     // @Effect()
     // public DeleteTax$: Observable<Action> = this.action$

@@ -1,21 +1,22 @@
+
+import {takeUntil, map} from 'rxjs/operators';
 import { Component, ViewChild } from '@angular/core';
 import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  ReplaySubject } from 'rxjs';
 import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
 import { AppState } from '../../../store';
 import { Store } from '@ngrx/store';
 import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
 import { CompanyResponse, States } from '../../../models/api-models/Company';
 import { createSelector } from 'reselect';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { OnInit } from '@angular/core/src/metadata/lifecycle_hooks';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { ValueList } from 'nativescript-drop-down';
 import { NsDropDownOptions } from '../../../models/other-models/HelperModels';
 import { IContriesWithCodes } from '../../../shared/static-data/countryWithCodes';
-import { SettingsProfileActions } from "../../../actions/settings/profile/settings.profile.action";
+import { SettingsProfileActions } from '../../../actions/settings/profile/settings.profile.action';
 import * as _ from 'lodash';
-import { LoaderService } from "../../../services/loader.service";
+import { LoaderService } from '../../../services/loader.service';
 import { RouterService } from '../../../services/router.service';
 import { Page } from '../../../common/utils/environment';
 import { Config } from '../../../common';
@@ -29,7 +30,7 @@ import { Config } from '../../../common';
 export class CompanyProfileComponent implements OnInit {
 
     public navItemObj$: Observable<MyDrawerItem[]>;
-    @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
+    @ViewChild('drawer') public drawerComponent: RadSideDrawerComponent;
     public selectedCompany$: Observable<CompanyResponse>;
     public companyProfileForm: FormGroup;
     public countrySourceStream$: Observable<IContriesWithCodes[]>;
@@ -44,7 +45,7 @@ export class CompanyProfileComponent implements OnInit {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private _fb: FormBuilder, private page: Page, private _settingsProfileActions: SettingsProfileActions,
         private _loaderService: LoaderService, private routerExtensions: RouterService) {
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/settings') {
@@ -55,20 +56,20 @@ export class CompanyProfileComponent implements OnInit {
                 }
             }
             return p;
-        });
+        }));
 
-        this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes).takeUntil(this.destroyed$);
-        this.stateStream$ = this.store.select(s => s.general.states).takeUntil(this.destroyed$);
+        this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes).pipe(takeUntil(this.destroyed$));
+        this.stateStream$ = this.store.select(s => s.general.states).pipe(takeUntil(this.destroyed$));
         this.selectedCompany$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             if (!companies) {
                 return;
             }
 
             return companies.find(cmp => cmp.uniqueName === uniqueName);
-        })).takeUntil(this.destroyed$);
-        this.isUpdateCompanyProfileInProcess$ = this.store.select(state => state.session.isUpdateCompanyProfileInProcess).takeUntil(this.destroyed$);
-        this.isUpdateCompanyProfileSuccess$ = this.store.select(state => state.session.isUpdateCompanyProfileSuccess).takeUntil(this.destroyed$);
-        this.currenciesStream$ = this.store.select(state => state.general.currencies).takeUntil(this.destroyed$);
+        })).pipe(takeUntil(this.destroyed$));
+        this.isUpdateCompanyProfileInProcess$ = this.store.select(state => state.session.isUpdateCompanyProfileInProcess).pipe(takeUntil(this.destroyed$));
+        this.isUpdateCompanyProfileSuccess$ = this.store.select(state => state.session.isUpdateCompanyProfileSuccess).pipe(takeUntil(this.destroyed$));
+        this.currenciesStream$ = this.store.select(state => state.general.currencies).pipe(takeUntil(this.destroyed$));
         Config.IS_MOBILE_NATIVE && (this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy());
     }
 
@@ -88,7 +89,7 @@ export class CompanyProfileComponent implements OnInit {
         });
 
         this.stateStream$.subscribe(states => {
-            let statesArray: NsDropDownOptions[] = [];
+            const statesArray: NsDropDownOptions[] = [];
             if (states) {
                 states.forEach(stt => {
                     statesArray.push({ display: `${stt.code} - ${stt.name}`, value: stt.code });
@@ -98,7 +99,7 @@ export class CompanyProfileComponent implements OnInit {
         });
 
         this.currenciesStream$.subscribe(curr => {
-            let currenciesArray: NsDropDownOptions[] = [];
+            const currenciesArray: NsDropDownOptions[] = [];
             if (curr) {
                 curr.forEach(stt => {
                     currenciesArray.push({ display: stt, value: stt });
@@ -109,7 +110,7 @@ export class CompanyProfileComponent implements OnInit {
 
         this.selectedCompany$.subscribe(s => {
             if (s) {
-                let objToFill = _.cloneDeep(s);
+                const objToFill = _.cloneDeep(s);
 
                 objToFill.state = this.stateSource.getIndex(objToFill.state);
                 objToFill.baseCurrency = this.currenciesSource.getIndex(objToFill.baseCurrency);
@@ -156,7 +157,7 @@ export class CompanyProfileComponent implements OnInit {
     }
 
     public submit() {
-        let dataToSave = _.cloneDeep(this.companyProfileForm.value);
+        const dataToSave = _.cloneDeep(this.companyProfileForm.value);
         if (dataToSave.email) {
             dataToSave.email = dataToSave.email.toLowerCase();
         }

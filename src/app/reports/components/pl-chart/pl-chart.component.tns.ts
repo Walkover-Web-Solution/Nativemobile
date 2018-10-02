@@ -1,13 +1,13 @@
+
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ObservableArray} from 'tns-core-modules/data/observable-array/observable-array';
 import {AppState} from '../../../store';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, ReplaySubject, zip} from 'rxjs';
 import {ChartFilterType, IReportChartData} from '../../../models/interfaces/dashboard.interface';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
 import * as _ from 'lodash';
 import {CategoryHistoryResponse, GroupHistoryResponse} from '../../../models/api-models/Dashboard';
-import {zip} from 'rxjs/observable/zip';
 
 import {EventData} from 'tns-core-modules/data/observable';
 import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
@@ -15,17 +15,17 @@ import {Page} from '../../../common/utils/environment';
 import {ReportsActions} from '../../../actions/reports/reports.actions';
 import {on as applicationOn, orientationChangedEvent} from 'application';
 
-let webViewInterfaceModule = require('nativescript-webview-interface');
+const webViewInterfaceModule = require('nativescript-webview-interface');
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
     moduleId: module.id,
     templateUrl: './pl-chart.component.html',
-    styleUrls: ["./pl-chart.component.scss"]
+    styleUrls: ['./pl-chart.component.scss']
 })
 export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
-    @ViewChild("myWebView") webViewRef: ElementRef;
+    @ViewChild('myWebView') webViewRef: ElementRef;
     public currentData$: Observable<IReportChartData>;
     public previousData$: Observable<IReportChartData>;
     public profitLossChartFilter$: Observable<ChartFilterType>;
@@ -38,21 +38,21 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public pieSeries: Array<{ name: string, y: number, color: string }>;
     public previousPieSeries: Array<{ name: string, y: number, color: string }>;
-    public activeChart: string = 'current';
-    public pieTotal: number = 0;
-    public previousPieTotal: number = 0;
-    public pieLable: string = '';
-    public previousPieLable: string = '';
+    public activeChart = 'current';
+    public pieTotal = 0;
+    public previousPieTotal = 0;
+    public pieLable = '';
+    public previousPieLable = '';
     public selectedFilter$: Observable<ChartFilterType>;
-    public secondWebViewSRC = "~/www/profitLossChart.html"
+    public secondWebViewSRC = '~/www/profitLossChart.html'
     private oLangWebViewInterface;
 
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _reportsActions: ReportsActions, private page: Page, private cd: ChangeDetectorRef) {
-        this.currentData$ = this.store.select(st => st.report.currentData).takeUntil(this.destroyed$);
-        this.previousData$ = this.store.select(st => st.report.previousData).takeUntil(this.destroyed$);
+        this.currentData$ = this.store.select(st => st.report.currentData).pipe(takeUntil(this.destroyed$));
+        this.previousData$ = this.store.select(st => st.report.previousData).pipe(takeUntil(this.destroyed$));
         this.options = {
             chart: {
                 type: 'column',
@@ -65,7 +65,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
                 labels: {
                     style: {
-                        "fontSize": 16
+                        'fontSize': 16
                     }
                 },
             },
@@ -188,13 +188,13 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
         };
-        this.selectedFilter$ = this.store.select(s => s.report.profitLossChartFilter).takeUntil(this.destroyed$);
+        this.selectedFilter$ = this.store.select(s => s.report.profitLossChartFilter).pipe(takeUntil(this.destroyed$));
 
         (this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy());
     }
 
     public ngOnInit() {
-        this.selectedFilter$.distinctUntilChanged().subscribe(s => {
+        this.selectedFilter$.pipe(distinctUntilChanged()).subscribe(s => {
             this.store.dispatch(this._reportsActions.getIncomeData());
             this.store.dispatch(this._reportsActions.getExpensesData());
         });
@@ -205,7 +205,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     private setupWebViewInterface() {
-        let webView: WebView = this.webViewRef.nativeElement;
+        const webView: WebView = this.webViewRef.nativeElement;
 
         this.oLangWebViewInterface = new webViewInterfaceModule.WebViewInterface(webView, this.secondWebViewSRC);
         this.oLangWebViewInterface.on('onChartSelection', this.onChartSelection.bind(this));
@@ -259,9 +259,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.renderOptions(this.series);
     }
     public genSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
-        let incomeSeries = [];
-        let indirectexpensesSeries = [];
-        let operatingcostSeries = [];
+        const incomeSeries = [];
+        const indirectexpensesSeries = [];
+        const operatingcostSeries = [];
 
         if (incomeData && incomeData.intervalBalances) {
             incomeData.intervalBalances.forEach(int => {
@@ -303,9 +303,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public genPreviousSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
-        let incomeSeries = [];
-        let indirectexpensesSeries = [];
-        let operatingcostSeries = [];
+        const incomeSeries = [];
+        const indirectexpensesSeries = [];
+        const operatingcostSeries = [];
 
         if (incomeData && incomeData.intervalBalances) {
             incomeData.intervalBalances.forEach(int => {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 
 export interface IHeaderItem {
     action?: () => any,
@@ -13,12 +13,15 @@ export interface IHeaderItem {
     styleUrls: ['./my-header.component.scss']
 })
 export class MyHeaderComponent implements OnInit {
-    @Input() public title: string = 'Giddh';
+    @Input() public title = 'Giddh';
     @Input() public leftSideItem: IHeaderItem;
     @Input() public rightSideItem: IHeaderItem;
-    constructor() { }
 
-    ngOnInit() { }
+    constructor() {
+    }
+
+    ngOnInit() {
+    }
 
     public fireAction(type: string = 'left') {
         if (type === 'left') {

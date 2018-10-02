@@ -1,10 +1,10 @@
-import { Component, SimpleChanges, OnChanges, OnInit } from "@angular/core";
+import {Component, SimpleChanges, OnChanges, OnInit} from '@angular/core';
 
 @Component({
-    selector: "LogoutButton",
+    selector: 'LogoutButton',
     moduleId: module.id,
-    templateUrl: "./logout-button.component.html",
-    styleUrls: ["./logout-button.component.scss"]
+    templateUrl: './logout-button.component.html',
+    styleUrls: ['./logout-button.component.scss']
 })
 export class MyLogoutComponent implements OnInit, OnChanges {
 
@@ -14,12 +14,14 @@ export class MyLogoutComponent implements OnInit, OnChanges {
 
     ngOnInit(): void {
     }
+
     ngOnChanges(changes: SimpleChanges): void {
     }
 
     showLoader() {
 
     }
+
     logout() {
 
     }

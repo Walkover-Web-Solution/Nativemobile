@@ -1,6 +1,12 @@
-
-import { LoginComponent, LoginWithOtpComponent, LoginWithEmailComponent, LoginTwoWayComponent, ForgotComponent, SignUpComponent } from "./components";
-import { LinkedInLoginComponent } from "./components/linkedin-login/linkedin-login.component";
+import {
+    LoginComponent,
+    LoginWithOtpComponent,
+    LoginWithEmailComponent,
+    LoginTwoWayComponent,
+    ForgotComponent,
+    SignUpComponent
+} from './components';
+import {LinkedInLoginComponent} from './components/linkedin-login/linkedin-login.component';
 
 export const LoginRoutes = [
     {

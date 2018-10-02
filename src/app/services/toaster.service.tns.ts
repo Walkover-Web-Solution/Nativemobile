@@ -1,16 +1,17 @@
 import {Injectable} from '@angular/core';
 import {APP_DEFAULT_TITLE} from '../app.constants';
-import * as ToastModule from "nativescript-toast";
-import { Toast } from "nativescript-toast";
+import * as ToastModule from 'nativescript-toast';
+import {Toast} from 'nativescript-toast';
 import {SnackBar} from 'nativescript-snackbar';
 import * as dialogs from 'ui/dialogs';
-import { isIOS } from "platform";
+import {isIOS} from 'platform';
 
-let snackbar = new SnackBar();
+const snackbar = new SnackBar();
 
 @Injectable()
 export class ToasterService {
     private previousToast: Toast = null;
+
     constructor() {
 
     }
@@ -48,7 +49,7 @@ export class ToasterService {
             this.previousToast = null;
         }
 
-        let t = ToastModule.makeText(message);
+        const t = ToastModule.makeText(message);
 
         // if (!isIOS) {
         //     (<any>t).getView().getChildAt(0).setTypeface(this.androidTypeface);

@@ -3,9 +3,8 @@ import { SignupWithMobile, VerifyMobileModel } from '../../../models/api-models/
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  ReplaySubject } from 'rxjs';
 import { LoginActions } from '../../../actions/login/login.action';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { NavigationStart } from '@angular/router';
 import { RouterService } from '../../../services/router.service';
 import { Page, Color, AnimationCurve } from '../../../common/utils/environment';
@@ -24,7 +23,7 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     public isLoginWithMobileInProcess$: Observable<boolean>;
     public isVerifyMobileInProcess$: Observable<boolean>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-    constructor(private routerExtensions: RouterService,@Optional() private page: Page, private store: Store<AppState>,
+    constructor(private routerExtensions: RouterService, @Optional() private page: Page, private store: Store<AppState>,
         private _fb: FormBuilder, private _loginActions: LoginActions) {
         this.isLoginWithMobileSubmited$ = this.store.select(s => s.login.isLoginWithMobileSubmited);
         this.isVerifyMobileSuccess$ = this.store.select(s => s.login.isVerifyMobileSuccess);
@@ -87,19 +86,19 @@ export class LoginWithOtpComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public getOtp() {
-        let mobileVerifyForm = this.mobileVerifyForm.value;
-        let data: SignupWithMobile = new SignupWithMobile();
+        const mobileVerifyForm = this.mobileVerifyForm.value;
+        const data: SignupWithMobile = new SignupWithMobile();
         data.mobileNumber = mobileVerifyForm.mobileNumber;
         data.countryCode = Number(mobileVerifyForm.country);
         this.store.dispatch(this._loginActions.signupWithMobileRequest(data));
     }
 
     public verifyCode() {
-        let data = new VerifyMobileModel();
-        let mobileVerifyForm = this.mobileVerifyForm.value;
+        const data = new VerifyMobileModel();
+        const mobileVerifyForm = this.mobileVerifyForm.value;
         data.countryCode = Number(mobileVerifyForm.country);
-        data.mobileNumber = mobileVerifyForm.mobileNumber;;
-        data.oneTimePassword = mobileVerifyForm.otp;;
+        data.mobileNumber = mobileVerifyForm.mobileNumber; ;
+        data.oneTimePassword = mobileVerifyForm.otp; ;
         this.store.dispatch(this._loginActions.verifyMobileRequest(data));
     }
 }

@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
-import { Observable } from 'rxjs/Observable';
-import { RadSideDrawerComponent } from 'nativescript-ui-sidedrawer/angular';
-import { AppState } from '../../../store';
-import { Store } from '@ngrx/store';
-import { DrawerTransitionBase } from 'nativescript-ui-sidedrawer';
-import { TaxResponse } from '../../../models/api-models/Company';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
-import { CompanyActions } from '../../../actions/company/company.action';
-import { LoaderService } from "../../../services/loader.service";
-import { RouterService } from '../../../services/router.service';
-import { Page } from '../../../common/utils/environment';
-import { Config } from '../../../common';
+import {takeUntil, map} from 'rxjs/operators';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {Observable, ReplaySubject} from 'rxjs';
+import {RadSideDrawerComponent} from 'nativescript-ui-sidedrawer/angular';
+import {AppState} from '../../../store';
+import {Store} from '@ngrx/store';
+import {DrawerTransitionBase} from 'nativescript-ui-sidedrawer';
+import {TaxResponse} from '../../../models/api-models/Company';
+import {CompanyActions} from '../../../actions/company/company.action';
+import {LoaderService} from '../../../services/loader.service';
+import {RouterService} from '../../../services/router.service';
+import {Page} from '../../../common/utils/environment';
+import {Config} from '../../../common';
 
 @Component({
     selector: 'ns-taxes',
@@ -22,16 +22,16 @@ import { Config } from '../../../common';
 export class TaxesComponent implements OnInit {
 
     public navItemObj$: Observable<MyDrawerItem[]>;
-    @ViewChild("drawer") public drawerComponent: RadSideDrawerComponent;
+    @ViewChild('drawer') public drawerComponent: RadSideDrawerComponent;
     public taxList$: Observable<TaxResponse[]>;
     public isTaxLoading$: Observable<boolean>;
     private _sideDrawerTransition: DrawerTransitionBase;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private routerExtensions: RouterService, private page: Page,
-        private _companyActions: CompanyActions, private _loaderService: LoaderService) {
+                private _companyActions: CompanyActions, private _loaderService: LoaderService) {
         this.store.dispatch(this._companyActions.getTax());
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/settings') {
@@ -42,10 +42,10 @@ export class TaxesComponent implements OnInit {
                 }
             }
             return p;
-        }).takeUntil(this.destroyed$);
+        }), takeUntil(this.destroyed$));
 
-        this.taxList$ = this.store.select(p => p.company.taxes).takeUntil(this.destroyed$);
-        this.isTaxLoading$ = this.store.select(p => p.company.isTaxesLoading).takeUntil(this.destroyed$);
+        this.taxList$ = this.store.select(p => p.company.taxes).pipe(takeUntil(this.destroyed$));
+        this.isTaxLoading$ = this.store.select(p => p.company.isTaxesLoading).pipe(takeUntil(this.destroyed$));
         Config.IS_MOBILE_NATIVE && (this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy());
     }
 

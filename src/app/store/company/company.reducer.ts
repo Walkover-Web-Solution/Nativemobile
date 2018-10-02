@@ -1,8 +1,8 @@
-import { CustomActions } from '../customActions';
-import { TaxResponse } from "../../models/api-models/Company";
-import { CompanyConstants } from '../../actions/company/company.const';
-import { BaseResponse } from '../../models/api-models/BaseResponse';
-import { SettingsTaxesConstants } from '../../actions/settings/taxes/settings.taxes.const';
+import {CustomActions} from '../customActions';
+import {TaxResponse} from '../../models/api-models/Company';
+import {CompanyConstants} from '../../actions/company/company.const';
+import {BaseResponse} from '../../models/api-models/BaseResponse';
+import {SettingsTaxesConstants} from '../../actions/settings/taxes/settings.taxes.const';
 import * as _ from 'lodash';
 
 export interface CurrentCompanyState {
@@ -30,13 +30,13 @@ export function CompanyReducer(state: CurrentCompanyState = initialState, action
 
     switch (action.type) {
 
-        //region Get Tax List
+        // region Get Tax List
         case CompanyConstants.GET_COMPANY_TAX:
             return Object.assign({}, state, {
                 isTaxesLoading: true
             });
         case CompanyConstants.GET_COMPANY_TAX_RESPONSE:
-            let taxes: BaseResponse<TaxResponse[], string> = action.payload;
+            const taxes: BaseResponse<TaxResponse[], string> = action.payload;
             if (taxes.status === 'success') {
                 return Object.assign({}, state, {
                     taxes: taxes.body,
@@ -46,17 +46,17 @@ export function CompanyReducer(state: CurrentCompanyState = initialState, action
             return Object.assign({}, state, {
                 isTaxesLoading: false
             });
-        //endregion
+        // endregion
 
-        //region Create Tax
+        // region Create Tax
         case SettingsTaxesConstants.CREATE_TAX:
             return Object.assign({}, state, {
                 isCreateTaxInProcess: true
             });
         case SettingsTaxesConstants.CREATE_TAX_RESPONSE: {
-            let res: BaseResponse<TaxResponse, string> = action.payload;
+            const res: BaseResponse<TaxResponse, string> = action.payload;
             if (res.status === 'success') {
-                let newState = _.cloneDeep(state);
+                const newState = _.cloneDeep(state);
                 newState.taxes.push(res.body);
                 newState.isCreateTaxInProcess = false;
                 newState.isCreateTaxSuccess = true;
@@ -73,18 +73,18 @@ export function CompanyReducer(state: CurrentCompanyState = initialState, action
                 isCreateTaxSuccess: false
             });
         }
-        //endregion
+        // endregion
 
-        //region Update Tax
+        // region Update Tax
         case SettingsTaxesConstants.UPDATE_TAX:
             return Object.assign({}, state, {
                 isUpdateTaxInProcess: true
             });
         case SettingsTaxesConstants.UPDATE_TAX_RESPONSE: {
-            let res: BaseResponse<TaxResponse, any> = action.payload;
+            const res: BaseResponse<TaxResponse, any> = action.payload;
             if (res.status === 'success') {
-                let newState = _.cloneDeep(state);
-                let taxIndx = newState.taxes.findIndex((tax) => tax.uniqueName === res.request.uniqueName);
+                const newState = _.cloneDeep(state);
+                const taxIndx = newState.taxes.findIndex((tax) => tax.uniqueName === res.request.uniqueName);
                 if (taxIndx > -1) {
                     newState.taxes[taxIndx] = res.request;
                 }
@@ -103,7 +103,7 @@ export function CompanyReducer(state: CurrentCompanyState = initialState, action
                 isUpdateTaxSuccess: false
             });
         }
-        //endregion
+        // endregion
         default:
             return state;
     }

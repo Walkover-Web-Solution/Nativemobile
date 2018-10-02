@@ -1,7 +1,9 @@
+
+import {mergeMap} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {LoginActions} from '../../../actions/login/login.action';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../../services/authentication.service';
@@ -9,7 +11,7 @@ import {AnimationCurve, Color, defaultLoaderOptions, isIOS, Page} from '../../..
 import {ToasterService} from '../../../services/toaster.service';
 import {RouterService} from '../../../services/router.service';
 import {Config} from '../../../common';
-import 'rxjs/add/operator/mergeMap';
+
 import * as app from 'tns-core-modules/application';
 import {LoadingIndicator} from 'nativescript-loading-indicator';
 // import {EventData} from 'tns-core-modules/data/observable';
@@ -77,7 +79,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         });
 
         if (isIOS) {
-            let SocialLogin = require('nativescript-social-login');
+            const SocialLogin = require('nativescript-social-login');
             SocialLogin.init({
                 google: {
                     initialize: true,
@@ -159,7 +161,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public login() {
-        let formValues = this.loginWithPasswordForm.value;
+        const formValues = this.loginWithPasswordForm.value;
         formValues.uniqueKey = formValues.uniqueKey.toLowerCase();
         this.store.dispatch(this._loginActions.loginWithPassword(this.loginWithPasswordForm.value));
     }
@@ -168,9 +170,9 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(()  => {
             this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Logging With Google...'}));
         }, 300);
-        let SocialLogin = require('nativescript-social-login');
+        const SocialLogin = require('nativescript-social-login');
         const androidApp = app.android;
-        let result = SocialLogin.init({
+        const result = SocialLogin.init({
             activity: androidApp.foregroundActivity,
             google: {
                 initialize: true,
@@ -194,12 +196,12 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         SocialLogin.loginWithGoogle((result) => {
             if (result.error || !result.authCode) {
-                console.log('error: ',result.error);
+                console.log('error: ', result.error);
                 console.log('auth_code_err: ', result.authCode);
                 this._toaster.errorToast('Something Went Wrong! Please Try Again');
             } else {
-                this.authservice.GetAtuhToken(result)
-                    .mergeMap((token: any) => this.authservice.LoginWithGoogle(token.access_token))
+                this.authservice.GetAtuhToken(result).pipe(
+                    mergeMap((token: any) => this.authservice.LoginWithGoogle(token.access_token)))
                     .subscribe(LoginResult => {
                         console.log('giddh_app: ', 'Got Google Login Result');
                         this.store.dispatch(this._loginActions.signupWithGoogleResponse(LoginResult));
@@ -215,7 +217,7 @@ export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public linkedinLogin() {
-        let SocialLogin = require('nativescript-social-login');
+        const SocialLogin = require('nativescript-social-login');
         SocialLogin.loginWithLinkedIn((result) => {
             // console.log(JSON.stringify(result));
 

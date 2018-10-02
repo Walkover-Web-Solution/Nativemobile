@@ -1,17 +1,18 @@
+
+import {takeUntil} from 'rxjs/operators';
 import { Component, OnInit, OnDestroy, Optional } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
 import { LoginActions } from '../../../actions/login/login.action';
 import { ResetPasswordV2 } from '../../../models/api-models/Login';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observable ,  ReplaySubject } from 'rxjs';
 import { NavigationStart } from '@angular/router';
 import { ToasterService } from '../../../services/toaster.service';
 import { RouterService } from '../../../services/router.service';
 import { Config } from '../../../common';
 import { Page, Color, AnimationCurve } from '../../../common/utils/environment';
-import 'rxjs/add/operator/takeUntil';
+
 
 @Component({
     selector: 'ns-forgot-password',
@@ -31,10 +32,10 @@ export class ForgotComponent implements OnInit, OnDestroy {
     // private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private routerExtensions: RouterService, @Optional() private page: Page, private _fb: FormBuilder,
         private store: Store<AppState>, private _loginActions: LoginActions, private _toaster: ToasterService) {
-        this.isForgotPasswordSuccess$ = this.store.select(s => s.login.isForgotPasswordSuccess).takeUntil(this.destroyed$);
-        this.isResetPasswordSuccess$ = this.store.select(s => s.login.isResetPasswordSuccess).takeUntil(this.destroyed$);
-        this.isForgotPasswordInProcess$ = this.store.select(s => s.login.isForgotPasswordInProcess).takeUntil(this.destroyed$);
-        this.isResetPasswordInProcess$ = this.store.select(s => s.login.isResetPasswordInProcess).takeUntil(this.destroyed$);
+        this.isForgotPasswordSuccess$ = this.store.select(s => s.login.isForgotPasswordSuccess).pipe(takeUntil(this.destroyed$));
+        this.isResetPasswordSuccess$ = this.store.select(s => s.login.isResetPasswordSuccess).pipe(takeUntil(this.destroyed$));
+        this.isForgotPasswordInProcess$ = this.store.select(s => s.login.isForgotPasswordInProcess).pipe(takeUntil(this.destroyed$));
+        this.isResetPasswordInProcess$ = this.store.select(s => s.login.isResetPasswordInProcess).pipe(takeUntil(this.destroyed$));
         // this.page.on(Page.unloadedEvent, ev => this.ngOnDestroy());
         if (Config.IS_MOBILE_NATIVE) {
             (this.routerExtensions.router as any).router.events.takeUntil(this.destroyed$).subscribe(ev => {
@@ -90,8 +91,8 @@ export class ForgotComponent implements OnInit, OnDestroy {
     }
 
     resetPassword() {
-        let resetPasswordRequest = new ResetPasswordV2();
-        let resetPasswordFormValues = this.forgotPasswordForm.value;
+        const resetPasswordRequest = new ResetPasswordV2();
+        const resetPasswordFormValues = this.forgotPasswordForm.value;
 
         resetPasswordRequest.uniqueKey = resetPasswordFormValues.uniqueKey.toLowerCase();
         resetPasswordRequest.verificationCode = resetPasswordFormValues.verificationCode;

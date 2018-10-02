@@ -1,7 +1,8 @@
+
+import {map, takeUntil} from 'rxjs/operators';
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { RouterService } from '../../../services/router.service';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Observable ,  ReplaySubject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
 import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
@@ -19,8 +20,8 @@ export class CurrenciesComponent implements OnInit, OnDestroy {
     public currenciesStream$: Observable<string[]>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private routerExtensions: RouterService) {
-        this.currenciesStream$ = this.store.select(state => state.general.currencies).takeUntil(this.destroyed$);
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+        this.currenciesStream$ = this.store.select(state => state.general.currencies).pipe(takeUntil(this.destroyed$));
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/settings') {
@@ -31,7 +32,7 @@ export class CurrenciesComponent implements OnInit, OnDestroy {
                 }
             }
             return p;
-        });
+        }));
     }
 
     public ngOnInit() {

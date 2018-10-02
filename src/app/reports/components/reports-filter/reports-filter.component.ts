@@ -1,13 +1,14 @@
-import { Component, ViewChild, OnDestroy } from "@angular/core";
-import { MatDialogRef, MatSelectionList } from "@angular/material";
-import { ChartFilterType } from "../../../models/interfaces/dashboard.interface";
-import { AppState } from "../../../store";
-import { Store } from "@ngrx/store";
-import { ReportsActions } from "../../../actions/reports/reports.actions";
-import { ChartCustomFilter } from "../../../models/api-models/Dashboard";
-import { ReplaySubject } from "rxjs/ReplaySubject";
-import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import {takeUntil, distinctUntilKeyChanged} from 'rxjs/operators';
+import {Component, ViewChild, OnDestroy} from '@angular/core';
+import {MatDialogRef, MatSelectionList} from '@angular/material';
+import {ChartFilterType} from '../../../models/interfaces/dashboard.interface';
+import {AppState} from '../../../store';
+import {Store} from '@ngrx/store';
+import {ReportsActions} from '../../../actions/reports/reports.actions';
+import {ChartCustomFilter} from '../../../models/api-models/Dashboard';
+import {ReplaySubject} from 'rxjs';
+import {MAT_MOMENT_DATE_FORMATS, MomentDateAdapter} from '@angular/material-moment-adapter';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import * as moment from 'moment';
 
 const MY_FORMATS = {
@@ -27,30 +28,31 @@ const MY_FORMATS = {
     selector: 'ns-reports-filter',
     templateUrl: './reports-filter.component.html',
     providers: [
-        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-        { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
+        {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+        {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
     ]
 })
 export class ReportsFilterComponent implements OnDestroy {
     public items: Array<{ text: string, val: ChartFilterType }>;
     public selectedFilter: ChartFilterType = ChartFilterType.Custom;
-    public showCustomFilterInputs: boolean = false;
+    public showCustomFilterInputs = false;
     public customFilterObj: ChartCustomFilter;
     public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(public dialogRef: MatDialogRef<ReportsFilterComponent>, public store: Store<AppState>,
-        public _reportsAction: ReportsActions) {
+                public _reportsAction: ReportsActions) {
         this.items = [
-            { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date' },
-            { val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date' },
-            { val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date' },
-            { val: ChartFilterType.ThisYearToDate, text: 'This Year to Date' },
-            { val: ChartFilterType.LastMonth, text: 'Last Month' },
-            { val: ChartFilterType.LastQuater, text: 'Last Quater' },
-            { val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year' },
-            { val: ChartFilterType.LastYear, text: 'Last Year' },
-            { val: ChartFilterType.Custom, text: 'Custom' },
+            {val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date'},
+            {val: ChartFilterType.ThisQuarterToDate, text: 'This Quarter to Date'},
+            {val: ChartFilterType.ThisFinancialYearToDate, text: 'This Financial Year to Date'},
+            {val: ChartFilterType.ThisYearToDate, text: 'This Year to Date'},
+            {val: ChartFilterType.LastMonth, text: 'Last Month'},
+            {val: ChartFilterType.LastQuater, text: 'Last Quater'},
+            {val: ChartFilterType.LastFiancialYear, text: 'Last Fiancial Year'},
+            {val: ChartFilterType.LastYear, text: 'Last Year'},
+            {val: ChartFilterType.Custom, text: 'Custom'},
         ];
-        this.store.select(s => s.report).distinctUntilKeyChanged('profitLossChartFilter').takeUntil(this.destroyed$).subscribe(fl => {
+        this.store.select(s => s.report).pipe(distinctUntilKeyChanged('profitLossChartFilter'), takeUntil(this.destroyed$),).subscribe(fl => {
             this.selectedFilter = fl.profitLossChartFilter;
             this.showCustomFilterInputs = fl.profitLossChartFilter === ChartFilterType.Custom;
             // if (this.showCustomFilterInputs) {
@@ -83,8 +85,8 @@ export class ReportsFilterComponent implements OnDestroy {
         } else {
             this.customFilterObj = new ChartCustomFilter();
         }
-        let item = this.items.find(a => a.val === this.selectedFilter);
-        this.store.dispatch(this._reportsAction.setFilterType({ filterTitle: item.text, filterType: item.val }, this.customFilterObj));
+        const item = this.items.find(a => a.val === this.selectedFilter);
+        this.store.dispatch(this._reportsAction.setFilterType({filterTitle: item.text, filterType: item.val}, this.customFilterObj));
         this.close();
     }
 

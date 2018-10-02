@@ -1,12 +1,13 @@
+
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable, ReplaySubject} from 'rxjs';
 import {
     ChartFilterType,
     ChartType,
     IChildGroups,
     IRevenueChartClosingBalanceResponse
 } from '../../../models/interfaces/dashboard.interface';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {AppState} from '../../../store';
 import {Store} from '@ngrx/store';
 import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
@@ -20,7 +21,7 @@ import {MatDialog} from '@angular/material';
     selector: 'ns-revenue-chart,[ns-revenue-chart]',
     moduleId: module.id,
     templateUrl: './revenue.component.html',
-    styleUrls: ["./revenue.component.scss"],
+    styleUrls: ['./revenue.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RevenueChartComponent implements OnInit, OnDestroy {
@@ -30,7 +31,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public activeYearGrandAmount: any;
     public activeYearLabel: string;
     public lastYearLabel: string;
-    public chartFilterTitle: string = '';
+    public chartFilterTitle = '';
     public categories: string[] = [];
     public series: Array<{ name: string, data: number[] }>;
     public options: any;
@@ -50,9 +51,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef, public dialog: MatDialog) {
-        this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
-        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
-        let that = this;
+        this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).pipe(takeUntil(this.destroyed$));
+        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).pipe(distinctUntilChanged(), takeUntil(this.destroyed$), );
+        const that = this;
         this.options = {
             chart: {
                 type: 'column',
@@ -184,18 +185,18 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         this.revenueChartData$.subscribe(rvn => {
             // if (rvn) {
             if (rvn && rvn.revenuefromoperationsActiveyear && rvn.otherincomeActiveyear) {
-                let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
-                let otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
-                let groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
+                const revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsActiveyear.childGroups);
+                const otherincomeAccounts = [].concat.apply([], rvn.otherincomeActiveyear.childGroups);
+                const groups = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
                 this.activeYearAccounts = groups;
             } else {
                 // this.resetActiveYearChartData();
             }
 
             if (rvn && rvn.revenuefromoperationsLastyear && rvn.otherincomeLastyear) {
-                let revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
-                let otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
-                let lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
+                const revenuefromoperationsAccounts = [].concat.apply([], rvn.revenuefromoperationsLastyear.childGroups);
+                const otherincomeAccounts = [].concat.apply([], rvn.otherincomeLastyear.childGroups);
+                const lastAccounts = _.unionBy(revenuefromoperationsAccounts as IChildGroups[], otherincomeAccounts as IChildGroups[]) as IChildGroups[];
                 this.lastYearAccounts = lastAccounts;
             } else {
                 // this.resetLastYearChartData();
@@ -233,7 +234,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     }
 
     public generateActiveYearString(): INameUniqueName[] {
-        let activeStrings: INameUniqueName[] = [];
+        const activeStrings: INameUniqueName[] = [];
         this.activeYearAccounts.map(acc => {
             activeStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
         });
@@ -241,7 +242,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     }
 
     public generateLastYearString(): INameUniqueName[] {
-        let lastStrings: INameUniqueName[] = [];
+        const lastStrings: INameUniqueName[] = [];
         this.lastYearAccounts.map(acc => {
             lastStrings.push({ uniqueName: acc.uniqueName, name: acc.groupName });
         });
@@ -265,9 +266,9 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             }
         });
 
-        let activeAccounts = [];
-        let lastAccounts = [];
-        let categories = [];
+        const activeAccounts = [];
+        const lastAccounts = [];
+        const categories = [];
 
         this.accountStrings.forEach(p => {
             activeAccounts.push(p.activeYear);
@@ -283,7 +284,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         this.lastYearAccountsRanks = lastAccounts;
         this.categories = categories;
 
-        let seriesName = this.genSeriesName(this.selectedFilterType);
+        const seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
             { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
             { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
@@ -364,7 +365,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     }
 
     public seriesSeleted() {
-        let __this: any = this;
+        const __this: any = this;
         let compo: RevenueChartComponent;
 
         arguments[0].forEach(f => compo = f);
@@ -372,8 +373,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         if (__this.hoverPoints && __this.hoverPoints.length > 0) {
             let activePer = 0;
             let lastPer = 0;
-            let activePoint = __this.hoverPoints[0].y;
-            let lastPoint = __this.hoverPoints[1].y;
+            const activePoint = __this.hoverPoints[0].y;
+            const lastPoint = __this.hoverPoints[1].y;
 
             activePer = Number(((activePoint * 100) / compo.activeYearGrandAmount).toFixed(2));
             lastPer = Number(((lastPoint * 100) / compo.lastYearGrandAmount).toFixed(2));
@@ -384,7 +385,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     }
 
     public openFilter() {
-        let dialog = this.dialog.open(DashboardFilterComponent, {
+        const dialog = this.dialog.open(DashboardFilterComponent, {
             data: { chartType: ChartType.Revenue }
         });
     }

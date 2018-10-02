@@ -1,10 +1,10 @@
-import { IAccountCreate, IAccount, ICountryClass } from '../interfaces/accountCreate.interface';
-import { IGstDetailListItem } from '../interfaces/gstDetailListItem.interface';
-import { IUserInfo } from '../interfaces/userInfo.interface';
-import { INameUniqueName } from '../interfaces/nameUniqueName.interface';
-import { IFlattenAccountsResultItem } from '../interfaces/flattenAccountsResultItem.interface';
-import { IInheritedTaxes } from '../interfaces/inheritedTaxes.interface';
-import { IPaginatedResponse } from '../interfaces/paginatedResponse.interface';
+import {IAccountCreate, IAccount, ICountryClass} from '../interfaces/accountCreate.interface';
+import {IGstDetailListItem} from '../interfaces/gstDetailListItem.interface';
+import {IUserInfo} from '../interfaces/userInfo.interface';
+import {INameUniqueName} from '../interfaces/nameUniqueName.interface';
+import {IFlattenAccountsResultItem} from '../interfaces/flattenAccountsResultItem.interface';
+import {IInheritedTaxes} from '../interfaces/inheritedTaxes.interface';
+import {IPaginatedResponse} from '../interfaces/paginatedResponse.interface';
 
 /**
  * Model for create account api response
@@ -14,39 +14,39 @@ import { IPaginatedResponse } from '../interfaces/paginatedResponse.interface';
  * new keys - [addresses] will be an array of IAccountAddress
  */
 export class AccountResponse implements IAccountCreate {
-  public gstDetails?: IGstDetailListItem[];
-  public stateCode?: string;
-  public state?: string;
-  public city?: string;
-  public address?: string;
-  public addresses?: IAccountAddress[];
-  public pincode?: string;
-  public email: string;
-  public country?: ICountryClass;
-  public createdAt: string;
-  public updatedAt: string;
-  public updatedBy: IUserInfo;
-  public mobileNo: string;
-  public sacNumber?: string;
-  public attentionTo: string;
-  public createdBy: IUserInfo;
-  public companyName: string;
-  public parentGroups: INameUniqueName[];
-  public openingBalanceDate: string;
-  public applicableTaxes: INameUniqueName[];
-  public isFixed: boolean;
-  public yodleeAdded: boolean;
-  public accountType?: string;
-  public hsnNumber?: string;
-  public openingBalanceType: string;
-  public openingBalance: number;
-  public description?: string;
-  public role: INameUniqueName;
-  public stocks?: any[];
-  public mergedAccounts: string;
-  public uniqueName: string;
-  public name: string;
-  public isComposite?: boolean;
+    public gstDetails?: IGstDetailListItem[];
+    public stateCode?: string;
+    public state?: string;
+    public city?: string;
+    public address?: string;
+    public addresses?: IAccountAddress[];
+    public pincode?: string;
+    public email: string;
+    public country?: ICountryClass;
+    public createdAt: string;
+    public updatedAt: string;
+    public updatedBy: IUserInfo;
+    public mobileNo: string;
+    public sacNumber?: string;
+    public attentionTo: string;
+    public createdBy: IUserInfo;
+    public companyName: string;
+    public parentGroups: INameUniqueName[];
+    public openingBalanceDate: string;
+    public applicableTaxes: INameUniqueName[];
+    public isFixed: boolean;
+    public yodleeAdded: boolean;
+    public accountType?: string;
+    public hsnNumber?: string;
+    public openingBalanceType: string;
+    public openingBalance: number;
+    public description?: string;
+    public role: INameUniqueName;
+    public stocks?: any[];
+    public mergedAccounts: string;
+    public uniqueName: string;
+    public name: string;
+    public isComposite?: boolean;
 }
 
 /**
@@ -55,26 +55,26 @@ export class AccountResponse implements IAccountCreate {
  */
 
 export class AccountRequest implements IAccount {
-  public address?: string;
-  public attentionTo?: string;
-  public companyName?: string;
-  public description?: string;
-  public email?: string;
-  public mobileNo?: string;
-  public openingBalance?: any;
-  public openingBalanceDate?: string;
-  public openingBalanceType?: string;
-  public name: string;
-  public uniqueName: string;
-  public gstDetails?: IGstDetailListItem[];
-  public hsnNumber: string;
-  public city: string;
-  public pincode: string;
-  public country: any;
-  public state?: string;
-  public sacNumber: string;
-  public stateCode: string;
-  public isComposite?: boolean;
+    public address?: string;
+    public attentionTo?: string;
+    public companyName?: string;
+    public description?: string;
+    public email?: string;
+    public mobileNo?: string;
+    public openingBalance?: any;
+    public openingBalanceDate?: string;
+    public openingBalanceType?: string;
+    public name: string;
+    public uniqueName: string;
+    public gstDetails?: IGstDetailListItem[];
+    public hsnNumber: string;
+    public city: string;
+    public pincode: string;
+    public country: any;
+    public state?: string;
+    public sacNumber: string;
+    public stateCode: string;
+    public isComposite?: boolean;
 
 }
 
@@ -86,7 +86,7 @@ export class AccountRequest implements IAccount {
  * its response will be success message in body
  */
 export class AccountMergeRequest {
-  public uniqueName: string;
+    public uniqueName: string;
 }
 
 /**
@@ -96,8 +96,8 @@ export class AccountMergeRequest {
  * its response will be success message in body
  */
 export class AccountUnMergeRequest {
-  public uniqueNames: string[];
-  public moveTo?: string;
+    public uniqueNames: string[];
+    public moveTo?: string;
 }
 
 /*
@@ -106,7 +106,7 @@ export class AccountUnMergeRequest {
  * its response will be success message in body
  */
 export class AccountMoveRequest {
-  public uniqueName: string;
+    public uniqueName: string;
 }
 
 /*
@@ -115,8 +115,8 @@ export class AccountMoveRequest {
  * its response will be success message in body
  */
 export class ShareAccountRequest {
-  public role: string;
-  public user: string;
+    public role: string;
+    public user: string;
 }
 
 /*
@@ -125,10 +125,10 @@ export class ShareAccountRequest {
  * response will be array of AccountSharedWithResponse
  */
 export class AccountSharedWithResponse {
-  public role: INameUniqueName;
-  public userEmail: string;
-  public userName: string;
-  public userUniqueName: string;
+    public role: INameUniqueName;
+    public userEmail: string;
+    public userName: string;
+    public userUniqueName: string;
 }
 
 /*
@@ -141,12 +141,12 @@ export class AccountSharedWithResponse {
  * response will be hash as FlattenAccountsResponse
  */
 export class FlattenAccountsResponse implements IPaginatedResponse {
-  public count: number;
-  public page: number;
-  public results: IFlattenAccountsResultItem[];
-  public size: number;
-  public totalItems: number;
-  public totalPages: number;
+    public count: number;
+    public page: number;
+    public results: IFlattenAccountsResultItem[];
+    public size: number;
+    public totalItems: number;
+    public totalPages: number;
 }
 
 /*
@@ -156,65 +156,67 @@ export class FlattenAccountsResponse implements IPaginatedResponse {
  * response will be hash as AccountsTaxHierarchyResponse
  */
 export class AccountsTaxHierarchyResponse {
-  public applicableTaxes: INameUniqueName[];
-  public inheritedTaxes: IInheritedTaxes[];
+    public applicableTaxes: INameUniqueName[];
+    public inheritedTaxes: IInheritedTaxes[];
 }
+
 export class IAccountAddress {
-  public gstNumber: string;
-  public address: string;
-  public state: string;
-  public stateCode: string;
-  public isDefault: boolean;
-  public isComposite: boolean;
-  public partyType: string;
+    public gstNumber: string;
+    public address: string;
+    public state: string;
+    public stateCode: string;
+    public isDefault: boolean;
+    public isComposite: boolean;
+    public partyType: string;
 }
 
 export class AccountRequestV2 {
-  public addresses: IAccountAddress[];
-  public attentionTo?: string;
-  public companyName?: string;
-  public description?: string;
-  public email?: string;
-  public mobileNo?: string;
-  public openingBalance?: any;
-  public openingBalanceDate?: string;
-  public openingBalanceType?: string;
-  public name: string;
-  public uniqueName: string;
-  public hsnNumber: string;
-  public country: { countryCode: string };
-  public sacNumber: string;
-  public mobileCode?: string;
+    public addresses: IAccountAddress[];
+    public attentionTo?: string;
+    public companyName?: string;
+    public description?: string;
+    public email?: string;
+    public mobileNo?: string;
+    public openingBalance?: any;
+    public openingBalanceDate?: string;
+    public openingBalanceType?: string;
+    public name: string;
+    public uniqueName: string;
+    public hsnNumber: string;
+    public country: { countryCode: string };
+    public sacNumber: string;
+    public mobileCode?: string;
 }
+
 export class AccountResponseV2 {
-  public name: string;
-  public country: { countryCode: string, countryName: string };
-  public stocks?: any[];
-  public hsnNumber?: string;
-  public openingBalanceDate?: string;
-  public applicableTaxes: INameUniqueName[];
-  public isFixed: boolean;
-  public yodleeAdded: boolean;
-  public accountType: any;
-  public mobileNo: string;
-  public sacNumber?: string;
-  public attentionTo: string;
-  public openingBalanceType: string;
-  public openingBalance: number;
-  public companyName: string;
-  public parentGroups: INameUniqueName[];
-  public description?: string;
-  public role: INameUniqueName;
-  public email: string;
-  public mergedAccounts: string;
-  public createdAt: string;
-  public createdBy: IUserInfo;
-  public updatedAt: string;
-  public updatedBy: IUserInfo;
-  public city?: string;
-  public pincode?: string;
-  public uniqueName: string;
-  public addresses: IAccountAddress[];
+    public name: string;
+    public country: { countryCode: string, countryName: string };
+    public stocks?: any[];
+    public hsnNumber?: string;
+    public openingBalanceDate?: string;
+    public applicableTaxes: INameUniqueName[];
+    public isFixed: boolean;
+    public yodleeAdded: boolean;
+    public accountType: any;
+    public mobileNo: string;
+    public sacNumber?: string;
+    public attentionTo: string;
+    public openingBalanceType: string;
+    public openingBalance: number;
+    public companyName: string;
+    public parentGroups: INameUniqueName[];
+    public description?: string;
+    public role: INameUniqueName;
+    public email: string;
+    public mergedAccounts: string;
+    public createdAt: string;
+    public createdBy: IUserInfo;
+    public updatedAt: string;
+    public updatedBy: IUserInfo;
+    public city?: string;
+    public pincode?: string;
+    public uniqueName: string;
+    public addresses: IAccountAddress[];
 }
 
 /*
@@ -223,7 +225,7 @@ export class AccountResponseV2 {
  * API:: company/:companyUniqueName/role/:roleUniqueName/assign
  */
 export class ShareEntityRequest {
-  public emailId: string;
-  public entity: string;
-  public entityUniqueName: string;
+    public emailId: string;
+    public entity: string;
+    public entityUniqueName: string;
 }

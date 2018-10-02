@@ -1,3 +1,5 @@
+
+import {take, map, switchMap} from 'rxjs/operators';
 import {Actions, Effect} from '@ngrx/effects';
 import {DashboardService} from '../../services/dashboard.service';
 import {CustomActions} from '../../store/customActions';
@@ -16,9 +18,7 @@ import {ActiveFinancialYear} from '../../models/api-models/Company';
 
 import * as _ from 'lodash';
 import * as moment from 'moment/moment';
-import {zip} from 'rxjs/observable/zip';
-import {of} from 'rxjs/observable/of';
-import {Observable} from 'rxjs/Observable';
+import {zip, of, Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {ToasterService} from '../../services/toaster.service';
 import {BalanceSheetRequest, ProfitLossRequest} from '../../models/api-models/tb-pl-bs';
@@ -30,61 +30,62 @@ export class ReportsActions {
 
     @Effect()
     public getIncomeData$: Observable<CustomActions> = this.actions$
-        .ofType(ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_REQUEST)
-        .switchMap((action: CustomActions) => {
+        .ofType(ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_REQUEST).pipe(
+        switchMap((action: CustomActions) => {
             let filterType: ChartFilterType;
             let activeFinancialYear: ActiveFinancialYear;
             let lastFinancialYear: ActiveFinancialYear;
             let customFilterObj: ChartCustomFilter;
-            this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
-            this.store.select(s => s.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+            this.store.select(s => s.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+            this.store.select(createSelector([(state: AppState) => state.session.companies,
+                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
                 return { companies, uniqueName };
-            })).take(1).subscribe(res => {
+            })).pipe(take(1)).subscribe(res => {
                 if (!res.companies) {
                     return;
                 }
                 let financialYears = [];
-                let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
                 if (activeCmp) {
                     activeFinancialYear = activeCmp.activeFinancialYear;
 
                     if (activeCmp.financialYears.length > 1) {
                         financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
                         financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
 
                             return b.diff(a, 'days') < 0;
                         });
                         financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
                             return b.diff(a, 'days');
                         }, 'desc');
                         lastFinancialYear = financialYears[0];
                     }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
-            let model: GroupHistoryRequest = {
+            const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
+            const model: GroupHistoryRequest = {
                 category: ['income']
             };
-            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
+            const interValType = filterType === ChartFilterType.ThisMonthToDate ||
+            filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
             return zip(
                 this._dashboardService.GetCategoryHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
                 of(op)
             );
-        }).map((res) => {
-            let config: ChartFilterConfigs = res[1];
+        }), map((res) => {
+            const config: ChartFilterConfigs = res[1];
             if (res[0].status === 'success') {
-                let obj: CategoryHistoryResponse = res[0].body[0];
+                const obj: CategoryHistoryResponse = res[0].body[0];
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_INCOME_DATA_RESPONSE,
                     payload: { data: obj, config }
                 };
-            }
-            else {
+            } else {
                 // this._toasterService.errorToast(res[0].message);
                 this.store.dispatch(this._generalAction.setError(res[0].message));
                 return {
@@ -92,94 +93,96 @@ export class ReportsActions {
                     payload: {data: null, config}
                 };
             }
-        });
+        }), );
 
     @Effect()
     public getExpensesData$: Observable<CustomActions> = this.actions$
-        .ofType(ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_REQUEST)
-        .switchMap((action: CustomActions) => {
+        .ofType(ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_REQUEST).pipe(
+        switchMap((action: CustomActions) => {
             let filterType: ChartFilterType;
             let activeFinancialYear: ActiveFinancialYear;
             let lastFinancialYear: ActiveFinancialYear;
             let customFilterObj: ChartCustomFilter;
-            this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
-            this.store.select(s => s.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+            this.store.select(s => s.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+            this.store.select(createSelector([(state: AppState) => state.session.companies,
+                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
                 return { companies, uniqueName };
-            })).take(1).subscribe(res => {
+            })).pipe(take(1)).subscribe(res => {
                 if (!res.companies) {
                     return;
                 }
                 let financialYears = [];
-                let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
                 if (activeCmp) {
                     activeFinancialYear = activeCmp.activeFinancialYear;
 
                     if (activeCmp.financialYears.length > 1) {
                         financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
                         financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
 
                             return b.diff(a, 'days') < 0;
                         });
                         financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
                             return b.diff(a, 'days');
                         }, 'desc');
                         lastFinancialYear = financialYears[0];
                     }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
-            let model: GroupHistoryRequest = {
+            const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
+            const model: GroupHistoryRequest = {
                 groups: ['indirectexpenses', 'operatingcost']
             };
 
-            let interValType = filterType === ChartFilterType.ThisMonthToDate || filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
+            const interValType = filterType === ChartFilterType.ThisMonthToDate ||
+            filterType === ChartFilterType.LastMonth ? 'daily' : 'monthly';
             return zip(
                 this._dashboardService.GetHistory(model, op.lastYear.startDate, op.activeYear.endDate, interValType),
                 of(op)
             );
-        }).map((res) => {
-            let config: ChartFilterConfigs = res[1];
+        }), map((res) => {
+            const config: ChartFilterConfigs = res[1];
             if (res[0].status === 'success') {
-                let obj: GroupHistoryResponse = res[0].body;
+                const obj: GroupHistoryResponse = res[0].body;
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_RESPONSE,
                     payload: { data: obj, config }
                 };
-            }
-            else {
+            } else {
                 this.store.dispatch(this._generalAction.setError(res[0].message));
                 return {
                     type: ReportConst.PROFIT_LOSS_CHART.GET_EXPENSES_DATA_ERROR,
                     payload: { data: null, config }
                 };
             }
-        });
+        }), );
 
     @Effect() private GetProfitLoss$: Observable<CustomActions> = this.actions$
-        .ofType(ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST)
-        .switchMap((action: CustomActions) => {
+        .ofType(ReportConst.PROFIT_LOSS_SHEET.GET_PROFIT_LOSS_SHEET_REQUEST).pipe(
+        switchMap((action: CustomActions) => {
             let filterType: ChartFilterType;
             let fyIndex: number;
             let activeFinancialYear: ActiveFinancialYear;
             let lastFinancialYear: ActiveFinancialYear;
             let customFilterObj: ChartCustomFilter;
             let activeChartType: string;
-            this.store.select(p => p.report.activeChartType).take(1).subscribe(p => activeChartType = p);
-            this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
-            this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+            this.store.select(p => p.report.activeChartType).pipe(take(1)).subscribe(p => activeChartType = p);
+            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+            this.store.select(p => p.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+            this.store.select(createSelector([(state: AppState) => state.session.companies,
+                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
                 return { companies, uniqueName };
-            })).take(1).subscribe(res => {
+            })).pipe(take(1)).subscribe(res => {
                 if (!res.companies) {
                     return;
                 }
                 let financialYears = [];
-                let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
                 if (activeCmp) {
                     activeFinancialYear = activeCmp.activeFinancialYear;
                     fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
@@ -187,22 +190,22 @@ export class ReportsActions {
                     if (activeCmp.financialYears.length > 1) {
                         financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
                         financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
 
                             return b.diff(a, 'days') < 0;
                         });
                         financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
                             return b.diff(a, 'days');
                         }, 'desc');
                         lastFinancialYear = financialYears[0];
                     }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
-            let request: ProfitLossRequest = {
+            const op = parseDates(filterType, activeFinancialYear, lastFinancialYear, customFilterObj);
+            const request: ProfitLossRequest = {
                 refresh: action.payload,
                 from: activeChartType === 'current' ? op.activeYear.startDate : op.lastYear.startDate,
                 to: activeChartType === 'current' ? op.activeYear.endDate : op.lastYear.endDate,
@@ -210,8 +213,8 @@ export class ReportsActions {
                 tax: 0
             };
             return zip(this._tlPlService.GetProfitLoss(request), of(op));
-        })
-        .map(response => {
+        }),
+        map(response => {
             // console.log(JSON.stringify(response[0]));
             if (response[0].status === 'success') {
                 return {
@@ -223,28 +226,29 @@ export class ReportsActions {
                     type: 'EmptyActions'
                 }
             }
-        });
+        }), );
 
     @Effect() private GetBalanceSheet$: Observable<CustomActions> = this.actions$
-        .ofType(ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST)
-        .switchMap((action: CustomActions) => {
+        .ofType(ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_REQUEST).pipe(
+        switchMap((action: CustomActions) => {
             let filterType: ChartFilterType;
             let fyIndex: number;
             let activeFinancialYear: ActiveFinancialYear;
             let lastFinancialYear: ActiveFinancialYear;
             let customFilterObj: ChartCustomFilter;
             let activeChartType: string;
-            this.store.select(p => p.report.activeChartType).take(1).subscribe(p => activeChartType = p);
-            this.store.select(p => p.report.profitLossChartCustomFilter).take(1).subscribe(p => customFilterObj = p);
-            this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(p => filterType = p);
-            this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
+            this.store.select(p => p.report.activeChartType).pipe(take(1)).subscribe(p => activeChartType = p);
+            this.store.select(p => p.report.profitLossChartCustomFilter).pipe(take(1)).subscribe(p => customFilterObj = p);
+            this.store.select(p => p.report.profitLossChartFilter).pipe(take(1)).subscribe(p => filterType = p);
+            this.store.select(createSelector([(state: AppState) => state.session.companies,
+                (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
                 return { companies, uniqueName };
-            })).take(1).subscribe(res => {
+            })).pipe(take(1)).subscribe(res => {
                 if (!res.companies) {
                     return;
                 }
                 let financialYears = [];
-                let activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
+                const activeCmp = res.companies.find(p => p.uniqueName === res.uniqueName);
                 if (activeCmp) {
                     activeFinancialYear = activeCmp.activeFinancialYear;
                     fyIndex = activeCmp.financialYears.findIndex(f => f.uniqueName === activeFinancialYear.uniqueName);
@@ -252,30 +256,30 @@ export class ReportsActions {
                     if (activeCmp.financialYears.length > 1) {
                         financialYears = activeCmp.financialYears.filter(cm => cm.uniqueName !== activeFinancialYear.uniqueName);
                         financialYears = _.filter(financialYears, (it: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(it.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(it.financialYearEnds, 'DD-MM-YYYY');
 
                             return b.diff(a, 'days') < 0;
                         });
                         financialYears = _.orderBy(financialYears, (p: ActiveFinancialYear) => {
-                            let a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
-                            let b = moment(p.financialYearEnds, 'DD-MM-YYYY');
+                            const a = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY');
+                            const b = moment(p.financialYearEnds, 'DD-MM-YYYY');
                             return b.diff(a, 'days');
                         }, 'desc');
                         lastFinancialYear = financialYears[0];
                     }
                 }
             });
-            let op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
-            let request: BalanceSheetRequest = {
+            const op = parseDates(filterType, activeFinancialYear, null, customFilterObj);
+            const request: BalanceSheetRequest = {
                 refresh: action.payload,
                 from: op.activeYear.startDate,
                 to: op.activeYear.endDate,
                 fy: fyIndex === 0 ? 0 : fyIndex * -1
             };
             return zip(this._tlPlService.GetBalanceSheet(request), of(op));
-        })
-        .map(response => {
+        }),
+        map(response => {
             if (response[0].status === 'success') {
                 return {
                     type: ReportConst.BALANCE_SHEET.GET_BALANCE_SHEET_RESPONSE,
@@ -288,7 +292,7 @@ export class ReportsActions {
                     type: 'EmptyActions'
                 }
             }
-        });
+        }), );
 
     constructor(private actions$: Actions, private _dashboardService: DashboardService, private store: Store<AppState>,
         private _toasterService: ToasterService, private _tlPlService: TlPlService, private _generalAction: GeneralActions) {
@@ -307,7 +311,8 @@ export class ReportsActions {
         }
     }
 
-    public setFilterType(filterObj: { filterTitle: string, filterType: ChartFilterType }, customFilterObj: ChartCustomFilter): CustomActions {
+    public setFilterType(filterObj: { filterTitle: string, filterType: ChartFilterType }
+    , customFilterObj: ChartCustomFilter): CustomActions {
         return {
             type: ReportConst.SET_REPORT_FILTER_TYPE,
             payload: { filterObj, customFilterObj }
@@ -338,7 +343,7 @@ export class ReportsActions {
 
 
 const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFinancialYear, lastFinancialYear: ActiveFinancialYear, customFilterObj: ChartCustomFilter): ChartFilterConfigs => {
-    let config = new ChartFilterConfigs();
+    const config = new ChartFilterConfigs();
     switch (filterType) {
         case ChartFilterType.ThisMonthToDate: // This Month to Date
             config.ChartTitle = 'This Month to Date';
@@ -366,16 +371,16 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
             return config;
         case ChartFilterType.ThisFinancialYearToDate: // This Financial Year to Date
             config.ChartTitle = 'This Financial Year to Date';
-            let activeLegend = [];
-            let lastLegend = [];
+            const activeLegend = [];
+            const lastLegend = [];
             if (activeFinancialYear) {
                 config.activeYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('DD-MM-YYYY');
                 // config.activeYear.endDate = moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
                 config.activeYear.endDate = moment().format('DD-MM-YYYY');
                 config.activeYear.lable = 'FY-' + moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('YY') + ' - FY-' + moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('YY');
 
-                let dateStart = moment(config.activeYear.startDate, 'DD-MM-YYYY');
-                let dateEnd = moment(config.activeYear.endDate, 'DD-MM-YYYY');
+                const dateStart = moment(config.activeYear.startDate, 'DD-MM-YYYY');
+                const dateEnd = moment(config.activeYear.endDate, 'DD-MM-YYYY');
                 while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
                     activeLegend.push(dateStart.format('MMM'));
                     dateStart.add(1, 'month');
@@ -391,8 +396,8 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
                 config.lastYear.endDate = moment(lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('DD-MM-YYYY');
                 config.lastYear.lable = 'FY-' + moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('day').format('YY') + ' - FY-' + moment(lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').format('YY');
 
-                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
-                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                const dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                const dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
                 while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
                     lastLegend.push(dateStart.format('MMM'));
                     dateStart.add(1, 'month');
@@ -402,8 +407,8 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
                 config.lastYear.endDate = moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('day').subtract(1, 'year').format('DD-MM-YYYY');
                 config.lastYear.lable = 'FY-' + moment(config.lastYear.startDate, 'DD-MM-YYYY').startOf('day').format('YY') + ' - FY-' + moment(config.lastYear.endDate, 'DD-MM-YYYY').endOf('day').format('YY');
 
-                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
-                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                const dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                const dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
                 while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
                     lastLegend.push(dateStart.format('MMM'));
                     dateStart.add(1, 'month');
@@ -451,15 +456,15 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
         case ChartFilterType.LastFiancialYear: {
             // Last Fiancial Year
             config.ChartTitle = 'Last Fiancial Year';
-            let activeLegend = [];
-            let lastLegend = [];
+            const activeLegend = [];
+            const lastLegend = [];
             if (activeFinancialYear) {
                 config.activeYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('year').subtract(1, 'year').format('DD-MM-YYYY');
                 config.activeYear.endDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
                 config.activeYear.lable = 'FY-' + moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('year').subtract(1, 'year').format('YY') + ' - FY-' + moment(activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('YY');
 
-                let dateStart = moment(config.activeYear.startDate, 'DD-MM-YYYY');
-                let dateEnd = moment(config.activeYear.endDate, 'DD-MM-YYYY');
+                const dateStart = moment(config.activeYear.startDate, 'DD-MM-YYYY');
+                const dateEnd = moment(config.activeYear.endDate, 'DD-MM-YYYY');
                 while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
                     activeLegend.push(dateStart.format('MMM'));
                     dateStart.add(1, 'month');
@@ -475,19 +480,23 @@ const parseDates = (filterType: ChartFilterType, activeFinancialYear: ActiveFina
                 config.lastYear.endDate = moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('DD-MM-YYYY');
                 config.lastYear.lable = 'FY-' + moment(lastFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('year').subtract(1, 'year').format('YY') + ' - FY-' + moment(lastFinancialYear.financialYearEnds, 'DD-MM-YYYY').endOf('year').subtract(1, 'year').format('YY');
 
-                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
-                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                const dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                const dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
                 while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
                     lastLegend.push(dateStart.format('MMM'));
                     dateStart.add(1, 'month');
                 }
             } else {
-                config.lastYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').startOf('year').subtract(2, 'year').format('DD-MM-YYYY');
-                config.lastYear.endDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').endOf('year').subtract(2, 'year').format('DD-MM-YYYY');
-                config.lastYear.lable = 'FY-' + moment(config.lastYear.startDate, 'DD-MM-YYYY').startOf('year').subtract(2, 'year').format('YY') + ' - FY-' + moment(config.lastYear.endDate, 'DD-MM-YYYY').endOf('year').subtract(2, 'year').format('YY');
+                config.lastYear.startDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY')
+                    .startOf('year').subtract(2, 'year').format('DD-MM-YYYY');
+                config.lastYear.endDate = moment(activeFinancialYear.financialYearStarts, 'DD-MM-YYYY')
+                    .endOf('year').subtract(2, 'year').format('DD-MM-YYYY');
+                config.lastYear.lable = 'FY-' + moment(config.lastYear.startDate, 'DD-MM-YYYY')
+                    .startOf('year').subtract(2, 'year').format('YY') + ' - FY-' + moment(config.lastYear.endDate, 'DD-MM-YYYY')
+                    .endOf('year').subtract(2, 'year').format('YY');
 
-                let dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
-                let dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
+                const dateStart = moment(config.lastYear.startDate, 'DD-MM-YYYY');
+                const dateEnd = moment(config.lastYear.endDate, 'DD-MM-YYYY');
                 while (dateEnd > dateStart || dateStart.format('M') === dateEnd.format('M')) {
                     lastLegend.push(dateStart.format('MMM'));
                     dateStart.add(1, 'month');

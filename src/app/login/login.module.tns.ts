@@ -1,9 +1,9 @@
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NativeScriptRouterModule } from "nativescript-angular/router";
+import { NativeScriptRouterModule } from 'nativescript-angular/router';
 
 // nativescript
-import { NativeScriptCommonModule } from "nativescript-angular/common";
+import { NativeScriptCommonModule } from 'nativescript-angular/common';
 import { NativeScriptFormsModule } from 'nativescript-angular/forms';
 
 // app
@@ -20,7 +20,7 @@ import { LoginRoutes } from './login.routes';
         ReactiveFormsModule,
         SharedModule
     ],
-    exports:[NativeScriptRouterModule],
+    exports: [NativeScriptRouterModule],
     declarations: [...COMPONENTS],
     schemas: [
         NO_ERRORS_SCHEMA

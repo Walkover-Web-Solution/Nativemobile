@@ -1,4 +1,4 @@
-import { SecureStorage } from "nativescript-secure-storage";
+import { SecureStorage } from 'nativescript-secure-storage';
 
 const secureStorage = new SecureStorage();
 
@@ -123,7 +123,7 @@ export const syncStateUpdate = (
         let encrypt = undefined;
 
         if (typeof key === 'object') {
-            let name = Object.keys(key)[0];
+            const name = Object.keys(key)[0];
             stateSlice = state[name];
 
             if (typeof stateSlice !== 'undefined' && key[name]) {
@@ -260,7 +260,7 @@ export const localStorageSyncAndClean = (
     rehydrate: boolean = false,
     removeOnUndefined: boolean = false
 ) => (reducer: any) => {
-    let config: LocalStorageConfig = {
+    const config: LocalStorageConfig = {
         keys: keys,
         rehydrate: rehydrate,
         storage: secureStorage,

@@ -1,4 +1,5 @@
-import { ILogRequest, ILogsItem } from '../interfaces/logs.interface';
+import {ILogRequest, ILogsItem} from '../interfaces/logs.interface';
+
 /**
  * Model for Audit Logs api request
  * API:: (Audit Logs) company/:companyUniqueName/logs?page=:page
@@ -12,15 +13,15 @@ import { ILogRequest, ILogsItem } from '../interfaces/logs.interface';
  */
 
 export class LogsRequest implements ILogRequest {
-  public fromDate?: string;
-  public toDate?: string;
-  public operation: string;
-  public userUniqueName: string;
-  public accountUniqueName: string;
-  public groupUniqueName: string;
-  public entryDate?: string;
-  public logDate?: string;
-  public entity: string;
+    public fromDate?: string;
+    public toDate?: string;
+    public operation: string;
+    public userUniqueName: string;
+    public accountUniqueName: string;
+    public groupUniqueName: string;
+    public entryDate?: string;
+    public logDate?: string;
+    public entity: string;
 }
 
 /**
@@ -28,8 +29,8 @@ export class LogsRequest implements ILogRequest {
  * API:: (Audit Logs) company/:companyUniqueName/logs?page=:page
  */
 export class LogsResponse {
-  public logs: ILogsItem[];
-  public totalPages: number;
-  public size: number;
-  public totalElements: number;
+    public logs: ILogsItem[];
+    public totalPages: number;
+    public size: number;
+    public totalElements: number;
 }

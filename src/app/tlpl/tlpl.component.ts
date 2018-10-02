@@ -1,9 +1,11 @@
+
+import {takeUntil, take} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as _ from 'lodash';
 import {createSelector} from 'reselect';
 import {ReplaySubject} from 'rxjs//ReplaySubject';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {CompanyActions} from '../actions/company/company.action';
 import {TBPlBsActions} from '../actions/tl-pl/tl-pl.actions';
 import {CompanyResponse} from '../models/api-models/Company';
@@ -43,9 +45,9 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
                 private _routerExtension: RouterService, private _cdRef: ChangeDetectorRef) {
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             return {companies, uniqueName};
-        })).takeUntil(this.destroyed$);
-        this.data$ = this.store.select(s => s.tlPl.tb.data).takeUntil(this.destroyed$);
-        this.showLoader$ = this.store.select(s => s.tlPl.tb.showLoader).takeUntil(this.destroyed$);
+        })).pipe(takeUntil(this.destroyed$));
+        this.data$ = this.store.select(s => s.tlPl.tb.data).pipe(takeUntil(this.destroyed$));
+        this.showLoader$ = this.store.select(s => s.tlPl.tb.showLoader).pipe(takeUntil(this.destroyed$));
     }
 
     ngOnInit(): void {
@@ -147,7 +149,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     navigateTo(uniqueName: string) {
         this.activeAcc = '';
-        this.data$.take(1).subscribe(p => {
+        this.data$.pipe(take(1)).subscribe(p => {
             let d = _.cloneDeep(p) as AccountDetails;
             let result = this.loopOver(d.groupDetails, uniqueName, null);
             this.activeGrp = result;
@@ -246,7 +248,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         if (res.parentGrpUniqueName) {
             let r = this.genBreadcrumb(res.parentGrpUniqueName, []);
             if (r && r.length) {
-                this.data$.take(1).subscribe(p => {
+                this.data$.pipe(take(1)).subscribe(p => {
                     let d = _.cloneDeep(p) as AccountDetails;
                     let result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
                     this.filterdData = result.childGroups;

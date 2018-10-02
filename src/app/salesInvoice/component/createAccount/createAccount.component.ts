@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, Component } from "@angular/core";
+import {OnInit, OnDestroy, Component} from '@angular/core';
 
 @Component({
     selector: 'ns-create-account',
@@ -7,11 +7,13 @@ import { OnInit, OnDestroy, Component } from "@angular/core";
 })
 export class CreateAccountComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
+
     ngOnDestroy(): void {
-        throw new Error("Method not implemented.");
+        throw new Error('Method not implemented.');
     }
+
     constructor() {
 
     }

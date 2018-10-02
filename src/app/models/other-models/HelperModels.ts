@@ -1,6 +1,6 @@
 export interface NsDropDownOptions {
-  display: string;
-  value: string;
+    display: string;
+    value: string;
 }
 
 
@@ -9,4 +9,4 @@ export enum userLoginStateEnum {
     userLoggedIn,
     newUserLoggedIn,
     needTwoWayAuth
-  }
+}

@@ -1,3 +1,5 @@
+
+import {distinctUntilChanged} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 // vendor dependencies
 import {Store} from '@ngrx/store';
@@ -5,7 +7,7 @@ import {AppState} from './store';
 import {GeneralService} from './services/general.service';
 import {GeneralActions} from './actions/general/general.actions';
 import {CompanyActions} from './actions/company/company.action';
-import 'rxjs/add/operator/distinctUntilChanged'
+
 
 // app
 
@@ -22,9 +24,9 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.store.select(s => s.session).distinctUntilChanged((x, y) => {
+        this.store.select(s => s.session).pipe(distinctUntilChanged((x, y) => {
             return x.userLoginState === y.userLoginState
-        }).subscribe(ss => {
+        })).subscribe(ss => {
             // console.log('key changed');
             if (ss.user) {
                 this._generalService.user = ss.user.user;

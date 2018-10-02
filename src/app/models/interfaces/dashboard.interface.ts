@@ -1,6 +1,6 @@
-import { INameUniqueName } from './nameUniqueName.interface';
-import { IClosingBalance, IForwardBalance } from './ledger.interface';
-import { ClosingBalanceResponse, CategoryHistoryResponse, GroupHistoryResponse } from '../api-models/Dashboard';
+import {INameUniqueName} from './nameUniqueName.interface';
+import {IClosingBalance, IForwardBalance} from './ledger.interface';
+import {ClosingBalanceResponse, CategoryHistoryResponse, GroupHistoryResponse} from '../api-models/Dashboard';
 
 export interface IPeriodBalances {
     periodBalances: IPeriodBalancesitem[];
@@ -138,7 +138,7 @@ export interface IBankAccount {
     name: string;
 }
 
-let cost = {
+const cost = {
     // revenue
     revenueActiveYear: [],
     revenueActiveYearMonthly: [],

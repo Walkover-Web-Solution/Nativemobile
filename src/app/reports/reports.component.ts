@@ -13,10 +13,11 @@ import {ToasterService} from '../services/toaster.service';
     styleUrls: ['./reports.component.scss']
 })
 
-export class ReportsComponent implements OnInit{
+export class ReportsComponent implements OnInit {
     public chartType: ChartType = ChartType.ProfitLoss;
-    public width: number = 0;
-    public pageTitle: string = 'Profit And Loss';
+    public width = 0;
+    public pageTitle = 'Profit And Loss';
+
     constructor(private _routerExtension: RouterService, private store: Store<AppState>, private _toasterService: ToasterService) {
         if (Config.IS_WEB) {
             this.width = (window as any).innerWidth;
@@ -25,7 +26,7 @@ export class ReportsComponent implements OnInit{
 
     public ngOnInit() {
         this.store.select(s => s.general.errorString).subscribe(s => {
-            if (s && s!== '') {
+            if (s && s !== '') {
                 this._toasterService.errorToast(s);
             }
         });

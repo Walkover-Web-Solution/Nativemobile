@@ -1,8 +1,9 @@
+import {catchError, map} from 'rxjs/operators';
 import {Inject, Injectable, Optional} from '@angular/core';
-import 'rxjs/add/operator/map';
+
 import {HttpWrapperService} from './httpWrapper.service';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {BaseResponse} from '../models/api-models/BaseResponse';
 import {UserDetails} from '../models/api-models/loginModels';
 import {ErrorHandler} from './catchManager/catchmanger';
@@ -25,7 +26,7 @@ export class TlPlService {
     private user: UserDetails;
 
     constructor(private errorHandler: ErrorHandler, public _http: HttpWrapperService, public _router: Router,
-        private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
+                private _generalService: GeneralService, @Optional() @Inject(ServiceConfig) private config: IServiceConfigArgs) {
     }
 
     /**
@@ -35,14 +36,18 @@ export class TlPlService {
         this.user = this._generalService.user;
         this.companyUniqueName = this._generalService.companyUniqueName;
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_TRIAL_BALANCE
-            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), { from: request.from, to: request.to, refresh: request.refresh })
-            .map((res) => {
+            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), {
+            from: request.from,
+            to: request.to,
+            refresh: request.refresh
+        }).pipe(
+            map((res) => {
 
-                let data: BaseResponse<AccountDetails, TrialBalanceRequest> = res;
+                const data: BaseResponse<AccountDetails, TrialBalanceRequest> = res;
                 data.request = request;
                 return data;
-            })
-            .catch((e) => this.errorHandler.HandleCatch<AccountDetails, TrialBalanceRequest>(e, request));
+            }),
+            catchError((e) => this.errorHandler.HandleCatch<AccountDetails, TrialBalanceRequest>(e, request)));
     }
 
     /**
@@ -51,18 +56,18 @@ export class TlPlService {
     public GetProfitLoss(request: ProfitLossRequest): Observable<BaseResponse<ProfitLossDataV3, ProfitLossRequest>> {
         this.user = this._generalService.user;
         this.companyUniqueName = this._generalService.companyUniqueName;
-        let filteredRequest = (Object.keys(request)
+        const filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
+            .reduce((r, i) => (Object.assign({}, r, {[i]: request[i]})), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_PROFIT_LOSS
-            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
-            .map((res) => {
-                let data: BaseResponse<ProfitLossDataV3, ProfitLossRequest> = res;
+            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest).pipe(
+            map((res) => {
+                const data: BaseResponse<ProfitLossDataV3, ProfitLossRequest> = res;
                 data.request = request;
                 return data;
-            })
-            .catch((e) => this.errorHandler.HandleCatch<ProfitLossDataV3, ProfitLossRequest>(e, request));
+            }),
+            catchError((e) => this.errorHandler.HandleCatch<ProfitLossDataV3, ProfitLossRequest>(e, request)));
     }
 
     /**
@@ -71,18 +76,18 @@ export class TlPlService {
     public GetBalanceSheet(request: BalanceSheetRequest): Observable<BaseResponse<AccountDetails, BalanceSheetRequest>> {
         this.user = this._generalService.user;
         this.companyUniqueName = this._generalService.companyUniqueName;
-        let filteredRequest = (Object.keys(request)
+        const filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
+            .reduce((r, i) => (Object.assign({}, r, {[i]: request[i]})), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.GET_BALANCE_SHEET
-            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
-            .map((res) => {
-                let data: BaseResponse<AccountDetails, BalanceSheetRequest> = res;
+            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest).pipe(
+            map((res) => {
+                const data: BaseResponse<AccountDetails, BalanceSheetRequest> = res;
                 data.request = request;
                 return data;
-            })
-            .catch((e) => this.errorHandler.HandleCatch<any, any>(e));
+            }),
+            catchError((e) => this.errorHandler.HandleCatch<any, any>(e)));
     }
 
     public DownloadTrialBalanceExcel(request: TrialBalanceExportExcelRequest): Observable<BaseResponse<any, any>> {
@@ -90,47 +95,47 @@ export class TlPlService {
         this.companyUniqueName = this._generalService.companyUniqueName;
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.DOWNLOAD_TRIAL_BALANCE_EXCEL
-            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), request)
-            .map((res) => {
-                let data = this.b64toBlob(res.body, 'application/xml', 512);
+            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), request).pipe(
+            map((res) => {
+                const data = this.b64toBlob(res.body, 'application/xml', 512);
                 // saveAs(data, 'trialbalance.xlsx');
                 return res;
-            })
-            .catch((e) => this.errorHandler.HandleCatch<any, any>(e));
+            }),
+            catchError((e) => this.errorHandler.HandleCatch<any, any>(e)));
     }
 
     public DownloadBalanceSheetExcel(request: ProfitLossRequest): Observable<BaseResponse<any, any>> {
         this.user = this._generalService.user;
         this.companyUniqueName = this._generalService.companyUniqueName;
-        let filteredRequest = (Object.keys(request)
+        const filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
+            .reduce((r, i) => (Object.assign({}, r, {[i]: request[i]})), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.DOWNLOAD_BALANCE_SHEET_EXCEL
-            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
-            .map((res) => {
-                let data = this.b64toBlob(res.body, 'application/xml', 512);
+            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest).pipe(
+            map((res) => {
+                const data = this.b64toBlob(res.body, 'application/xml', 512);
                 // saveAs(data, 'balancesheet.xlsx');
                 return res;
-            })
-            .catch((e) => this.errorHandler.HandleCatch<any, any>(e));
+            }),
+            catchError((e) => this.errorHandler.HandleCatch<any, any>(e)));
     }
 
     public DownloadProfitLossExcel(request: ProfitLossRequest): Observable<BaseResponse<any, any>> {
         this.user = this._generalService.user;
         this.companyUniqueName = this._generalService.companyUniqueName;
-        let filteredRequest = (Object.keys(request)
+        const filteredRequest = (Object.keys(request)
             .filter(p => request[p] != null)
-            .reduce((r, i) => (Object.assign({}, r, { [i]: request[i] })), {}));
+            .reduce((r, i) => (Object.assign({}, r, {[i]: request[i]})), {}));
 
         return this._http.get(this.config.apiUrl + TB_PL_BS_API.DOWNLOAD_PROFIT_LOSS_EXCEL
-            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest)
-            .map((res) => {
-                let data = this.b64toBlob(res.body, 'application/xml', 512);
+            .replace(':companyUniqueName', encodeURIComponent(this.companyUniqueName)), filteredRequest).pipe(
+            map((res) => {
+                const data = this.b64toBlob(res.body, 'application/xml', 512);
                 // saveAs(data, 'profitloss.xlsx');
                 return res;
-            })
-            .catch((e) => this.errorHandler.HandleCatch<any, any>(e));
+            }),
+            catchError((e) => this.errorHandler.HandleCatch<any, any>(e)));
     }
 
     private b64toBlob = (b64Data, contentType, sliceSize) => {

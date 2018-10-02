@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseResponse } from '../../models/api-models/BaseResponse';
 import { ToasterService } from '../toaster.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 // import { LoginActions } from '../actions/login.action';
 import { Store } from '@ngrx/store';
 // import { AppState } from '../../store';

@@ -1,6 +1,5 @@
-import { Routes } from "@angular/router";
-import { ReportsComponent } from "./reports.component";
-
+import {Routes} from '@angular/router';
+import {ReportsComponent} from './reports.component';
 
 
 export const ReportsRoutes: Routes = [

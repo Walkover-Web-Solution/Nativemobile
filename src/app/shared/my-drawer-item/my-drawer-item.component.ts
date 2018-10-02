@@ -1,12 +1,12 @@
-import { Component, Input, OnInit, Output, EventEmitter } from "@angular/core";
-import { MyDrawerItem } from "./my-drawer-item";
-import { RouterService } from "../../services/router.service";
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {MyDrawerItem} from './my-drawer-item';
+import {RouterService} from '../../services/router.service';
 
 @Component({
-    selector: "MyDrawerItem",
+    selector: 'MyDrawerItem',
     moduleId: module.id,
-    templateUrl: "./my-drawer-item.component.html",
-    styleUrls: ["./my-drawer-item.component.scss"]
+    templateUrl: './my-drawer-item.component.html',
+    styleUrls: ['./my-drawer-item.component.scss']
 })
 export class MyDrawerItemComponent implements OnInit {
     @Input() mydraweritem: MyDrawerItem;
@@ -19,6 +19,7 @@ export class MyDrawerItemComponent implements OnInit {
 
     ngOnInit(): void {
     }
+
     onNavItemTap(): void {
         this.itemSelected.emit();
     }

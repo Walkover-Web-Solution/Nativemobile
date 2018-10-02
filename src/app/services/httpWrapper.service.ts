@@ -1,11 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import {tap, finalize} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpRequest, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs';
 // import { LoaderService } from '../loader/loader.service';
-import { GeneralService } from './general.service';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/operator/finally';
-import { LoaderService } from './loader.service';
+import {GeneralService} from './general.service';
+
+
+import {LoaderService} from './loader.service';
 
 @Injectable()
 export class HttpWrapperService {
@@ -16,53 +17,48 @@ export class HttpWrapperService {
     public get = (url: string, params?: any, options?: any): Observable<any> => {
         options = this.prepareOptions(options);
         options.params = params;
-        return this._http.get(url, options).do((res) => {
+        return this._http.get(url, options).pipe(tap((res) => {
             //
-        }).finally(() => {
+        }), finalize(() => {
             this.hideLoader();
-        });
+        }));
     }
-
     public post = (url: string, body: any, options?: any): Observable<any> => {
         options = this.prepareOptions(options);
-        return this._http.post(url, body, options).do((res) => {
+        return this._http.post(url, body, options).pipe(tap((res) => {
             //
-        }).finally(() => {
+        }), finalize(() => {
             this.hideLoader();
-        });
+        }));
     }
-
     public put = (url: string, body: any, options?: any): Observable<any> => {
         options = this.prepareOptions(options);
-        return this._http.put(url, body, options).do((res) => {
+        return this._http.put(url, body, options).pipe(tap((res) => {
             //
-        }).finally(() => {
+        }), finalize(() => {
             this.hideLoader();
-        });
+        }));
     }
-
     public delete = (url: string, params?: any, options?: any): Observable<any> => {
         options = this.prepareOptions(options);
         options.search = this.objectToParams(params);
-        return this._http.delete(url, options).do((res) => {
+        return this._http.delete(url, options).pipe(tap((res) => {
             //
-        }).finally(() => {
+        }), finalize(() => {
             this.hideLoader();
-        });
+        }));
     }
-
     public patch = (url: string, body: any, options?: any): Observable<any> => {
         options = this.prepareOptions(options);
-        return this._http.patch(url, body, options).do((res) => {
+        return this._http.patch(url, body, options).pipe(tap((res) => {
             //
-        }).finally(() => {
+        }), finalize(() => {
             this.hideLoader();
-        });
+        }));
     }
-
     public prepareOptions(options: any): any {
         this.showLoader();
-        let sessionId = this._generalService.sessionId;
+        const sessionId = this._generalService.sessionId;
         options = options || {};
 
         if (!options.headers) {
@@ -86,7 +82,7 @@ export class HttpWrapperService {
 
     public objectToParams(object = {}) {
         return Object.keys(object).map((value) => {
-            let objectValue = this.isPrimitive(object[value]) ? object[value] : JSON.stringify(object[value]);
+            const objectValue = this.isPrimitive(object[value]) ? object[value] : JSON.stringify(object[value]);
             return `${value}=${objectValue}`;
         }).join('&');
     }

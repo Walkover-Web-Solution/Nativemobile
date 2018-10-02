@@ -12,7 +12,7 @@ export class NeedsAuthentication implements CanActivate {
     }
 
     public canActivate() {
-        let data = false;
+        const data = false;
         return this.store.select(createSelector([(p: AppState) => p.session], (s) => {
             if (s && s.user) {
                 return true;

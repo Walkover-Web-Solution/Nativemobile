@@ -1,10 +1,10 @@
-import { Routes } from "@angular/router";
-import { SettingsComponent } from "../settings/settings.component";
-import { CompanyProfileComponent } from "../settings/components/company-profile/company-profile.component";
-import { CurrenciesComponent } from "../settings/components/currencies/currencies.component";
-import { CreateCurrenciesComponent } from "../settings/components/create-currencies/create-currencies.component";
-import { TaxesComponent } from "../settings/components/taxes/taxes.component";
-import { CreateTaxesComponent } from "../settings/components/create-taxes/create-taxes.component";
+import {Routes} from '@angular/router';
+import {SettingsComponent} from '../settings/settings.component';
+import {CompanyProfileComponent} from '../settings/components/company-profile/company-profile.component';
+import {CurrenciesComponent} from '../settings/components/currencies/currencies.component';
+import {CreateCurrenciesComponent} from '../settings/components/create-currencies/create-currencies.component';
+import {TaxesComponent} from '../settings/components/taxes/taxes.component';
+import {CreateTaxesComponent} from '../settings/components/create-taxes/create-taxes.component';
 
 
 export const SettingsRoutes: Routes = [

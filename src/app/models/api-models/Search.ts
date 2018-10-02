@@ -24,9 +24,9 @@ export class Account {
     public openingBalance: OpeningBalance;
     public uniqueName: string;
     public name: string;
-    public isVisible: boolean = false;
-    public isIncludedInSearch: boolean = true;
-    public isCreated: boolean = false;
+    public isVisible = false;
+    public isIncludedInSearch = true;
+    public isCreated = false;
     public understandingCategoryText?: string;
     public category?: string;
     public parentGrpUniqueName?: string;
@@ -69,9 +69,9 @@ export class ChildGroup {
     public accountType: string;
     public understandingCategoryText?: string;
     public groupName: string;
-    public isIncludedInSearch: boolean = true;
-    public isCreated: boolean = false;
-    public isVisible: boolean = false;
+    public isIncludedInSearch = true;
+    public isCreated = false;
+    public isVisible = false;
 }
 
 export interface SearchResponse {
@@ -95,7 +95,7 @@ export interface SearchRequest {
 
 export class SearchDataSet {
     public queryType: string = null;
-    public balType: string = 'CREDIT';
+    public balType = 'CREDIT';
     public queryDiffer: string = null;
     public amount: string = null;
 }

@@ -1,4 +1,4 @@
-import { ChildGroup, ClosingBalance, ForwardedBalance, OpeningBalance } from './Search';
+import {ChildGroup, ClosingBalance, ForwardedBalance, OpeningBalance} from './Search';
 
 export interface TrialBalanceExportExcelRequest {
     fromDate?: string;

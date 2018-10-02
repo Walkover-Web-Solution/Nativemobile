@@ -1,3 +1,5 @@
+
+import {takeUntil, take} from 'rxjs/operators';
 import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewContainerRef} from '@angular/core';
 import {ModalDialogOptions, ModalDialogService} from 'nativescript-angular/modal-dialog';
 import {TBPlBsActions} from '../../actions/tl-pl/tl-pl.actions';
@@ -5,10 +7,9 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {DownloadLedgerRequest, TransactionsRequest, TransactionsResponse} from '../../models/api-models/Ledger';
 import {IMyDateRangeModel, IMyDrpOptions} from 'mydaterangepicker';
-import {Observable} from 'rxjs/Observable';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/shareReplay';
+import {Observable, ReplaySubject, of} from 'rxjs';
+
+
 import {AccountResponse} from '../../models/api-models/Account';
 import {underStandingTextData} from './underStandingTextData';
 import * as _ from 'lodash';
@@ -20,7 +21,6 @@ import {CompoundEntryDialogComponent} from '../compoundEntryDialog/compoundEntry
 import {ITransactionItem} from '../../models/interfaces/ledger.interface';
 import {isIOS} from '../../common/utils/environment';
 import * as permissions from 'nativescript-permissions';
-import {of} from 'rxjs/observable/of';
 
 declare var java;
 declare var NSUTF8StringEncoding;
@@ -73,11 +73,11 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
                 private _cdRef: ChangeDetectorRef, private modalService: ModalDialogService, private viewContainerRef: ViewContainerRef) {
         this.request = new TransactionsRequest();
         this.request.page = 0;
-        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
-        this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).takeUntil(this.destroyed$);
-        this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).takeUntil(this.destroyed$);
-        this.activeAccount$ = this.store.select(p => p.tlPl.accountDetails).takeUntil(this.destroyed$);
-        this.accountDetailsInProgress$ = this.store.select(p => p.tlPl.accountDetailsInProgress).takeUntil(this.destroyed$);
+        this.transactionData$ = this.store.select(p => p.tlPl.transactionsResponse).pipe(takeUntil(this.destroyed$));
+        this.transactionDataWithOutShare$ = this.store.select(p => p.tlPl.transactionsResponse).pipe(takeUntil(this.destroyed$));
+        this.isTransactionRequestInProcess$ = this.store.select(p => p.tlPl.transactionInProgress).pipe(takeUntil(this.destroyed$));
+        this.activeAccount$ = this.store.select(p => p.tlPl.accountDetails).pipe(takeUntil(this.destroyed$));
+        this.accountDetailsInProgress$ = this.store.select(p => p.tlPl.accountDetailsInProgress).pipe(takeUntil(this.destroyed$));
     }
 
     ngOnInit() {
@@ -179,7 +179,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         let that = this;
         // e.stopPropagation();
         let activeAccount = null;
-        this.activeAccount$.take(1).subscribe(p => activeAccount = p);
+        this.activeAccount$.pipe(take(1)).subscribe(p => activeAccount = p);
         let downloadRequest = new DownloadLedgerRequest();
         downloadRequest.invoiceNumber = [invoiceName];
 
@@ -254,7 +254,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
         } else {
             this.activeTab = 'credit';
         }
-        this.transactionData$.take(1).subscribe(s => {
+        this.transactionData$.pipe(take(1)).subscribe(s => {
             this.activeTransaction$ = this.activeTab === 'debit' ? of(s.debitTransactions) : of(s.creditTransactions);
         });
         this.detectChanges();
@@ -294,7 +294,7 @@ export class AccLedgerComponent implements OnInit, OnDestroy, OnChanges {
     openCompoundEntry(txnUniqueName: string) {
         let allItems: ITransactionItem[] = [];
 
-        this.transactionDataWithOutShare$.take(1).subscribe(t => {
+        this.transactionDataWithOutShare$.pipe(take(1)).subscribe(t => {
             if (t) {
                 t.debitTransactions.filter(dt => dt.entryUniqueName === txnUniqueName).forEach(function (dtrx) {
                     allItems.push(dtrx);

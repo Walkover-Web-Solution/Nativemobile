@@ -1,21 +1,21 @@
-import { Component, OnInit, AfterViewInit, OnDestroy, ViewChild } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { Observable } from "rxjs/Observable";
-import { IFlattenAccountsResultItem } from "../../../models/interfaces/flattenAccountsResultItem.interface";
-import { TaxResponse } from "../../../models/api-models/Company";
-import { ReplaySubject } from "rxjs/ReplaySubject";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../../store";
-import { SettingsTaxesActions } from "../../../actions/settings/taxes/settings.taxes.action";
-import { RouterService } from "../../../services/router.service";
-import { GeneralActions } from "../../../actions/general/general.actions";
-import { ActivatedRoute } from "../../../common";
-import { LoaderService } from "../../../services/loader.service";
-import { ToasterService } from "../../../services/toaster.service";
+import {map, take, takeUntil} from 'rxjs/operators';
+import {Component, OnInit, AfterViewInit, OnDestroy, ViewChild} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {Observable, ReplaySubject} from 'rxjs';
+import {IFlattenAccountsResultItem} from '../../../models/interfaces/flattenAccountsResultItem.interface';
+import {TaxResponse} from '../../../models/api-models/Company';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../store';
+import {SettingsTaxesActions} from '../../../actions/settings/taxes/settings.taxes.action';
+import {RouterService} from '../../../services/router.service';
+import {GeneralActions} from '../../../actions/general/general.actions';
+import {ActivatedRoute} from '../../../common';
+import {LoaderService} from '../../../services/loader.service';
+import {ToasterService} from '../../../services/toaster.service';
 import * as moment from 'moment/moment';
 import * as _ from 'lodash';
-import { MyDrawerItem } from "../../../shared/my-drawer-item/my-drawer-item";
-import { MyDrawerComponent } from "../../../shared/my-drawer/my-drawer.component";
+import {MyDrawerItem} from '../../../shared/my-drawer-item/my-drawer-item';
+import {MyDrawerComponent} from '../../../shared/my-drawer/my-drawer.component';
 
 @Component({
     selector: 'ns-create-taxes',
@@ -32,26 +32,27 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
     public isUpdateTaxSuccess$: Observable<boolean>;
     public flattenAccountsStream$: Observable<IFlattenAccountsResultItem[]>;
     public selectedTaxObj: TaxResponse;
-    public showLinkedAccounts: boolean = false;
+    public showLinkedAccounts = false;
     public taxTypeList = [
-        { display: 'GST', value: 'GST' },
-        { display: 'InputGST', value: 'InputGST' },
-        { display: 'Others', value: 'others' }
+        {display: 'GST', value: 'GST'},
+        {display: 'InputGST', value: 'InputGST'},
+        {display: 'Others', value: 'others'}
     ];
     public taxDurationList = [
-        { display: 'Monthly', value: 'MONTHLY' },
-        { display: 'Quarterly', value: 'QUARTERLY' },
-        { display: 'Half-Yearly', value: 'HALFYEARLY' },
-        { display: 'Yearly', value: 'YEARLY' }
+        {display: 'Monthly', value: 'MONTHLY'},
+        {display: 'Quarterly', value: 'QUARTERLY'},
+        {display: 'Half-Yearly', value: 'HALFYEARLY'},
+        {display: 'Yearly', value: 'YEARLY'}
     ];
 
     public days: any[] = [];
     private taxList$: Observable<TaxResponse[]>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private store: Store<AppState>, private _fb: FormBuilder,
-        private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterService,
-        private _generalActinos: GeneralActions, private pageRoute: ActivatedRoute, private _loaderService: LoaderService,
-        private _toasterService: ToasterService) {
+                private _settingsTaxesActions: SettingsTaxesActions, private routerExtensions: RouterService,
+                private _generalActinos: GeneralActions, private pageRoute: ActivatedRoute, private _loaderService: LoaderService,
+                private _toasterService: ToasterService) {
 
         this.taxForm = this._fb.group({
             name: ['', Validators.required],
@@ -65,13 +66,13 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
             accounts: []
         });
 
-        this.taxList$ = this.store.select(p => p.company.taxes).takeUntil(this.destroyed$);
-        this.isCreateTaxInProcess$ = this.store.select(s => s.company.isCreateTaxInProcess).takeUntil(this.destroyed$);
-        this.isCreateTaxSuccess$ = this.store.select(s => s.company.isCreateTaxSuccess).takeUntil(this.destroyed$);
-        this.isUpdateTaxInProcess$ = this.store.select(s => s.company.isUpdateTaxInProcess).takeUntil(this.destroyed$);
-        this.isUpdateTaxSuccess$ = this.store.select(s => s.company.isUpdateTaxSuccess).takeUntil(this.destroyed$);
-        this.flattenAccountsStream$ = this.store.select(s => s.general.flattenAccounts).takeUntil(this.destroyed$);
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+        this.taxList$ = this.store.select(p => p.company.taxes).pipe(takeUntil(this.destroyed$));
+        this.isCreateTaxInProcess$ = this.store.select(s => s.company.isCreateTaxInProcess).pipe(takeUntil(this.destroyed$));
+        this.isCreateTaxSuccess$ = this.store.select(s => s.company.isCreateTaxSuccess).pipe(takeUntil(this.destroyed$));
+        this.isUpdateTaxInProcess$ = this.store.select(s => s.company.isUpdateTaxInProcess).pipe(takeUntil(this.destroyed$));
+        this.isUpdateTaxSuccess$ = this.store.select(s => s.company.isUpdateTaxSuccess).pipe(takeUntil(this.destroyed$));
+        this.flattenAccountsStream$ = this.store.select(s => s.general.flattenAccounts).pipe(takeUntil(this.destroyed$));
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/settings') {
@@ -82,15 +83,16 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
                 }
             }
             return p;
-        }).takeUntil(this.destroyed$);
+        }), takeUntil(this.destroyed$));
     }
+
     public ngOnInit(): void {
         this.selectedTaxObj = null;
         this.store.dispatch(this._generalActinos.getFlattenAccount());
 
         this.days = [];
         for (let i = 1; i <= 31; i++) {
-            this.days.push({ display: i.toString(), value: i.toString() });
+            this.days.push({display: i.toString(), value: i.toString()});
         }
 
         this.isCreateTaxInProcess$.subscribe(s => {
@@ -130,7 +132,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public accountChanged(acc: string) {
         let account: IFlattenAccountsResultItem;
-        this.flattenAccountsStream$.take(1).subscribe(result => {
+        this.flattenAccountsStream$.pipe(take(1)).subscribe(result => {
             account = result.find(r => r.uniqueName === acc);
         });
         this.taxForm.get('accounts').patchValue([{
@@ -140,7 +142,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public fillTaxGroupForm(tax: TaxResponse) {
-        let formObj = tax;
+        const formObj = tax;
         formObj.taxType = formObj.taxType ? formObj.taxType : 'others';
         this.taxTypeChanged(formObj.taxType);
 
@@ -159,7 +161,7 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
             return;
         }
 
-        let dataToSave = this.taxForm.value;
+        const dataToSave = this.taxForm.value;
         dataToSave.taxDetail = [{
             taxValue: dataToSave.taxValue,
             date: dataToSave.date
@@ -177,12 +179,12 @@ export class CreateTaxesComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit(): void {
-        this.pageRoute.params.takeUntil(this.destroyed$)
+        this.pageRoute.params.pipe(takeUntil(this.destroyed$))
             .subscribe(params => {
                 if ('uniqueName' in params) {
-                    let selectedTaxUniqueName = params.uniqueName;
+                    const selectedTaxUniqueName = params.uniqueName;
 
-                    this.taxList$.take(1).subscribe(taxes => {
+                    this.taxList$.pipe(take(1)).subscribe(taxes => {
                         this.selectedTaxObj = _.cloneDeep(taxes.find(tx => tx.uniqueName === selectedTaxUniqueName));
                         this.fillTaxGroupForm(this.selectedTaxObj);
                     });

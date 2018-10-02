@@ -1,4 +1,4 @@
-import { IGroupListItem } from '../interfaces/groupListItem.interface';
+import {IGroupListItem} from '../interfaces/groupListItem.interface';
 
 /**
  * Model for company groups api response
@@ -6,9 +6,9 @@ import { IGroupListItem } from '../interfaces/groupListItem.interface';
  */
 
 export class GroupListItemResponse implements IGroupListItem {
-  public category: string;
-  public groups: IGroupListItem[];
-  public name: string;
-  public synonyms?: string;
-  public uniqueName: string;
+    public category: string;
+    public groups: IGroupListItem[];
+    public name: string;
+    public synonyms?: string;
+    public uniqueName: string;
 }

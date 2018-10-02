@@ -1,25 +1,24 @@
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ReportsActions} from '../../../actions/reports/reports.actions';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, zip, ReplaySubject} from 'rxjs';
 import {ChartFilterType, IReportChartData} from '../../../models/interfaces/dashboard.interface';
 import {CategoryHistoryResponse, GroupHistoryResponse} from '../../../models/api-models/Dashboard';
-import {zip} from 'rxjs/observable/zip';
 import * as _ from 'lodash';
 import {MatDialog} from '@angular/material';
 import {ReportsFilterComponent} from '../reports-filter/reports-filter.component';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 @Component({
     selector: 'ns-pl-chart,[ns-pl-chart]',
     moduleId: module.id,
     templateUrl: './pl-chart.component.html',
-    styleUrls: ["./pl-chart.component.scss"],
+    styleUrls: ['./pl-chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
-    public pichartclass: boolean = false;
+    public pichartclass = false;
     public currentData$: Observable<IReportChartData>;
     public previousData$: Observable<IReportChartData>;
     public profitLossChartFilter$: Observable<ChartFilterType>;
@@ -32,20 +31,20 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
     public pieSeries: Array<{ name: string, y: number, color: string }>;
     public previousPieSeries: Array<{ name: string, y: number, color: string }>;
-    public per: number = 50;
-    public activeChart: string = 'current';
-    public pieTotal: number = 0;
-    public previousPieTotal: number = 0;
-    public pieLable: string = '';
-    public previousPieLable: string = '';
-    public noData: boolean = false;
+    public per = 50;
+    public activeChart = 'current';
+    public pieTotal = 0;
+    public previousPieTotal = 0;
+    public pieLable = '';
+    public previousPieLable = '';
+    public noData = false;
     public selectedFilter$: Observable<ChartFilterType>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     constructor(private store: Store<AppState>, private _reportsActions: ReportsActions, private cd: ChangeDetectorRef,
-        public dialog: MatDialog) {
-        this.currentData$ = this.store.select(st => st.report.currentData).takeUntil(this.destroyed$);
-        this.previousData$ = this.store.select(st => st.report.previousData).takeUntil(this.destroyed$);
+                public dialog: MatDialog) {
+        this.currentData$ = this.store.select(st => st.report.currentData).pipe(takeUntil(this.destroyed$));
+        this.previousData$ = this.store.select(st => st.report.previousData).pipe(takeUntil(this.destroyed$));
         this.options = {
             chart: {
                 type: 'column',
@@ -57,8 +56,8 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas'],
                 labels: {
                     formatter: function () {
-                        let obj = this.chart.userOptions.series;
-                        let totalArr = [];
+                        const obj = this.chart.userOptions.series;
+                        const totalArr = [];
                         obj[0].data.forEach((d, i) => {
                             totalArr.push(obj[0].data[i] || 0 + obj[1].data[i] || 0 + obj[2].data[i] || 0);
                         });
@@ -70,7 +69,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                         <p style="color:#63B351;">(${((((totalArr[this.pos] ? totalArr[this.pos].toFixed(0) : 0) * 100) / total) || 0).toFixed(2)}%)</p></span>`;
                     },
                     style: {
-                        "fontSize": 16
+                        'fontSize': 16
                     }
                 },
             },
@@ -144,7 +143,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotShadow: false,
                 height: 200,
                 width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
-            // backgroundColor: '#F7FAFB'
+                // backgroundColor: '#F7FAFB'
             },
             credits: {
                 enabled: false
@@ -179,7 +178,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 data: []
             }]
         };
-        this.selectedFilter$ = this.store.select(s => s.report.profitLossChartFilter).takeUntil(this.destroyed$);
+        this.selectedFilter$ = this.store.select(s => s.report.profitLossChartFilter).pipe(takeUntil(this.destroyed$));
     }
 
     public ngOnInit() {
@@ -209,7 +208,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             this.genSeries(incomeData, expensesData, legendData);
             this.genPreviousSeries(previousIncomeData, previousExpensesData, previousLegendData);
         });
-        this.selectedFilter$.distinctUntilChanged().subscribe(s => {
+        this.selectedFilter$.pipe(distinctUntilChanged()).subscribe(s => {
             this.store.dispatch(this._reportsActions.getIncomeData());
             this.store.dispatch(this._reportsActions.getExpensesData());
         });
@@ -236,10 +235,11 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
         this.previousPieSeries = [];
         this.renderOptions(this.series);
     }
+
     public genSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
-        let incomeSeries = [];
-        let indirectexpensesSeries = [];
-        let operatingcostSeries = [];
+        const incomeSeries = [];
+        const indirectexpensesSeries = [];
+        const operatingcostSeries = [];
 
         if (incomeData && incomeData.intervalBalances) {
             incomeData.intervalBalances.forEach(int => {
@@ -257,8 +257,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
-        this.series = [{ name: 'income', data: incomeSeries, stack: 'income' }, { name: 'indirectexpenses', data: indirectexpensesSeries, stack: 'expenses' },
-        { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
+        this.series = [{name: 'income', data: incomeSeries, stack: 'income'}, {
+            name: 'indirectexpenses',
+            data: indirectexpensesSeries,
+            stack: 'expenses'
+        },
+            {name: 'operatingcost', data: operatingcostSeries, stack: 'expenses'}];
         this.categories = legendData;
 
         this.renderOptions(this.series);
@@ -281,9 +285,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public genPreviousSeries(incomeData: CategoryHistoryResponse, expensesData: GroupHistoryResponse, legendData: string[]) {
-        let incomeSeries = [];
-        let indirectexpensesSeries = [];
-        let operatingcostSeries = [];
+        const incomeSeries = [];
+        const indirectexpensesSeries = [];
+        const operatingcostSeries = [];
 
         if (incomeData && incomeData.intervalBalances) {
             incomeData.intervalBalances.forEach(int => {
@@ -301,8 +305,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
-        this.previousSeries = [{ name: 'income', data: incomeSeries, stack: 'income' }, { name: 'indirectexpenses', data: indirectexpensesSeries, stack: 'expenses' },
-        { name: 'operatingcost', data: operatingcostSeries, stack: 'expenses' }];
+        this.previousSeries = [{name: 'income', data: incomeSeries, stack: 'income'}, {
+            name: 'indirectexpenses',
+            data: indirectexpensesSeries,
+            stack: 'expenses'
+        },
+            {name: 'operatingcost', data: operatingcostSeries, stack: 'expenses'}];
         this.categories = legendData;
 
         // this.renderOptions(this.previousSeries);
@@ -324,8 +332,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.pieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
+            this.pieSeries = [{name: 'revenue', y: incomeTotal, color: '#58C5C4'}, {
+                name: 'operatingcost',
+                y: operatingcost,
+                color: '#17989C'
+            },
+                {name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7'}];
             this.pieTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
             this.renderPieOptions('current');
         } else {
@@ -342,8 +354,12 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             });
 
-            this.previousPieSeries = [{ name: 'revenue', y: incomeTotal, color: '#58C5C4' }, { name: 'operatingcost', y: operatingcost, color: '#17989C' },
-            { name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7' }];
+            this.previousPieSeries = [{name: 'revenue', y: incomeTotal, color: '#58C5C4'}, {
+                name: 'operatingcost',
+                y: operatingcost,
+                color: '#17989C'
+            },
+                {name: 'indirectexpenses', y: indirectexpensesTotal, color: '#BAE3E7'}];
             this.previousPieTotal = Number((incomeTotal + indirectexpensesTotal + operatingcost).toFixed(2));
             this.renderPieOptions('previous');
         }
@@ -432,9 +448,9 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
     }
+
     public openFilter() {
-        let dialog = this.dialog.open(ReportsFilterComponent, {
-        });
+        const dialog = this.dialog.open(ReportsFilterComponent, {});
     }
 
     public ngOnDestroy() {

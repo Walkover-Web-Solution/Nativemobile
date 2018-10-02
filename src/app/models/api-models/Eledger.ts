@@ -1,4 +1,4 @@
-import { IEledgerTransaction } from '../interfaces/eledger.interface';
+import {IEledgerTransaction} from '../interfaces/eledger.interface';
 
 /*
  * Model for get eledger transactions api request
@@ -7,9 +7,9 @@ import { IEledgerTransaction } from '../interfaces/eledger.interface';
  * Response will be success message and array of EledgerResponse in body
  */
 export class EledgerResponse {
-  public transactions: IEledgerTransaction[];
-  public transactionId: string;
-  public date: string;
+    public transactions: IEledgerTransaction[];
+    public transactionId: string;
+    public date: string;
 }
 
 /*
@@ -20,5 +20,5 @@ export class EledgerResponse {
  */
 
 export class EledgerMapRequest {
-  public uniqueName: string;
+    public uniqueName: string;
 }

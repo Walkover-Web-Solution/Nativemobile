@@ -1,11 +1,12 @@
+
+import {takeUntil} from 'rxjs/operators';
 import {Component, OnDestroy, OnInit, Optional} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store';
-import {Observable} from 'rxjs/Observable';
+import {Observable, ReplaySubject} from 'rxjs';
 import {LoginActions} from '../../../actions/login/login.action';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {VerifyEmailModel} from '../../../models/api-models/loginModels';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {NavigationStart} from '@angular/router';
 import {RouterService} from '../../../services/router.service';
 import {AnimationCurve, Color, Page} from '../../../common/utils/environment';
@@ -25,11 +26,11 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
     public emailVerifyForm: FormGroup;
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-    constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService,@Optional() private page: Page) {
-        this.isLoginWithEmailInProcess$ = this.store.select(s => s.login.isLoginWithEmailInProcess).takeUntil(this.destroyed$);
-        this.isVerifyEmailInProcess$ = this.store.select(s => s.login.isVerifyEmailInProcess).takeUntil(this.destroyed$);
-        this.isVerifyEmailSuccess$ = this.store.select(s => s.login.isVerifyEmailSuccess).takeUntil(this.destroyed$);
-        this.isLoginWithEmailSubmited$ = this.store.select(s => s.login.isLoginWithEmailSubmited).takeUntil(this.destroyed$);
+    constructor(private _fb: FormBuilder, private store: Store<AppState>, private _loginActions: LoginActions, private routerExtensions: RouterService, @Optional() private page: Page) {
+        this.isLoginWithEmailInProcess$ = this.store.select(s => s.login.isLoginWithEmailInProcess).pipe(takeUntil(this.destroyed$));
+        this.isVerifyEmailInProcess$ = this.store.select(s => s.login.isVerifyEmailInProcess).pipe(takeUntil(this.destroyed$));
+        this.isVerifyEmailSuccess$ = this.store.select(s => s.login.isVerifyEmailSuccess).pipe(takeUntil(this.destroyed$));
+        this.isLoginWithEmailSubmited$ = this.store.select(s => s.login.isLoginWithEmailSubmited).pipe(takeUntil(this.destroyed$));
 
         // applicationOn(resumeEvent, (args: ApplicationEventData) => {
         //   if (args.android) {
@@ -83,13 +84,13 @@ export class LoginWithEmailComponent implements OnInit, OnDestroy {
     }
 
     public loginWithEmail() {
-        let emailForm = this.emailVerifyForm;
+        const emailForm = this.emailVerifyForm;
         this.store.dispatch(this._loginActions.signupWithEmailRequest(emailForm.value.email.toLowerCase()));
     }
 
     public verifyEmail() {
-        let emailForm = this.emailVerifyForm;
-        let data = new VerifyEmailModel();
+        const emailForm = this.emailVerifyForm;
+        const data = new VerifyEmailModel();
         data.email = emailForm.value.email.toLowerCase();
         data.verificationCode = emailForm.value.token;
         this.store.dispatch(this._loginActions.verifyEmailRequest(data));

@@ -1,5 +1,7 @@
+
+import {takeUntil} from 'rxjs/operators';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable, ReplaySubject} from 'rxjs';
 import {VerifyEmailResponseModel} from '../models/api-models/loginModels';
 import {AppState} from '../store';
 import {Store} from '@ngrx/store';
@@ -11,7 +13,6 @@ import {createSelector} from 'reselect';
 import {RouterService} from '../services/router.service';
 import {ToasterService} from '../services/toaster.service';
 import {Config} from '../common';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {Page} from '../common/utils/environment';
 
 @Component({
@@ -38,14 +39,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             return { companies, uniqueName };
         }));
-        this.isLoggedInWithSocialAccount$ = this.store.select(p => p.login.isLoggedInWithSocialAccount).takeUntil(this.destroyed$);
+        this.isLoggedInWithSocialAccount$ = this.store.select(p => p.login.isLoggedInWithSocialAccount).pipe(takeUntil(this.destroyed$));
         (this.page as any).on((Page as any).unloadedEvent, (ev) => {
             this.ngOnDestroy();
         });
     }
 
     public ngOnInit(): void {
-        this.store.select(s => s.session.companyUniqueName).takeUntil(this.destroyed$).subscribe(s => {
+        this.store.select(s => s.session.companyUniqueName).pipe(takeUntil(this.destroyed$)).subscribe(s => {
             if (Config.IS_MOBILE_NATIVE) {
                 // this.drawerComponent.sideDrawer.toggleDrawerState();
             }

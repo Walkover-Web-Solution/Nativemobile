@@ -1,3 +1,5 @@
+
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {
     AfterViewInit,
     ChangeDetectionStrategy,
@@ -8,12 +10,11 @@ import {
     OnInit,
     ViewChild
 } from '@angular/core';
-import {ReplaySubject} from 'rxjs/ReplaySubject';
+import {ReplaySubject, Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store';
 import {Page} from '../../../common/utils/environment';
 import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
-import {Observable} from 'rxjs/Observable';
 import {
     ChartFilterType,
     ChartType,
@@ -64,8 +65,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     private oLangWebViewInterface;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
-        this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
-        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
+        this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).pipe(takeUntil(this.destroyed$));
+        this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).pipe(distinctUntilChanged(),takeUntil(this.destroyed$),);
         this.options = {
             chart: {
                 type: 'column',

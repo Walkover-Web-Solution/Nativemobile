@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
-import { APP_DEFAULT_TITLE, DEFAULT_TOASTER_OPTIONS } from '../app.constants';
-import { ToastrService } from 'ngx-toastr';
+import {Injectable} from '@angular/core';
+import {APP_DEFAULT_TITLE, DEFAULT_TOASTER_OPTIONS} from '../app.constants';
+import {ToastrService} from 'ngx-toastr';
+
 @Injectable()
 export class ToasterService {
 
@@ -29,7 +30,7 @@ export class ToasterService {
     }
 
     public confirm(obj) {
-        let c = confirm(obj.message);
+        const c = confirm(obj.message);
         return new Promise((resolve, reject) => resolve(c));
     }
 }

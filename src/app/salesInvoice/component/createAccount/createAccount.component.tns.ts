@@ -1,20 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs/Observable';
+import {takeUntil} from 'rxjs/operators';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {FormGroup, FormBuilder, Validators} from '@angular/forms';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
 import * as _ from 'lodash';
-import { SelectedIndexChangedEventData, ValueList } from "nativescript-drop-down";
-import { IContriesWithCodes } from '../../../shared/static-data/countryWithCodes';
-import { ReplaySubject } from 'rxjs//ReplaySubject';
-import { NsDropDownOptions } from '../../../models/other-models/HelperModels';
-import { CompanyResponse } from '../../../models/api-models/Company';
-import { createSelector } from 'reselect';
-import { AppState } from '../../../store';
-import { GroupService } from '../../../services/group.service';
-import { RouterService } from '../../../services/router.service';
-import { Page } from '../../../common/utils/environment';
-import { Config } from '../../../common';
-import { GroupResponse } from '../../../models/api-models/Group';
+import {SelectedIndexChangedEventData, ValueList} from 'nativescript-drop-down';
+import {IContriesWithCodes} from '../../../shared/static-data/countryWithCodes';
+import {ReplaySubject} from 'rxjs//ReplaySubject';
+import {NsDropDownOptions} from '../../../models/other-models/HelperModels';
+import {CompanyResponse} from '../../../models/api-models/Company';
+import {createSelector} from 'reselect';
+import {AppState} from '../../../store';
+import {GroupService} from '../../../services/group.service';
+import {RouterService} from '../../../services/router.service';
+import {Page} from '../../../common/utils/environment';
+import {Config} from '../../../common';
+import {GroupResponse} from '../../../models/api-models/Group';
 
 @Component({
     selector: 'ns-create-account',
@@ -28,8 +29,9 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
     public selectedCompany$: Observable<CompanyResponse>;
     public countrySourceStream$: Observable<IContriesWithCodes[]>;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private _fb: FormBuilder, private store: Store<AppState>, private groupService: GroupService,
-        private page: Page, public _routerExtension: RouterService) {
+                private page: Page, public _routerExtension: RouterService) {
         this.countrySourceStream$ = this.store.select(s => s.general.contriesWithCodes);
 
         this.selectedCompany$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
@@ -40,7 +42,7 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
             return companies.find(cmp => {
                 return cmp.uniqueName === uniqueName;
             });
-        })).takeUntil(this.destroyed$);
+        })).pipe(takeUntil(this.destroyed$));
 
         Config.IS_MOBILE_NATIVE && ((this.page as any).on((Page as any).unloadedEvent, ev => this.ngOnDestroy()));
     }
@@ -50,13 +52,13 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
 
         // get groups list and refine list
         this.groupService.GetGroupSubgroups('currentassets').subscribe(res => {
-            let result: NsDropDownOptions[] = [];
+            const result: NsDropDownOptions[] = [];
             if (res.status === 'success' && res.body.length > 0) {
-                let sundryGrp = _.find(res.body, { uniqueName: 'sundrydebtors' });
+                const sundryGrp = _.find(res.body, {uniqueName: 'sundrydebtors'});
                 if (sundryGrp) {
-                    let flatGrps = this.groupService.flattenGroup([sundryGrp], []);
+                    const flatGrps = this.groupService.flattenGroup([sundryGrp], []);
                     _.forEach(flatGrps, (grp: GroupResponse) => {
-                        result.push({ display: grp.name, value: grp.uniqueName });
+                        result.push({display: grp.name, value: grp.uniqueName});
                     });
                 }
             }
@@ -64,10 +66,10 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
         });
 
         this.countrySourceStream$.subscribe(countries => {
-            let cntArray: NsDropDownOptions[] = [];
+            const cntArray: NsDropDownOptions[] = [];
             if (countries) {
                 countries.forEach(cnt => {
-                    cntArray.push({ display: `${cnt.countryflag} - ${cnt.countryName}`, value: cnt.countryflag });
+                    cntArray.push({display: `${cnt.countryflag} - ${cnt.countryName}`, value: cnt.countryflag});
                 });
             }
             this.countrySource = new ValueList(cntArray);
@@ -100,8 +102,8 @@ export class CreateAccountComponent implements OnInit, OnDestroy {
     }
 
     public setCountryByCompany(company: CompanyResponse) {
-        let countryIndex = this.countrySource.getIndex(company.country);
-        let result: string = this.countrySource.getValue(countryIndex);
+        const countryIndex = this.countrySource.getIndex(company.country);
+        const result: string = this.countrySource.getValue(countryIndex);
         if (result) {
             this.addAccountForm.get('country').get('countryCode').patchValue(result);
         } else {

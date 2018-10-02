@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AppState } from '../../../store';
-import { ReportsActions } from '../../../actions/reports/reports.actions';
-import { Store } from '@ngrx/store';
-import { ProfitLossDataV3 } from '../../../models/api-models/tb-pl-bs';
-import { Observable } from 'rxjs/Observable';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import {takeUntil} from 'rxjs/operators';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {AppState} from '../../../store';
+import {ReportsActions} from '../../../actions/reports/reports.actions';
+import {Store} from '@ngrx/store';
+import {ProfitLossDataV3} from '../../../models/api-models/tb-pl-bs';
+import {Observable, ReplaySubject} from 'rxjs';
 
 @Component({
     selector: 'ns-pl-sheet,[ns-pl-sheet]',
@@ -15,23 +15,24 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 export class PlSheetComponent implements OnInit, OnDestroy {
     public data$: Observable<ProfitLossDataV3>;
     public chartFilterTitle$: Observable<string>;
-    public totalIncome: number = 0;
-    public totalExpense: number = 0;
+    public totalIncome = 0;
+    public totalExpense = 0;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor(private store: Store<AppState>, private _reportsActions: ReportsActions) {
-        this.data$ = this.store.select(s => s.report.profitLossSheet.data).takeUntil(this.destroyed$);
-        this.chartFilterTitle$ = this.store.select(s => s.report.profirLossChartFilterTitle).takeUntil(this.destroyed$);
+        this.data$ = this.store.select(s => s.report.profitLossSheet.data).pipe(takeUntil(this.destroyed$));
+        this.chartFilterTitle$ = this.store.select(s => s.report.profirLossChartFilterTitle).pipe(takeUntil(this.destroyed$));
     }
 
     ngOnInit() {
-        this.store.select(s => s.report.profitLossChartFilter)
-            .takeUntil(this.destroyed$)
+        this.store.select(s => s.report.profitLossChartFilter).pipe(
+            takeUntil(this.destroyed$))
             .subscribe(s => {
                 this.fetchData(false);
             });
 
-        this.store.select(s => s.report.activeChartType)
-            .takeUntil(this.destroyed$)
+        this.store.select(s => s.report.activeChartType).pipe(
+            takeUntil(this.destroyed$))
             .subscribe(s => {
                 this.fetchData(false);
             });

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { RouterService } from '../../../services/router.service';

@@ -1,9 +1,9 @@
 export class DaybookQueryRequest {
-  public q: string = '';
-  public page: number = 0;
-  public count: number = 20;
-  public from: string = '';
-  public to: string = '';
+  public q = '';
+  public page = 0;
+  public count = 20;
+  public from = '';
+  public to = '';
 }
 export interface DayBookRequestModel {
   amountLessThan: boolean;

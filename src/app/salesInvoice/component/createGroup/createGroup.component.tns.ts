@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { SegmentedBar, SegmentedBarItem } from "ui/segmented-bar";
-import { RouterService } from '../../../services/router.service';
+import {Component} from '@angular/core';
+import {SegmentedBar, SegmentedBarItem} from 'ui/segmented-bar';
+import {RouterService} from '../../../services/router.service';
 
 @Component({
     selector: 'ns-group-create',
@@ -9,11 +9,12 @@ import { RouterService } from '../../../services/router.service';
 })
 export class CreateGroupComponent {
     public myItems: SegmentedBarItem[];
-    public selectedIndex: number = 0;
+    public selectedIndex = 0;
+
     constructor(public _routerExtension: RouterService) {
         this.myItems = [];
-        let productItem = new SegmentedBarItem();
-        let serviceItem = new SegmentedBarItem();
+        const productItem = new SegmentedBarItem();
+        const serviceItem = new SegmentedBarItem();
 
         productItem.title = 'Add Product';
         serviceItem.title = 'Add Service';
@@ -22,7 +23,7 @@ export class CreateGroupComponent {
     }
 
     public onSelectedIndexChange(args) {
-        let segmetedBar = args.object as SegmentedBar;
+        const segmetedBar = args.object as SegmentedBar;
         this.selectedIndex = segmetedBar.selectedIndex;
     }
 }

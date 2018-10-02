@@ -1,9 +1,11 @@
+
+import {take, takeUntil} from 'rxjs/operators';
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Store} from '@ngrx/store';
 import * as _ from 'lodash';
 import {createSelector} from 'reselect';
 import {ReplaySubject} from 'rxjs//ReplaySubject';
-import {Observable} from 'rxjs/Observable';
+import {Observable, Subscription, BehaviorSubject} from 'rxjs';
 import {CompanyActions} from '../actions/company/company.action';
 import {TBPlBsActions} from '../actions/tl-pl/tl-pl.actions';
 import {CompanyResponse} from '../models/api-models/Company';
@@ -14,12 +16,9 @@ import {Account, ChildGroup} from '../models/api-models/Search';
 import {INameUniqueName} from '../models/interfaces/nameUniqueName.interface';
 import {defaultLoaderOptions, Page} from '../common/utils/environment';
 import {LoadingIndicator} from 'nativescript-loading-indicator';
-import {Subscription} from 'rxjs/Subscription';
-import 'rxjs/add/operator/debounceTime';
+
 import * as app from 'application';
 import {isAndroid} from 'platform';
-// const platformModule = require('tns-core-modules/platform');
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 declare let android: any;
 
@@ -55,11 +54,11 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(private store: Store<AppState>, private _companyActions: CompanyActions, public _tlPlActions: TBPlBsActions,
                 private _routerExtension: RouterService, private _cdRef: ChangeDetectorRef, private page: Page) {
-        this.showLoader$ = this.store.select(s => s.tlPl.tb.showLoader).takeUntil(this.destroyed$);
+        this.showLoader$ = this.store.select(s => s.tlPl.tb.showLoader).pipe(takeUntil(this.destroyed$));
         this.companyData$ = this.store.select(createSelector([(state: AppState) => state.session.companies, (state: AppState) => state.session.companyUniqueName], (companies, uniqueName) => {
             return {companies, uniqueName};
-        })).takeUntil(this.destroyed$);
-        this.data$ = this.store.select(s => s.tlPl.tb.data).takeUntil(this.destroyed$);
+        })).pipe(takeUntil(this.destroyed$));
+        this.data$ = this.store.select(s => s.tlPl.tb.data).pipe(takeUntil(this.destroyed$));
         (this.page as any).on((Page as any).unloadedEvent, (ev) => {
             this.ngOnDestroy();
         });
@@ -195,7 +194,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
 
     navigateTo(uniqueName: string) {
         this.activeAcc = '';
-        this.data$.take(1).subscribe(p => {
+        this.data$.pipe(take(1)).subscribe(p => {
             let d = _.cloneDeep(p) as AccountDetails;
             let result = this.loopOver(d.groupDetails, uniqueName, null);
             this.activeGrp = result;
@@ -317,7 +316,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         if (res.parentGrpUniqueName) {
             let r = this.genBreadcrumb(res.parentGrpUniqueName, []);
             if (r && r.length) {
-                this.data$.take(1).subscribe(p => {
+                this.data$.pipe(take(1)).subscribe(p => {
                     let d = _.cloneDeep(p) as AccountDetails;
                     let result = this.loopOver(d.groupDetails, res.isGroup ? res.uniqueName : res.parentGrpUniqueName, null);
                     this.filterdData = result.childGroups;

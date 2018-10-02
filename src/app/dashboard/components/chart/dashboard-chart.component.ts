@@ -1,5 +1,7 @@
+
+import {map} from 'rxjs/operators';
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 
 import { Store } from '@ngrx/store';
 import { MyDrawerItem } from '../../../shared/my-drawer-item/my-drawer-item';
@@ -18,7 +20,7 @@ export class DashboardChartComponent implements OnInit, OnDestroy {
     public navItemObj$: Observable<MyDrawerItem[]>;
     @ViewChild('myDrawer') public myDrawer: MyDrawerComponent;
     constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _dashboardActions: DashboardActions) {
-        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).map(p => {
+        this.navItemObj$ = this.store.select(p => p.general.navDrawerObj).pipe(map(p => {
             for (const iterator of p) {
                 if (iterator.router) {
                     if (iterator.router === '/dashboard') {
@@ -29,7 +31,7 @@ export class DashboardChartComponent implements OnInit, OnDestroy {
                 }
             }
             return p;
-        });
+        }));
     }
 
     ngOnInit() {

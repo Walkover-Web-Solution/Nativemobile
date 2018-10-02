@@ -1,5 +1,5 @@
-import { Component, ViewChild, OnDestroy } from "@angular/core";
-import { ReplaySubject } from "rxjs/ReplaySubject";
+import {Component, ViewChild, OnDestroy} from '@angular/core';
+import {ReplaySubject} from 'rxjs';
 
 @Component({
     selector: 'ns-reports-filter',
@@ -8,6 +8,7 @@ import { ReplaySubject } from "rxjs/ReplaySubject";
 })
 export class ReportsFilterComponent implements OnDestroy {
     public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
     constructor() {
 
     }

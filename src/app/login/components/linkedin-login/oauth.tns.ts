@@ -1,140 +1,139 @@
-
 const queryString = require('query-string');
 import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
 import {AnimationCurve} from '../../../common/utils/environment';
 
 const nodeUrl = require('url-parse');
 const generateRandomString = function (length) {
-  let text = '';
-  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
+    const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  for (let i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
+    for (let i = 0; i < length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
 
-  return text;
+    return text;
 };
 
 export default (config, webview: WebView, routerExtension) => {
-  let getAuthorizationCode = (opts) => {
-    opts = opts || {};
+    const getAuthorizationCode = (opts) => {
+        opts = opts || {};
 
-    if (!config.redirectUri) {
-      config.redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
-    }
-
-    let urlParams: any = {
-      response_type: 'code',
-      redirect_uri: config.redirectUri,
-      client_id: config.clientId,
-      state: generateRandomString(16)
-    };
-
-    if (opts.scope) {
-      urlParams.scope = opts.scope;
-    }
-
-    if (opts.accessType) {
-      urlParams.access_type = opts.accessType;
-    }
-
-    let url = config.authorizationUrl + '?' + queryString.stringify(urlParams);
-
-    return new Promise((resolve, reject) => {
-      const authWindow: WebView = webview;
-
-      // authWindow.show();
-      authWindow.src = url;
-
-      let onCallback = (url) => {
-        // debugger;
-        let url_parts: any = nodeUrl(url, true);
-        // console.log(JSON.stringify(url));
-        let query = url_parts.query;
-        let code = query.code;
-        let error = query.error;
-
-        if (error !== undefined) {
-          reject(error);
-          routerExtension.navigate(['/login'], {
-            clearHistory: true, animated: true,
-            transition: {
-              name: 'slideRight',
-              curve: AnimationCurve.ease
-            }
-          });
-        } else if (code) {
-          resolve(code);
-          routerExtension.navigate(['/login'], {
-            clearHistory: true, animated: true,
-            transition: {
-              name: 'slideRight',
-              curve: AnimationCurve.ease
-            }
-          });
+        if (!config.redirectUri) {
+            config.redirectUri = 'urn:ietf:wg:oauth:2.0:oob';
         }
-      }
 
-      authWindow.on('loadStarted', (event: LoadEventData) => {
-        // console.log()
-        onCallback(event.url);
-      });
+        const urlParams: any = {
+            response_type: 'code',
+            redirect_uri: config.redirectUri,
+            client_id: config.clientId,
+            state: generateRandomString(16)
+        };
 
-      // authWindow.on('loadFinished', (event: LoadEventData) => {
-      //   onCallback(event.url);
-      // });
-    });
-  }
+        if (opts.scope) {
+            urlParams.scope = opts.scope;
+        }
 
-  let tokenRequest = (data) => {
-    let header: any = {
-      'Accept': 'application/json',
-      'Content-Type': 'application/x-www-form-urlencoded'
-    };
+        if (opts.accessType) {
+            urlParams.access_type = opts.accessType;
+        }
 
-    if (config.useBasicAuthorizationHeader) {
-      let Buffer = require('buffer');
-      header.Authorization = 'Basic ' + new Buffer(config.clientId + ':' + config.clientSecret).toString('base64');
-    } else {
-      Object.assign(data, {
-        client_id: config.clientId,
-        client_secret: config.clientSecret
-      });
+        const url = config.authorizationUrl + '?' + queryString.stringify(urlParams);
+
+        return new Promise((resolve, reject) => {
+            const authWindow: WebView = webview;
+
+            // authWindow.show();
+            authWindow.src = url;
+
+            const onCallback = (url) => {
+                // debugger;
+                const url_parts: any = nodeUrl(url, true);
+                // console.log(JSON.stringify(url));
+                const query = url_parts.query;
+                const code = query.code;
+                const error = query.error;
+
+                if (error !== undefined) {
+                    reject(error);
+                    routerExtension.navigate(['/login'], {
+                        clearHistory: true, animated: true,
+                        transition: {
+                            name: 'slideRight',
+                            curve: AnimationCurve.ease
+                        }
+                    });
+                } else if (code) {
+                    resolve(code);
+                    routerExtension.navigate(['/login'], {
+                        clearHistory: true, animated: true,
+                        transition: {
+                            name: 'slideRight',
+                            curve: AnimationCurve.ease
+                        }
+                    });
+                }
+            }
+
+            authWindow.on('loadStarted', (event: LoadEventData) => {
+                // console.log()
+                onCallback(event.url);
+            });
+
+            // authWindow.on('loadFinished', (event: LoadEventData) => {
+            //   onCallback(event.url);
+            // });
+        });
     }
 
-    return fetch(config.tokenUrl, {
-      method: 'POST',
-      headers: header,
-      body: queryString.stringify(data)
-    }).then(function (res) {
-      return res.json();
-    });
-  }
-
-  let getAccessToken = (opts) => {
-    return getAuthorizationCode(opts)
-      .then(function (authorizationCode) {
-        let tokenRequestData = {
-          code: authorizationCode,
-          grant_type: 'authorization_code',
-          redirect_uri: config.redirectUri
+    const tokenRequest = (data) => {
+        const header: any = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded'
         };
-        tokenRequestData = Object.assign(tokenRequestData, opts.additionalTokenRequestData);
-        return tokenRequest(tokenRequestData);
-      });
-  }
 
-  let refreshToken = (refreshToken) => {
-    return tokenRequest({
-      refresh_token: refreshToken,
-      grant_type: 'refresh_token',
-      redirect_uri: config.redirectUri
-    });
-  }
+        if (config.useBasicAuthorizationHeader) {
+            const Buffer = require('buffer');
+            header.Authorization = 'Basic ' + new Buffer(config.clientId + ':' + config.clientSecret).toString('base64');
+        } else {
+            Object.assign(data, {
+                client_id: config.clientId,
+                client_secret: config.clientSecret
+            });
+        }
 
-  return {
-    getAuthorizationCode: getAuthorizationCode,
-    getAccessToken: getAccessToken,
-    refreshToken: refreshToken
-  };
+        return fetch(config.tokenUrl, {
+            method: 'POST',
+            headers: header,
+            body: queryString.stringify(data)
+        }).then(function (res) {
+            return res.json();
+        });
+    }
+
+    const getAccessToken = (opts) => {
+        return getAuthorizationCode(opts)
+            .then(function (authorizationCode) {
+                let tokenRequestData = {
+                    code: authorizationCode,
+                    grant_type: 'authorization_code',
+                    redirect_uri: config.redirectUri
+                };
+                tokenRequestData = Object.assign(tokenRequestData, opts.additionalTokenRequestData);
+                return tokenRequest(tokenRequestData);
+            });
+    }
+
+    const refreshToken = (refreshToken) => {
+        return tokenRequest({
+            refresh_token: refreshToken,
+            grant_type: 'refresh_token',
+            redirect_uri: config.redirectUri
+        });
+    }
+
+    return {
+        getAuthorizationCode: getAuthorizationCode,
+        getAccessToken: getAccessToken,
+        refreshToken: refreshToken
+    };
 };

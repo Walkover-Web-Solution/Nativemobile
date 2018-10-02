@@ -1,18 +1,18 @@
-import { INameUniqueName } from '../interfaces/nameUniqueName.interface';
-import { IPaginatedResponse } from '../interfaces/paginatedResponse.interface';
+import {INameUniqueName} from '../interfaces/nameUniqueName.interface';
+import {IPaginatedResponse} from '../interfaces/paginatedResponse.interface';
 import {
-  IAccountDetails,
-  IManufacturingDetails,
-  Istock,
-  IStockDetail,
-  IStockItem,
-  IStockReport,
-  IStockReportItem,
-  IStocksItem,
-  IStockTransaction,
-  IStockUnit,
-  IStockUnitItem,
-  IStockUnitResponse
+    IAccountDetails,
+    IManufacturingDetails,
+    Istock,
+    IStockDetail,
+    IStockItem,
+    IStockReport,
+    IStockReportItem,
+    IStocksItem,
+    IStockTransaction,
+    IStockUnit,
+    IStockUnitItem,
+    IStockUnitResponse
 } from '../interfaces/stocksItem.interface';
 
 /*
@@ -22,11 +22,11 @@ import {
  * response will be hash as StockGroupResponse
  */
 export class StockGroupRequest implements INameUniqueName {
-  public isSelfParent?: boolean;
-  public name: string;
-  public uniqueName: string;
-  public parentStockGroupUniqueName?: string;
-  public isSubGroup?: boolean;
+    public isSelfParent?: boolean;
+    public name: string;
+    public uniqueName: string;
+    public parentStockGroupUniqueName?: string;
+    public isSubGroup?: boolean;
 }
 
 /**
@@ -34,12 +34,12 @@ export class StockGroupRequest implements INameUniqueName {
  * API:: (Create Stock Group) company/:companyUniqueName/stock-group
  */
 export class StockGroupResponse {
-  public childStockGroups?: INameUniqueName[];
-  public name: string;
-  public parentStockGroup?: INameUniqueName;
-  public parentStockGroupNames: string[];
-  public stocks: INameUniqueName[];
-  public uniqueName: string;
+    public childStockGroups?: INameUniqueName[];
+    public name: string;
+    public parentStockGroup?: INameUniqueName;
+    public parentStockGroupNames: string[];
+    public stocks: INameUniqueName[];
+    public uniqueName: string;
 }
 
 /**
@@ -48,12 +48,12 @@ export class StockGroupResponse {
  * response will ne a hash containing StocksResponse
  */
 export class StocksResponse implements IPaginatedResponse {
-  public count: number;
-  public page: number;
-  public results: IStocksItem[];
-  public size: number;
-  public totalItems: number;
-  public totalPages: number;
+    public count: number;
+    public page: number;
+    public results: IStocksItem[];
+    public size: number;
+    public totalItems: number;
+    public totalPages: number;
 }
 
 /**
@@ -72,11 +72,11 @@ export class StocksResponse implements IPaginatedResponse {
  * Response will be a array of StockUnitResponse
  */
 export class StockUnitResponse implements IStockUnitResponse {
-  public code: string;
-  public hierarchicalQuantity: number;
-  public name: string;
-  public parentStockUnit?: IStockItem;
-  public quantityPerUnit: number;
+    public code: string;
+    public hierarchicalQuantity: number;
+    public name: string;
+    public parentStockUnit?: IStockItem;
+    public quantityPerUnit: number;
 }
 
 /**
@@ -96,24 +96,24 @@ export class StockUnitResponse implements IStockUnitResponse {
  * for hour stockUnitQtyMap contains {hr: 1} etc
  */
 export class StockReportResponse implements IStockReport {
-  public closingBalance: IStockReportItem;
-  public count: number;
-  public openingBalance: IStockReportItem;
-  public page: number;
-  public stockUnit: string;
-  public stockUnitQtyMap: any;
-  public totalItems: number;
-  public totalPages: number;
-  public transactions: IStockTransaction[];
+    public closingBalance: IStockReportItem;
+    public count: number;
+    public openingBalance: IStockReportItem;
+    public page: number;
+    public stockUnit: string;
+    public stockUnitQtyMap: any;
+    public totalItems: number;
+    public totalPages: number;
+    public transactions: IStockTransaction[];
 }
 
 export class StockReportRequest {
-  public stockGroupUniqueName: string;
-  public stockUniqueName: string;
-  public from: string = '';
-  public to: string = '';
-  public count: number = 10;
-  public page: number = 1;
+    public stockGroupUniqueName: string;
+    public stockUniqueName: string;
+    public from = '';
+    public to = '';
+    public count = 10;
+    public page = 1;
 }
 
 /**
@@ -123,17 +123,17 @@ export class StockReportRequest {
  * Response will be hash containing StockDetailResponse
  */
 export class StockDetailResponse implements IStockDetail {
-  public manufacturingDetails: IManufacturingDetails;
-  public openingAmount: number;
-  public openingQuantity: number;
-  public purchaseAccountDetails?: IAccountDetails;
-  public salesAccountDetails?: IAccountDetails;
-  public stockGroup: INameUniqueName;
-  public stockUnit: IStockUnitItem;
-  public stockUnitCode?: string;
-  public name: string;
-  public uniqueName: string;
-  public hsnNumber?: number;
+    public manufacturingDetails: IManufacturingDetails;
+    public openingAmount: number;
+    public openingQuantity: number;
+    public purchaseAccountDetails?: IAccountDetails;
+    public salesAccountDetails?: IAccountDetails;
+    public stockGroup: INameUniqueName;
+    public stockUnit: IStockUnitItem;
+    public stockUnitCode?: string;
+    public name: string;
+    public uniqueName: string;
+    public hsnNumber?: number;
 }
 
 /*
@@ -143,16 +143,16 @@ export class StockDetailResponse implements IStockDetail {
  * its response will be hash as StockDetailResponse
  */
 export class CreateStockRequest {
-  public isFsStock: boolean;
-  public manufacturingDetails: IManufacturingDetails;
-  public name: string;
-  public openingAmount: number;
-  public openingQuantity: number;
-  public purchaseAccountDetails: IAccountDetails;
-  public salesAccountDetails: IAccountDetails;
-  public stockUnitCode: string;
-  public uniqueName: string;
-  public hsnNumber?: number;
+    public isFsStock: boolean;
+    public manufacturingDetails: IManufacturingDetails;
+    public name: string;
+    public openingAmount: number;
+    public openingQuantity: number;
+    public purchaseAccountDetails: IAccountDetails;
+    public salesAccountDetails: IAccountDetails;
+    public stockUnitCode: string;
+    public uniqueName: string;
+    public hsnNumber?: number;
 }
 
 /*
@@ -163,11 +163,11 @@ export class CreateStockRequest {
  * its response will be hash as StockUnitResponse
  */
 export class StockUnitRequest implements IStockUnit {
-  public parentStockUnit: IStockItem;
-  public quantityPerUnit: number;
-  public name: string;
-  public code: string;
-  public parentStockUnitCode?: string;
+    public parentStockUnit: IStockItem;
+    public quantityPerUnit: number;
+    public name: string;
+    public code: string;
+    public parentStockUnitCode?: string;
 }
 
 /*

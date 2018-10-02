@@ -1,7 +1,9 @@
+
+import {take} from 'rxjs/operators';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../store';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { LoginActions } from '../../../actions/login/login.action';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { VerifyEmailModel, VerifyEmailResponseModel, VerifyMobileModel } from '../../../models/api-models/loginModels';
@@ -50,8 +52,8 @@ export class LoginTwoWayComponent implements OnInit, OnDestroy {
 
     public verifyTwoWayCode() {
         let user: VerifyEmailResponseModel;
-        this.userDetails$.take(1).subscribe(p => user = p);
-        let data = new VerifyMobileModel();
+        this.userDetails$.pipe(take(1)).subscribe(p => user = p);
+        const data = new VerifyMobileModel();
         data.countryCode = Number(user.countryCode);
         data.mobileNumber = user.contactNumber;
         data.oneTimePassword = this.twoWayOthForm.value.otp;

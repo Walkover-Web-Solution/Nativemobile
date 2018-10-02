@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { UserDetails } from '../models/api-models/loginModels';
-import { Subject } from 'rxjs/Subject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import {Injectable} from '@angular/core';
+import {UserDetails} from '../models/api-models/loginModels';
+import {Subject, ReplaySubject} from 'rxjs';
+
 // import { eventsConst } from 'app/shared/header/components/eventsConst';
 export enum eventsConst {
     groupAdded,
@@ -14,6 +14,7 @@ export enum eventsConst {
     accountMoved,
     accountMerged
 }
+
 @Injectable()
 export class GeneralService {
     public eventHandler: Subject<{ name: eventsConst, payload: any }> = new Subject();

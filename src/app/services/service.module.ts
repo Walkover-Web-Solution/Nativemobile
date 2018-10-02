@@ -1,47 +1,47 @@
-import { MagicLinkService } from './magic-link.service';
+import {MagicLinkService} from './magic-link.service';
 // import { PermissionDataService } from './../permissions/permission-data.service';
-import { LogsService } from './logs.service';
-import { ErrorHandler } from './catchManager/catchmanger';
-import { ModuleWithProviders, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import {LogsService} from './logs.service';
+import {ErrorHandler} from './catchManager/catchmanger';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule} from '@angular/forms';
 
-import { AuthenticationService } from './authentication.service';
-import { GroupService } from './group.service';
-import { StorageService } from './storage.service';
-import { HttpWrapperService } from './httpWrapper.service';
-import { ToasterService } from './toaster.service';
+import {AuthenticationService} from './authentication.service';
+import {GroupService} from './group.service';
+import {StorageService} from './storage.service';
+import {HttpWrapperService} from './httpWrapper.service';
+import {ToasterService} from './toaster.service';
 
-import { CompanyService } from './companyService.service';
-import { LocationService } from './location.service';
-import { AccountService } from './account.service';
-import { InventoryService } from './inventory.service';
-import { PermissionService } from './permission.service';
-import { ManufacturingService } from './manufacturing.service';
+import {CompanyService} from './companyService.service';
+import {LocationService} from './location.service';
+import {AccountService} from './account.service';
+import {InventoryService} from './inventory.service';
+import {PermissionService} from './permission.service';
+import {ManufacturingService} from './manufacturing.service';
 /**
  * Home Module
  */
-import { SearchService } from './search.service';
-import { TlPlService } from './tl-pl.service';
-import { LedgerService } from './ledger.service';
-import { DaybookService } from './daybook.service';
-import { DashboardService } from './dashboard.service';
-import { SettingsIntegrationService } from './settings.integraion.service';
-import { SettingsProfileService } from './settings.profile.service';
-import { SettingsTaxesService } from './settings.taxes.service';
-import { SalesService } from './sales.service';
-import { InvoiceService } from './invoice.service';
-import { InvoiceTemplatesService } from './invoice.templates.service';
-import { SettingsLinkedAccountsService } from './settings.linked.accounts.service';
-import { PurchaseInvoiceService } from './purchase-invoice.service';
-import { SettingsFinancialYearService } from './settings.financial-year.service';
-import { SettingsPermissionService } from './settings.permission.service';
+import {SearchService} from './search.service';
+import {TlPlService} from './tl-pl.service';
+import {LedgerService} from './ledger.service';
+import {DaybookService} from './daybook.service';
+import {DashboardService} from './dashboard.service';
+import {SettingsIntegrationService} from './settings.integraion.service';
+import {SettingsProfileService} from './settings.profile.service';
+import {SettingsTaxesService} from './settings.taxes.service';
+import {SalesService} from './sales.service';
+import {InvoiceService} from './invoice.service';
+import {InvoiceTemplatesService} from './invoice.templates.service';
+import {SettingsLinkedAccountsService} from './settings.linked.accounts.service';
+import {PurchaseInvoiceService} from './purchase-invoice.service';
+import {SettingsFinancialYearService} from './settings.financial-year.service';
+import {SettingsPermissionService} from './settings.permission.service';
 // import { LoaderService } from '../loader/loader.service';
-import { GeneralService } from './general.service';
-import { ServiceConfig, IServiceConfigArgs } from './service.config';
-import { RouterService } from './router.service';
-import { LoaderService } from './loader.service';
-import { RouterModule } from '../common';
+import {GeneralService} from './general.service';
+import {ServiceConfig, IServiceConfigArgs} from './service.config';
+import {RouterService} from './router.service';
+import {LoaderService} from './loader.service';
+import {RouterModule} from '../common';
 
 /**
  * Do not specify providers for modules that might be imported by a lazy loaded module.
