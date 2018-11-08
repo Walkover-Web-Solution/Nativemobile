@@ -4,39 +4,41 @@
     <div class="sixteen-nine">
         <my-header [title]="'Trial Balance'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }">
         </my-header>
+        <mat-card *ngIf="breadCrumb.length > 0" class="breadcrumb-card">
+            <mat-card-content>
+                <div>
+                    <a (click)="resetNavigation()" href="javascript:void (0)">Home</a>
+                    <span style="margin: 0px 5px; color:#9f9f9f">/</span>
+                    <span *ngFor="let brd of breadCrumb;let l = last">
+                        <a *ngIf="!l;else last" (click)="navigateTo(brd.uniqueName)" href="javascript:void (0)">{{ brd.name }}</a>
+                        <span *ngIf="!l" style="margin: 0px 5px; color:#9f9f9f">/</span>
+                        <ng-template #last> {{ brd.name }}</ng-template>
+                    </span>
+                </div>
+            </mat-card-content>
+        </mat-card>
         <div class="main_card" style="display: flex;flex-direction: column">
-            <mat-card *ngIf="breadCrumb.length > 0">
-                <mat-card-content>
-                    <div>
-                        <a (click)="resetNavigation()" href="javascript:void (0)">Home /</a>
-                        <span *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
-                            <a *ngIf="!l;else last" (click)="navigateTo(brd.uniqueName)" href="javascript:void (0)">{{ brd.name }} /</a>
-                            <ng-template #last> {{ brd.name }}</ng-template>
-                        </span>
-                    </div>
-                </mat-card-content>
-            </mat-card>
 
             <div style="display: flex;justify-content: center;" *ngIf="(showLoader$ | async)">
                 <img src="assets/image/loader.png" class="roted-logo">
             </div>
 
             <ng-container *ngIf="activeAcc === '' && !(showLoader$ | async)">
-                <mat-card class="mat-elevation-z2" *ngIf="breadCrumb.length === 0">
+                <mat-card class="mat-elevation-z2 giddh-search-card" *ngIf="breadCrumb.length === 0">
 
                     <mat-card-content>
                         <form>
                             <div style="display: flex;">
-                                <mat-icon class="icon-search" matPrefix>search</mat-icon>
+                                <mat-icon class="search-placeholder-icon" matPrefix>search</mat-icon>
                                 <input class="search-box" type="text" matInput #searchControl
-                                       (input)="search(searchControl.value)">
+                                       (input)="search(searchControl.value)" placeholder="Search">
                             </div>
                         </form>
                     </mat-card-content>
 
                 </mat-card>
 
-                <mat-card class="mat-elevation-z2" *ngIf="breadCrumb.length > 0 && activeGrp">
+                <mat-card class="mat-elevation-z2 trial-balance-total-card" *ngIf="breadCrumb.length > 0 && activeGrp">
 
                     <mat-card-content>
                         <div class="totalContainer">
@@ -47,7 +49,7 @@
 
                 </mat-card>
 
-                <mat-card>
+                <mat-card class="trial-balance-card">
                     <div class="arrow-text">
                         <span>Particular
                             <mat-icon class="arrow-drop" matPrefix>arrow_drop_down

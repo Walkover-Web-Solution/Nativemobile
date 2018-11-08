@@ -385,7 +385,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public openFilter() {
         let dialog = this.dialog.open(DashboardFilterComponent, {
-            data: { chartType: ChartType.Revenue }
+            data: { chartType: ChartType.Revenue }, panelClass:'filter-dialog'
         });
     }
 

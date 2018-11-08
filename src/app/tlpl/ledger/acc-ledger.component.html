@@ -182,10 +182,11 @@
         </div>
     </mat-card-content>
 </mat-card>
-
-<button mat-raised-button class="pull-right" color="warn" [disabled]="totalPages === 0 || (request.page === totalPages)"
+<div class="load-more-btn">
+    <button mat-raised-button color="warn" [disabled]="totalPages === 0 || (request.page === totalPages)"
         (click)="loadMore()">Load More
-</button>
+    </button>
+</div>
 
 <mat-card *ngIf="isTransactionRequestInProcess$ | async">
     <div style="display: flex;justify-content: center;align-items: center; width: 100%;">

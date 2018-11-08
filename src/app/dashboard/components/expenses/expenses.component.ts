@@ -385,7 +385,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
     public openFilter() {
         let dialog = this.dialog.open(DashboardFilterComponent, {
-            data: { chartType: ChartType.Expense }
+            data: { chartType: ChartType.Expense }, panelClass:'filter-dialog'
         });
     }
 

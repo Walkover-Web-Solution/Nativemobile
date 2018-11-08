@@ -6,7 +6,12 @@
 @import '~nativescript-theme-core/scss/index';
 // define our custom styles here...
 Page {
-  background-color: $white;
+  // background-color: $white;
+  background-color: #FAFAFA;
+}
+
+*{
+  font-family: 'Lato', 'Lato-Regular', serif;
 }
 
 
@@ -25,6 +30,44 @@ Page {
 ActionBar {
   color: rgb(12, 115, 115);
   background-color: rgb(0, 169, 157);
+  width: 80%;
+}
+
+.action-bar{
+  padding: 0;
+  margin: 0;
+  .button{
+    // margin: 50;
+    border-width: 0;
+    border-color: transparent;
+    height: 100%;
+    z-index: 0;
+    background-color: transparent;
+    // background-color: red;
+    font-size: 20;
+    border-radius: 0;
+  }
+  .text-btn{
+    text-transform: none;
+    font-size: 16;
+    font-family: 'Lato', 'Lato-Bold', serif;
+    font-weight: 700;
+  }
+  label{
+    margin: 0;
+    padding: 0;
+  }
+  .actionbar-grid{
+    padding: 0;
+    margin: 0;
+    // height: 100%;
+  }
+  .action-bar-title{
+    // font-weight: 300;
+    // padding-left: 0;
+    font-size: 16 !important;
+    font-weight: 400 !important;
+  }
 }
 
 .headerBtn {}
@@ -215,10 +258,20 @@ FilterSelect.disabled{
 .gen-font-color {
   color: #4e4f53;
 }
+.chart-title{
+  font-size: 16;
+  color: #333333;
+}
 
 .gen-card-style {
-  margin:5 4;
+  margin:8 4;
   background-color: white;
+}
+
+.form-input-label{
+  font-size: 12;
+  font-weight: 700;
+  color: #333333;
 }
 
 .gen-label-style {
@@ -226,5 +279,5 @@ FilterSelect.disabled{
 }
 
 .action-bar-title {
-  font-weight: 350 !important;
+  // font-weight: 350 !important;
 }

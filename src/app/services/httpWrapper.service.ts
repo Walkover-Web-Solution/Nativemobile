@@ -63,6 +63,7 @@ export class HttpWrapperService {
     public prepareOptions(options: any): any {
         this.showLoader();
         let sessionId = this._generalService.sessionId;
+        let authKey = this._generalService.authKey;
         options = options || {};
 
         if (!options.headers) {
@@ -71,6 +72,10 @@ export class HttpWrapperService {
 
         if (sessionId) {
             options.headers['Session-Id'] = sessionId;
+        }
+        
+        if(authKey){
+            options.headers['auth-key'] = authKey;
         }
         // options.withCredentials = true;
         options.headers['cache-control'] = 'no-cache';

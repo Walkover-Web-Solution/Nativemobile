@@ -5,7 +5,7 @@
     cursor: pointer;
     li {
         .inner-item{
-            padding: 12px;
+            padding: 10px 15px;
             border-bottom: 1px solid #ebebeb;
             small{
                 color: #9f9f9f;
@@ -26,22 +26,8 @@
     color: black;
 }
 
-
-.search-box{
-    width: 100%;
-    height: 41px;
-    border: 1px solid #e3e3e3;
-    box-shadow: 0px 4px 10px #dcdcdc82;
-    border-radius: 3px;
-    padding-left: 41px;
-}
-.icon-search{
-    position: absolute;
-    top: 35px;
-    left: 37px;
-}
 .arrow-text{
-    padding: 0 12px 12px 12px;
+    padding: 10px 15px;
     font-weight: bold;
     .arrow-drop{
         position: relative;
@@ -49,11 +35,53 @@
         left: 6px;
     }
 }
-.totalContainer {
-    display: flex;
-    justify-content: space-between;
-    box-shadow: 0px 1px 4px #8080805e;
-    padding: 5px;
-    background: #F6F8F9;
-    font-size: 17px;
+.giddh-search-card{
+    padding: 0;
+    margin-bottom: 20px;
+    .search-placeholder-icon{
+        position: absolute;
+        top: 0;
+        line-height: 45px;
+        left: 15px;
+    }
+    .search-box{
+        width: 100%;
+        height: 41px;
+        border: 1px solid #e3e3e3;
+        box-shadow: 0px 4px 10px #dcdcdc82;
+        border-radius: 3px;
+        padding-left: 41px;
+        font-size: 14px;
+        outline: none;
+    }
+}
+.trial-balance-card{
+    padding: 0;
+}
+.breadcrumb-card{
+    padding: 10px;
+    background: #efefef;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.3) !important;
+    a{
+        text-decoration: none;
+        color: #4888fb;
+    }
+}
+.trial-balance-total-card{
+    padding: 0;
+    margin-bottom: 15px;
+    box-shadow: none;
+    .totalContainer {
+        display: flex;
+        justify-content: space-between;
+        // box-shadow: 0px 1px 4px #8080805e;
+        padding: 10px 15px;
+        background: #f1f1f1;
+        font-size: 17px;
+        border-radius: 4px;
+        border: 1px solid #e8e8e8;
+        p{
+            margin: 0;
+        }
+    }
 }

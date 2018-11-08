@@ -1,33 +1,28 @@
 .login,
 .page {
+  // font-family: 'Lato', serif;
   background-color: rgb(0, 169, 157);
 }
 
 .login #logo {
-  margin-top: 13%;
+  // margin-top: 60;
+  // margin-bottom: 25;
+  margin-bottom: 20;
 }
 
 .page {
-  margin: 0 5%;
+  // margin: 0 5%;
+  margin: 0 20;
 }
 
 .form {
-  margin-top: 10%;
+  // margin-top: 10%;
 }
 
-// .input {
-//   background-color: rgb(12, 115, 115);
-//   placeholder-color: rgb(80, 164, 161);
-//   color: white;
-//   margin-bottom: 50px;
-//   border-radius: 2px;
-//   border: 0;
-//   padding: 0;
-// }
 
 .btn {
-  background-color: rgb(154, 214, 208);
-  color: rgb(40, 40, 90);
+  background-color: #99D6D0;
+  color: #201D50;
   margin: 0;
 }
 
@@ -40,22 +35,13 @@
   background-color: rgb(40, 40, 90);
 }
 
-.margin {
-  margin-top: 20%;
-}
-
 .icon {
   border-radius: 50%;
   height: 40;
   width: 40;
   background-color: rgb(12, 115, 115);
   color: white;
-  margin-top: 30;
-}
-
-.mar-l-r {
-  margin-right: 30;
-  margin-left: 30;
+  // margin-top: 30;
 }
 
 .icon-nam {
@@ -63,24 +49,61 @@
   font-size: 10;
 }
 
-.mar-l-r-nam {
-  margin-left: 35;
-  margin-right: 35;
-}
-
-.p-top {
-  padding-top: 50;
-}
-
-.p-bottom {
-  padding-bottom: 30;
-}
 .input {
   background-color: rgb(12, 115, 115);
   placeholder-color: rgb(80, 164, 161);
   color: white;
-  margin-bottom: 20;
-  border-radius: 2;
+  margin-bottom: 15;
+  border-radius: 3;
   border: 0;
   padding: 5 10;
+  height: 40;
+  font-size: 14;
+}
+.login-options{
+  padding-top: 10;
+  .font{
+    font-size: 11;
+    // margin-right: 5;
+    // padding: 10;
+    padding: 5 8;
+    // padding-right: 5;
+    // border: 1 #201D50;
+    border-right-color: #201D50;
+    border-right-width: 1;
+    &.last{
+      border-right-width: 0;
+      padding-right: 0;
+      margin: 0;
+    }
+  }
+}
+.signup{
+  font-size: 12;
+  padding: 10;
+
+}
+.login-alternate{
+  padding: 0 20 15 20;
+  margin-top: 30;
+  .font{
+    font-size: 12;
+  }
+  .login-separator{
+    margin-bottom: 5;
+    .font{
+      padding: 0 10;
+    }
+  }
+}
+
+.social-login{
+  margin: 0;
+  padding: 0;
+  .icon{
+    margin: 20 10 0 10;
+  }
+}
+.icon-nam{
+  margin: 0 13 0 13;
 }
