@@ -3,7 +3,13 @@ ActionBar {
   background-color: $ab-background;
   padding: 0;
 }
-
+.page{
+  background-color: #FAFAFA;
+  padding: 5;
+  CardView{
+  background-color: #FAFAFA;
+  }
+}
 .left {
   float: left;
 }
@@ -22,8 +28,8 @@ ActionBar {
 }
 
 .button {
-  background-color: $ab-background;
-  color: white;
+  // background-color: $ab-background;
+  // color: white;
   box-shadow: 0;
   margin: 0;
 }
@@ -33,9 +39,11 @@ ActionBar {
   background-color: rgba(250, 190, 190, 0.007);
   // border-style: solid;
   // border-width: 2pt;
-  margin: 5pt;
+  margin: 5;
+  // margin: 0;
+  padding: 30 10;
   // background-color: #fff;
-  background-color: #f2f2f8;
+  background-color: #ffffff;
 }
 .mar-top-20{
 

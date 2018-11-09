@@ -1,164 +1,168 @@
 <ActionBar class="action-bar" width="100%">
-    <GridLayout columns="auto,*,auto" rows="*" width="100%">
-        <Button row="0" col="0" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="goBack()"
-                textAlignment="center"
-                text="&#xf060;" fontFamily="FontAwesome">
-        </Button>
-        <Label row="0" col="1" class="action-bar-title" fontWeight="400" text="Trial Balance"
-               horizontalAlignment="left"></Label>
-        <!-- <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> -->
-    </GridLayout>
-</ActionBar>
-
-<!--<ScrollView verticalAlignment="stretch">-->
-<StackLayout margin="5" orientation="vertical">
-    <GridLayout verticalAlignment="stretch" rows="auto,auto,*" col="*">
-        <!--search bar-->
-        <CardView row="0" , col="0" class="gen-card-style" elevation="10" radius="5" marginBottom="20" ripple="true"
-                  *ngIf="breadCrumb.length === 0">
-            <GridLayout rows="auto" columns="*">
-                <!--<StackLayout>-->
-                <FlexboxLayout>
-                    <Label [text]="icon" fontFamily="FontAwesome" alignSelf="center" margin="0 15"
-                           fontSize="16"></Label>
-                    <TextView hint="Search group and accounts" row="0"
-                              (textChange)="search($event.object.text)" returnKeyType="send"
-                              class="input customTextView" backgroundColor="white"></TextView>
-                </FlexboxLayout>
-                <!--</StackLayout>-->
-            </GridLayout>
-        </CardView>
-        <!--breadCrumb bar-->
-        <CardView row="0" , col="0" class="gen-card-style" elevation="3" radius="1" *ngIf="breadCrumb.length > 0">
-            <ScrollView orientation="horizontal">
-                <StackLayout orientation="horizontal" padding="15" color="black" class="brd-text">
-                    <Label text="Home /" (tap)="resetNavigation()" color="#0aa7fc"></Label>
-                    <StackLayout *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
-                        <Label *ngIf="!l" color="#0aa7fc" (tap)="navigateTo(brd.uniqueName)"
-                               text="{{ brd.name }} /"></Label>
-                        <Label *ngIf="l" text="{{ brd.name }}"></Label>
+        <GridLayout columns="50,*,auto" rows="*" width="100%">
+            <Button row="0" col="0" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="goBack()"
+                    textAlignment="left"
+                    text="&#xe91a;"
+                    fontFamily="GiddhIconFonts">
+            </Button>
+            <Label row="0" col="1" class="action-bar-title" fontWeight="400" text="Trial Balance"
+                   horizontalAlignment="left"></Label>
+            <!-- <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> -->
+        </GridLayout>
+    </ActionBar>
+    
+    <!--<ScrollView verticalAlignment="stretch">-->
+    <StackLayout margin="0" orientation="vertical">
+        <GridLayout verticalAlignment="stretch" rows="auto,auto,*" col="*">
+            <!--search bar-->
+            <CardView row="0" , col="0" margin="10 10 0 10" class="gen-card-style" elevation="10" radius="5" marginBottom="20" ripple="true"
+                      *ngIf="breadCrumb.length === 0">
+                <GridLayout rows="auto" columns="*">
+                    <!--<StackLayout>-->
+                    <FlexboxLayout>
+                        <Label [text]="icon" fontFamily="FontAwesome" alignSelf="center" margin="0 15"
+                               fontSize="16"></Label>
+                        <TextView hint="Search group and accounts" row="0"
+                                  (textChange)="search($event.object.text)" returnKeyType="send"
+                                  class="input customTextView" backgroundColor="white"></TextView>
+                    </FlexboxLayout>
+                    <!--</StackLayout>-->
+                </GridLayout>
+            </CardView>
+            <!--breadCrumb bar-->
+            <CardView row="0" , col="0" marginBottom="5" class="gen-card-style0" elevation="6" radius="1" backgroundColor="#f8f8f8" margin="0" *ngIf="breadCrumb.length > 0">
+                <ScrollView orientation="horizontal">
+                    <StackLayout orientation="horizontal" padding="10 15" color="black" class="brd-text">
+                        <Label text="Home" (tap)="resetNavigation()" fontSize="12" color="#4888fb"></Label>
+                        <Label text=" / " color="#9f9f9f" fontSize="12"></Label>
+                        <StackLayout orientation="horizontal" *ngFor="let brd of breadCrumb;let l = last" style="margin: 0px 5px">
+                            <Label *ngIf="!l" color="#4888fb" fontSize="12" (tap)="navigateTo(brd.uniqueName)"
+                                   text="{{ brd.name }}"></Label>
+                            <Label *ngIf="!l" color="#9f9f9f" text=" / " fontSize="12"></Label>
+                            <Label *ngIf="l" text="{{ brd.name }}" fontSize="12"></Label>
+                        </StackLayout>
                     </StackLayout>
-                </StackLayout>
-            </ScrollView>
-        </CardView>
-        <!--breadCrumb bar show account-->
-        <CardView row="1" , col="0" class="gen-card-style" elevation="3" radius="1"
-                  *ngIf="breadCrumb.length > 0 && activeGrp">
-            <FlexboxLayout flexDirection="row" class="text-box">
-                <Label text="Total"></Label>
-                <Label text="{{ activeGrp?.closingBalance.amount | number: '1.0-2' }}"></Label>
-            </FlexboxLayout>
-        </CardView>
-        <CardView row="2" , col="0" verticalAlignment="stretch" class="gen-card-style" elevation="3" radius="1">
-
-            <FlexboxLayout verticalAlignment="stretch" flexDirection="column">
-
-                <ng-container *ngIf="activeAcc === '';">
-
-                    <DockLayout>
-                        <!--<StackLayout orientation="horizontal">-->
-                        <FlexboxLayout class="bold" padding="5 10" flexDirection="row"
-                                       justifyContent="space-between"
-                                       dock="top">
-                            <FlexboxLayout>
-                                <Label text="Particular" marginRight="7"></Label>
-                                <Label text="&#xf0dd;" fontFamily="FontAwesome"></Label>
+                </ScrollView>
+            </CardView>
+            <!--breadCrumb bar show account-->
+            <CardView row="1" , col="0" margin="5 10" class="gen-card-style" elevation="0" radius="0"
+                      *ngIf="breadCrumb.length > 0 && activeGrp">
+                <FlexboxLayout flexDirection="row" backgroundColor="#f5f5f5" borderRadius="3" borderWidth="1" borderColor="#e4e4e4" class="text-box">
+                    <Label text="Total"></Label>
+                    <Label text="{{ activeGrp?.closingBalance.amount | number: '1.0-2' }}"></Label>
+                </FlexboxLayout>
+            </CardView>
+            <CardView row="2" , col="0" margin="5 10" verticalAlignment="stretch" class="gen-card-style" elevation="3" radius="1">
+    
+                <FlexboxLayout verticalAlignment="stretch" flexDirection="column">
+    
+                    <ng-container *ngIf="activeAcc === '';">
+    
+                        <DockLayout>
+                            <!--<StackLayout orientation="horizontal">-->
+                            <FlexboxLayout class="bold" padding="10 15 0 15" flexDirection="row"
+                                           justifyContent="space-between"
+                                           dock="top">
+                                <FlexboxLayout>
+                                    <Label text="Particular" marginRight="7"></Label>
+                                    <Label text="&#xf0dd;" fontFamily="FontAwesome"></Label>
+                                </FlexboxLayout>
+                                <FlexboxLayout>
+                                    <Label text="Closing Balance" marginRight="7"></Label>
+                                    <Label text="&#xf0dd;" fontFamily="FontAwesome"></Label>
+                                </FlexboxLayout>
                             </FlexboxLayout>
-                            <FlexboxLayout>
-                                <Label text="Closing Balance" marginRight="7"></Label>
-                                <Label text="&#xf0dd;" fontFamily="FontAwesome"></Label>
-                            </FlexboxLayout>
-                        </FlexboxLayout>
-                        <!--</StackLayout>-->
-
-                        <FlexboxLayout flexDirection="column" class="list-group"
-                                       *ngIf="!isSearchEnabled; else searchContainer" alignContent="stretch">
-                            <!--Groups-->
-                            <ListView [items]="mergedGroupAndAccountData$ | async" class="list-group">
-                                <ng-template let-grp="item">
-                                    <GridLayout rows="auto">
-                                        <!--<ng-template >-->
-                                        <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb"
-                                                     class="list-group-item"
-                                                     (tap)="filterData(grp)" *ngIf="grp.isGroup">
-                                            <Label class="main-text" text="{{ grp.groupName }} >"></Label>
-                                            <GridLayout columns="*,*" rows="auto">
-                                                <StackLayout row="0" col="0">
-                                                    <Label text="{{ grp.understandingCategoryText }}"
-                                                           class="sub-text"></Label>
-                                                </StackLayout>
-                                                <StackLayout row="0" col="1">
-                                                    <FlexboxLayout justifyContent="space-between"
-                                                                   class="pull-right">
-                                                        <Label class="main-text"
-                                                               text="{{ grp.closingBalance.amount | number: '1.0-2' }}"
-                                                               marginRight="5"></Label>
-                                                        <Label text="Cr" class="sub-text" marginTop="3"></Label>
-                                                    </FlexboxLayout>
-                                                </StackLayout>
-                                            </GridLayout>
-                                        </StackLayout>
-                                        <!--</ng-template>-->
-                                        <!--<ng-template >-->
-                                        <StackLayout class="list-group-item" borderBottomWidth="1"
-                                                     *ngIf="!grp.isGroup"
-                                                     borderBottomColor="#ebebeb" (tap)="goToLedger(grp)">
-                                            <Label class="main-text" text="{{ grp.name }}" textWrap="true"></Label>
-                                            <GridLayout columns="*,*" rows="auto">
-                                                <StackLayout row="0" col="0">
-                                                    <Label text="{{ grp.understandingCategoryText }}"
-                                                           class="sub-text"></Label>
-                                                </StackLayout>
-                                                <StackLayout row="0" col="1">
-                                                    <FlexboxLayout justifyContent="space-between"
-                                                                   class="pull-right">
-                                                        <Label class="main-text"
-                                                               text="{{ grp.closingBalance.amount | number: '1.0-2' }}"
-                                                               marginRight="5"></Label>
-                                                        <Label text="Cr" class="sub-text" marginTop="3"></Label>
-                                                    </FlexboxLayout>
-                                                </StackLayout>
-                                            </GridLayout>
-                                        </StackLayout>
-                                        <!--</ng-template>-->
-                                    </GridLayout>
-                                </ng-template>
-                            </ListView>
-
-                        </FlexboxLayout>
-
-                        <ng-template #searchContainer>
-                            <FlexboxLayout flexDirection="column" class="list-group">
-                                <ListView [items]="searchedFlattenGrpDetails$ | async" class="list-group">
+                            <!--</StackLayout>-->
+    
+                            <FlexboxLayout flexDirection="column" class="list-group"
+                                           *ngIf="!isSearchEnabled; else searchContainer" alignContent="stretch">
+                                <!--Groups-->
+                                <ListView [items]="mergedGroupAndAccountData$ | async" class="list-group" separatorColor="transparent">
                                     <ng-template let-grp="item">
-                                        <StackLayout class="list-group-item" (tap)="searchResultClicked(grp)">
-                                            <Label class="main-text"
-                                                   text="{{ grp.isGroup ? grp.groupName : grp.name }}"></Label>
-                                            <Label class="sub-text"
-                                                   text="{{ grp.isGroup ? 'Grp' : 'Acc' }}"></Label>
-                                        </StackLayout>
+                                        <GridLayout rows="auto">
+                                            <!--<ng-template >-->
+                                            <StackLayout borderBottomWidth="1" borderBottomColor="#ebebeb"
+                                                         class="list-group-item"
+                                                         (tap)="filterData(grp)" *ngIf="grp.isGroup">
+                                                <Label class="main-text" text="{{ grp.groupName }} >"></Label>
+                                                <GridLayout columns="*,*" rows="auto">
+                                                    <StackLayout row="0" col="0">
+                                                        <Label text="{{ grp.understandingCategoryText }}"
+                                                               class="sub-text"></Label>
+                                                    </StackLayout>
+                                                    <StackLayout row="0" col="1">
+                                                        <FlexboxLayout justifyContent="space-between"
+                                                                       class="pull-right">
+                                                            <Label class="main-text"
+                                                                   text="{{ grp.closingBalance.amount | number: '1.0-2' }}"
+                                                                   marginRight="5"></Label>
+                                                            <Label text="Cr" class="sub-text" marginTop="3"></Label>
+                                                        </FlexboxLayout>
+                                                    </StackLayout>
+                                                </GridLayout>
+                                            </StackLayout>
+                                            <!--</ng-template>-->
+                                            <!--<ng-template >-->
+                                            <StackLayout class="list-group-item" borderBottomWidth="1"
+                                                         *ngIf="!grp.isGroup"
+                                                         borderBottomColor="#ebebeb" (tap)="goToLedger(grp)">
+                                                <Label class="main-text" text="{{ grp.name }}" textWrap="true"></Label>
+                                                <GridLayout columns="*,*" rows="auto">
+                                                    <StackLayout row="0" col="0">
+                                                        <Label text="{{ grp.understandingCategoryText }}"
+                                                               class="sub-text"></Label>
+                                                    </StackLayout>
+                                                    <StackLayout row="0" col="1">
+                                                        <FlexboxLayout justifyContent="space-between"
+                                                                       class="pull-right">
+                                                            <Label class="main-text"
+                                                                   text="{{ grp.closingBalance.amount | number: '1.0-2' }}"
+                                                                   marginRight="5"></Label>
+                                                            <Label text="Cr" class="sub-text" marginTop="3"></Label>
+                                                        </FlexboxLayout>
+                                                    </StackLayout>
+                                                </GridLayout>
+                                            </StackLayout>
+                                            <!--</ng-template>-->
+                                        </GridLayout>
                                     </ng-template>
                                 </ListView>
+    
                             </FlexboxLayout>
-                        </ng-template>
-                    </DockLayout>
-
-                </ng-container>
-                <!--account view-->
-                <ng-container *ngIf="activeAcc !== ''">
-                    <!--<ScrollView>-->
-                        <FlexboxLayout flexDirection="column">
-                            <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
-                        </FlexboxLayout>
-                    <!--</ScrollView>-->
-                </ng-container>
-
-            </FlexboxLayout>
-
-        </CardView>
-    </GridLayout>
-
-</StackLayout>
-<!--</ScrollView>-->
-
-
+    
+                            <ng-template #searchContainer>
+                                <FlexboxLayout flexDirection="column" class="list-group">
+                                    <ListView [items]="searchedFlattenGrpDetails$ | async" class="list-group" separatorColor="transparent">
+                                        <ng-template let-grp="item">
+                                            <StackLayout class="list-group-item" (tap)="searchResultClicked(grp)">
+                                                <Label class="main-text"
+                                                       text="{{ grp.isGroup ? grp.groupName : grp.name }}"></Label>
+                                                <Label class="sub-text"
+                                                       text="{{ grp.isGroup ? 'Grp' : 'Acc' }}"></Label>
+                                            </StackLayout>
+                                        </ng-template>
+                                    </ListView>
+                                </FlexboxLayout>
+                            </ng-template>
+                        </DockLayout>
+    
+                    </ng-container>
+                    <!--account view-->
+                    <ng-container *ngIf="activeAcc !== ''">
+                        <!--<ScrollView>-->
+                            <FlexboxLayout flexDirection="column">
+                                <ns-acc-ledger [accUniqueName]="activeAcc"></ns-acc-ledger>
+                            </FlexboxLayout>
+                        <!--</ScrollView>-->
+                    </ng-container>
+    
+                </FlexboxLayout>
+    
+            </CardView>
+        </GridLayout>
+    
+    </StackLayout>
+    <!--</ScrollView>-->
+    
+    
+    

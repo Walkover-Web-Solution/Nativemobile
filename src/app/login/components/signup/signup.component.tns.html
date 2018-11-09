@@ -1,25 +1,27 @@
-<GridLayout class="login" rows="*" columns="*">
-  <GridLayout rows="* ,auto" columns="*">
-    <StackLayout row="0" col="0" class="page">
-      <Image id='logo' src="~/assets/image/logo.png" height="12%" stretch="aspectFit" horizontalAlignment="center"></Image>
-      <StackLayout class="form" [formGroup]="signupWithPasswordForm">
-        <TextField hint="Email Id" formControlName="email" class="input"></TextField>
-        <TextField hint="Password" secure="true" formControlName="password" class="input"></TextField>
-        <TextField hint="Mobile No" formControlName="mobileNo" class="input"></TextField>
-        <!-- <Button text="Sign Up" [disabled]="signupWithPasswordForm.invalid" (tap)="signUp()" class="btn btn-primary"></Button> -->
-        <MyButton [text]="'Sign Up'" [isEnabled]="signupWithPasswordForm.valid" [lodder]='signUpProcess$ | async' (tap)="signUp()"
-          [class]="'btn btn-primary'">
-        </MyButton>
-        <StackLayout horizontalAlignment="center" orientation="horizontal" marginTop="5">
-          <Label text="Back To Login" class="font" (tap)="backToLogin()" pageTransition="flip"></Label>
-        </StackLayout>
-      </StackLayout>
+<GridLayout class="login" rows="150,*,auto" columns="*">
 
+    <StackLayout verticalAlignment="bottom" row="0" col="0" class="page">
+      <Image id='logo' src="~/assets/image/logo.png" height="69" stretch="aspectFit" horizontalAlignment="center"></Image>
     </StackLayout>
-    <StackLayout row="1" col="0" class="m-b-60">
-      <GridLayout rows="auto" columns="*,auto,*" class="m-t-60">
+    <StackLayout verticalAlignment="center" row="1" col="0" class="page">
+        <StackLayout class="form" [formGroup]="signupWithPasswordForm">
+          <TextField hint="Email Id" formControlName="email" class="input"></TextField>
+          <TextField hint="Password" secure="true" formControlName="password" class="input"></TextField>
+          <TextField hint="Mobile No" formControlName="mobileNo" class="input"></TextField>
+          <!-- <Button text="Sign Up" [disabled]="signupWithPasswordForm.invalid" (tap)="signUp()" class="btn btn-primary"></Button> -->
+          <MyButton [text]="'Sign Up'" [isEnabled]="signupWithPasswordForm.valid" [lodder]='signUpProcess$ | async' (tap)="signUp()"
+            [class]="'btn btn-primary'">
+          </MyButton>
+          <StackLayout horizontalAlignment="center" orientation="horizontal" marginTop="5" class="login-options">
+            <Label text="Back To Login" class="font last" (tap)="backToLogin()" pageTransition="flip"></Label>
+          </StackLayout>
+        </StackLayout>
+  
+    </StackLayout>
+    <StackLayout verticalAlignment="bottom" row="2" col="0" class="login-alternate">
+      <GridLayout rows="auto" columns="*,auto,*" class="login-separator">
         <StackLayout class="hr-light color" col="0"></StackLayout>
-        <Label text="or login with" class="p-10 font" col="1"></Label>
+        <Label text="OR login with" class="font" col="1"></Label>
         <StackLayout class="hr-light color" col="2"></StackLayout>
       </GridLayout>
       <StackLayout horizontalAlignment="center" orientation="horizontal">
@@ -28,14 +30,15 @@
         <Button text="&#xf099;" class="fa icon"></Button> -->
       </StackLayout>
       <StackLayout horizontalAlignment="center" orientation="horizontal">
-        <Label text="google" class="icon-nam p-bottom" col="1"></Label>
+        <Label text="Google" class="icon-nam" col="1"></Label>
         <!-- <Label text="linkenid" class="icon-nam p-bottom mar-l-r-nam" col="1"></Label>
         <Label text="twitter" class="icon-nam p-bottom" col="1"></Label> -->
-
-
-
+  
+  
+  
       </StackLayout>
     </StackLayout>
-
+  
+  
   </GridLayout>
-</GridLayout>
+  

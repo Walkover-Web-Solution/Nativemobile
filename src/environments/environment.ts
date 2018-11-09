@@ -5,6 +5,7 @@
 
 export const environment = {
   production: false,
-  apiUrl: 'http://apitest.giddh.com/',
+  // apiUrl: 'http://apitest.giddh.com/',
+  apiUrl: 'http://api.giddh.com/',
   appUrl: 'http://api.giddh.com/'
 };

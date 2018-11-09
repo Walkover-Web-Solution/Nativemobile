@@ -3,14 +3,14 @@
 
         <my-header [title]="activeCompany?.name" [leftSideItem]="{ icon:'menu', action: toggleWebDrawer.bind(this) }" [rightSideItem]="{ title: userName, action: logout.bind(this) }"></my-header>
         <div class="main_card">
-            <mat-nav-list role="list">
+            <!-- <mat-nav-list role="list">
                 <mat-list-item role="listitem">
                     <a matLine [routerLink]="['/dashboard']">Dashboard </a>
                 </mat-list-item>
                 <mat-divider></mat-divider>
-                <!-- <mat-list-item role="listitem">
+                <mat-list-item role="listitem">
                 <a matLine [routerLink]="['/sale']">Sales Invoice </a>
-            </mat-list-item> -->
+            </mat-list-item>
                 <mat-divider></mat-divider>
                 <mat-list-item role="listitem">
                     <a matLine [routerLink]="['/reports']">Reports </a>
@@ -24,7 +24,33 @@
                     <a matLine [routerLink]="['/tl-pl']">Trial Balance </a>
                 </mat-list-item>
                 <mat-divider></mat-divider>
-            </mat-nav-list>
+            </mat-nav-list> -->
+
+
+            <div class="dashboard-cards">
+
+                <mat-card class="dashboard-card" [routerLink]="['/dashboard']">
+                    <mat-card-title><span class="icon-dashboard"></span></mat-card-title>
+                    <mat-card-subtitle>Dashboard</mat-card-subtitle>
+                </mat-card>
+
+                <mat-card class="dashboard-card" [routerLink]="['/tl-pl']">
+                    <mat-card-title><span class="icon-trail-balance"></span></mat-card-title>
+                    <mat-card-subtitle>Trial Balance</mat-card-subtitle>
+                </mat-card>
+
+                <mat-card class="dashboard-card" [routerLink]="['/reports']">
+                    <mat-card-title><span class="icon-report"></span></mat-card-title>
+                    <mat-card-subtitle>Reports</mat-card-subtitle>
+                </mat-card>
+
+                <mat-card class="dashboard-card" [routerLink]="['/settings']">
+                    <mat-card-title><span class="icon-settings"></span></mat-card-title>
+                    <mat-card-subtitle>Settings</mat-card-subtitle>
+                </mat-card>
+                    
+            </div>
+            
 
             <div class="logout-b"> <button mat-raised-button color="warn" (click)="logout()">Logout</button></div>
         </div>

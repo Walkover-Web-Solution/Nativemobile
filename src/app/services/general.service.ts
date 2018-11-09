@@ -20,6 +20,7 @@ export class GeneralService {
     private _user: UserDetails;
     private _companyUniqueName: string;
     private _sessionId: string;
+    private _authKey: string;
 
     get user(): UserDetails {
         return this._user;
@@ -43,6 +44,14 @@ export class GeneralService {
 
     set sessionId(sessionId: string) {
         this._sessionId = sessionId;
+    }
+
+    get authKey(): string {
+        return this._authKey;
+    }
+
+    set authKey(authKey: string) {
+        this._authKey = authKey;
     }
 
     public resetGeneralServiceState() {

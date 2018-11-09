@@ -150,7 +150,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             series: [{
                 type: 'pie',
                 name: 'Revenue',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
             }],
             navigation: {
@@ -196,7 +196,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             series: [{
                 type: 'pie',
                 name: 'Revenue',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
             }],
             navigation: {

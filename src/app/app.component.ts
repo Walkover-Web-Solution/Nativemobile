@@ -30,9 +30,19 @@ export class AppComponent implements OnInit {
                 this._generalService.user = ss.user.user;
                 this.store.dispatch(this._generalActions.setCountriesWithCodes());
                 this.store.dispatch(this._generalActions.getStatesData());
-                if (ss.user.statusCode !== 'AUTHENTICATE_TWO_WAY') {
+                // if (ss.user.statusCode !== 'AUTHENTICATE_TWO_WAY') {
+                //     this._generalService.sessionId = ss.user.session.id;
+                // }
+
+                if (ss.user.authKey) {
+                    console.log(ss);
+                    this._generalService.authKey = ss.user.authKey;
+                }
+                if(ss.user.session){
                     this._generalService.sessionId = ss.user.session.id;
                 }
+
+
             } else {
                 this._generalService.user = null;
                 this._generalService.sessionId = null;

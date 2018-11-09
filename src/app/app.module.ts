@@ -18,7 +18,7 @@ import { NeedsAuthentication } from './decorators/needsAuthentication';
 import { ToastrModule } from 'ngx-toastr';
 import { localStorageSync } from 'ngrx-store-localstorage';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { environment } from 'environments/environment';
+import { environment } from '../environments/environment';
 
 
 Config.PLATFORM_TARGET = Config.PLATFORMS.WEB;

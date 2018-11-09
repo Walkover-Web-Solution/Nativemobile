@@ -142,7 +142,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             series: [{
                 type: 'pie',
                 name: 'Expenses',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
             }],
             navigation: {
@@ -188,7 +188,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             series: [{
                 type: 'pie',
                 name: 'Expenses',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
             }],
             navigation: {

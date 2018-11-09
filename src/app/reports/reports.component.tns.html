@@ -1,37 +1,38 @@
 <ActionBar class="action-bar" width="100%">
-  <GridLayout columns="auto,*,auto" rows="*" width="100%">
-    <Button row="0" col="0" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="goBack()" textAlignment="center" text="&#xf060;" fontFamily="FontAwesome">
-    </Button>
-    <Label row="0" col="1" class="action-bar-title" fontWeight="400" [text]="pageTitle" horizontalAlignment="left"></Label>
-    <!-- <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> -->
-    <Button class="button" row="0" col="2" textAlignment="center" [nsRouterLink]="['/dashboard','filter', chartType]" text="&#xf1de;" fontFamily="FontAwesome">
-    </Button>
-  </GridLayout>
-</ActionBar>
-
-<GridLayout rows="*" columns="*" margin="5">
-  <Carousel indicatorColor="#2C2866" indicatorColorUnselected="#B9B6DA" row="0" col="0" showIndicator="true" (pageChanged)="pageChanged($event)">
-
-    <CarouselItem id="slide1" verticalAlignment="center">
-      <ScrollView>
-        <StackLayout>
-          <CardView class="gen-card-style" elevation="3" radius="1" ns-pl-chart>
-          </CardView>
-
-          <CardView class="gen-card-style" elevation="3" radius="1" ns-pl-sheet>
+    <GridLayout columns="50,*,auto" rows="*" width="100%">
+      <Button row="0" col="0" class="button" height="50" width="50" ios:visibility="collapsed" (tap)="goBack()" textAlignment="left"  text="&#xe91a;" fontFamily="GiddhIconFonts">
+      </Button>
+      <Label row="0" col="1" class="action-bar-title" fontWeight="400" [text]="pageTitle" horizontalAlignment="left"></Label>
+      <!-- <Label text="&#xf1de;" fontSize="20"  class="" fontFamily="FontAwesome"></Label> -->
+      <Button class="button" row="0" col="2" textAlignment="center" [nsRouterLink]="['/dashboard','filter', chartType]" text="&#xe904;" fontFamily="GiddhIconFonts">
+      </Button>
+    </GridLayout>
+  </ActionBar>
+  
+  <GridLayout rows="*" columns="*" margin="5">
+    <Carousel indicatorColor="#2C2866" indicatorColorUnselected="#B9B6DA" row="0" col="0" showIndicator="true" (pageChanged)="pageChanged($event)">
+  
+      <CarouselItem id="slide1" verticalAlignment="center">
+        <ScrollView>
+          <StackLayout>
+            <CardView class="gen-card-style" elevation="3" radius="1" ns-pl-chart>
             </CardView>
-        </StackLayout>
-      </ScrollView>
-    </CarouselItem>
-
-    <CarouselItem id="slide2" verticalAlignment="center">
-      <ScrollView>
-        <StackLayout>
-          <CardView class="gen-card-style" elevation="3" radius="1" ns-bs-sheet>
-          </CardView>
-        </StackLayout>
-      </ScrollView>
-    </CarouselItem>
-
-  </Carousel>
-</GridLayout>
+  
+            <CardView class="gen-card-style" elevation="3" radius="1" ns-pl-sheet>
+              </CardView>
+          </StackLayout>
+        </ScrollView>
+      </CarouselItem>
+  
+      <CarouselItem id="slide2" verticalAlignment="center">
+        <ScrollView>
+          <StackLayout>
+            <CardView class="gen-card-style" elevation="3" radius="1" ns-bs-sheet>
+            </CardView>
+          </StackLayout>
+        </ScrollView>
+      </CarouselItem>
+  
+    </Carousel>
+  </GridLayout>
+  

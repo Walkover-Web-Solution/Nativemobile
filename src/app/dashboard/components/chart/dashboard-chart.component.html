@@ -1,18 +1,20 @@
 <MyDrawer #myDrawer [pages]="navItemObj$ | async">
     <ng-template #optionTemplate>
         <my-header [title]="'Dashboard'" [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }"></my-header>
-        <mat-card class="mat-elevation-z8">
-            <mat-card-content>
-                <ns-revenue-chart></ns-revenue-chart>
-            </mat-card-content>
-        </mat-card>
+        <div class="main_card">
+            <mat-card class="mat-elevation-z1 analytics-card">
+                <mat-card-content>
+                    <ns-revenue-chart></ns-revenue-chart>
+                </mat-card-content>
+            </mat-card>
 
-        <mat-card class="mat-elevation-z2">
-            <mat-divider></mat-divider>
+            <mat-card class="mat-elevation-z1 analytics-card">
+                <mat-divider></mat-divider>
 
-            <mat-card-content>
-                <ns-expenses-chart></ns-expenses-chart>
-            </mat-card-content>
-        </mat-card>
+                <mat-card-content>
+                    <ns-expenses-chart></ns-expenses-chart>
+                </mat-card-content>
+            </mat-card>
+        </div>
     </ng-template>
 </MyDrawer>

@@ -1,4 +1,26 @@
-
+.giddh-sidebar{
+    width: 250px;
+}
+.sidebar-user-info{
+    padding: 0;
+    box-shadow: none;
+    .mat-card-title-group{
+        padding: 30px 15px;
+        margin: 0;
+        background-color: #2B2766;
+        color: #fff;
+        mat-card-title{
+            margin-bottom: 10px;
+        }
+        mat-card-subtitle{
+            margin-bottom: 0;
+            color: #fff;
+        }
+    }
+    mat-nav-list{
+        padding-top: 0;
+    }
+}
 
 // // @import '../../styles';
 // @mixin aspect-ratio($width, $height) {
