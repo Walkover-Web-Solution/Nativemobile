@@ -61,7 +61,7 @@
                         </span>
                     </div>
 
-                    <div [style.height.px]="parentListHeight">
+                    <div>
                         <ng-container *ngIf="!isSearchEnabled; else searchContainer">
                             <ul class="list-nav vs4-1"
                                 *vsFor="filterdData; tagName:'li'; let _items = vsCollection;scrollParent:'.vs4-1'">

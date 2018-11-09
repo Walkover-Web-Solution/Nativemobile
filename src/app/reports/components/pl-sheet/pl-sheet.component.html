@@ -13,15 +13,15 @@
             <mat-list>
                 <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Total Revenue</span>
-                        <span matLine>{{ (data$ | async)?.revenue?.amount || 0 | number:'1.2-2'}}</span>
+                        <span>Total Revenue</span>
+                        <span>{{ (data$ | async)?.revenue?.amount || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
 
                 <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Cost Of Goods Sold</span>
-                        <span matLine>{{ (data$ | async)?.costOfGoodsSold || 0 | number:'1.2-2'}}</span>
+                        <span>Cost Of Goods Sold</span>
+                        <span>{{ (data$ | async)?.costOfGoodsSold || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
             </mat-list>
@@ -36,8 +36,8 @@
             <mat-list>
                 <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Less: Operating Expenses</span>
-                        <span matLine>{{ (data$ | async)?.operatingExpenses?.amount || 0 | number:'1.2-2'}}</span>
+                        <span>Less: Operating Expenses</span>
+                        <span>{{ (data$ | async)?.operatingExpenses?.amount || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
 
@@ -53,8 +53,8 @@
             <mat-list>
                 <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Less: Other Expenses</span>
-                        <span matLine>{{ (data$ | async)?.otherExpenses?.amount || 0 | number:'1.2-2'}}</span>
+                        <span>Less: Other Expenses</span>
+                        <span>{{ (data$ | async)?.otherExpenses?.amount || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
             </mat-list>
@@ -69,8 +69,8 @@
             <mat-list>
                 <mat-list-item>
                     <div class="sheetListItemContainer">
-                        <span matLine>Less: Taxes</span>
-                        <span matLine>{{ (data$ | async)?.appliedTax || 0 | number:'1.2-2'}}</span>
+                        <span>Less: Taxes</span>
+                        <span>{{ (data$ | async)?.appliedTax || 0 | number:'1.2-2'}}</span>
                     </div>
                 </mat-list-item>
             </mat-list>
@@ -83,7 +83,7 @@
 
         <ng-template #noData>
             <mat-list-item style="display:flex;height:30px;justify-content: center;align-items: center;">
-                <span matLine>No Data</span>
+                <span>No Data</span>
             </mat-list-item>
         </ng-template>
 

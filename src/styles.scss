@@ -196,7 +196,8 @@ body {
 .main_card {
     padding: 15px;
     background-color: #FAFAFA;
-    height: 100vh;
+    min-height: 100vh;
+    min-height: calc(100vh - 86px);
 }
 
 .analytics-card{
@@ -206,6 +207,12 @@ body {
 .filter-dialog{
     .mat-dialog-container{
         padding: 0;
+        max-height: 90vh;
+    }
+    .custom-date-block{
+        display: flex;
+        justify-content: left;
+        flex-wrap: wrap;
     }
 }
 
@@ -245,3 +252,84 @@ body {
 .mydrp .mydrpicon{
     font-family: mydaterangepicker !important;
 }
+
+.custom-date-title{
+    margin: 0 -8px;
+    .mat-card-title{
+        font-size: 16px;
+        color: #468ECC;
+        margin-bottom: 5px;
+    }
+}
+.taxes-card{
+    padding: 0 !important;
+    .mat-nav-list{
+        padding-top: 0;
+    }
+    .mat-card-footer{
+        margin: 0 0 16px 0;
+    }
+}
+.form-card{
+    .half-width-container{
+        margin: 0 -10px;
+    }
+    .half-width {
+        padding: 0 10px;
+        .mat-form-field-infix {
+           width: auto;
+           padding-top: 12px;
+       }
+    }
+    .mat-form-field-underline{
+        background-color: #E6E6E6;
+    }
+    .mat-form-field:not(.mat-input-invalid){
+        .mat-form-field-label{
+            mat-label{
+                color: #333333;
+            }
+        }
+    }
+    .mat-form-field-label{
+        mat-label{
+            font-size: 16px;
+            font-weight: 700;
+        }
+    }
+    .mat-card-footer{
+        margin-bottom: 0;
+    }
+}
+.giddh-fab-btn{
+    &.mat-fab{
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+    }
+}
+
+.list-card {
+    min-height: calc(100vh - 86px);
+    &.mat-card{
+        padding: 0;
+    }
+    .mat-nav-list {
+        padding-top: 0;
+        .mat-list-item {
+            padding: 0 15px;
+            .mat-list-item-content {
+                padding: 0;
+                border-bottom: 1px solid #f1f1f1;
+            }
+        }
+    }
+}
+
+// @media(max-width: 480px){
+//     .filter-dialog{
+//         .custom-date-block{
+//             justify-content: 
+//         }
+//     }    
+// }

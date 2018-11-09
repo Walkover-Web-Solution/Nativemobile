@@ -6,20 +6,22 @@
             <img src="assets/image/loader.png" class="roted-logo">
         </div>
 
-        <mat-card class="main_card" style="display: flex;flex-direction: column">
-            <mat-card-content>
-                <mat-nav-list *ngIf="!(isTaxLoading$ | async)">
-                    <mat-list-item *ngFor="let item of (taxList$ | async)" [routerLink]="['/settings','create-taxes', item.uniqueName]">
-                        {{ item.name }}
-                        <mat-divider></mat-divider>
-                    </mat-list-item>
-                </mat-nav-list>
-            </mat-card-content>
+        <div class="main_card">
+            <mat-card class="taxes-card list-card" style="display: flex;flex-direction: column">
+                <mat-card-content>
+                    <mat-nav-list *ngIf="!(isTaxLoading$ | async)">
+                        <mat-list-item *ngFor="let item of (taxList$ | async)" [routerLink]="['/settings','create-taxes', item.uniqueName]">
+                            {{ item.name }}
+                            <!-- <mat-divider></mat-divider> -->
+                        </mat-list-item>
+                    </mat-nav-list>
+                </mat-card-content>
 
-            <mat-card-footer style="align-self: center">
-                <button type="button" mat-raised-button color="primary" [routerLink]="['/settings','create-taxes']">Add</button>
-            </mat-card-footer>
-        </mat-card>
+                <!-- <mat-card-footer style="align-self: center">
+                    </mat-card-footer> -->
+            </mat-card>
+            <button class="giddh-fab-btn" mat-fab type="button" color="primary" [routerLink]="['/settings','create-taxes']"><mat-icon>add</mat-icon></button>
+        </div>
 
     </ng-template>
 </MyDrawer>

@@ -10,10 +10,10 @@ import { MyDrawerItem } from "../../shared/my-drawer-item/my-drawer-item";
 const initialNavObj: MyDrawerItem[] = [
     {
         title: 'Back',
-        icon: String.fromCharCode(0xf060),
+        icon: String.fromCharCode(0x70),
         needTopHr: true,
         router: '/home',
-        fontFamily: 'FontAwesome',
+        fontFamily: '1515160234',
     } as MyDrawerItem,
     {
         title: 'Home',
