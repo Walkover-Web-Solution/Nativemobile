@@ -2,61 +2,70 @@
     <ng-template #optionTemplate>
         <my-header [title]="'Create Taxes'" [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }" [rightSideItem]="{ title: 'Save', action: submit.bind(this) }"></my-header>
 
-        <mat-card class="main_card" style="display: flex;flex-direction: column">
-            <mat-card-content>
-                <form [formGroup]="companyProfileForm" class="" (submit)="submit()">
+        <div class="main_card">
+            <mat-card class="form-card" style="display: flex;flex-direction: column">
+                <mat-card-content>
+                    <form [formGroup]="companyProfileForm" class="" (submit)="submit()">
 
-                    <mat-form-field class="full-width">
-                        <input matInput formControlName="name" placeholder="Company Name">
-                    </mat-form-field>
-
-                    <mat-form-field class="full-width">
-                        <input matInput formControlName="email" placeholder="Email Address">
-                    </mat-form-field>
-
-                    <div class="half-width-container">
-                        <mat-form-field class="half-width">
-                            <input matInput formControlName="contactNo" placeholder="Mobile Number">
+                        <mat-form-field class="full-width" floatLabel="always">
+                            <mat-label>Company Name</mat-label>
+                            <input matInput formControlName="name" placeholder="Company Name">
                         </mat-form-field>
 
-                        <mat-form-field class="half-width">
-                            <input matInput formControlName="panNumber" placeholder="Pan Number">
-                        </mat-form-field>
-                    </div>
-
-                    <div class="half-width-container">
-                        <mat-form-field class="half-width">
-                            <input matInput formControlName="contactNo" placeholder="State">
+                        <mat-form-field class="full-width" floatLabel="always">
+                            <mat-label>Email Address</mat-label>
+                            <input matInput formControlName="email" placeholder="Email Address">
                         </mat-form-field>
 
-                        <mat-form-field class="half-width">
-                            <mat-select formControlName="state" placeholder="State">
-                                <mat-option [value]="st.code" *ngFor="let st of (stateStream$ | async)">{{ st.name }}</mat-option>
-                            </mat-select>
+                        <div class="half-width-container">
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>Mobile Number</mat-label>
+                                <input matInput formControlName="contactNo" placeholder="Mobile Number">
+                            </mat-form-field>
+
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>Pan Number</mat-label>
+                                <input matInput formControlName="panNumber" placeholder="Pan Number">
+                            </mat-form-field>
+                        </div>
+
+                        <div class="half-width-container">
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>State</mat-label>
+                                <input matInput formControlName="contactNo" placeholder="State">
+                            </mat-form-field>
+
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>State</mat-label>
+                                <mat-select formControlName="state" placeholder="State">
+                                    <mat-option [value]="st.code" *ngFor="let st of (stateStream$ | async)">{{ st.name }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <mat-form-field class="full-width" floatLabel="always">
+                            <mat-label>Postal Address</mat-label>
+                            <input matInput formControlName="address" placeholder="Postal Address">
                         </mat-form-field>
-                    </div>
 
-                    <mat-form-field class="full-width">
-                        <input matInput formControlName="address" placeholder="Postal Address">
-                    </mat-form-field>
+                        <div class="half-width-container" style="align-items:center;">
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>Currency</mat-label>
+                                <mat-select formControlName="baseCurrency" placeholder="Currency">
+                                    <mat-option [value]="bc" *ngFor="let bc of (currenciesStream$ | async)">{{ bc }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
 
-                    <div class="half-width-container">
-                        <mat-form-field class="half-width">
-                            <mat-select formControlName="baseCurrency" placeholder="Currency">
-                                <mat-option [value]="bc" *ngFor="let bc of (currenciesStream$ | async)">{{ bc }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
+                            <mat-checkbox class="half-width" matInput formControlName="isMultipleCurrency">Multicurrency?</mat-checkbox>
+                        </div>
 
-                        <mat-checkbox class="half-width" matInput formControlName="isMultipleCurrency">Multicurrency?</mat-checkbox>
-                    </div>
+                    </form>
+                </mat-card-content>
 
-                </form>
-            </mat-card-content>
-
-            <mat-card-footer style="align-self: center">
-                <button type="submit" (click)="submit()" [ladda]="isUpdateCompanyProfileInProcess$ | async" mat-raised-button color="primary">Submit</button>
-            </mat-card-footer>
-        </mat-card>
-
+                <mat-card-footer style="align-self: center">
+                    <button type="submit" (click)="submit()" [ladda]="isUpdateCompanyProfileInProcess$ | async" mat-raised-button color="primary">Submit</button>
+                </mat-card-footer>
+            </mat-card>
+        </div>
     </ng-template>
 </MyDrawer>

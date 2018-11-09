@@ -7,13 +7,13 @@
 </mat-radio-group>
 
 <mat-card *ngIf="showCustomFilterInputs">
-    <mat-card-header>
+    <mat-card-header class="custom-date-title">
         <mat-card-title>Current</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <div style="display: flex;justify-content: space-around">
+        <div class="custom-date-block">
             <div style="flex: 1 0 auto">
-                <h2 matLine>From</h2>
+                <h4 matLine>From</h4>
                 <mat-form-field>
                     <input matInput [matDatepicker]="currentFromDP" [(ngModel)]="customFilterObj.activeYear.startDate" placeholder="Choose a date">
                     <mat-datepicker-toggle [for]="currentFromDP"></mat-datepicker-toggle>
@@ -34,13 +34,13 @@
 </mat-card>
 
 <mat-card *ngIf="showCustomFilterInputs">
-    <mat-card-header>
+    <mat-card-header class="custom-date-title">
         <mat-card-title>Previous</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-        <div style="display: flex;justify-content: space-around">
+        <div class="custom-date-block">
             <div style="flex: 1 0 auto">
-                <h2 matLine>From</h2>
+                <h4 matLine>From</h4>
                 <mat-form-field>
                     <input matInput [matDatepicker]="previousFromDP" [(ngModel)]="customFilterObj.lastYear.startDate" placeholder="Choose a date">
                     <mat-datepicker-toggle [for]="previousFromDP"></mat-datepicker-toggle>

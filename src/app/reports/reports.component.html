@@ -8,20 +8,22 @@
         <!-- <mat-tab-group> -->
 
         <!-- <mat-tab label="Profit Loss"> -->
-        <mat-card class="mat-elevation-z8">
+        <div class="main_card">
+            <mat-card class="mat-elevation-z2 analytics-card">
 
-            <mat-card-content>
-                <ns-pl-chart></ns-pl-chart>
-            </mat-card-content>
-        </mat-card>
+                <mat-card-content>
+                    <ns-pl-chart></ns-pl-chart>
+                </mat-card-content>
+            </mat-card>
 
-        <mat-card class="mat-elevation-z2">
-            <mat-divider></mat-divider>
+            <mat-card class="mat-elevation-z2 analytics-card profit-report">
+                <!-- <mat-divider></mat-divider> -->
 
-            <mat-card-content>
-                <ns-pl-sheet></ns-pl-sheet>
-            </mat-card-content>
-        </mat-card>
+                <mat-card-content>
+                    <ns-pl-sheet></ns-pl-sheet>
+                </mat-card-content>
+            </mat-card>
+        </div>
         <!-- </mat-tab> -->
 
         <!-- <mat-tab label="Balance Sheet"> -->

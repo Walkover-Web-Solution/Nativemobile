@@ -70,7 +70,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
                         <p style="color:#63B351;">(${((((totalArr[this.pos] ? totalArr[this.pos].toFixed(0) : 0) * 100) / total) || 0).toFixed(2)}%)</p></span>`;
                     },
                     style: {
-                        "fontSize": 16
+                        "fontSize": '12px'
                     }
                 },
             },
@@ -434,6 +434,7 @@ export class PlChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     public openFilter() {
         let dialog = this.dialog.open(ReportsFilterComponent, {
+            panelClass:'filter-dialog'
         });
     }
 

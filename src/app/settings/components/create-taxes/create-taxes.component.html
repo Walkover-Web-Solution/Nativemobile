@@ -4,78 +4,87 @@
         [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }"
          [rightSideItem]="{ title: 'Save', action: submit.bind(this) }"></my-header>
 
-        <mat-card class="main_card" style="display: flex;flex-direction: column">
-            <mat-card-content>
-                <form [formGroup]="taxForm" (submit)="submit()" class="">
+        <div class="main_card">
+            <mat-card class="form-card" style="display: flex;flex-direction: column">
+                <mat-card-content>
+                    <form [formGroup]="taxForm" (submit)="submit()" class="">
 
-                    <mat-form-field class="full-width">
-                        <input matInput formControlName="name" placeholder="Tax Name">
-                    </mat-form-field>
+                        <mat-form-field class="full-width" floatLabel="always">
+                            <mat-label>Tax Name</mat-label>
+                            <input matInput formControlName="name" placeholder="Name">
+                        </mat-form-field>
 
-                    <mat-form-field class="full-width" *ngIf="!selectedTaxObj">
-                        <input matInput formControlName="taxNumber" placeholder="Unique No">
-                    </mat-form-field>
+                        <mat-form-field class="full-width" *ngIf="!selectedTaxObj" floatLabel="always">
+                            <mat-label>Unique No</mat-label>
+                            <input matInput formControlName="taxNumber" placeholder="Tax Unique No">
+                        </mat-form-field>
+                        
+                        <mat-form-field class="full-width" floatLabel="always">
+                            <mat-label>Tax Type</mat-label>
+                            <mat-select formControlName="taxType" placeholder="Select Tax Type" (selectionChange)="taxTypeChanged(taxForm.get('taxType').value)">
+                                <mat-option [value]="tType.value" *ngFor="let tType of taxTypeList">{{ tType.display }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
 
-                    <mat-form-field class="full-width">
-                        <mat-select formControlName="taxType" placeholder="Select Tax Type" (selectionChange)="taxTypeChanged(taxForm.get('taxType').value)">
-                            <mat-option [value]="tType.value" *ngFor="let tType of taxTypeList">{{ tType.display }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
 
 
+                        <div class="full-width">
+                            <ng-container *ngIf="!selectedTaxObj && showLinkedAccounts">
+                                <mat-form-field class="full-width" floatLabel="always">
+                                    <mat-label>Account Type</mat-label>
+                                    <mat-select formControlName="account" placeholder="Select Account" (selectionChange)="accountChanged(taxForm.get('account').value)">
+                                        <mat-option *ngFor="let aType of (flattenAccountsStream$ | async)" [value]="aType.uniqueName">{{ aType.name }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </ng-container>
 
-                    <div class="full-width">
-                        <ng-container *ngIf="!selectedTaxObj && showLinkedAccounts">
-                            <mat-form-field class="full-width">
-                                <mat-select formControlName="account" placeholder="Select Account" (selectionChange)="accountChanged(taxForm.get('account').value)">
-                                    <mat-option *ngFor="let aType of (flattenAccountsStream$ | async)" [value]="aType.uniqueName">{{ aType.name }}</mat-option>
+                            <ng-container *ngIf="selectedTaxObj && showLinkedAccounts">
+                                <mat-chip-list>
+                                    <mat-chip *ngFor="let acc of taxForm.get('accounts').value">
+                                        {{ acc.name }}
+                                    </mat-chip>
+                                </mat-chip-list>
+
+                            </ng-container>
+                        </div>
+
+                        <div class="half-width-container">
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>Tax Rate</mat-label>
+                                <input matInput formControlName="taxValue" placeholder="in percenatge">
+                            </mat-form-field>
+
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>Apply Tax From</mat-label>
+                                <input matInput [matDatepicker]="picker" formControlName="taxFileDate" placeholder="Apply Tax From">
+                                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        
+                        <div class="half-width-container">
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>Tax Duration</mat-label>
+                                <mat-select formControlName="duration" placeholder="Enter Tax Duration">
+                                    <mat-option *ngFor="let dType of taxDurationList" [value]="dType.value">{{ dType.display }}</mat-option>
                                 </mat-select>
                             </mat-form-field>
-                        </ng-container>
+                            
+                            <mat-form-field class="half-width" floatLabel="always">
+                                <mat-label>Tax File Date</mat-label>
+                                <mat-select formControlName="taxFileDate" placeholder="Enter Tax File Date">
+                                    <mat-option *ngFor="let day of days" [value]="day.value">{{ day.display }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
 
-                        <ng-container *ngIf="selectedTaxObj && showLinkedAccounts">
-                            <mat-chip-list>
-                                <mat-chip *ngFor="let acc of taxForm.get('accounts').value">
-                                    {{ acc.name }}
-                                </mat-chip>
-                            </mat-chip-list>
+                    </form>
+                </mat-card-content>
 
-                        </ng-container>
-                    </div>
-
-                    <div class="half-width-container">
-                        <mat-form-field class="half-width">
-                            <input matInput formControlName="taxValue" placeholder="Tax Rate">
-                        </mat-form-field>
-
-                        <mat-form-field class="half-width">
-                            <input matInput [matDatepicker]="picker" formControlName="taxFileDate" placeholder="Apply Tax From">
-                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker></mat-datepicker>
-                        </mat-form-field>
-                    </div>
-
-                    <div class="half-width-container">
-                        <mat-form-field class="half-width">
-                            <mat-select formControlName="duration" placeholder="Tax Duration">
-                                <mat-option *ngFor="let dType of taxDurationList" [value]="dType.value">{{ dType.display }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-
-                        <mat-form-field class="half-width">
-                            <mat-select formControlName="taxFileDate" placeholder="Tax File Date">
-                                <mat-option *ngFor="let day of days" [value]="day.value">{{ day.display }}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </div>
-
-                </form>
-            </mat-card-content>
-
-            <mat-card-footer style="align-self: center">
-                <button type="submit" mat-raised-button color="primary" (click)="submit()" [disabled]="taxForm.invalid" [ladda]="(isCreateTaxInProcess$ | async) || (isUpdateTaxInProcess$ | async)">Submit</button>
-            </mat-card-footer>
-        </mat-card>
-
+                <mat-card-footer style="align-self: center">
+                    <button type="submit" mat-raised-button color="primary" (click)="submit()" [disabled]="taxForm.invalid" [ladda]="(isCreateTaxInProcess$ | async) || (isUpdateTaxInProcess$ | async)">Submit</button>
+                </mat-card-footer>
+            </mat-card>
+        </div>
     </ng-template>
 </MyDrawer>

@@ -22,3 +22,8 @@
 ::ng-deep .activeChart {
     background-color: #F7FAFB;
 }
+.profit-report{
+    &.mat-card{
+        padding: 0 !important;
+    }
+}
