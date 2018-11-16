@@ -2,7 +2,8 @@ import {
     ChartFilterType,
     ChartType,
     IExpensesChartClosingBalanceResponse,
-    IRevenueChartClosingBalanceResponse
+    IRevenueChartClosingBalanceResponse,
+    ILoader
 } from '../../models/interfaces/dashboard.interface';
 import {CustomActions} from '../../store/customActions';
 import {DashboardConst} from '../../actions/dashboard/dashboard.const';
@@ -19,6 +20,7 @@ export interface DashboardState {
 
     revenueChartCustomFilter: ChartCustomFilter;
     expensesChartCustomFilter: ChartCustomFilter;
+    load?: boolean;
 }
 
 const initialState: DashboardState = {
@@ -49,7 +51,8 @@ const initialState: DashboardState = {
         lastYear: {
             startDate: '', endDate: ''
         },
-    }
+    },
+    load: false
 }
 
 export function DashboardReducer(state: DashboardState = initialState, action: CustomActions): DashboardState {
@@ -57,6 +60,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
         // region revenue chart
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE: {
             let data = action.payload as IRevenueChartClosingBalanceResponse;
+            // let load = false
             return Object.assign({}, state, {
                 revenueChart: Object.assign({}, state.revenueChart, {
                     revenuefromoperationsActiveyear: data.revenuefromoperationsActiveyear,
@@ -64,8 +68,9 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                     chartTitle: data.chartTitle,
                     label: Object.assign({}, state.revenueChart.label, {
                         activeYearLabel: data.label.activeYearLabel
-                    })
-                })
+                    }),
+                }),
+                load: false
             });
         }
         case DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_RESPONSE: {
@@ -87,10 +92,11 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                 revenueChart: Object.assign({}, state.revenueChart, {
                     chartTitle: data.chartTitle, otherincomeActiveyear: null,
                     revenuefromoperationsActiveyear: null,
-                    label: Object.assign({}, state.revenueChart.label, {
-                        activeYearLabel: data.label.activeYearLabel
-                    })
+                    // label: Object.assign({}, state.revenueChart.label, {
+                    //     activeYearLabel: data.label.activeYearLabel
+                    // })
                 }),
+                load: false,
                 revenueChartError: 'Something Went Wrong'
             })
         }
@@ -100,9 +106,9 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                 revenueChart: Object.assign({}, state.revenueChart, {
                     chartTitle: data.chartTitle, otherincomeLastyear: null,
                     revenuefromoperationsLastyear: null,
-                    label: Object.assign({}, state.revenueChart.label, {
-                        lastYearLabel: data.label.lastYearLabel
-                    })
+                    // label: Object.assign({}, state.revenueChart.label, {
+                    //     lastYearLabel: data.label.lastYearLabel
+                    // })
                 }),
                 revenueChartError: 'Something Went Wrong'
             })
@@ -120,7 +126,8 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                     label: Object.assign({}, state.expensesChart.label, {
                         activeYearLabel: data.label.activeYearLabel
                     })
-                })
+                }),
+                load: false
             });
         }
 
@@ -148,6 +155,7 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                         activeYearLabel: data.label.activeYearLabel
                     })
                 }),
+                load: false,
                 expensesChartError: 'Something Went Wrong'
             })
         }
@@ -174,7 +182,8 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                 if (action.payload.filterType === ChartFilterType.Custom) {
                     return Object.assign({}, state, {
                         revenueChartFilter: action.payload.filterType,
-                        revenueChartCustomFilter: action.payload.customFilterObj
+                        revenueChartCustomFilter: action.payload.customFilterObj,
+                        // load: true
                     });
                 } else {
                     return Object.assign({}, state, {
@@ -186,14 +195,16 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                             lastYear: {
                                 startDate: '', endDate: ''
                             },
-                        }
+                        },
+                        // load: true
                     });
                 }
             } else {
                 if (action.payload.filterType === ChartFilterType.Custom) {
                     return Object.assign({}, state, {
                         expensesChartFilter: action.payload.filterType,
-                        expensesChartCustomFilter: action.payload.customFilterObj
+                        expensesChartCustomFilter: action.payload.customFilterObj,
+                        // load: true
                     })
                 } else {
                     return Object.assign({}, state, {
@@ -205,10 +216,16 @@ export function DashboardReducer(state: DashboardState = initialState, action: C
                             lastYear: {
                                 startDate: '', endDate: ''
                             },
-                        }
+                        },
                     })
                 }
             }
+        }
+        
+        case DashboardConst.SHOW_LOADER: {
+            return Object.assign({}, state, {
+                load: true
+            })
         }
         // endregion
 

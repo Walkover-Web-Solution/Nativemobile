@@ -213,3 +213,6 @@ export interface IReportChartData {
     to: string;
     lable: string;
 }
+export interface ILoader {
+    showLoader?: boolean;
+}

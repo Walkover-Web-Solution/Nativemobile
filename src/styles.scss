@@ -325,7 +325,41 @@ body {
         }
     }
 }
-
+.giddh-loader {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+    background: rgba(0,0,0,0.4);
+    img{
+        height: 70px;
+    }
+}
+.giddh-chart-grand-amount{
+    font-size: 18px;
+    display: block;
+}
+.giddh-chart-amount-label{
+    font-size: 14px;
+    color: #808080;
+    // margin-top: 5px;
+    display: block;
+}
+.giddh-chart-wrap{
+    margin-bottom: 30px;
+}
+.giddh-chart{
+    position: relative;
+    z-index: 9;
+    .highcharts-container{
+        overflow: visible !important;
+    }
+}
 // @media(max-width: 480px){
 //     .filter-dialog{
 //         .custom-date-block{

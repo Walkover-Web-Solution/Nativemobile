@@ -1,8 +1,10 @@
-<div class="container" #container [ngStyle]="{'padding': '0 '+ ((width - 414)/2) + 'px'}">
+<MyDrawer #myDrawer [pages]="navItemObj$ | async">
+        <ng-template #optionTemplate>
+        <!-- <div class="container" #container> -->
 
 
-    <div class="sixteen-nine">
-        <my-header [title]="'Trial Balance'" [leftSideItem]="{ icon:'arrow_back', action: goBack.bind(this) }">
+    <!-- <div class="sixteen-nine"> -->
+        <my-header [title]="'Trial Balance'" [leftSideItem]="{ icon:'menu', action: toggleDrawer.bind(this) }" [rightSideItem]="{ icon: 'refresh', action: refreshData.bind(this) }">
         </my-header>
         <mat-card *ngIf="breadCrumb.length > 0" class="breadcrumb-card">
             <mat-card-content>
@@ -28,10 +30,15 @@
 
                     <mat-card-content>
                         <form>
-                            <div style="display: flex;">
-                                <mat-icon class="search-placeholder-icon" matPrefix>search</mat-icon>
-                                <input class="search-box" type="text" matInput #searchControl
-                                       (input)="search(searchControl.value)" placeholder="Search">
+                            <div class="tlbl-search-wrap">
+                                <div class="tlbl-search-box">
+                                    <mat-icon class="search-placeholder-icon" matPrefix>search</mat-icon>
+                                    <input class="search-box" type="text" matInput #searchControl
+                                    (input)="search(searchControl.value)" placeholder="Search">
+                                </div>
+                                <div class="tlbl-filter-btn">
+                                    <button (click)="openFilter()"><mat-icon class="filter-icon" matPrefix>filter_list</mat-icon></button>
+                                </div>
                             </div>
                         </form>
                     </mat-card-content>
@@ -51,13 +58,15 @@
 
                 <mat-card class="trial-balance-card">
                     <div class="arrow-text">
-                        <span>Particular
-                            <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
-                            </mat-icon>
+                        <span (click)="sortGroupByName()">Particular
+                            <span *ngIf="!isDataSortedByName" class="giddh-sort-icon"></span>
+                            <mat-icon *ngIf="sortByNameSwitch && isDataSortedByName" class="arrow-icon" matPrefix>arrow_drop_down</mat-icon>
+                            <mat-icon *ngIf="!sortByNameSwitch && isDataSortedByName" class="arrow-icon" matPrefix>arrow_drop_up</mat-icon>
                         </span>
-                        <span class="pull-right">Closing Balance
-                            <mat-icon class="arrow-drop" matPrefix>arrow_drop_down
-                            </mat-icon>
+                        <span (click)="sortGroupByClosingBalance()" class="pull-right">Closing Balance
+                            <span *ngIf="!isDataSortedByClosingBalance" class="giddh-sort-icon"></span>
+                            <mat-icon *ngIf="sortByClosingBalanceSwitch && isDataSortedByClosingBalance" class="arrow-icon" matPrefix>arrow_drop_down</mat-icon>
+                            <mat-icon *ngIf="!sortByClosingBalanceSwitch && isDataSortedByClosingBalance" class="arrow-icon" matPrefix>arrow_drop_up</mat-icon>
                         </span>
                     </div>
 
@@ -120,5 +129,7 @@
                 </div>
             </ng-container>
         </div>
-    </div>
-</div>
+    <!-- </div> -->
+<!-- </div> -->
+</ng-template>
+</MyDrawer>

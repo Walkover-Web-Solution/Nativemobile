@@ -74,6 +74,7 @@ export class ReportsFilterComponent implements OnDestroy {
     }
 
     public submit() {
+        console.log('Reports Submitted')
         if (this.selectedFilter === ChartFilterType.Custom) {
             this.customFilterObj.activeYear.startDate = moment(this.customFilterObj.activeYear.startDate).format('DD-MM-YYYY');
             this.customFilterObj.activeYear.endDate = moment(this.customFilterObj.activeYear.endDate).format('DD-MM-YYYY');

@@ -29,10 +29,10 @@
 .arrow-text{
     padding: 10px 15px;
     font-weight: bold;
-    .arrow-drop{
+    .arrow-icon{
         position: relative;
         top: 7px;
-        left: 6px;
+        left: 0px;
     }
 }
 .giddh-search-card{
@@ -47,8 +47,10 @@
     .search-box{
         width: 100%;
         height: 41px;
-        border: 1px solid #e3e3e3;
-        box-shadow: 0px 4px 10px #dcdcdc82;
+        // border: 1px solid #e3e3e3;
+        // box-shadow: 0px 4px 10px #dcdcdc82;
+        border: none;
+        box-shadow: none;
         border-radius: 3px;
         padding-left: 41px;
         font-size: 14px;
@@ -84,4 +86,53 @@
             margin: 0;
         }
     }
+}
+.giddh-sort-icon{
+    display: inline-block;
+    height: 27px;
+    width: 10px;
+    position: relative;
+    margin: 0 8px;
+    vertical-align: bottom;
+    &:before,&:after{
+        content: "";
+        position: absolute;
+        display: block;
+    }
+    &:before{
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 0 5px 5px 5px;
+        border-color: transparent transparent rgba(0,0,0,.87) transparent;
+        top: 12px;
+        bottom: auto;
+    }
+    &:after{
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 5px 5px 0 5px;
+        border-color: rgba(0,0,0,.87) transparent transparent transparent;
+        top: auto;
+        bottom: 3px;
+    }
+}
+.tlbl-search-wrap{
+    display: flex;
+    .tlbl-search-box{
+        display: flex;
+        flex: 1;
+    }
+    .tlbl-filter-btn{
+        display: flex;
+        align-items: stretch;
+        button{
+            background: transparent;
+            border: none;
+            padding: 0 15px;
+            outline: none;
+        }
+    }
+
 }

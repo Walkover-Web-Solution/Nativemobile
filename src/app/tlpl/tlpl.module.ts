@@ -11,6 +11,7 @@ import {AccLedgerComponent} from './ledger/acc-ledger.component';
 import {MyDateRangePickerModule} from 'mydaterangepicker';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {CompoundEntryDialogComponent} from './compoundEntryDialog/compoundEntryDialog.component';
+import { TlplFilterComponent } from './tlpl-filter/tlpl-filter.component';
 
 @NgModule({
     imports: [
@@ -23,11 +24,11 @@ import {CompoundEntryDialogComponent} from './compoundEntryDialog/compoundEntryD
         MyDateRangePickerModule,
         InfiniteScrollModule
     ],
-    declarations: [TlPlComponent, AccLedgerComponent, CompoundEntryDialogComponent],
+    declarations: [TlPlComponent, AccLedgerComponent, CompoundEntryDialogComponent, TlplFilterComponent],
     schemas: [
         NO_ERRORS_SCHEMA
     ],
-    entryComponents: [CompoundEntryDialogComponent]
+    entryComponents: [CompoundEntryDialogComponent, TlplFilterComponent]
 })
 export class TlPlModule {
 }

@@ -1,3 +1,4 @@
+import {ChartFilterType} from '../../models/interfaces/dashboard.interface';
 import {AccountDetails} from '../../models/api-models/tb-pl-bs';
 import {ChildGroup} from '../../models/api-models/Search';
 import {CustomActions} from '../customActions';
@@ -8,6 +9,7 @@ import {TransactionsResponse} from '../../models/api-models/Ledger';
 import {AccountResponse} from '../../models/api-models/Account';
 import * as moment from 'moment';
 import {underStandingTextData} from '../../tlpl/ledger/underStandingTextData';
+import {ChartCustomFilter} from '../../models/api-models/Dashboard';
 
 interface TbState {
     data?: AccountDetails;
@@ -26,6 +28,8 @@ export interface TBPlBsState {
     transactionInProgress: boolean;
     accountDetails?: AccountResponse;
     accountDetailsInProgress: boolean;
+    tlplFilter: ChartFilterType;
+    tlplCustomFilter: ChartCustomFilter;
 }
 
 const initialState: TBPlBsState = {
@@ -42,7 +46,18 @@ const initialState: TBPlBsState = {
     transactionInProgress: false,
     transactionsResponse: null,
     accountDetails: null,
-    accountDetailsInProgress: false
+    accountDetailsInProgress: false,
+    tlplFilter: ChartFilterType.ThisMonthToDate,
+    tlplCustomFilter: {
+        activeYear: {
+            startDate: '', endDate: ''
+        },
+        lastYear: {
+            startDate: '', endDate: ''
+        },
+    }
+
+
 };
 
 
@@ -51,6 +66,7 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
         case TlPlConst.GET_TRIAL_BALANCE_RESPONSE: {
             // no payload means error from server
             console.log(JSON.stringify("I am updating store"));
+            console.log(action);
             if (action.payload) {
                 let data: AccountDetails = _.cloneDeep(action.payload) as AccountDetails;
                 data.groupDetails = removeZeroAmountAccount((data.groupDetails));
@@ -68,10 +84,10 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
             }
         }
         case TlPlConst.GET_TRIAL_BALANCE_REQUEST: {
-            return Object.assign({}, initialState, { tb: Object.assign({}, initialState.tb, { showLoader: true }) });
+            return Object.assign({}, state, { tb: Object.assign({}, initialState.tb, { showLoader: true }) });
         }
         case TlPlConst.RESET_LOADER:{
-            return Object.assign({}, initialState);
+            return Object.assign({}, state);
         }
         case TlPlConst.GET_FLAT_ACCOUNT_W_GROUP_REQUEST:
             return Object.assign({}, state, { isFlyAccountInProcess: true });
@@ -139,6 +155,31 @@ export function tbPlBsReducer(state = initialState, action: CustomActions): TBPl
                     accountDetails: null
                 });
             }
+
+        // region set chart filter
+        case TlPlConst.SET_CHART_FILTER_TYPE: {
+            if (action.payload.filterType === ChartFilterType.Custom) {
+                return Object.assign({}, state, {
+                    tlplFilter: action.payload.filterType,
+                    tlplCustomFilter: action.payload.customFilterObj,
+                    // load: true
+                });
+            } else {
+                return Object.assign({}, state, {
+                    tlplFilter: action.payload.filterType,
+                    tlplCustomFilter: {
+                        activeYear: {
+                            startDate: '', endDate: ''
+                        },
+                        lastYear: {
+                            startDate: '', endDate: ''
+                        },
+                    },
+                    // load: true
+                });
+            }
+        }
+
         default:
             return state;
     }
