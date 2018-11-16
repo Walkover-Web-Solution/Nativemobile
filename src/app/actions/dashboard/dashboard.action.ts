@@ -219,28 +219,38 @@ export class DashboardActions {
                     revenuefromoperationsActiveyear: res[0].body[0],
                     otherincomeActiveyear: res[1].body[0],
                 };
-
                 obj.chartTitle = res[2].ChartTitle;
                 obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
-
                 return {
                     type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_RESPONSE,
                     payload: obj
                 };
-            } else {
-                this._toasterService.errorToast('Something Went Wrong Please Try Again!');
-                let obj: IRevenueChartClosingBalanceResponse = {};
-
-                obj.otherincomeActiveyear = null;
-                obj.revenuefromoperationsActiveyear = null;
-
-                obj.chartTitle = res[2].ChartTitle;
-                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
-
-                return {
-                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR,
-                    payload: obj
-                };
+            }
+            else {
+                if(res[0].status === 'error' && res[0].code === 'INVALID_DATE') {
+                    this._toasterService.errorToast(res[0].message);
+                    let obj: IRevenueChartClosingBalanceResponse = {};
+                    obj.otherincomeActiveyear = null;
+                    obj.revenuefromoperationsActiveyear = null;
+                    obj.chartTitle = res[2].ChartTitle;
+                    obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                    return {
+                        type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR,
+                        payload: obj
+                    };
+                }
+                else{
+                    this._toasterService.errorToast('Something Went Wrong Please Try Again!');
+                    let obj: IRevenueChartClosingBalanceResponse = {};
+                    obj.otherincomeActiveyear = null;
+                    obj.revenuefromoperationsActiveyear = null;
+                    obj.chartTitle = res[2].ChartTitle;
+                    obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                    return {
+                        type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_ACTIVE_YEAR_ERROR,
+                        payload: obj
+                    };
+                }
             }
         });
 
@@ -294,9 +304,6 @@ export class DashboardActions {
                     revenuefromoperationsLastyear: res[0].body[0],
                     otherincomeLastyear: res[1].body[0],
                 };
-
-
-
                 obj.chartTitle = res[2].ChartTitle;
                 obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
 
@@ -305,19 +312,31 @@ export class DashboardActions {
                     payload: obj
                 };
             } else {
-                this._toasterService.errorToast('Something Went Wrong Please Try Again!');
-                let obj: IRevenueChartClosingBalanceResponse = {};
+                if(res[0].status === 'error' && res[0].code === 'INVALID_DATE') {
+                    this._toasterService.errorToast(res[0].message);
+                    let obj: IRevenueChartClosingBalanceResponse = {};
+                    obj.otherincomeLastyear = null;
+                    obj.revenuefromoperationsLastyear = null;
+                    obj.chartTitle = res[2].ChartTitle;
+                    obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                    return {
+                        type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR,
+                        payload: obj
+                    };
+                }
+                else{
+                    this._toasterService.errorToast('Something Went Wrong Please Try Again!');
+                    let obj: IRevenueChartClosingBalanceResponse = {};
+                    obj.otherincomeLastyear = null;
+                    obj.revenuefromoperationsLastyear = null;
+                    obj.chartTitle = res[2].ChartTitle;
+                    obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
+                    return {
+                        type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR,
+                        payload: obj
+                    };
+                }
 
-                obj.otherincomeLastyear = null;
-                obj.revenuefromoperationsLastyear = null;
-
-                obj.chartTitle = res[2].ChartTitle;
-                obj.label = { activeYearLabel: res[2].activeYear.lable, lastYearLabel: res[2].lastYear.lable };
-
-                return {
-                    type: DashboardConst.REVENUE_CHART.GET_REVENUE_CHART_DATA_LAST_YEAR_ERROR,
-                    payload: obj
-                };
             }
         });
 
@@ -366,6 +385,12 @@ export class DashboardActions {
     public resetDashboardState(): CustomActions {
         return {
             type: DashboardConst.RESET_DASHBOARD_STATE
+        }
+    }
+
+    public showLoad(): CustomActions {
+        return {
+            type: DashboardConst.SHOW_LOADER
         }
     }
 }

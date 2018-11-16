@@ -41,6 +41,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
     public selectedFilter$: Observable<ChartFilterType>;
     public selectedFilterType: ChartFilterType;
+    public showLoader$: Observable<boolean>;
 
     public activeYearAccounts: IChildGroups[] = [];
     public lastYearAccounts: IChildGroups[] = [];
@@ -51,6 +52,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
     constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef, public dialog: MatDialog) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
+        this.showLoader$ = this.store.select(s => s.dashboard.load).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         let that = this;
         this.options = {
@@ -92,15 +94,22 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
                     borderWidth: 0
                 }
             },
-            series: []
+            series: [],
+            credits: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            }
         };
         this.pieChartOptions = {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200,
-                backgroundColor: '#F7FAFB',
+                height: '100%',
+                spacingBottom: 0,
+                // backgroundColor: '#F7FAFB',
                 width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
             },
             credits: {
@@ -132,16 +141,20 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             series: [{
                 type: 'pie',
                 name: 'Revenue',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
-            }]
+            }],
+            exporting: {
+                enabled: false
+            }
         };
         this.previousPieChartOptions = {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200,
+                height: '100%',
+                spacingBottom: 0,
                 width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
                 // backgroundColor: '#F7FAFB'
             },
@@ -174,9 +187,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
             series: [{
                 type: 'pie',
                 name: 'Revenue',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
-            }]
+            }],
+            exporting: {
+                enabled: false
+            }
         };
     }
 
@@ -216,6 +232,10 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         });
 
         this.selectedFilter$.subscribe(s => {
+            console.log('-----------------')
+            console.log('Revenue Component')
+            console.log(s)
+            console.log('-----------------')
             this.selectedFilterType = s;
             this.fetchChartData();
         });
@@ -228,8 +248,15 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
     }
 
     public fetchChartData() {
+        this.store.dispatch(this._dashboardActions.showLoad());
         this.store.dispatch(this._dashboardActions.getActiveYearRevenueChartData());
         this.store.dispatch(this._dashboardActions.getLastYearRevenueChartData());
+    }
+
+    public refreshData() {
+        this.store.dispatch(this._dashboardActions.showLoad());
+        this.store.dispatch(this._dashboardActions.getActiveYearRevenueChartData(true));
+        this.store.dispatch(this._dashboardActions.getLastYearRevenueChartData(true));
     }
 
     public generateActiveYearString(): INameUniqueName[] {
@@ -250,18 +277,21 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
 
     public generateCharts() {
         this.accountStrings = _.uniqBy(this.generateActiveYearString().concat(this.generateLastYearString()), 'uniqueName');
+
         this.accountStrings.forEach((ac) => {
+
+
             ac.activeYear = 0;
             ac.lastYear = 0;
             let index = -1;
             index = _.findIndex(this.activeYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
+                ac.activeYear = this.activeYearAccounts[index].creditTotal - this.activeYearAccounts[index].debitTotal;
             }
             index = -1;
             index = _.findIndex(this.lastYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
+                ac.lastYear = this.lastYearAccounts[index].creditTotal - this.lastYearAccounts[index].debitTotal;
             }
         });
 
@@ -270,6 +300,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         let categories = [];
 
         this.accountStrings.forEach(p => {
+
             activeAccounts.push(p.activeYear);
             lastAccounts.push(p.lastYear);
             categories.push(p.name);
@@ -284,12 +315,17 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
         this.categories = categories;
 
         let seriesName = this.genSeriesName(this.selectedFilterType);
+        // this.series = [
+        //     { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
+        //     { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+        // ];
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+            { name: this.activeYearLabel, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
+            { name: this.lastYearLabel, data: this.lastYearAccountsRanks, color: '#1F989C' }
         ];
         this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
+
         this.renderChart();
         this.renderPieChart('current', this.activePieChartAmount);
         this.renderPieChart('previous', this.lastPieChartAmount);
@@ -355,7 +391,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy {
                     text: `${per}%`
                 }),
                 series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.pieSeries
+                    s.data = this.previousPieSeries
                     return s;
                 }),
             });

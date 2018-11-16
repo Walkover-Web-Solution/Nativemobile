@@ -42,6 +42,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     public expensesChartData$: Observable<IExpensesChartClosingBalanceResponse>;
     public selectedFilter$: Observable<ChartFilterType>;
     public selectedFilterType: ChartFilterType;
+    public showLoader$: Observable<boolean>;
 
     public activeYearAccounts: IChildGroups[] = [];
     public lastYearAccounts: IChildGroups[] = [];
@@ -52,6 +53,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     constructor(private store: Store<AppState>, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef,
         public dialog: MatDialog) {
         this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
+        this.showLoader$ = this.store.select(s => s.dashboard.load).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         let that = this;
         this.options = {
@@ -93,15 +95,22 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
                     borderWidth: 0
                 }
             },
-            series: []
+            series: [],
+            credits: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            }
         };
         this.pieChartOptions = {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200,
-                backgroundColor: '#F7FAFB',
+                height: '100%',
+                spacingBottom: 0,
+                // backgroundColor: '#F7FAFB',
                 width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
             },
             credits: {
@@ -133,16 +142,20 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             series: [{
                 type: 'pie',
                 name: 'Expenses',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
-            }]
+            }],
+            exporting: {
+                enabled: false
+            }
         };
         this.previousPieChartOptions = {
             chart: {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200,
+                height: '100%',
+                spacingBottom: 0,
                 width: window.innerWidth > 414 ? ((414 / 2) - 50) : ((window.innerWidth / 2) - 50)
                 // backgroundColor: '#F7FAFB'
             },
@@ -175,9 +188,12 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             series: [{
                 type: 'pie',
                 name: 'Expenses',
-                innerSize: '90%',
+                innerSize: '85%',
                 data: []
-            }]
+            }],
+            exporting: {
+                enabled: false
+            }
         };
     }
 
@@ -229,8 +245,15 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
     }
 
     public fetchChartData() {
+        this.store.dispatch(this._dashboardActions.showLoad());
         this.store.dispatch(this._dashboardActions.getActiveYearExpensesChartData());
         this.store.dispatch(this._dashboardActions.getLastYearExpensesChartData());
+    }
+
+    public refreshData() {
+        this.store.dispatch(this._dashboardActions.showLoad());
+        this.store.dispatch(this._dashboardActions.getActiveYearExpensesChartData(true));
+        this.store.dispatch(this._dashboardActions.getLastYearExpensesChartData(true));
     }
 
     public generateActiveYearString(): INameUniqueName[] {
@@ -257,12 +280,14 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             let index = -1;
             index = _.findIndex(this.activeYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
+                // ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
+                ac.activeYear = this.activeYearAccounts[index].debitTotal - this.activeYearAccounts[index].creditTotal;
             }
             index = -1;
             index = _.findIndex(this.lastYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
+                // ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
+                ac.lastYear = this.lastYearAccounts[index].debitTotal - this.lastYearAccounts[index].creditTotal;
             }
         });
 
@@ -286,11 +311,12 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
 
         let seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+            { name: this.activeYearLabel, data: this.activeYearAccountsRanks, color: '#F79658' } as any,
+            { name: this.lastYearLabel, data: this.lastYearAccountsRanks, color: '#EB6926' }
         ];
         this.lastYearGrandAmount = _.sum(lastAccounts) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
+
         this.renderChart();
         this.renderPieChart('current', this.activePieChartAmount);
         this.renderPieChart('previous', this.lastPieChartAmount);
@@ -333,7 +359,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             if (per === 0) {
                 this.pieSeries = [{ y: 100, color: '#ECECED' }];
             } else {
-                this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+                this.pieSeries = [{ y: per, color: '#F79658' }, { y: 100 - per, color: '#ECECED' }];
             }
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
@@ -348,14 +374,14 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             if (per === 0) {
                 this.previousPieSeries = [{ y: 100, color: '#ECECED' }];
             } else {
-                this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+                this.previousPieSeries = [{ y: per, color: '#EB6926' }, { y: 100 - per, color: '#ECECED' }];
             }
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 title: Object.assign({}, this.previousPieChartOptions.title, {
                     text: `${per}%`
                 }),
                 series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.pieSeries
+                    s.data = this.previousPieSeries
                     return s;
                 }),
             });
@@ -374,7 +400,6 @@ export class ExpensesChartComponent implements OnInit, OnDestroy {
             let lastPer = 0;
             let activePoint = _this.hoverPoints[0].y;
             let lastPoint = _this.hoverPoints[1].y;
-
             activePer = Number(((activePoint * 100) / compo.activeYearGrandAmount).toFixed(2));
             lastPer = Number(((lastPoint * 100) / compo.lastYearGrandAmount).toFixed(2));
 

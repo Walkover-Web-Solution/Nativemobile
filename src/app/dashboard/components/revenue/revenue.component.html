@@ -2,22 +2,29 @@
 
     <div style="display: flex; align-items: center; border-bottom: 1px solid #E6E6E6; margin-bottom: 15px;">
         <h4 style="flex: 1 0 auto" matLine>Revenue ({{ chartFilterTitle }})</h4>
+        <button mat-icon-button (click)="refreshData()">
+            <mat-icon>refresh</mat-icon>
+        </button>
         <button mat-icon-button (click)="openFilter()">
             <mat-icon>filter_list</mat-icon>
         </button>
     </div>
 
+    <div class="giddh-loader" *ngIf="(showLoader$ | async)">
+        <img src="assets/image/loader.png" class="roted-logo">
+    </div>
+
     <div style="display: grid; grid-template-columns:
     repeat(2, minmax(100px, 1fr));">
-        <div style="display: flex;flex-direction: column;align-items: center;">
-            <chart [options]="pieChartOptions"></chart>
-            <span>Rs, {{ activeYearGrandAmount | number: '1.2-2' }}</span>
-            <span>{{ activeYearLabel }}</span>
+        <div class="giddh-chart-wrap" style="display: flex;flex-direction: column;align-items: center;">
+            <chart class="giddh-chart" [options]="pieChartOptions"></chart>
+            <span class="giddh-chart-grand-amount">Rs, {{ activeYearGrandAmount | number: '1.2-2' }}</span>
+            <span class="giddh-chart-amount-label">{{ activeYearLabel }}</span>
         </div>
-        <div style="display: flex;flex-direction: column;align-items: center;">
-            <chart [options]="previousPieChartOptions"></chart>
-            <span>Rs, {{ lastYearGrandAmount | number: '1.2-2' }}</span>
-            <span>{{ lastYearLabel }}</span>
+        <div class="giddh-chart-wrap" style="display: flex;flex-direction: column;align-items: center;">
+            <chart class="giddh-chart" [options]="previousPieChartOptions"></chart>
+            <span class="giddh-chart-grand-amount">Rs, {{ lastYearGrandAmount | number: '1.2-2' }}</span>
+            <span class="giddh-chart-amount-label">{{ lastYearLabel }}</span>
         </div>
     </div>
 

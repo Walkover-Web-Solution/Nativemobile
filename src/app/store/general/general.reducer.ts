@@ -8,13 +8,13 @@ import { FlattenAccountsResponse } from "../../models/api-models/Account";
 import { MyDrawerItem } from "../../shared/my-drawer-item/my-drawer-item";
 
 const initialNavObj: MyDrawerItem[] = [
-    {
-        title: 'Back',
-        icon: String.fromCharCode(0x70),
-        needTopHr: true,
-        router: '/home',
-        fontFamily: '1515160234',
-    } as MyDrawerItem,
+    // {
+    //     title: 'Back',
+    //     icon: String.fromCharCode(0x70),
+    //     needTopHr: true,
+    //     router: '/home',
+    //     fontFamily: '1515160234',
+    // } as MyDrawerItem,
     {
         title: 'Home',
         icon: String.fromCharCode(0x66),
@@ -50,20 +50,20 @@ const initialNavObj: MyDrawerItem[] = [
     //     fontFamily: '1515160234',
     //     router: '/purchase'
     // } as MyDrawerItem,
-    {
-        title: 'Reports',
-        icon: String.fromCharCode(0x69),
-        needTopHr: true,
-        fontFamily: '1515160234',
-        router: '/reports'
-    } as MyDrawerItem,
-    {
-        title: 'Settings',
-        icon: String.fromCharCode(0x6c),
-        needTopHr: true,
-        fontFamily: '1515160234',
-        router: '/settings'
-    } as MyDrawerItem,
+    // {
+    //     title: 'Reports',
+    //     icon: String.fromCharCode(0x69),
+    //     needTopHr: true,
+    //     fontFamily: '1515160234',
+    //     router: '/reports'
+    // } as MyDrawerItem,
+    // {
+    //     title: 'Settings',
+    //     icon: String.fromCharCode(0x6c),
+    //     needTopHr: true,
+    //     fontFamily: '1515160234',
+    //     router: '/settings'
+    // } as MyDrawerItem,
 ];
 
 const initialCurrenciesData: string[] = [
