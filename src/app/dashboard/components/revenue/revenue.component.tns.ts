@@ -6,12 +6,13 @@ import {
     ElementRef,
     OnDestroy,
     OnInit,
-    ViewChild
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store';
-import {Page} from '../../../common/utils/environment';
+import {Page, defaultLoaderOptions} from '../../../common/utils/environment';
 import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
 import {Observable} from 'rxjs/Observable';
 import {
@@ -25,7 +26,11 @@ import {DashboardActions} from '../../../actions/dashboard/dashboard.action';
 import {INameUniqueName} from '../../../models/interfaces/nameUniqueName.interface';
 import * as _ from 'lodash';
 import {on as applicationOn, orientationChangedEvent} from 'application';
-
+import {LoadingIndicator} from 'nativescript-loading-indicator';
+import {Subscription} from 'rxjs/Subscription';
+import {RouterService} from '../../../services/router.service';
+import { ModalDialogService } from 'nativescript-angular';
+import { DashboardFilterComponent } from '../filter/dashboard-filter.component';
 const webViewInterfaceModule = require('nativescript-webview-interface');
 
 @Component({
@@ -48,6 +53,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public revenueChartData$: Observable<IRevenueChartClosingBalanceResponse>;
     public selectedFilter$: Observable<ChartFilterType>;
     public selectedFilterType: ChartFilterType;
+    public loader: LoadingIndicator;
+    public showLoader$: Observable<boolean>;
     public activeYearAccounts: IChildGroups[] = [];
     public lastYearAccounts: IChildGroups[] = [];
     public accountStrings: AccountChartDataLastCurrentYear[] = [];
@@ -63,8 +70,10 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     public chartFilterTitle: string = '';
     private oLangWebViewInterface;
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-    constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
+    private loaderSubcriber$: Subscription;
+    constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private routerExtensions: RouterService, private modal: ModalDialogService, private vcRef: ViewContainerRef, private cdRef: ChangeDetectorRef) {
         this.revenueChartData$ = this.store.select(p => p.dashboard.revenueChart).takeUntil(this.destroyed$);
+        this.showLoader$ = this.store.select(s => s.dashboard.load).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.revenueChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         this.options = {
             chart: {
@@ -118,8 +127,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200,
-                backgroundColor: '#F7FAFB'
+                height: '100%',
+                // backgroundColor: '#F7FAFB'
             },
             credits: {
                 enabled: false
@@ -164,7 +173,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
                 plotShadow: false,
-                height: 200,
+                height: '100%',
                 // backgroundColor: '#F7FAFB'
             },
             credits: {
@@ -209,9 +218,21 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
+        console.log('-------------------')
+        console.log('NGINIT')
+        console.log('-------------------')
+        this.loader = new LoadingIndicator();
         this.selectedFilter$.subscribe(s => {
             this.selectedFilterType = s;
             this.fetchChartData();
+        });
+
+        this.loaderSubcriber$ = this.showLoader$.subscribe(s => {
+            if (s && this.loader) {
+                this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Loading Dashboard Data...'}));
+            } else {
+                this.loader.hide();
+            }
         });
     }
 
@@ -220,8 +241,41 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public fetchChartData() {
+        this.store.dispatch(this._dashboardActions.showLoad());
         this.store.dispatch(this._dashboardActions.getActiveYearRevenueChartData());
         this.store.dispatch(this._dashboardActions.getLastYearRevenueChartData());
+    }
+
+    public refreshData() {
+        console.log('----------------------')
+        console.log('Refresh Data Revenue')
+        console.log('----------------------')
+        this.store.dispatch(this._dashboardActions.showLoad());
+        this.store.dispatch(this._dashboardActions.getActiveYearRevenueChartData(true));
+        this.store.dispatch(this._dashboardActions.getLastYearRevenueChartData(true));
+    }
+
+    
+
+    public openFilter() {
+        console.log('----------------------')
+        console.log('Route Function')
+        console.log('----------------------')
+        // this.routerExtensions.router.navigate(["/dashboard/filter/chartType"]);
+        let options = {
+            context: {
+                'ChartType': this.chartType,
+            },
+            fullscreen: true,
+            viewContainerRef: this.vcRef
+        };
+        this.modal.showModal(DashboardFilterComponent, options).then(res => {
+            console.log(res);
+        });
+    }
+
+    public goTo(route: string[]) {
+        (this.routerExtensions.router as any).navigate(route);
     }
 
     private setupWebViewInterface() {
@@ -303,12 +357,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
             let index = -1;
             index = _.findIndex(this.activeYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
+                ac.activeYear = this.activeYearAccounts[index].creditTotal - this.activeYearAccounts[index].debitTotal;
             }
             index = -1;
             index = _.findIndex(this.lastYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
+                ac.lastYear = this.lastYearAccounts[index].creditTotal - this.lastYearAccounts[index].debitTotal;
             }
         });
 
@@ -332,8 +386,8 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
 
         let seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+            { name: this.activeYearLabel, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
+            { name: this.lastYearLabel, data: this.lastYearAccountsRanks, color: '#1F989C' }
         ];
         this.lastYearGrandAmount = Number(_.sum(lastAccounts).toFixed(2)) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
@@ -408,7 +462,7 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
                     text: `${per}%`
                 }),
                 series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.pieSeries
+                    s.data = this.previousPieSeries
                     return s;
                 }),
             });
@@ -437,6 +491,12 @@ export class RevenueChartComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     public ngOnDestroy() {
+        console.log('++++++++++++++++++++++++++');
+        console.log('REVENUE PAGE DESTROY');
+        console.log('++++++++++++++++++++++++++');
+        if (this.loaderSubcriber$) {
+            this.loaderSubcriber$.unsubscribe();
+        }
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }

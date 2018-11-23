@@ -11,8 +11,13 @@
   </ActionBar>
   
   <ScrollView>
-    <StackLayout margin="5">
-      <CardView class="gen-card-style gen-font-style" height="390" elevation="3" radius="1">
+    <StackLayout>
+        <GridLayout class="giddh-modal-actionbar action-bar" columns="50,*,auto" rows="*" width="100%" padding="0 10">
+            <Button row="0" col="0" class="button" textAlignment="center" text="&#xe91a;" fontFamily="GiddhIconFonts" (tap)="closeFilter()"></Button>
+            <Label row="0" col="1" class="action-bar-title card" [text]="'Select Time'" fontWeight="400" verticalAlignment="center" horizontalAlignment="left"></Label>
+            <Button row="0" col="2" class="button text-btn" text="SAVE" (tap)="saveAndClose()"></Button>
+          </GridLayout>
+      <!-- <CardView class="gen-card-style gen-font-style" height="390" elevation="3" radius="1">
   
         <ListView [items]="items" margin="0 15">
           <ng-template let-item="item" let-i="index">
@@ -21,9 +26,18 @@
           </ng-template>
         </ListView>
   
+      </CardView> -->
+
+      <CardView class="gen-card-style gen-font-style filter-list-card" margin="10" height="390" elevation="3" radius="1">
+          <StackLayout orientation="vertical">
+            <StackLayout class="checkbox-wrap" *ngFor="let item of items">
+              <CheckBox #elem [text]="item.text" [checked]="item.selected" (checkedChange)="elem.checked !== item.selected && changeCheckedRadio(item)"
+              boxType="circle" margin="5 0" style="font-size:15"></CheckBox>
+            </StackLayout>
+          </StackLayout>
       </CardView>
   
-      <CardView class="gen-card-style gen-font-style" elevation="3" radius="1" [visibility]="showCustomFilterInputs ? 'visible' : 'collapsed'">
+      <CardView class="gen-card-style gen-font-style" margin="10" elevation="3" radius="1" *ngIf="showCustomFilterInputs">
   
         <GridLayout rows="auto,*" columns="*" padding="15">
           <StackLayout row="0" col="0" horizontalAlignment="left" marginBottom="15">
@@ -47,7 +61,7 @@
   
       </CardView>
   
-      <CardView class="gen-card-style gen-font-style" elevation="3" radius="1" [visibility]="showCustomFilterInputs ? 'visible' : 'collapsed'">
+      <CardView class="gen-card-style gen-font-style" margin="10" elevation="3" radius="1" *ngIf="showCustomFilterInputs">
   
         <GridLayout rows="auto,*" columns="*" padding="15">
           <StackLayout row="0" col="0" horizontalAlignment="left" marginBottom="15">

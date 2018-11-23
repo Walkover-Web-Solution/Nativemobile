@@ -1,8 +1,10 @@
 <StackLayout padding="0 15">
 
-        <FlexboxLayout justifyContent="space-between" margin="10 0">
+        <FlexboxLayout justifyContent="space-between" margin="10 0" class="dashboard-chart-header">
             <Label text="Expenses ({{ chartFilterTitle }})" class="chart-title"></Label>
-            <Label text="&#xe904;" color="#333333" fontSize="20" [nsRouterLink]="['/dashboard','filter', chartType]" class="" fontFamily="GiddhIconFonts"></Label>
+            <Label text="&#xf021;" color="#333333" fontSize="20" class="chart-icon" (tap)="refreshData()" fontFamily="FontAwesome"></Label>
+            <!-- <Label text="&#xe904;" color="#333333" fontSize="20" class="chart-icon" [nsRouterLink]="['/dashboard','filter', chartType]" class="" fontFamily="GiddhIconFonts"></Label> -->
+            <Label text="&#xe904;" color="#333333" fontSize="20" class="chart-icon" (tap)="openFilter()" class="" fontFamily="GiddhIconFonts"></Label>
         </FlexboxLayout>
 
         <StackLayout class="hr-light"></StackLayout>

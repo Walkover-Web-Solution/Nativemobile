@@ -8,12 +8,13 @@ import {AppState} from '../../../store';
 import {RouterService} from '../../../services/router.service';
 import {ActivatedRoute, Config} from '../../../common';
 import {ReportsActions} from '../../../actions/reports/reports.actions';
+import { ModalDialogParams } from 'nativescript-angular';
 
 @Component({
     selector: 'ns-dashboard-filter',
     moduleId: module.id,
     templateUrl: './dashboard-filter.component.html',
-    styleUrls: ['./dashboard-filter.component.scss']
+    styleUrls: ['./dashboard-filter.component.css']
 })
 export class DashboardFilterComponent implements OnInit {
     public chartType: ChartType;
@@ -22,7 +23,7 @@ export class DashboardFilterComponent implements OnInit {
     public customFilterObj: ChartCustomFilter;
 
     constructor(private routerExtensions: RouterService, private store: Store<AppState>,
-        private _dashboardActions: DashboardActions, private _reportsActions: ReportsActions, private activatedRouter: ActivatedRoute) {
+        private _dashboardActions: DashboardActions, private _reportsActions: ReportsActions, private activatedRouter: ActivatedRoute, private params: ModalDialogParams) {
 
         this.items = [
             { val: ChartFilterType.ThisMonthToDate, text: 'This Month to Date', selected: false },
@@ -40,19 +41,47 @@ export class DashboardFilterComponent implements OnInit {
     }
 
     ngOnInit() {
-        Config.IS_MOBILE_NATIVE && (this.activatedRouter as any).activatedRoute
-            .switchMap(activatedRoute => activatedRoute.params)
-            .subscribe((params) => {
-                this.chartType = Number(params['chartType']) as ChartType;
-            });
+        // Config.IS_MOBILE_NATIVE && (this.activatedRouter as any).activatedRoute
+        //     .switchMap(activatedRoute => activatedRoute.params)
+        //     .subscribe((params) => {
+        //         this.chartType = Number(params['chartType']) as ChartType;
+        //     });
+        console.log('Custom Date')
+        console.log(this.customFilterObj)
+        this.chartType = this.params.context.ChartType;
+            
 
         if (this.chartType === ChartType.Revenue) {
             this.store.select(p => p.dashboard.revenueChartFilter).take(1).subscribe(s => {
                 this.setSelectedItem(s);
             });
+            this.store.select(p => p.dashboard.revenueChartCustomFilter).take(1).subscribe(s => {
+                (this.customFilterObj.activeYear.startDate as any) = moment(this.customFilterObj.activeYear.startDate, 'DD-MM-YYYY').toDate();
+                (this.customFilterObj.activeYear.endDate  as any)= moment(this.customFilterObj.activeYear.endDate, 'DD-MM-YYYY').toDate();
+                (this.customFilterObj.lastYear.startDate as any) = moment(this.customFilterObj.lastYear.startDate, 'DD-MM-YYYY').toDate();
+                (this.customFilterObj.lastYear.endDate as any) = moment(this.customFilterObj.lastYear.endDate, 'DD-MM-YYYY').toDate();
+                if(s.activeYear.startDate !== ''){
+                    (this.customFilterObj.activeYear.startDate as any) = moment(s.activeYear.startDate, 'DD-MM-YYYY').toDate();
+                    (this.customFilterObj.activeYear.endDate  as any)= moment(s.activeYear.endDate, 'DD-MM-YYYY').toDate();
+                    (this.customFilterObj.lastYear.startDate as any) = moment(s.lastYear.startDate, 'DD-MM-YYYY').toDate();
+                    (this.customFilterObj.lastYear.endDate as any) = moment(s.lastYear.endDate, 'DD-MM-YYYY').toDate();
+                }
+            });
         } else if (this.chartType === ChartType.Expense) {
             this.store.select(p => p.dashboard.expensesChartFilter).take(1).subscribe(s => {
                 this.setSelectedItem(s);
+            });
+            this.store.select(p => p.dashboard.expensesChartCustomFilter).take(1).subscribe(s => {
+                (this.customFilterObj.activeYear.startDate as any) = moment(this.customFilterObj.activeYear.startDate, 'DD-MM-YYYY').toDate();
+                (this.customFilterObj.activeYear.endDate  as any)= moment(this.customFilterObj.activeYear.endDate, 'DD-MM-YYYY').toDate();
+                (this.customFilterObj.lastYear.startDate as any) = moment(this.customFilterObj.lastYear.startDate, 'DD-MM-YYYY').toDate();
+                (this.customFilterObj.lastYear.endDate as any) = moment(this.customFilterObj.lastYear.endDate, 'DD-MM-YYYY').toDate();
+                if(s.activeYear.startDate !== ''){
+                    (this.customFilterObj.activeYear.startDate as any) = moment(s.activeYear.startDate, 'DD-MM-YYYY').toDate();
+                    (this.customFilterObj.activeYear.endDate  as any)= moment(s.activeYear.endDate, 'DD-MM-YYYY').toDate();
+                    (this.customFilterObj.lastYear.startDate as any) = moment(s.lastYear.startDate, 'DD-MM-YYYY').toDate();
+                    (this.customFilterObj.lastYear.endDate as any) = moment(s.lastYear.endDate, 'DD-MM-YYYY').toDate();
+                }
             });
         } else if (this.chartType === ChartType.ProfitLoss) {
             this.store.select(p => p.report.profitLossChartFilter).take(1).subscribe(s => {
@@ -78,11 +107,15 @@ export class DashboardFilterComponent implements OnInit {
         let customFilterObj: any = this.customFilterObj;
 
         if (item.val === ChartFilterType.Custom) {
+            // console.log('[][][][]][]')
+            // console.log(customFilterObj.activeYear)
+            // console.log('[][][][]][]')
             customFilterObj.activeYear.startDate = moment(customFilterObj.activeYear.startDate).format('DD-MM-YYYY');
             customFilterObj.activeYear.endDate = moment(customFilterObj.activeYear.endDate).format('DD-MM-YYYY');
 
             customFilterObj.lastYear.startDate = moment(customFilterObj.lastYear.startDate).format('DD-MM-YYYY');
             customFilterObj.lastYear.endDate = moment(customFilterObj.lastYear.endDate).format('DD-MM-YYYY');
+
         } else {
             customFilterObj = null;
         }
@@ -95,8 +128,13 @@ export class DashboardFilterComponent implements OnInit {
             url = '/dashboard';
             this.store.dispatch(this._dashboardActions.setChartFilter(this.chartType, item.val, customFilterObj));
         }
-        this.customFilterObj = new ChartCustomFilter();
-        Config.IS_MOBILE_NATIVE && (this.routerExtensions.router as any).navigateByUrl(url, { clearHistory: true });
+        // this.customFilterObj = new ChartCustomFilter();
+        this.params.closeCallback();
+        // Config.IS_MOBILE_NATIVE && (this.routerExtensions.router as any).navigateByUrl(url, { clearHistory: true });
+    }
+
+    closeFilter(){
+        this.params.closeCallback();
     }
 
     setSelectedItem(selVal) {

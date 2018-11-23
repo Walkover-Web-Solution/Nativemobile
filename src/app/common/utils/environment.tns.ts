@@ -9,7 +9,7 @@ export const defaultLoaderOptions  = {
     progress: 0.65,
     android: {
         indeterminate: true,
-        cancelable: true,
+        cancelable: false,
         max: 100,
         progressNumberFormat: "%1d/%2d",
         progressPercentFormat: 0.53,

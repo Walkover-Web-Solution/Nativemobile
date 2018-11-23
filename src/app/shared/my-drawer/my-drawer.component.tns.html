@@ -2,18 +2,31 @@
 The MyDrawer custom component view is where you define what will be displayed in the app drawer.
 Feel free to customize layouts and components to change how your app drawer looks.
 -->
-<GridLayout rows="auto, *" class="sidedrawer sidedrawer-left">
-    <StackLayout row="0" class="sidedrawer-header">
-        <Label class="sidedrawer-header-image fa" text="&#xf2bd;"></Label>
-        <Label class="sidedrawer-header-brand" [text]="(user$ | async)?.user?.name"></Label>
-        <Label class="footnote" [text]="(user$ | async)?.user?.email"></Label>
-    </StackLayout>
-
-    <ScrollView row="1">
-        <StackLayout class="sidedrawer-content">
-            {{ pages | json }}
-            <MyDrawerItem (itemSelected)="onNavItemTap(item)" *ngFor="let item of pages" [mydraweritem]="item" icon="{{item.icon}}">
-            </MyDrawerItem>
+<GridLayout rows="auto, *, auto" class="sidedrawer sidedrawer-left">
+        <StackLayout row="0" class="sidedrawer-header">
+            <Label class="sidedrawer-header-image fa" text="&#xf2bd;"></Label>
+            <Label class="sidedrawer-header-brand" [text]="(user$ | async)?.user?.name"></Label>
+            <Label class="footnote" [text]="(user$ | async)?.user?.email"></Label>
         </StackLayout>
-    </ScrollView>
-</GridLayout>
+    
+        <ScrollView row="1">
+            <StackLayout class="sidedrawer-content">
+                {{ pages | json }}
+                <MyDrawerItem (itemSelected)="onNavItemTap(item)" *ngFor="let item of pages" [mydraweritem]="item" icon="{{item.icon}}">
+                </MyDrawerItem>
+            </StackLayout>
+        </ScrollView>
+    
+        <StackLayout row="2" class="logout-footer">
+            <!-- <Label class="logout-text" text="Logout"></Label> -->
+    
+            <GridLayout columns="auto, *" class="logout-btn" (tap)="logout()">
+                <Label col="0" class="logout-icon" text="&#xe906;" fontFamily="GiddhIconFonts"></Label>
+                <Label col="1" class="logout-text" text="Logout"></Label>
+            </GridLayout>
+    
+            
+        </StackLayout>
+        
+    </GridLayout>
+    

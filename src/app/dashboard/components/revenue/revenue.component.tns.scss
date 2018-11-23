@@ -12,7 +12,14 @@
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
-
+.dashboard-chart-header{
+  .chart-title{
+    flex: 1;
+  }
+  .chart-icon{
+    width: 40;
+  }
+}
 @keyframes faspin {
   from {
     transform: rotate(0deg);

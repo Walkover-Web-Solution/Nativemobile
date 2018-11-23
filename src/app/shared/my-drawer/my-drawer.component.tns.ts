@@ -5,6 +5,8 @@ import { AppState } from "../../store";
 import { UserDetails, VerifyEmailResponseModel } from "../../models/api-models/loginModels";
 import { Observable } from "rxjs/Observable";
 import { RouterService } from "../../services/router.service";
+import { LoginActions } from "../../actions/login/login.action";
+import { ToasterService } from "../../services/toaster.service";
 
 /* ***********************************************************
 * Keep data that is displayed in your app drawer in the MyDrawer component class.
@@ -22,7 +24,7 @@ export class MyDrawerComponent implements OnInit {
     @Output() public itemSelected: EventEmitter<MyDrawerItem> = new EventEmitter();
     @Input() pages: MyDrawerItem[];
 
-    constructor(private store: Store<AppState>, private routerExtensions: RouterService) {
+    constructor(private store: Store<AppState>, private routerExtensions: RouterService, private _loginActions: LoginActions, private _toaster: ToasterService) {
         this.user$ = this.store.select(p => p.session.user);
     }
 
@@ -34,9 +36,25 @@ export class MyDrawerComponent implements OnInit {
 
     onNavItemTap(item: MyDrawerItem): void {
         if (item.router && item.router !== '') {
-            (this.routerExtensions.router as any).navigate([item.router],{ clearHistory: false });
+            (this.routerExtensions.router as any).navigate([item.router],{ clearHistory: true });
         } else {
             this.itemSelected.emit(item);
         }
+    }
+    public logout() {
+
+        this._toaster.confirm({
+            title: 'Logout',
+            message: 'Are you sure you want to logout?',
+            okButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then(r => {
+            if (r) {
+                let SocialLogin = require('nativescript-social-login');
+                debugger;
+                this.store.dispatch(this._loginActions.logout());
+                (this.routerExtensions.router as any).navigateByUrl('/login', { clearHistory: true });
+            }
+        });
     }
 }

@@ -10,6 +10,7 @@ import {RouterModule} from '../common';
 import {TlPlComponent} from './tlpl.component';
 import {AccLedgerComponent} from './ledger/acc-ledger.component';
 import {CompoundEntryDialogComponent} from './compoundEntryDialog/compoundEntryDialog.component';
+import { TlplFilterComponent } from './tlpl-filter/tlpl-filter.component';
 
 @NgModule({
     imports: [
@@ -20,8 +21,8 @@ import {CompoundEntryDialogComponent} from './compoundEntryDialog/compoundEntryD
         ReactiveFormsModule,
         SharedModule
     ],
-    declarations: [TlPlComponent, AccLedgerComponent, CompoundEntryDialogComponent],
-    entryComponents: [CompoundEntryDialogComponent],
+    declarations: [TlPlComponent, AccLedgerComponent, CompoundEntryDialogComponent, TlplFilterComponent],
+    entryComponents: [CompoundEntryDialogComponent, TlplFilterComponent],
     schemas: [
         NO_ERRORS_SCHEMA
     ]

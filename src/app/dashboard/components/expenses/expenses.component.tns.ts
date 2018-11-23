@@ -1,9 +1,9 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {ReplaySubject} from 'rxjs/ReplaySubject';
 
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../store';
-import {Page} from '../../../common/utils/environment';
+import {Page, defaultLoaderOptions} from '../../../common/utils/environment';
 import {LoadEventData, WebView} from 'tns-core-modules/ui/web-view';
 import {Observable} from 'rxjs/Observable';
 import {AccountChartDataLastCurrentYear} from '../../../models/view-models/AccountChartDataLastCurrentYear';
@@ -17,6 +17,11 @@ import {
     IChildGroups,
     IExpensesChartClosingBalanceResponse
 } from '../../../models/interfaces/dashboard.interface';
+
+import {LoadingIndicator} from 'nativescript-loading-indicator';
+import {Subscription} from 'rxjs/Subscription';
+import { ModalDialogService } from 'nativescript-angular';
+import { DashboardFilterComponent } from '../filter/dashboard-filter.component';
 
 const webViewInterfaceModule = require('nativescript-webview-interface');
 
@@ -48,6 +53,9 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     public selectedFilter$: Observable<ChartFilterType>;
     public selectedFilterType: ChartFilterType;
 
+    public loader: LoadingIndicator;
+    public showLoader$: Observable<boolean>;
+
     public activeYearAccounts: IChildGroups[] = [];
     public lastYearAccounts: IChildGroups[] = [];
     public accountStrings: AccountChartDataLastCurrentYear[] = [];
@@ -56,9 +64,11 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     private oLangWebViewInterface;
 
     private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+    private loaderSubcriber$: Subscription;
 
-    constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef) {
+    constructor(private store: Store<AppState>, private page: Page, private _dashboardActions: DashboardActions, private cdRef: ChangeDetectorRef, private modal: ModalDialogService, private vcRef: ViewContainerRef,) {
         this.expensesChartData$ = this.store.select(p => p.dashboard.expensesChart).takeUntil(this.destroyed$);
+        this.showLoader$ = this.store.select(s => s.dashboard.load).takeUntil(this.destroyed$);
         this.selectedFilter$ = this.store.select(s => s.dashboard.expensesChartFilter).distinctUntilChanged().takeUntil(this.destroyed$);
         this.options = {
             chart: {
@@ -111,7 +121,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
                 plotBorderWidth: 0,
                 plotShadow: false,
                 height: 200,
-                backgroundColor: '#F7FAFB'
+                // backgroundColor: '#F7FAFB'
             },
             credits: {
                 enabled: false
@@ -201,9 +211,17 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     ngOnInit() {
+        this.loader = new LoadingIndicator();
         this.selectedFilter$.subscribe(s => {
             this.selectedFilterType = s;
             this.fetchChartData();
+        });
+        this.loaderSubcriber$ = this.showLoader$.subscribe(s => {
+            if (s && this.loader) {
+                this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Loading Dashboard Data...'}));
+            } else {
+                this.loader.hide();
+            }
         });
     }
 
@@ -267,8 +285,35 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     public fetchChartData() {
+        this.store.dispatch(this._dashboardActions.showLoad());
         this.store.dispatch(this._dashboardActions.getActiveYearExpensesChartData());
         this.store.dispatch(this._dashboardActions.getLastYearExpensesChartData());
+    }
+
+    public refreshData() {
+        console.log('------------------------------------')
+        console.log('Refresh Data Expense')
+        console.log('------------------------------------')
+        this.store.dispatch(this._dashboardActions.showLoad());
+        this.store.dispatch(this._dashboardActions.getActiveYearExpensesChartData(true));
+        this.store.dispatch(this._dashboardActions.getLastYearExpensesChartData(true));
+    }
+
+    public openFilter() {
+        console.log('----------------------')
+        console.log('Route Function')
+        console.log('----------------------')
+        // this.routerExtensions.router.navigate(["/dashboard/filter/chartType"]);
+        let options = {
+            context: {
+                'ChartType': this.chartType,
+            },
+            fullscreen: true,
+            viewContainerRef: this.vcRef
+        };
+        this.modal.showModal(DashboardFilterComponent, options).then(res => {
+            console.log(res);
+        });
     }
 
     public generateActiveYearString(): INameUniqueName[] {
@@ -295,12 +340,12 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             let index = -1;
             index = _.findIndex(this.activeYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.activeYear = this.activeYearAccounts[index].closingBalance.amount;
+                ac.activeYear = this.activeYearAccounts[index].debitTotal - this.activeYearAccounts[index].creditTotal;
             }
             index = -1;
             index = _.findIndex(this.lastYearAccounts, (p) => p.uniqueName === ac.uniqueName);
             if (index !== -1) {
-                ac.lastYear = this.lastYearAccounts[index].closingBalance.amount;
+                ac.lastYear = this.lastYearAccounts[index].debitTotal - this.lastYearAccounts[index].creditTotal;
             }
         });
 
@@ -324,8 +369,8 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
 
         let seriesName = this.genSeriesName(this.selectedFilterType);
         this.series = [
-            { name: `This ${seriesName}`, data: this.activeYearAccountsRanks, color: '#5AC4C4' } as any,
-            { name: `Last ${seriesName}`, data: this.lastYearAccountsRanks, color: '#1F989C' }
+            { name: this.activeYearLabel, data: this.activeYearAccountsRanks, color: '#F79658' } as any,
+            { name: this.lastYearLabel, data: this.lastYearAccountsRanks, color: '#EB6926' }
         ];
         this.lastYearGrandAmount = Number(_.sum(lastAccounts).toFixed(2)) || 0;
         this.lastPieChartAmount = this.lastYearGrandAmount > 0 ? 100 : 0;
@@ -372,7 +417,7 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             if (per === 0) {
                 this.pieSeries = [{ y: 100, color: '#ECECED' }];
             } else {
-                this.pieSeries = [{ y: per, color: '#5AC4C4' }, { y: 100 - per, color: '#ECECED' }];
+                this.pieSeries = [{ y: per, color: '#F79658' }, { y: 100 - per, color: '#ECECED' }];
             }
             this.pieChartOptions = Object.assign({}, this.pieChartOptions, {
                 title: Object.assign({}, this.pieChartOptions.title, {
@@ -393,14 +438,14 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
             if (per === 0) {
                 this.previousPieSeries = [{ y: 100, color: '#ECECED' }];
             } else {
-                this.previousPieSeries = [{ y: per, color: '#1F989C' }, { y: 100 - per, color: '#ECECED' }];
+                this.previousPieSeries = [{ y: per, color: '#EB6926' }, { y: 100 - per, color: '#ECECED' }];
             }
             this.previousPieChartOptions = Object.assign({}, this.previousPieChartOptions, {
                 title: Object.assign({}, this.previousPieChartOptions.title, {
                     text: `${per}%`
                 }),
                 series: this.previousPieChartOptions.series.map(s => {
-                    s.data = this.pieSeries
+                    s.data = this.previousPieSeries
                     return s;
                 }),
             });
@@ -428,6 +473,10 @@ export class ExpensesChartComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     public ngOnDestroy() {
+        if (this.loaderSubcriber$) {
+            console.log(JSON.stringify('unsubcribed'));
+            this.loaderSubcriber$.unsubscribe();
+        }
         this.destroyed$.next(true);
         this.destroyed$.complete();
     }
