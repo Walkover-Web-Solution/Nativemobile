@@ -91,9 +91,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
             return {companies, uniqueName};
         })).takeUntil(this.destroyed$);
         this.data$ = this.store.select(s => s.tlPl.tb.data).takeUntil(this.destroyed$);
-        (this.page as any).on((Page as any).unloadedEvent, (ev) => {
-            this.ngOnDestroy();
-        });
+        (this.page as any).on((Page as any).unloadedEvent, (ev) =>  this.ngOnDestroy() );
 
     }
 
@@ -120,10 +118,14 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         });
         this.loaderSubcriber$ = this.showLoader$.subscribe(s => {
             if (s && this.loader) {
-                console.log(JSON.stringify('Hey I am called'));
+                console.log(JSON.stringify('---'));
+                console.log(JSON.stringify('Loader INIT'));
+                console.log(JSON.stringify('---'));
                 this.loader.show(Object.assign({}, defaultLoaderOptions, {message: 'Loading TL / PL...'}));
             } else {
                 this.loader.hide();
+                console.log(JSON.stringify('Loader Completed'));
+
             }
         });
 
@@ -215,7 +217,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store.dispatch(this._tlPlActions.GetTrialBalance(_.cloneDeep(request)));
     }
 
-    refreshData(request: TrialBalanceRequest) {
+    refreshData() {
         this.resetNavigation();
         let a = {
             refresh: true,
@@ -493,20 +495,24 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    ngOnDestroy(): void {
-        if (this.loaderSubcriber$) {
-            console.log(JSON.stringify('unsubcribed'));
-            this.loaderSubcriber$.unsubscribe();
-        }
-        this.store.dispatch(this._tlPlActions.RESET_LOADER());
-        console.log(JSON.stringify('unloading page'));
+    ngOnDestroy(){
+        // if (this.loaderSubcriber$) {
+            // console.log(JSON.stringify('unsubcribed Loader'));
+            // this.loaderSubcriber$.unsubscribe();
+        // }
+        // this.store.dispatch(this._tlPlActions.RESET_LOADER());
         this.destroyed$.next(true);
         this.destroyed$.complete();
+        console.log(JSON.stringify('unloading page'));
 
     }
 
     public onDrawerButtonTap(): void {
         console.log('Nav')
+         if (this.loaderSubcriber$) {
+            console.log(JSON.stringify('unsubcribed Loader'));
+            this.loaderSubcriber$.unsubscribe();
+        }
         // console.log(this.drawerComponent)
         this.drawerComponent.sideDrawer.showDrawer();
     }
