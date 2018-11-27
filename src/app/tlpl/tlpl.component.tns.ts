@@ -6,7 +6,7 @@ import {ReplaySubject} from 'rxjs//ReplaySubject';
 import {Observable} from 'rxjs/Observable';
 import {CompanyActions} from '../actions/company/company.action';
 import {TBPlBsActions} from '../actions/tl-pl/tl-pl.actions';
-import {CompanyResponse} from '../models/api-models/Company';
+import {ActiveFinancialYear, CompanyResponse} from '../models/api-models/Company';
 import {AccountDetails, TrialBalanceRequest} from '../models/api-models/tb-pl-bs';
 import {AppState} from '../store';
 import {RouterService} from '../services/router.service';
@@ -21,12 +21,11 @@ import {isAndroid} from 'platform';
 // const platformModule = require('tns-core-modules/platform');
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
-import { ModalDialogService } from "nativescript-angular/directives/dialogs";
-import { TlplFilterComponent } from './tlpl-filter/tlpl-filter.component';
+import {ModalDialogService} from 'nativescript-angular/directives/dialogs';
+import {TlplFilterComponent} from './tlpl-filter/tlpl-filter.component';
 import {ChartCustomFilter, ChartFilterConfigs} from '../models/api-models/Dashboard';
 import {ChartFilterType} from '../models/interfaces/dashboard.interface';
-import {ActiveFinancialYear} from '../models/api-models/Company';
-import { MyDrawerItem } from '../shared/my-drawer-item/my-drawer-item';
+import {MyDrawerItem} from '../shared/my-drawer-item/my-drawer-item';
 import * as moment from 'moment/moment';
 
 declare let android: any;
@@ -215,7 +214,7 @@ export class TlPlComponent implements OnInit, OnDestroy, AfterViewInit {
         this.store.dispatch(this._tlPlActions.GetTrialBalance(_.cloneDeep(request)));
     }
 
-    refreshData(request: TrialBalanceRequest) {
+    refreshData() {
         this.resetNavigation();
         let a = {
             refresh: true,

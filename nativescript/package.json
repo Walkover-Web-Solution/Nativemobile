@@ -12,10 +12,7 @@
       }
     ],
     "tns-android": {
-      "version": "4.0.1"
-    },
-    "tns-ios": {
-      "version": "5.0.0-rc-2018-10-17-161243-01"
+      "version": "4.2.0"
     }
   },
   "dependencies": {
@@ -120,7 +117,7 @@
     "phone-android-bundle": "npm run prepPhone && tns prepare android && tns run android --bundle --env.aot --env.uglify",
     "tablet-android-bundle": "npm run prepTablet && tns prepare android && tns run android --bundle --env.aot --env.uglify",
     "build.phone-android-bundle": "npm run prepPhone && tns prepare android && tns build android --bundle --env.aot --env.uglify",
-    "build.tablet-android-bundle": "npm run prepTablet && tns prepare android && tns build android --compileSdk 25 --bundle --release --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123 --env.aot ",
+    "build.tablet-android-bundle": "npm run prepTablet && tns prepare android && tns build android --compileSdk 25 --clean  --bundle --release --key-store-path ./giddh.keystore --key-store-password asd123 --key-store-alias mykey --key-store-alias-password asd123 --env.aot ",
     "livesync": "gulp tns.Livesync",
     "livesync.phone": "gulp tns.Livesync.Phone",
     "publish-ios-bundle": "tns publish ios --bundle --env.aot --env.uglify"
