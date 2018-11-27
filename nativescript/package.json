@@ -11,11 +11,11 @@
         "script": "./customHooks/before-prepare/nativescript-environment.js"
       }
     ],
-    "tns-android": {
-      "version": "4.0.1"
-    },
     "tns-ios": {
       "version": "5.0.0-rc-2018-10-17-161243-01"
+    },
+    "tns-android": {
+      "version": "5.0.0"
     }
   },
   "dependencies": {
@@ -91,7 +91,7 @@
     "lazy": "~1.0.11",
     "nativescript-css-loader": "~0.26.1",
     "nativescript-dev-sass": "~1.5.0",
-    "nativescript-dev-typescript": "^0.7.5",
+    "nativescript-dev-typescript": "^0.7.6",
     "nativescript-dev-webpack": "^0.11.0",
     "nativescript-worker-loader": "0.8.1",
     "raw-loader": "~0.5.1",
