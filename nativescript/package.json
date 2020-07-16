@@ -34,7 +34,7 @@
         "@ngrx/store-devtools": "4.1.1",
         "@ngx-translate/core": "~9.1.1",
         "@ngx-translate/http-loader": "~2.0.1",
-        "lodash": "4.17.11",
+        "lodash": "4.17.19",
         "moment": "2.18.1",
         "nativescript-angular": "5.2.0",
         "nativescript-cardview": "2.0.4",
